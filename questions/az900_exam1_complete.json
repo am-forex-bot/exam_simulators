@@ -1,0 +1,1102 @@
+[
+  {
+    "id": "AZ900-E01-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your company currently runs all workloads on physical servers in a single on-premises data centre\n- The CTO wants to reduce upfront hardware spending and shift to a monthly billing model\n- The IT team must retain the ability to scale compute resources up or down based on seasonal demand\n\nQuestion:\nWhich cloud characteristic BEST addresses the CTO's financial requirement?",
+    "choices": [
+      "High availability",
+      "Consumption-based pricing (OpEx model)",
+      "Geo-distribution",
+      "Fault tolerance"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "High availability ensures uptime and redundancy, but it does not directly address the shift from capital expenditure to operational expenditure.",
+      "This option is correct. Consumption-based pricing means you pay only for the resources you use, shifting from large upfront CapEx (buying servers) to predictable OpEx (monthly bills). This directly addresses the CTO's requirement to reduce upfront spending and move to monthly billing.",
+      "Geo-distribution places resources in multiple regions for latency and redundancy. It's a deployment benefit, not a financial model.",
+      "Fault tolerance ensures continued operation during component failures. Like high availability, it's an operational benefit, not a financial one."
+    ],
+    "tip": "Exam pattern: When a question mentions reducing upfront costs, shifting to monthly billing, or eliminating capital expenditure \u2014 the answer is always about the consumption-based/OpEx model. Microsoft frames this as a core cloud benefit."
+  },
+  {
+    "id": "AZ900-E01-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A startup is building a new web application\n- They want to deploy code without managing the underlying operating system, patching, or runtime environment\n- They need automatic scaling during traffic spikes\n\nQuestion:\nWhich cloud service type should the startup use?",
+    "choices": [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)",
+      "Desktop as a Service (DaaS)"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "IaaS provides virtual machines, networking, and storage \u2014 but the customer still manages the OS, patching, and runtime. The startup explicitly wants to avoid this responsibility.",
+      "This option is correct. PaaS provides a managed platform where the cloud provider handles the OS, patching, and runtime. Developers just deploy their code. Azure App Service is the classic PaaS example. Auto-scaling is a built-in PaaS capability.",
+      "SaaS is a complete application consumed by end users (e.g., Microsoft 365, Salesforce). The startup is building their own application, not consuming a finished one.",
+      "DaaS provides virtual desktops (e.g., Azure Virtual Desktop). This has nothing to do with hosting a web application."
+    ],
+    "tip": "IaaS = you manage the most (OS, runtime, app). PaaS = you manage only your code and data. SaaS = you manage nothing, just use the app. If the question says 'deploy code without managing infrastructure' \u2014 it's PaaS."
+  },
+  {
+    "id": "AZ900-E01-003",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A financial services company has strict regulatory requirements that prevent customer data from leaving their own data centre\n- They also want to use Azure AI and machine learning services for fraud detection\n- The solution must satisfy both requirements simultaneously\n\nQuestion:\nWhich cloud deployment model should the company use?",
+    "choices": [
+      "Public cloud only",
+      "Private cloud only",
+      "Hybrid cloud",
+      "Multi-cloud"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Public cloud alone would mean customer data goes to Azure data centres. This violates the regulatory requirement to keep data on-premises.",
+      "Private cloud alone keeps data on-premises, but doesn't provide access to Azure's AI and ML services. The company needs both.",
+      "This option is correct. Hybrid cloud combines on-premises infrastructure (private) with Azure services (public). Customer data stays in the local data centre to satisfy regulations, while Azure AI/ML services are consumed from the public cloud for fraud detection. This is the textbook hybrid cloud use case.",
+      "Multi-cloud means using multiple public cloud providers (e.g., Azure + AWS). This doesn't solve the data residency requirement \u2014 it just adds another public cloud."
+    ],
+    "tip": "Hybrid cloud questions almost always involve a regulatory/compliance constraint keeping some data on-premises PLUS a need for public cloud services. If you see both requirements in one question, it's hybrid."
+  },
+  {
+    "id": "AZ900-E01-004",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation hosts a customer-facing e-commerce website\n- During Black Friday sales, traffic increases by 800%\n- After the sale period, traffic returns to normal levels\n- You want to automatically add compute resources during the spike and remove them afterwards to control costs\n\nQuestion:\nWhich cloud characteristic describes this ability?",
+    "choices": [
+      "Agility",
+      "High availability",
+      "Elasticity",
+      "Disaster recovery"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Agility refers to the ability to quickly deploy and configure cloud resources. While related, agility is about speed of provisioning, not automatic scaling in response to demand.",
+      "High availability ensures services remain accessible during failures (e.g., 99.9% uptime SLA). It doesn't specifically address scaling resources up and down with demand.",
+      "This option is correct. Elasticity is the ability to automatically increase or decrease resources based on demand. Resources scale out during the Black Friday spike and scale back in afterwards \u2014 you only pay for what you use. This is the definition of elasticity.",
+      "Disaster recovery is about restoring services after a catastrophic event (flood, fire, region failure). Traffic spikes are not disasters \u2014 they're expected demand patterns."
+    ],
+    "tip": "Elasticity = automatic scale out/in based on demand. Scalability = ability to handle growth (can be manual). Microsoft distinguishes these: elasticity is specifically about dynamic, automatic adjustment. If the question says 'automatically add and remove resources based on demand' \u2014 it's elasticity."
+  },
+  {
+    "id": "AZ900-E01-005",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 for email and collaboration\n- The IT security team asks: 'Who is responsible for ensuring the physical security of the data centres where our email data is stored?'\n\nQuestion:\nAccording to the shared responsibility model, who is responsible for physical data centre security when using a SaaS service like Microsoft 365?",
+    "choices": [
+      "The customer (your company)",
+      "The cloud provider (Microsoft)",
+      "Shared between the customer and Microsoft",
+      "A third-party security vendor"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "The customer is never responsible for physical data centre security in any cloud model (IaaS, PaaS, or SaaS). Physical security always belongs to the cloud provider.",
+      "This option is correct. In the shared responsibility model, physical security of data centres is ALWAYS the cloud provider's responsibility \u2014 regardless of whether you're using IaaS, PaaS, or SaaS. Microsoft secures the buildings, hardware, and physical access controls.",
+      "Physical security is not a shared responsibility. Some things are shared (like network controls in IaaS), but physical security is exclusively the provider's domain.",
+      "Microsoft does not delegate physical data centre security to third parties. They manage it directly."
+    ],
+    "tip": "Shared responsibility model is heavily tested on AZ-900. Remember: Physical security, host infrastructure, and the physical network are ALWAYS Microsoft's responsibility. Data, endpoints, accounts, and access management are ALWAYS the customer's. Everything in between depends on the service model."
+  },
+  {
+    "id": "AZ900-E01-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys virtual machines in the Azure UK South region\n- The architecture team needs to protect against a single data centre failure within that region\n- They do NOT want to replicate to a different Azure region due to data sovereignty concerns\n\nQuestion:\nWhat should the architecture team use to protect the VMs against a single data centre failure within UK South?",
+    "choices": [
+      "Azure Traffic Manager",
+      "Availability Zones",
+      "Azure Site Recovery to UK West",
+      "A single Availability Set"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Traffic Manager is a DNS-based load balancer that routes traffic across regions or endpoints. It doesn't protect individual VMs against data centre failures within a region \u2014 it operates at a higher level.",
+      "This option is correct. Availability Zones are physically separate data centres within an Azure region, each with independent power, cooling, and networking. Deploying VMs across Availability Zones in UK South protects against a single data centre failure while keeping all resources within the same region (satisfying data sovereignty).",
+      "Azure Site Recovery to UK West replicates to a different region. The question explicitly says they don't want cross-region replication due to data sovereignty.",
+      "An Availability Set protects against rack-level and update-domain failures within a SINGLE data centre. It does NOT protect against an entire data centre going down. This is a critical exam distinction."
+    ],
+    "tip": "Availability Zones = protection against data centre failure (within one region). Availability Sets = protection against rack/update failures (within one data centre). The exam LOVES testing this distinction. Zone > Set for resilience."
+  },
+  {
+    "id": "AZ900-E01-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to organise Azure resources for three departments: Finance, Marketing, and Engineering\n- Each department has its own budget and cost centre\n- You need to track Azure spending per department for chargeback purposes\n- Resources from different departments sometimes share the same subscription\n\nQuestion:\nWhat is the MOST efficient way to track costs per department?",
+    "choices": [
+      "Create a separate Azure subscription for each department",
+      "Create a separate resource group for each department",
+      "Apply Azure tags to resources with a Department key",
+      "Use Azure Management Groups for each department"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Separate subscriptions would work for cost separation, but the question states resources sometimes share the same subscription. Additionally, creating separate subscriptions adds administrative overhead and isn't the most efficient approach for cost tracking alone.",
+      "Resource groups provide logical grouping, but a resource can only belong to one resource group. If resources are already organised differently (e.g., by application), reorganising by department would break existing structure. Tags are more flexible.",
+      "This option is correct. Azure tags are key-value pairs (e.g., Department: Finance) that can be applied to any resource regardless of its subscription or resource group. Cost Management can filter and group spending by tag, making chargeback reports straightforward. Tags are the recommended Microsoft approach for cost allocation across shared infrastructure.",
+      "Management Groups are for organising subscriptions and applying governance policies (like Azure Policy) at scale. They don't directly provide cost tracking per department within a subscription."
+    ],
+    "tip": "When the exam asks about cost tracking, chargeback, or cost allocation across departments \u2014 think Tags first. Tags are the most flexible cost categorisation tool because they work across resource groups and subscriptions. Microsoft recommends tags as the primary mechanism for cost allocation."
+  },
+  {
+    "id": "AZ900-E01-008",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to run a batch processing job that analyses large datasets\n- The job runs once per month and takes approximately 4 hours to complete\n- During the other 716+ hours of the month, no compute resources are needed\n- The company wants to minimise costs\n\nQuestion:\nWhich Azure compute option is MOST cost-effective for this workload?",
+    "choices": [
+      "An Azure Virtual Machine running 24/7 on a Reserved Instance",
+      "Azure Functions with a Consumption plan",
+      "Azure Batch with low-priority VMs",
+      "An Azure App Service on a Standard tier plan"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "A 24/7 VM with a Reserved Instance is cost-effective for always-on workloads, but paying for a VM that runs 720 hours to use it for 4 hours is extremely wasteful \u2014 even with the RI discount.",
+      "Azure Functions (Consumption plan) is designed for short-lived, event-driven tasks. It has a 10-minute execution timeout per invocation and isn't designed for 4-hour batch processing of large datasets.",
+      "This option is correct. Azure Batch is purpose-built for large-scale batch processing. Low-priority VMs offer up to 80% discount compared to regular VMs, and you only pay while the job runs. Batch handles provisioning the compute pool, running the job, and deallocating resources \u2014 ideal for a monthly 4-hour job.",
+      "App Service Standard tier runs continuously and is designed for web applications, not batch processing. You'd pay for 720+ hours for 4 hours of work."
+    ],
+    "tip": "Azure Batch + low-priority VMs is the go-to answer for large-scale, periodic batch processing. If the question describes a job that runs infrequently and processes large amounts of data, Azure Batch is almost always the answer."
+  },
+  {
+    "id": "AZ900-E01-009",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores files that are accessed frequently during the first 30 days after creation\n- After 30 days, files are rarely accessed but must be available within milliseconds if requested\n- After 180 days, files are almost never accessed and can tolerate retrieval delays of several hours\n- You need to minimise storage costs while meeting access requirements\n\nQuestion:\nWhich combination of Azure Blob Storage access tiers should you use?",
+    "choices": [
+      "Hot tier \u2192 Cool tier \u2192 Archive tier",
+      "Hot tier \u2192 Cool tier \u2192 Cold tier",
+      "Premium tier \u2192 Hot tier \u2192 Cool tier",
+      "Cool tier \u2192 Cold tier \u2192 Archive tier"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "This option is correct. Hot tier for the first 30 days (frequent access, low access cost), Cool tier from 30-180 days (infrequent access, lower storage cost, still millisecond retrieval), and Archive tier after 180 days (near-zero storage cost, hours to rehydrate). This matches all three access patterns described in the scenario.",
+      "Cold tier exists but the question says files after 180 days can tolerate hours of retrieval delay. Cool tier data is still available in milliseconds \u2014 you need Archive tier for the cheapest long-term storage where hours of latency is acceptable.",
+      "Premium tier is for block blob storage requiring consistent low latency (e.g., interactive workloads). It's the most expensive tier and overkill for general file storage.",
+      "Starting with Cool tier ignores that files are accessed frequently in the first 30 days. Cool tier has higher per-access costs \u2014 using it for frequently accessed data would increase costs unnecessarily."
+    ],
+    "tip": "Storage tier questions follow a pattern: Hot = frequent access, Cool = infrequent (30+ day minimum), Cold = rare (90+ day minimum), Archive = almost never (180+ day minimum, hours to rehydrate). Match the access pattern to the tier. The exam often describes lifecycle scenarios \u2014 map each phase to a tier."
+  },
+  {
+    "id": "AZ900-E01-010",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation has 15 Azure subscriptions across multiple departments\n- The IT governance team needs to enforce a policy that all resources must be deployed in UK South or UK West regions only\n- This policy must apply to ALL subscriptions, including any new ones created in the future\n- Individual departments must NOT be able to override this restriction\n\nQuestion:\nWhat should the governance team configure?",
+    "choices": [
+      "An Azure RBAC role assignment at each subscription level",
+      "Azure Policy assigned at the Management Group level",
+      "Resource locks on all existing resource groups",
+      "Azure Blueprints assigned to each subscription individually"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "RBAC controls who can do what (permissions), not what configurations are allowed. You could restrict who can create resources, but you can't use RBAC alone to restrict which regions resources are deployed to.",
+      "This option is correct. Azure Policy can enforce allowed locations (built-in policy: 'Allowed locations'). Assigning it at the Management Group level means it automatically applies to all subscriptions under that group \u2014 including future ones. Departments can't override policies inherited from a parent management group. This is the exact use case Management Groups + Azure Policy were designed for.",
+      "Resource locks prevent deletion or modification of existing resources. They don't control where new resources can be deployed, and they don't apply to future resource groups automatically.",
+      "Assigning Blueprints to each subscription individually would work, but fails the 'including any new subscriptions' requirement \u2014 you'd have to manually assign the Blueprint to each new subscription. The Management Group approach is automatic."
+    ],
+    "tip": "Azure Policy + Management Groups is Microsoft's recommended governance pattern for organisation-wide rules. If the question says 'all subscriptions including future ones' or 'cannot be overridden by departments' \u2014 Management Group-level Azure Policy is the answer. The 'Allowed locations' built-in policy is a favourite exam topic."
+  },
+  {
+    "id": "AZ900-E01-011",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is considering migrating 50 on-premises servers to Azure\n- The CFO needs a cost comparison between running the servers on-premises for the next 3 years versus running them in Azure\n- The comparison must include electricity, cooling, data centre labour, and networking costs\n\nQuestion:\nWhich Azure tool should you use to generate this comparison?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure Cost Management + Billing",
+      "Azure Total Cost of Ownership (TCO) Calculator",
+      "Azure Advisor"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "The Pricing Calculator estimates the cost of specific Azure services you plan to use. It does NOT compare Azure costs against on-premises costs \u2014 it only shows the Azure side of the equation.",
+      "Cost Management + Billing tracks and analyses spending on resources you're ALREADY using in Azure. It can't estimate future costs or compare against on-premises infrastructure.",
+      "This option is correct. The TCO Calculator is specifically designed to compare on-premises costs versus Azure costs. You input your current on-premises workloads (servers, databases, storage, networking) and it factors in hidden costs like electricity, cooling, data centre space, and IT labour to produce a multi-year cost comparison.",
+      "Azure Advisor provides recommendations for improving cost efficiency, security, reliability, and performance of existing Azure resources. It doesn't generate migration cost comparisons."
+    ],
+    "tip": "TCO Calculator = compare on-prem vs Azure (pre-migration planning). Pricing Calculator = estimate Azure-only costs for planned services. Cost Management = analyse existing Azure spending. These three tools appear constantly on AZ-900."
+  },
+  {
+    "id": "AZ900-E01-012",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A production Azure SQL Database was accidentally deleted by a junior administrator\n- This caused a 4-hour outage and significant business impact\n- Management wants to prevent this from happening again\n- The junior administrator still needs read access to the database for reporting purposes\n\nQuestion:\nWhat should you implement to prevent accidental deletion while maintaining the administrator's read access?",
+    "choices": [
+      "Remove the junior administrator's Contributor role and assign Reader only",
+      "Apply a Delete lock on the Azure SQL Database resource",
+      "Enable soft delete on the Azure SQL Database",
+      "Move the database to a dedicated subscription with restricted access"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Assigning Reader role would prevent deletion, but the question says the admin needs 'read access for reporting purposes' \u2014 Reader role works for Azure portal access but may not be sufficient for actual database query access. More importantly, this approach would affect ALL operations, not just deletion. It's overly restrictive.",
+      "This option is correct. A CanNotDelete resource lock prevents any user from deleting the resource, regardless of their RBAC role \u2014 even Owners can't delete a locked resource without first removing the lock. The junior admin retains all their existing access for reporting, they just can't delete the database. This is the most targeted solution.",
+      "Azure SQL Database doesn't have a 'soft delete' feature like Azure Blob Storage does. This option is a fabricated distractor. Even if it existed, prevention is better than recovery.",
+      "Moving to a dedicated subscription adds significant administrative complexity and doesn't directly prevent deletion \u2014 unless you also configure restrictive RBAC in that subscription. The lock is far simpler and more targeted."
+    ],
+    "tip": "Resource locks come in two types: CanNotDelete (prevents deletion) and ReadOnly (prevents any changes). They apply regardless of RBAC permissions. If the exam describes accidental deletion of a critical resource, think resource locks immediately."
+  },
+  {
+    "id": "AZ900-E01-013",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A healthcare company needs to deploy a new patient records system\n- They evaluate three options: build custom software on Azure VMs, use a managed database platform, or purchase a cloud-based SaaS healthcare records system\n- The company has a very small IT team with limited cloud expertise\n- They need the solution deployed within 2 weeks\n\nQuestion:\nWhich approach requires the LEAST management responsibility from the IT team?",
+    "choices": [
+      "Deploy custom software on Azure Virtual Machines (IaaS)",
+      "Build the application using Azure SQL Database and Azure App Service (PaaS)",
+      "Subscribe to a cloud-based SaaS healthcare records system",
+      "Use Azure Kubernetes Service to containerise the application"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "IaaS (VMs) requires the customer to manage the OS, patching, runtime, middleware, and the application itself. This is the highest management burden and would take the longest to deploy with a small team.",
+      "PaaS reduces infrastructure management (no OS patching), but the team still needs to build, deploy, and maintain the custom application code. With limited cloud expertise and a 2-week deadline, this is challenging.",
+      "This option is correct. SaaS is a complete, ready-to-use application. The healthcare company just subscribes, configures it, and starts using it. Microsoft manages everything \u2014 infrastructure, platform, and application. This requires the least management responsibility and can be deployed fastest.",
+      "AKS (Kubernetes) is an orchestration platform for containers. It requires significant expertise to configure and manage \u2014 the opposite of what a small team with limited cloud knowledge needs."
+    ],
+    "tip": "Management responsibility decreases as you go up the stack: IaaS > PaaS > SaaS. SaaS = least customer responsibility. The exam tests this constantly. If the question mentions 'least management effort' or 'small team with limited expertise' \u2014 SaaS is usually the answer."
+  },
+  {
+    "id": "AZ900-E01-014",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation is reviewing its cloud security posture\n- The CISO asks: 'In our Azure IaaS deployment, who is responsible for patching the operating systems on our virtual machines?'\n\nQuestion:\nAccording to the Microsoft shared responsibility model, who is responsible for OS patching on Azure IaaS virtual machines?",
+    "choices": [
+      "Microsoft (the cloud provider)",
+      "The customer (your organisation)",
+      "Shared responsibility between Microsoft and the customer",
+      "The VM operating system vendor (e.g., Canonical for Ubuntu)"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Microsoft is responsible for the physical infrastructure, host OS, and physical network. They do NOT patch guest operating systems on IaaS VMs \u2014 that's explicitly the customer's responsibility.",
+      "This option is correct. In IaaS, the customer is responsible for the guest OS, including patching, configuration, and security updates. Microsoft provides the underlying physical infrastructure and hypervisor, but everything from the OS upward is the customer's domain. This is a fundamental IaaS principle.",
+      "OS patching on IaaS is not shared \u2014 it falls entirely on the customer. Shared responsibilities include things like network controls and identity/directory infrastructure.",
+      "The OS vendor provides patches and updates, but the responsibility to apply them lies with the customer who deployed the VM. Microsoft doesn't involve third-party vendors in the shared responsibility model."
+    ],
+    "tip": "IaaS shared responsibility is heavily tested. Customer responsibilities in IaaS: guest OS, patches, applications, data, network config, identity. Microsoft responsibilities: physical hosts, physical network, physical data centre. If it's 'above' the hypervisor, you own it."
+  },
+  {
+    "id": "AZ900-E01-015",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A software company has development teams in London, New York, and Sydney\n- Each team needs identical development environments\n- New developers join frequently and need to be productive on day one\n- The company wants to eliminate the 'it works on my machine' problem\n\nQuestion:\nWhich cloud characteristic BEST enables the company to rapidly provision identical environments worldwide?",
+    "choices": [
+      "Elasticity",
+      "Agility",
+      "Disaster recovery",
+      "Consumption-based pricing"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Elasticity is about automatically scaling resources up or down based on demand. The question is about rapidly provisioning environments, not scaling based on load.",
+      "This option is correct. Agility in cloud computing refers to the ability to rapidly provision and deploy resources. Teams can spin up identical environments in minutes using templates (ARM/Bicep), regardless of geographic location. New developers get productive immediately because environments are standardised and instantly available.",
+      "Disaster recovery is about restoring services after failures. While deploying across regions is mentioned, the question is about development productivity, not business continuity.",
+      "Consumption-based pricing means pay-for-what-you-use. It's a financial benefit, not a speed-of-deployment benefit."
+    ],
+    "tip": "Agility = speed of deploying and configuring resources. Elasticity = automatic scaling based on demand. The exam distinguishes these carefully. 'Rapidly provision' or 'deploy quickly' = agility. 'Automatically scale with demand' = elasticity."
+  },
+  {
+    "id": "AZ900-E01-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to connect its on-premises data centre to Azure with a private, dedicated connection\n- The connection must NOT traverse the public internet\n- They require consistent low latency and bandwidth of at least 1 Gbps\n- Regulatory requirements mandate that data never travels over public networks\n\nQuestion:\nWhich Azure networking service should you use?",
+    "choices": [
+      "Azure VPN Gateway (site-to-site VPN)",
+      "Azure ExpressRoute",
+      "Azure Virtual WAN",
+      "Azure Front Door"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Site-to-site VPN creates an encrypted tunnel over the PUBLIC internet. The question explicitly states the connection must not traverse the public internet. VPN Gateway is suitable when internet-based connectivity is acceptable, but not here.",
+      "This option is correct. ExpressRoute provides a private, dedicated connection between your on-premises network and Azure through a connectivity provider. Traffic never touches the public internet, latency is consistent and low, and bandwidth options go up to 100 Gbps. This meets all the stated requirements: private, dedicated, low latency, high bandwidth, no public internet.",
+      "Azure Virtual WAN is a networking service that brings together VPN, ExpressRoute, and SD-WAN into a unified hub. It's an orchestration layer, not a connectivity type itself. The question asks which service to use for the connection \u2014 that's ExpressRoute.",
+      "Azure Front Door is a global load balancer and CDN for web applications. It has nothing to do with connecting an on-premises data centre to Azure."
+    ],
+    "tip": "VPN Gateway = encrypted tunnel OVER the public internet. ExpressRoute = private dedicated connection that BYPASSES the public internet. If the question says 'must not use public internet' or 'private dedicated connection' \u2014 it's always ExpressRoute."
+  },
+  {
+    "id": "AZ900-E01-017",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is building a microservices application\n- Each microservice runs in its own container\n- The application needs automated container orchestration, scaling, and self-healing\n- The development team has Kubernetes expertise\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Container Instances (ACI)",
+      "Azure Kubernetes Service (AKS)",
+      "Azure App Service",
+      "Azure Virtual Machines with Docker installed"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "ACI is designed for simple, single-container workloads \u2014 quick bursts of containers without orchestration. It doesn't provide the automated orchestration, scaling, and self-healing across multiple microservices that the question requires.",
+      "This option is correct. AKS is a managed Kubernetes service that provides automated container orchestration, horizontal scaling, self-healing (restarting failed containers), and rolling updates. The team already has Kubernetes expertise, making AKS the natural fit. Microsoft manages the control plane; you manage the worker nodes.",
+      "App Service can run containers, but it's primarily designed for web applications. It doesn't provide Kubernetes-level orchestration for complex microservices architectures with multiple interconnected services.",
+      "Running Docker on VMs gives full control but requires managing the orchestration yourself \u2014 installing Kubernetes, managing the cluster, patching VMs. This defeats the purpose of using a managed service and adds unnecessary operational burden."
+    ],
+    "tip": "ACI = simple, quick containers (no orchestration). AKS = full Kubernetes orchestration (complex microservices). App Service = web apps (can run containers but simpler model). If the question mentions microservices + orchestration + Kubernetes \u2014 it's AKS."
+  },
+  {
+    "id": "AZ900-E01-018",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A retail company wants to process credit card transactions\n- The application code runs only when a transaction occurs (event-driven)\n- Between transactions, no compute resources should be running\n- The average transaction processing time is 2 seconds\n- The company wants to pay ONLY for the time the code executes\n\nQuestion:\nWhich Azure compute service should you use?",
+    "choices": [
+      "Azure Virtual Machines",
+      "Azure App Service (Basic tier)",
+      "Azure Functions (Consumption plan)",
+      "Azure Batch"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "VMs run continuously and you pay for them whether they're processing transactions or idle. This directly violates the 'no resources running between transactions' and 'pay only for execution time' requirements.",
+      "App Service Basic tier runs on dedicated VMs that are always on. You pay a fixed monthly rate regardless of usage. Doesn't meet the pay-per-execution requirement.",
+      "This option is correct. Azure Functions on a Consumption plan is serverless \u2014 code runs only when triggered by an event (the transaction), and you pay only for the execution time (per GB-second). Between transactions, no compute resources are allocated. A 2-second execution time is well within the 10-minute limit. This is the textbook serverless use case.",
+      "Azure Batch is designed for large-scale parallel batch processing jobs. It provisions pools of VMs to process workloads. Overkill for a 2-second event-driven transaction, and the pool management doesn't align with 'no resources between transactions.'"
+    ],
+    "tip": "Azure Functions (Consumption plan) is THE answer when you see: event-driven, pay-per-execution, no idle resources, short execution times. It's Microsoft's serverless compute offering. If the question describes a workload that runs briefly in response to events \u2014 Functions."
+  },
+  {
+    "id": "AZ900-E01-019",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a web application that serves users globally\n- Users in Asia report significantly slower page load times compared to users in Europe (where the app is hosted)\n- The application serves mostly static content: images, CSS, JavaScript, and videos\n- You need to improve performance for Asian users without deploying additional application instances\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Traffic Manager",
+      "Azure Content Delivery Network (CDN)",
+      "Azure Application Gateway",
+      "Azure Load Balancer"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Traffic Manager uses DNS-based routing to direct users to different endpoints. But the question says you don't want to deploy additional application instances \u2014 Traffic Manager needs multiple endpoints to route between.",
+      "This option is correct. Azure CDN caches static content (images, CSS, JS, videos) at edge locations worldwide, including locations close to Asian users. Subsequent requests are served from the nearest edge node rather than travelling to the European origin server. This dramatically improves load times without deploying additional app instances.",
+      "Application Gateway is a regional Layer-7 load balancer with WAF capabilities. It operates within a single region and wouldn't help users in Asia access a European-hosted application faster.",
+      "Azure Load Balancer distributes traffic across VMs within a region (Layer-4). It doesn't cache content or reduce latency for geographically distant users."
+    ],
+    "tip": "CDN = cache static content at edge locations worldwide for faster delivery. Traffic Manager = route users to the nearest deployment. If the question mentions static content + global users + slow performance \u2014 CDN. If it mentions multiple app deployments + routing \u2014 Traffic Manager."
+  },
+  {
+    "id": "AZ900-E01-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Monitor to collect metrics and logs from Azure resources\n- The operations team wants proactive recommendations to improve the security, reliability, performance, and cost-effectiveness of their Azure deployment\n- They want a single dashboard showing prioritised, actionable recommendations\n\nQuestion:\nWhich Azure service provides these proactive recommendations?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Service Health",
+      "Azure Advisor",
+      "Microsoft Defender for Cloud"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure Monitor collects and analyses telemetry data (metrics, logs, traces). It's the data collection and alerting platform, but it doesn't generate proactive best-practice recommendations across the five pillars.",
+      "Azure Service Health notifies you about Azure service issues, planned maintenance, and health advisories that affect YOUR resources. It's reactive (telling you about problems), not proactive (suggesting improvements).",
+      "This option is correct. Azure Advisor analyses your Azure configuration and usage telemetry, then provides personalised, actionable recommendations across five categories: Cost, Security, Reliability, Operational Excellence, and Performance. It's your built-in cloud consultant \u2014 proactive, prioritised, and integrated into the Azure portal.",
+      "Microsoft Defender for Cloud focuses specifically on security posture and threat protection. While it provides security recommendations, it doesn't cover cost, performance, or operational excellence \u2014 the question asks for all categories."
+    ],
+    "tip": "Azure Advisor = proactive recommendations across 5 pillars (Cost, Security, Reliability, Operational Excellence, Performance). Azure Monitor = data collection and alerting. Service Health = Azure platform issues. Defender for Cloud = security-specific. If the question mentions 'recommendations' across multiple areas \u2014 it's Advisor."
+  },
+  {
+    "id": "AZ900-E01-021",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to deploy a standardised environment for new projects\n- Each environment must include: a resource group, a virtual network, a network security group, an Azure Policy assignment, and RBAC role assignments\n- The deployment must be repeatable and consistent across multiple subscriptions\n- All components must be deployed as a single unit with version control\n\nQuestion:\nWhich Azure governance tool should you use?",
+    "choices": [
+      "Azure Resource Manager (ARM) templates only",
+      "Azure Blueprints",
+      "Azure Management Groups",
+      "Azure Automation runbooks"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "ARM templates can deploy resources (VNet, NSG, etc.), but they cannot natively assign Azure Policy or RBAC roles as part of a governed, versioned deployment package. You'd need separate processes for policy and role assignments.",
+      "This option is correct. Azure Blueprints package together ARM templates, resource groups, policy assignments, and role assignments into a single, versioned, repeatable deployment artifact. Blueprints can be assigned to subscriptions and maintain a relationship between the definition and the deployment for auditing. This is exactly what the scenario describes.",
+      "Management Groups organise subscriptions into a hierarchy for governance, but they don't deploy resources or create standardised environments. They're a grouping mechanism, not a deployment tool.",
+      "Automation runbooks can script deployments, but they lack the built-in governance features of Blueprints \u2014 no native versioning of environment definitions, no built-in policy/RBAC assignment, and no deployment tracking."
+    ],
+    "tip": "Azure Blueprints = standardised environment as a governed package (resources + policies + RBAC). ARM/Bicep templates = infrastructure deployment only. If the question combines resource deployment WITH policy and role assignments in a repeatable package \u2014 Blueprints."
+  },
+  {
+    "id": "AZ900-E01-022",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a subscription with rapidly growing costs\n- The finance team wants to set spending limits and receive alerts when costs approach certain thresholds\n- They need to create budgets tied to specific resource groups and receive email notifications at 50%, 75%, and 100% of the budget\n\nQuestion:\nWhich tool should the finance team use?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure Cost Management budgets and alerts",
+      "Azure Advisor cost recommendations",
+      "Azure Reservations"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "The Pricing Calculator estimates costs for Azure services you plan to deploy. It's a planning tool, not a monitoring/alerting tool for existing spending.",
+      "This option is correct. Azure Cost Management allows you to create budgets scoped to subscriptions, resource groups, or management groups. You set the budget amount and configure alert thresholds (e.g., 50%, 75%, 100%) that trigger email notifications to specified recipients. This is the exact tool for spending limits and alerts.",
+      "Azure Advisor provides cost-saving recommendations (e.g., resize underutilised VMs, buy reservations), but it doesn't create budgets or send threshold-based alerts.",
+      "Azure Reservations provide discounted pricing for committing to 1- or 3-year terms on specific services. They help reduce costs but don't monitor spending or send budget alerts."
+    ],
+    "tip": "Cost Management budgets = set spending limits + alerts at thresholds. Advisor = cost optimisation recommendations. Pricing Calculator = estimate future costs. TCO Calculator = compare on-prem vs Azure. Know which cost tool does what \u2014 the exam tests all four."
+  },
+  {
+    "id": "AZ900-E01-023",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores sensitive customer documents in Azure Blob Storage\n- Regulatory requirements state that documents must be encrypted at rest\n- The security team wants to use their own encryption keys rather than Microsoft-managed keys\n- They need to manage key lifecycle (rotation, expiration) themselves\n\nQuestion:\nWhich feature should the security team configure?",
+    "choices": [
+      "Azure Storage Service Encryption (SSE) with Microsoft-managed keys",
+      "Azure Storage Service Encryption (SSE) with customer-managed keys in Azure Key Vault",
+      "Client-side encryption before uploading to Blob Storage",
+      "Azure Disk Encryption for the storage account"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "SSE with Microsoft-managed keys encrypts data at rest by default (all Azure Storage is encrypted), but Microsoft controls the keys. The security team explicitly wants to manage their own keys.",
+      "This option is correct. SSE with customer-managed keys (CMK) stores encryption keys in Azure Key Vault, where the security team has full control over key lifecycle \u2014 creation, rotation, expiration, and revocation. Data is still encrypted at rest using SSE, but the encryption keys are managed by the customer.",
+      "Client-side encryption means encrypting data before uploading it. While this works, it puts the encryption burden on the application code and doesn't leverage Azure's built-in storage encryption infrastructure. The question asks about encryption at rest configuration, not application-level encryption.",
+      "Azure Disk Encryption is for encrypting VM disks (OS and data disks), not Blob Storage accounts. Different service, different purpose."
+    ],
+    "tip": "Azure Storage encryption: Microsoft-managed keys (default, zero effort) vs Customer-managed keys (CMK in Key Vault, you control lifecycle) vs Customer-provided keys (you supply the key per-request). If the question says 'own keys' + 'manage lifecycle' \u2014 it's CMK with Key Vault."
+  },
+  {
+    "id": "AZ900-E01-024",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed a web application on two Azure Virtual Machines\n- Both VMs are in the same Azure region and availability zone\n- The application needs to distribute incoming HTTP traffic evenly across both VMs\n- You also need Web Application Firewall (WAF) protection against common web exploits\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Load Balancer (Standard SKU)",
+      "Azure Application Gateway with WAF",
+      "Azure Traffic Manager",
+      "Azure Front Door"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Load Balancer operates at Layer 4 (TCP/UDP) and distributes traffic across VMs. However, it does NOT include WAF capabilities. You'd need a separate WAF solution, which doesn't meet the 'single service' requirement implied by the question.",
+      "This option is correct. Azure Application Gateway is a Layer-7 (HTTP/HTTPS) load balancer that distributes web traffic across backend servers. The WAF SKU (WAF_v2) includes built-in Web Application Firewall protection against OWASP top-10 vulnerabilities like SQL injection and XSS. It handles both requirements in a single service.",
+      "Traffic Manager is a DNS-based global load balancer that routes across regions or endpoints. It doesn't distribute traffic within a single region across VMs, and it doesn't provide WAF.",
+      "Azure Front Door is a global Layer-7 load balancer with WAF capabilities, but it's designed for multi-region, globally distributed applications. For VMs within the same region/zone, Application Gateway is the appropriate choice \u2014 Front Door would be over-engineering."
+    ],
+    "tip": "Load Balancer = Layer 4 (TCP/UDP), no WAF. Application Gateway = Layer 7 (HTTP), has WAF option. Traffic Manager = DNS-based global routing. Front Door = global Layer 7 + WAF + CDN. If the question mentions HTTP traffic + WAF in a single region \u2014 Application Gateway."
+  },
+  {
+    "id": "AZ900-E01-025",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A research university needs a globally distributed NoSQL database\n- The database must support multiple data models (key-value, document, graph, column-family)\n- Researchers across five continents need single-digit millisecond read latency from their local region\n- The solution must provide multiple consistency levels to balance between performance and data accuracy\n\nQuestion:\nWhich Azure database service should the university use?",
+    "choices": [
+      "Azure SQL Database",
+      "Azure Cosmos DB",
+      "Azure Database for PostgreSQL",
+      "Azure Table Storage"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure SQL Database is a relational (SQL) database. It doesn't support multiple data models (graph, key-value, document, column-family), and while it can be geo-replicated, it doesn't offer the multiple consistency levels described.",
+      "This option is correct. Azure Cosmos DB is a globally distributed, multi-model NoSQL database that supports document, key-value, graph (Gremlin), column-family (Cassandra), and table APIs. It guarantees single-digit millisecond reads and writes, supports multi-region replication, and uniquely offers five consistency levels (Strong, Bounded Staleness, Session, Consistent Prefix, Eventual). It ticks every box in the scenario.",
+      "Azure Database for PostgreSQL is a managed relational database. While PostgreSQL supports JSON documents, it's not a multi-model NoSQL database and doesn't offer the global distribution and consistency level options of Cosmos DB.",
+      "Azure Table Storage supports key-value data only. It doesn't support document, graph, or column-family models, doesn't offer global distribution with multi-region writes, and has limited consistency options."
+    ],
+    "tip": "Cosmos DB is THE answer when you see: globally distributed + NoSQL + multi-model + low latency + multiple consistency levels. It's Azure's flagship NoSQL offering. The five consistency levels are a unique Cosmos DB feature that appears frequently on the exam."
+  },
+  {
+    "id": "AZ900-E01-026",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages Azure resources using the Azure portal\n- The infrastructure team wants to define infrastructure as code for repeatable deployments\n- They need to declare the desired state of resources in a template file\n- The template must be idempotent \u2014 deploying it multiple times should produce the same result\n\nQuestion:\nWhich approach should the infrastructure team use?",
+    "choices": [
+      "Azure CLI scripts",
+      "Azure PowerShell scripts",
+      "Azure Resource Manager (ARM) templates or Bicep",
+      "Manual deployment through the Azure portal"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure CLI scripts are imperative (step-by-step instructions). They're not inherently idempotent \u2014 running 'az vm create' twice would fail or create duplicates. You'd need custom logic to check state before each command.",
+      "PowerShell scripts are also imperative. Like CLI, they execute commands in sequence and require additional logic to achieve idempotency. They define HOW to deploy, not WHAT to deploy.",
+      "This option is correct. ARM templates and Bicep are declarative \u2014 you define the desired end state, and Azure Resource Manager figures out how to get there. They are idempotent by design: deploying the same template multiple times will always result in the same resource configuration. This is the Microsoft-recommended Infrastructure as Code approach for Azure.",
+      "Manual portal deployment is not infrastructure as code, not repeatable, and not idempotent. It's the opposite of what the question asks."
+    ],
+    "tip": "Declarative (ARM/Bicep) = define WHAT you want, idempotent, infrastructure as code. Imperative (CLI/PowerShell) = define HOW to get there, not inherently idempotent. If the exam mentions 'desired state', 'idempotent', or 'infrastructure as code' \u2014 think ARM templates or Bicep."
+  },
+  {
+    "id": "AZ900-E01-027",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to reduce Azure Virtual Machine costs\n- You have several VMs that run development workloads 8 hours per day, Monday to Friday\n- These VMs are idle for the remaining 128 hours per week\n- The workloads are interruptible \u2014 it's acceptable if a VM is deallocated with short notice\n\nQuestion:\nWhich cost-saving option provides the GREATEST discount for these VMs?",
+    "choices": [
+      "Azure Reserved Virtual Machine Instances (1-year term)",
+      "Azure Spot Virtual Machines",
+      "Auto-shutdown schedule to deallocate VMs outside business hours",
+      "Downsize the VMs to a smaller SKU"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Reserved Instances provide up to 72% discount but require a 1- or 3-year commitment for always-on workloads. For VMs that run only 40 hours/week, you'd pay for 168 hours of reservation but use only 40 \u2014 the discount is wasted on idle hours.",
+      "This option is correct. Azure Spot VMs use unused Azure capacity at discounts up to 90% off pay-as-you-go prices. Since the workloads are interruptible (the key qualifier), Spot VMs provide the greatest discount. Development workloads are ideal candidates \u2014 if a Spot VM is evicted, developers can restart it.",
+      "Auto-shutdown prevents paying for idle hours (good practice), but doesn't discount the hours the VMs ARE running. You'd still pay full pay-as-you-go rates for the 40 active hours. This helps, but doesn't provide the greatest discount.",
+      "Downsizing reduces the per-hour cost but doesn't address the 128 idle hours or provide a significant discount percentage. It's a complementary strategy, not the greatest savings."
+    ],
+    "tip": "Spot VMs = greatest discount (up to 90%), BUT workload must be interruptible. Reserved Instances = great discount (up to 72%), for steady-state always-on workloads. If the question says 'interruptible' or 'can be evicted' \u2014 Spot VMs give the biggest discount."
+  },
+  {
+    "id": "AZ900-E01-028",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates entirely on Azure\n- The security team needs to control which network traffic is allowed into and out of an Azure Virtual Network subnet\n- They need to create rules based on source IP, destination IP, port, and protocol\n- The rules must be applied at the subnet level\n\nQuestion:\nWhich Azure resource should the security team use?",
+    "choices": [
+      "Azure Firewall",
+      "Network Security Group (NSG)",
+      "Azure DDoS Protection",
+      "Azure Private Link"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Firewall is a managed, cloud-based network security service that filters traffic at the VNet level with advanced features (FQDN filtering, threat intelligence, IDPS). It's more powerful but also more complex and expensive than what's needed for basic subnet-level traffic filtering rules.",
+      "This option is correct. Network Security Groups (NSGs) contain inbound and outbound security rules that filter traffic based on source/destination IP, port, and protocol. NSGs can be associated with subnets or individual NICs. They're the standard, cost-effective way to control traffic at the subnet level \u2014 exactly what the scenario describes.",
+      "Azure DDoS Protection defends against distributed denial-of-service attacks. It doesn't create traffic filtering rules based on IP/port/protocol for normal operational traffic.",
+      "Azure Private Link provides private connectivity to Azure services over a private endpoint in your VNet. It's about private access to PaaS services, not traffic filtering rules."
+    ],
+    "tip": "NSG = basic traffic filtering (IP, port, protocol) at subnet or NIC level. Azure Firewall = advanced filtering (FQDN, threat intelligence, TLS inspection) at VNet level. If the question describes simple allow/deny rules based on IP and port \u2014 NSG. If it mentions FQDN filtering or advanced threat features \u2014 Azure Firewall."
+  },
+  {
+    "id": "AZ900-E01-029",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs a critical application on two servers\n- If one server fails, the other server continues handling all requests\n- The application experiences zero downtime during a single server failure\n- The company's SLA guarantees 99.99% uptime\n\nQuestion:\nWhich cloud concept does this architecture demonstrate?",
+    "choices": [
+      "Scalability",
+      "High availability",
+      "Elasticity",
+      "Agility"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Scalability is the ability to increase capacity to handle growing demand (more users, more data). The scenario describes surviving failures, not handling increased load.",
+      "This option is correct. High availability means a system remains operational and accessible even when components fail. Two servers in a failover configuration, zero downtime during a failure, and a 99.99% uptime SLA \u2014 this is the textbook definition of high availability.",
+      "Elasticity is automatic scaling up/down based on demand fluctuations. The scenario describes failure handling, not demand-based scaling.",
+      "Agility is the ability to rapidly deploy and configure resources. The scenario describes an already-deployed architecture's resilience, not speed of deployment."
+    ],
+    "tip": "High availability = system stays up despite failures (redundancy, failover, uptime SLAs). Fault tolerance = system continues with zero impact during failures. Disaster recovery = system recovers after a major failure. The exam distinguishes all three \u2014 HA is about uptime percentage and redundancy."
+  },
+  {
+    "id": "AZ900-E01-030",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to migrate an on-premises Microsoft SQL Server database to Azure\n- The database team wants a fully managed service with automatic patching, backups, and high availability\n- They need to retain full SQL Server compatibility, including cross-database queries, SQL Server Agent jobs, and Service Broker\n- Minimal application code changes are required\n\nQuestion:\nWhich Azure database service should you use?",
+    "choices": [
+      "Azure SQL Database (single database)",
+      "Azure SQL Managed Instance",
+      "Azure Database for PostgreSQL",
+      "SQL Server on Azure Virtual Machines"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure SQL Database is a fully managed PaaS database, but it doesn't support cross-database queries (within a single logical server), SQL Server Agent, or Service Broker. It's designed for modern cloud-native applications that don't rely on these instance-level features.",
+      "This option is correct. Azure SQL Managed Instance provides near-100% compatibility with on-premises SQL Server, including cross-database queries, SQL Server Agent, Service Broker, CLR, linked servers, and more. It's fully managed (automatic patching, backups, HA) while maintaining the instance-level features that SQL Database lacks. It's Microsoft's recommended lift-and-shift target for SQL Server.",
+      "Azure Database for PostgreSQL is a different database engine entirely. Migrating from SQL Server to PostgreSQL would require significant application code changes and query rewriting.",
+      "SQL Server on Azure VMs gives full SQL Server compatibility, but it's IaaS \u2014 you manage OS patching, backups, and high availability yourself. The question specifically requires a fully managed service. SQL MI provides the same compatibility with managed service benefits."
+    ],
+    "tip": "SQL Database = cloud-native PaaS, some SQL Server features missing. SQL Managed Instance = near-100% SQL Server compatibility + fully managed. SQL Server on VM = full compatibility but IaaS (you manage everything). If the question mentions SQL Server Agent, cross-database queries, or Service Broker \u2014 it's Managed Instance."
+  },
+  {
+    "id": "AZ900-E01-031",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has servers running in Azure, AWS, and on-premises\n- The operations team needs a single pane of glass to manage and govern ALL servers regardless of where they run\n- They want to apply Azure Policy, monitor compliance, and use Azure security features across the entire estate\n\nQuestion:\nWhich Azure service enables management of non-Azure servers through the Azure control plane?",
+    "choices": [
+      "Azure Migrate",
+      "Azure Arc",
+      "Azure Site Recovery",
+      "Azure Lighthouse"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Migrate is a tool for discovering, assessing, and migrating on-premises workloads TO Azure. It doesn't provide ongoing management of servers outside Azure \u2014 it's a migration tool, not a management tool.",
+      "This option is correct. Azure Arc extends Azure's management plane to servers running anywhere \u2014 on-premises, AWS, GCP, or edge locations. By installing the Azure Connected Machine agent, you can apply Azure Policy, use Microsoft Defender for Cloud, run Azure Monitor, and manage these machines as if they were Azure resources. It's the single pane of glass for hybrid/multi-cloud management.",
+      "Azure Site Recovery is a disaster recovery service that replicates workloads for failover. It doesn't provide day-to-day management, governance, or policy enforcement across multi-cloud environments.",
+      "Azure Lighthouse enables cross-tenant management for service providers managing multiple customer Azure tenants. It doesn't extend Azure management to non-Azure servers like on-premises or AWS."
+    ],
+    "tip": "Azure Arc = extend Azure management to ANY infrastructure (on-premises, other clouds, edge). If the question mentions managing non-Azure resources through Azure, applying Azure Policy to on-premises servers, or 'single pane of glass' for hybrid/multi-cloud \u2014 it's Azure Arc."
+  },
+  {
+    "id": "AZ900-E01-032",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A developer accidentally deploys a VM using a D-series SKU that costs \u00a32,000/month\n- The company policy states that only B-series VMs should be used in the development subscription\n- Management wants to prevent this from happening again by blocking non-compliant VM sizes at deployment time\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "An Azure RBAC custom role that excludes D-series VM creation",
+      "An Azure Policy that restricts allowed VM SKUs",
+      "An Azure Budget alert set to \u00a3500",
+      "An Azure Advisor cost recommendation"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "A custom RBAC role controls what actions a user can perform (e.g., Microsoft.Compute/virtualMachines/write), but RBAC doesn't have the granularity to allow VM creation while restricting specific SKU sizes. You can either allow or deny VM creation entirely.",
+      "This option is correct. Azure Policy has a built-in policy called 'Allowed virtual machine size SKUs' that lets you specify exactly which VM sizes can be deployed. If someone tries to deploy a D-series VM, the policy blocks the deployment with a deny effect. This prevents non-compliant resources from being created in the first place.",
+      "Budget alerts notify you when spending approaches a threshold, but they don't prevent deployments. The D-series VM would still be created \u2014 you'd just get an email afterwards.",
+      "Azure Advisor might recommend downsizing an oversized VM after it's deployed, but it doesn't prevent the deployment. It's reactive guidance, not preventive enforcement."
+    ],
+    "tip": "Azure Policy = PREVENT non-compliant resources from being created (enforce rules). RBAC = control WHO can do WHAT (permissions). Budget = ALERT on spending. If the question says 'prevent' or 'block' non-compliant configurations \u2014 Azure Policy with a Deny effect."
+  },
+  {
+    "id": "AZ900-E01-033",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to store 50 TB of unstructured data (images, videos, log files)\n- The data must be accessible over HTTP/HTTPS\n- Different files have different access frequencies \u2014 some are accessed daily, others haven't been accessed in years\n- You need the most cost-effective Azure storage solution\n\nQuestion:\nWhich Azure Storage service should you use?",
+    "choices": [
+      "Azure Files",
+      "Azure Blob Storage",
+      "Azure Queue Storage",
+      "Azure Disk Storage"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Files provides managed file shares accessible via SMB or NFS protocols. While it can serve files, it's designed for shared file systems (lift-and-shift of file servers), not for HTTP-accessible unstructured data at scale with tiered access.",
+      "This option is correct. Azure Blob Storage is designed specifically for storing massive amounts of unstructured data (images, videos, logs, backups). It's accessible over HTTP/HTTPS, supports access tiers (Hot, Cool, Cold, Archive) for cost optimisation based on access frequency, and scales to petabytes. It matches every requirement in the scenario.",
+      "Azure Queue Storage is for storing messages in a queue for asynchronous processing between application components. It stores messages, not files or unstructured data.",
+      "Azure Disk Storage provides managed disks for Azure Virtual Machines. Disks are attached to VMs and aren't directly accessible over HTTP/HTTPS. They're for VM workloads, not general-purpose unstructured data storage."
+    ],
+    "tip": "Blob Storage = unstructured data (files, images, videos, backups) accessible via HTTP. Files = managed file shares (SMB/NFS). Queue = messages between app components. Table = NoSQL key-value data. Disk = VM disks. For 'unstructured data over HTTP' \u2014 always Blob Storage."
+  },
+  {
+    "id": "AZ900-E01-034",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed an application across two Azure regions: UK South (primary) and North Europe (secondary)\n- You need to route users to the closest healthy region automatically\n- If UK South experiences an outage, all traffic should fail over to North Europe\n- Routing decisions should be based on DNS\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Load Balancer",
+      "Azure Application Gateway",
+      "Azure Traffic Manager",
+      "Azure Content Delivery Network"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure Load Balancer distributes traffic within a single region across VMs or VMSS instances. It cannot route traffic between regions \u2014 it's a regional Layer-4 service.",
+      "Application Gateway is also a regional service (Layer-7) that load balances within a single region. It doesn't provide cross-region routing or DNS-based failover.",
+      "This option is correct. Azure Traffic Manager is a DNS-based global traffic router. It uses health probes to monitor endpoints in multiple regions and routes users to the closest healthy endpoint. If UK South fails, Traffic Manager's health probe detects the outage and automatically routes DNS responses to North Europe. It supports multiple routing methods: Priority (failover), Performance (closest), Weighted, and Geographic.",
+      "CDN caches static content at edge locations worldwide. It doesn't route application traffic between regions based on health or perform DNS-based failover."
+    ],
+    "tip": "Traffic Manager = DNS-based routing across REGIONS (global). Load Balancer = traffic distribution within ONE region (Layer 4). Application Gateway = traffic distribution within ONE region (Layer 7). If the question mentions cross-region routing, DNS-based failover, or geographic routing \u2014 Traffic Manager."
+  },
+  {
+    "id": "AZ900-E01-035",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A university currently spends \u00a3200,000 annually on on-premises servers\n- This includes: \u00a3120,000 for server hardware refresh, \u00a330,000 for electricity/cooling, \u00a325,000 for data centre space rental, and \u00a325,000 for full-time system administrators\n- They are evaluating a move to Azure where equivalent services cost \u00a390,000 per year\n\nQuestion:\nWhich costs from the on-premises calculation are examples of Capital Expenditure (CapEx)?",
+    "choices": [
+      "Electricity, cooling, and data centre space rental",
+      "Server hardware refresh",
+      "Full-time system administrator salaries",
+      "All of the above are CapEx"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Electricity, cooling, and data centre space rental are recurring operational costs \u2014 you pay them monthly/annually regardless of whether you buy new hardware. These are Operating Expenditure (OpEx).",
+      "This option is correct. Server hardware purchases are Capital Expenditure \u2014 large upfront investments in physical assets that depreciate over time. The hardware refresh cycle (buying new servers every 3-5 years) is the classic example of CapEx that cloud computing eliminates by shifting to a pay-as-you-go OpEx model.",
+      "Salaries are ongoing operational costs paid regularly, not one-time capital investments. System administrator salaries are OpEx.",
+      "Only the hardware refresh is CapEx. Electricity, cooling, rent, and salaries are all OpEx (recurring operational costs). The exam frequently tests the CapEx vs OpEx distinction."
+    ],
+    "tip": "CapEx = upfront investment in physical assets (servers, networking equipment, data centre construction). OpEx = ongoing operational costs (electricity, rent, salaries, cloud subscriptions). Cloud computing shifts CapEx to OpEx. The exam loves asking you to categorise specific costs."
+  },
+  {
+    "id": "AZ900-E01-036",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is selecting a cloud provider for a new project\n- They want to avoid being locked into a single cloud vendor\n- Their strategy requires the ability to move workloads between Azure and AWS if pricing or features change\n- They plan to use Kubernetes for container orchestration\n\nQuestion:\nWhich cloud strategy does this describe?",
+    "choices": [
+      "Hybrid cloud",
+      "Multi-cloud",
+      "Private cloud",
+      "Community cloud"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Hybrid cloud combines on-premises (private) infrastructure with public cloud services. The company isn't using on-premises infrastructure \u2014 they're choosing between two public cloud providers.",
+      "This option is correct. Multi-cloud means using services from multiple public cloud providers (Azure + AWS + GCP). The strategy described \u2014 avoiding vendor lock-in and maintaining portability between Azure and AWS \u2014 is the definition of multi-cloud. Kubernetes is a popular multi-cloud choice because it runs identically across cloud providers.",
+      "Private cloud is infrastructure dedicated to a single organisation, either on-premises or hosted by a provider. The company is using public cloud providers, not a private setup.",
+      "Community cloud is shared infrastructure used by organisations with common concerns (e.g., government agencies, healthcare institutions). This isn't relevant to the scenario."
+    ],
+    "tip": "Multi-cloud = multiple PUBLIC cloud providers (avoid lock-in). Hybrid cloud = on-premises + public cloud. The exam distinguishes these clearly. If the question mentions using Azure AND AWS (or GCP), or 'avoiding vendor lock-in' between cloud providers \u2014 it's multi-cloud."
+  },
+  {
+    "id": "AZ900-E01-037",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to implement a private DNS zone for name resolution within Azure virtual networks\n- VMs in VNet-A need to resolve hostnames of VMs in VNet-B using custom domain names (e.g., app.contoso.internal)\n- The DNS resolution must not be accessible from the public internet\n\nQuestion:\nWhich Azure service should you configure?",
+    "choices": [
+      "Azure DNS (public zone)",
+      "Azure Private DNS zones",
+      "Azure Traffic Manager",
+      "Custom DNS server on a Virtual Machine"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure DNS public zones are for publicly resolvable domain names (e.g., contoso.com). Records in a public zone are accessible from the internet \u2014 the question explicitly requires private, non-internet-accessible resolution.",
+      "This option is correct. Azure Private DNS zones provide name resolution within virtual networks without exposing records to the public internet. You create a private zone (e.g., contoso.internal), link it to VNet-A and VNet-B, and VMs in both VNets can resolve each other's hostnames. It's fully managed \u2014 no DNS servers to maintain.",
+      "Traffic Manager is a DNS-based global traffic router for directing users to endpoints. It's not designed for internal hostname resolution between VMs in virtual networks.",
+      "Running a custom DNS server on a VM works but requires managing the VM, DNS software, updates, and high availability yourself. Azure Private DNS zones provide the same functionality as a managed service with zero infrastructure to maintain."
+    ],
+    "tip": "Azure DNS = public name resolution (internet-facing). Azure Private DNS = name resolution within VNets (private, no internet access). If the question says 'private DNS', 'internal name resolution', or 'not accessible from the internet' \u2014 Private DNS zones."
+  },
+  {
+    "id": "AZ900-E01-038",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- An Azure outage in the West Europe region is impacting your production workloads\n- The operations team needs to determine:\n  1. What Azure services are affected\n  2. Whether Microsoft has acknowledged the issue\n  3. The estimated time to resolution\n  4. Root cause analysis after the incident\n\nQuestion:\nWhich Azure service provides this information?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Advisor",
+      "Azure Service Health",
+      "Azure Activity Log"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure Monitor tracks metrics, logs, and traces from YOUR resources. It can tell you your VM's CPU is high or your app is throwing errors, but it doesn't provide information about Azure platform-level outages or Microsoft's response.",
+      "Azure Advisor provides recommendations for optimising your resources. It doesn't track or report on Azure service outages.",
+      "This option is correct. Azure Service Health provides three types of information: Service Issues (current outages affecting your resources), Planned Maintenance (upcoming changes that could affect you), and Health Advisories (service changes requiring action). During an outage, it shows affected services, Microsoft's status updates, estimated resolution times, and post-incident root cause analysis (RCA). It's personalised to show only the services and regions you actually use.",
+      "The Activity Log records management-plane operations on your resources (who created/deleted/modified what). It doesn't track Azure platform outages or provide incident information."
+    ],
+    "tip": "Service Health = Azure platform issues affecting YOUR resources (outages, maintenance, advisories). Azure Status page = global Azure status (affects everyone). Monitor = YOUR resource metrics/logs. If the question asks about Azure outages, planned maintenance, or incident RCA \u2014 Service Health."
+  },
+  {
+    "id": "AZ900-E01-039",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A gaming company needs to run Linux and Windows virtual machines in Azure\n- Some VMs need GPU-accelerated processing for rendering\n- Other VMs need high memory for in-memory caching\n- The company needs to select the right VM family for each workload\n\nQuestion:\nWhich VM series is optimised for GPU-accelerated workloads like rendering and machine learning?",
+    "choices": [
+      "D-series (General purpose)",
+      "E-series (Memory optimised)",
+      "N-series (GPU enabled)",
+      "F-series (Compute optimised)"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "D-series VMs are general purpose \u2014 balanced CPU-to-memory ratio suitable for most production workloads. They don't include GPU hardware.",
+      "E-series VMs are memory-optimised \u2014 high memory-to-CPU ratio ideal for in-memory caching, database servers, and analytics. No GPUs.",
+      "This option is correct. N-series VMs (NC, ND, NV families) include NVIDIA GPU hardware. NC-series is for compute-intensive GPU workloads (ML training), ND-series for deep learning, and NV-series for visualisation and rendering. GPU-accelerated rendering is exactly what N-series is designed for.",
+      "F-series VMs are compute-optimised \u2014 high CPU-to-memory ratio for CPU-intensive workloads like batch processing and web servers. No GPU hardware."
+    ],
+    "tip": "Azure VM families: B = burstable (dev/test), D = general purpose, E = memory optimised, F = compute optimised, N = GPU-enabled, L = storage optimised, M = very large memory. The exam expects you to match workload characteristics to VM family letters."
+  },
+  {
+    "id": "AZ900-E01-040",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription managed by multiple team members\n- The security team wants to review who performed the following actions in the last 90 days:\n  - Created new virtual machines\n  - Modified network security groups\n  - Deleted storage accounts\n  - Changed role assignments\n\nQuestion:\nWhere should the security team look to find this information?",
+    "choices": [
+      "Azure Monitor Metrics",
+      "Azure Activity Log",
+      "Azure Advisor",
+      "Azure Cost Management"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Monitor Metrics shows performance telemetry about resources (CPU%, memory usage, network throughput). It doesn't record who performed management operations on resources.",
+      "This option is correct. The Azure Activity Log records all management-plane (control-plane) operations on resources in a subscription \u2014 who created, modified, or deleted what, and when. It captures VM creation, NSG changes, storage account deletions, and RBAC role assignment changes. Activity Log data is retained for 90 days by default, matching the security team's requirement.",
+      "Azure Advisor provides optimisation recommendations. It doesn't log or audit user actions on resources.",
+      "Cost Management tracks spending and provides cost analysis. It doesn't record who performed specific resource management operations."
+    ],
+    "tip": "Activity Log = WHO did WHAT to WHICH resource and WHEN (management-plane audit trail). Retained 90 days by default. If the question asks about auditing user actions on Azure resources (create, delete, modify, role changes) \u2014 Activity Log. For longer retention, send Activity Log data to a Log Analytics workspace."
+  },
+  {
+    "id": "AZ900-E01-041",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A media company streams video content to millions of users worldwide\n- During a major live event, viewership increases from 100,000 to 5 million concurrent viewers\n- The company needs to add more streaming servers to handle the load\n- After the event, they want to remove the extra servers to save costs\n\nQuestion:\nWhich type of scaling does this scenario describe?",
+    "choices": [
+      "Vertical scaling (scale up)",
+      "Horizontal scaling (scale out)",
+      "Diagonal scaling",
+      "Manual scaling only"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Vertical scaling (scale up) means increasing the power of an existing server \u2014 more CPU, more RAM. It doesn't involve adding MORE servers. There's also a physical limit to how much you can scale up a single machine, and it typically requires downtime.",
+      "This option is correct. Horizontal scaling (scale out) means adding more instances (servers) to distribute the load. Going from a few servers to many servers to handle 5 million concurrent viewers, then removing them afterwards, is the textbook definition of scaling out/in. This is the cloud-native approach \u2014 add capacity by adding nodes, not by making one node bigger.",
+      "Diagonal scaling is not a standard cloud computing term. This is a distractor.",
+      "The scenario describes automatic scaling behaviour (implied by the elastic response to a live event). Even if it were manual, the type of scaling would still be horizontal because they're adding more servers, not making existing ones larger."
+    ],
+    "tip": "Horizontal scaling = add/remove instances (scale out/in). Vertical scaling = increase/decrease power of one instance (scale up/down). The exam consistently tests this distinction. Adding more VMs = horizontal. Upgrading to a bigger VM = vertical."
+  },
+  {
+    "id": "AZ900-E01-042",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is evaluating different cloud providers\n- They want to understand what Microsoft guarantees regarding Azure service uptime\n- The legal team needs to know what compensation is available if Azure services don't meet promised uptime percentages\n\nQuestion:\nWhat document defines Microsoft's uptime commitments and compensation terms for Azure services?",
+    "choices": [
+      "Azure Compliance Documentation",
+      "Service Level Agreement (SLA)",
+      "Microsoft Privacy Statement",
+      "Azure Service Trust Portal"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Compliance Documentation details which regulatory standards Azure meets (ISO 27001, SOC 2, HIPAA, etc.). It doesn't define uptime commitments or financial compensation for downtime.",
+      "This option is correct. A Service Level Agreement (SLA) is a formal commitment from Microsoft specifying the guaranteed uptime percentage for each Azure service (e.g., 99.9% for a single VM with premium disks, 99.99% for VMs in Availability Zones). If Azure fails to meet the SLA, customers can claim service credits as compensation. Each Azure service has its own SLA with specific terms.",
+      "The Privacy Statement explains how Microsoft collects, uses, and protects personal data. It has nothing to do with service uptime or performance guarantees.",
+      "The Service Trust Portal provides access to audit reports, compliance guides, and trust documents. While it relates to trust and compliance, it doesn't define specific uptime SLAs or financial compensation."
+    ],
+    "tip": "SLA = uptime guarantee + service credits if breached. Key SLA values to know: single VM (99.9% with premium storage), VMs in Availability Set (99.95%), VMs across Availability Zones (99.99%). No SLA = no guarantee and no credits. The exam tests specific SLA percentages."
+  },
+  {
+    "id": "AZ900-E01-043",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a legacy application that requires a Windows Server 2019 environment\n- The application needs direct access to the underlying operating system for driver installation\n- Specific third-party software must be installed on the server\n- The company wants to migrate this to Azure with minimal application changes\n\nQuestion:\nWhich Azure compute service should you use?",
+    "choices": [
+      "Azure App Service",
+      "Azure Functions",
+      "Azure Virtual Machines",
+      "Azure Container Instances"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure App Service is a PaaS platform for web applications. You don't get access to the underlying OS, can't install drivers, and can't install arbitrary third-party software. Not suitable for legacy applications requiring OS-level access.",
+      "Azure Functions is serverless compute for event-driven code execution. You have no access to the OS, can't install drivers or third-party software, and it's designed for small, stateless functions \u2014 not legacy applications.",
+      "This option is correct. Azure Virtual Machines (IaaS) provide full control over the operating system, including the ability to install drivers, configure third-party software, and run legacy applications exactly as they run on-premises. This is the classic 'lift and shift' migration \u2014 move the application to a VM in Azure with minimal changes.",
+      "Azure Container Instances run containerised applications. The legacy application would need to be containerised first (significant effort), and containers don't typically support driver installation or deep OS-level access."
+    ],
+    "tip": "When the exam describes a legacy application that needs OS-level access, specific drivers, or third-party software installation \u2014 Azure VMs (IaaS) is always the answer. VMs = maximum control, minimum application changes for legacy workloads. This is Microsoft's recommended 'lift and shift' approach."
+  },
+  {
+    "id": "AZ900-E01-044",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates in the UK and must comply with UK data protection regulations\n- All customer data must be stored within the United Kingdom\n- You need to ensure Azure resources are deployed only in UK Azure regions\n- The solution must also provide paired-region disaster recovery within the UK\n\nQuestion:\nWhich two Azure regions should you use? (The question asks you to identify the correct region pair.)",
+    "choices": [
+      "UK South and West Europe",
+      "UK South and UK West",
+      "North Europe and West Europe",
+      "UK South and France Central"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "West Europe is located in the Netherlands. Storing data there would violate the UK data residency requirement.",
+      "This option is correct. UK South (London) and UK West (Cardiff) are Azure's UK region pair. Microsoft automatically pairs regions within the same geography for disaster recovery. Data stays within the UK for both regions, satisfying data residency requirements. Microsoft staggers updates across paired regions and prioritises recovery of one region in each pair during widespread outages.",
+      "Both North Europe (Ireland) and West Europe (Netherlands) are outside the UK. Neither satisfies UK data residency requirements.",
+      "France Central is in Paris, France. While geographically close, data stored there is outside the UK and doesn't meet UK data residency regulations."
+    ],
+    "tip": "Azure region pairs are within the same geography. UK South \u2194 UK West, East US \u2194 West US, North Europe \u2194 West Europe. Data residency questions always require BOTH regions to be in the correct country/geography. Microsoft uses paired regions for geo-redundant replication and staged updates."
+  },
+  {
+    "id": "AZ900-E01-045",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has multiple Azure subscriptions\n- Some subscriptions are for production, others for development\n- The governance team wants to organise subscriptions into a hierarchy and apply policies at different levels\n- Production subscriptions need stricter policies than development subscriptions\n\nQuestion:\nWhich Azure feature allows you to organise subscriptions into a hierarchy and apply governance at different levels?",
+    "choices": [
+      "Resource Groups",
+      "Management Groups",
+      "Azure Tags",
+      "Azure Subscriptions"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Resource Groups organise resources WITHIN a subscription. They sit below subscriptions in the hierarchy and can't organise subscriptions themselves.",
+      "This option is correct. Management Groups provide a hierarchy ABOVE subscriptions. You can create groups like 'Production' and 'Development', place the relevant subscriptions in each, and apply Azure Policy and RBAC at the Management Group level. Policies cascade down to all subscriptions and resources within the group. The hierarchy supports up to 6 levels of depth below the root.",
+      "Tags are metadata key-value pairs for categorising resources. They help with cost tracking and organisation but don't provide a hierarchy or governance structure for subscriptions.",
+      "Subscriptions are billing and access boundaries, but they're flat \u2014 you can't organise subscriptions into groups using subscriptions alone. Management Groups add the hierarchical layer."
+    ],
+    "tip": "Azure hierarchy: Management Groups \u2192 Subscriptions \u2192 Resource Groups \u2192 Resources. Policies and RBAC assigned at higher levels cascade down. If the question mentions 'organise subscriptions' or 'hierarchical governance' \u2014 Management Groups."
+  },
+  {
+    "id": "AZ900-E01-046",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to securely store API keys, database connection strings, and SSL certificates\n- Application developers must be able to retrieve these secrets programmatically\n- Access must be controlled through Azure RBAC and access policies\n- All access to secrets must be logged for auditing\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Storage Account with encryption",
+      "Azure Key Vault",
+      "Azure Active Directory (Entra ID)",
+      "Azure Information Protection"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Storage Accounts store data (blobs, files, tables, queues) and encrypt it at rest. But storing secrets in a storage account is a security anti-pattern \u2014 there's no secret management, access auditing, or key lifecycle management built in.",
+      "This option is correct. Azure Key Vault is a managed service for securely storing and managing secrets (API keys, connection strings), keys (encryption keys), and certificates (SSL/TLS). Applications retrieve secrets via REST API/SDK. Access is controlled through RBAC and vault access policies. All access is logged in Azure Monitor for auditing. This is Microsoft's recommended approach for secret management.",
+      "Azure AD (Entra ID) is an identity and access management service (authentication, SSO, MFA). It manages identities, not secrets. While Managed Identities in Entra ID can authenticate to Key Vault, Entra ID itself doesn't store application secrets.",
+      "Azure Information Protection (now part of Microsoft Purview) classifies and protects documents and emails with labels. It's about data classification, not secret storage."
+    ],
+    "tip": "Azure Key Vault = secrets, keys, and certificates management. If the question mentions storing API keys, connection strings, passwords, or certificates securely \u2014 Key Vault. It's also the service for customer-managed encryption keys (CMK) used by other Azure services."
+  },
+  {
+    "id": "AZ900-E01-047",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's Azure environment has grown to 200+ resources across 5 subscriptions\n- The IT manager suspects many virtual machines are over-provisioned (too much CPU and RAM for their actual usage)\n- Network security groups may have overly permissive rules\n- Some resources may not be using the latest security configurations\n\nQuestion:\nWhich Azure service provides a unified security posture assessment and score across all your Azure resources?",
+    "choices": [
+      "Azure Advisor",
+      "Microsoft Defender for Cloud",
+      "Azure Monitor",
+      "Azure Policy"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Advisor provides recommendations across five pillars (cost, security, reliability, performance, operational excellence). While it includes some security recommendations, it doesn't provide the comprehensive security posture assessment, Secure Score, or threat protection that the question implies.",
+      "This option is correct. Microsoft Defender for Cloud (formerly Azure Security Center) provides a unified security posture management solution. It assesses all your Azure resources, generates a Secure Score (0-100%), identifies security misconfigurations (over-permissive NSGs, missing updates, etc.), and provides prioritised remediation recommendations. The free tier (CSPM) covers posture assessment; the paid tier adds threat protection.",
+      "Azure Monitor collects performance telemetry (metrics, logs). It monitors health and performance, not security posture. It can alert on unusual activity, but doesn't assess security configurations or provide a security score.",
+      "Azure Policy enforces and audits compliance with organisational rules. It can check if resources meet specific standards, but it's a policy enforcement tool, not a comprehensive security posture assessment service with a unified score."
+    ],
+    "tip": "Microsoft Defender for Cloud = security posture + Secure Score + threat protection. Azure Advisor = general best-practice recommendations (including some security). Azure Policy = enforce compliance rules. If the question mentions 'security posture', 'Secure Score', or 'security assessment across all resources' \u2014 Defender for Cloud."
+  },
+  {
+    "id": "AZ900-E01-048",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to deploy a web application that will be accessed by users in Europe and North America\n- The application backend is a REST API\n- You want automatic SSL termination, URL-based routing, and global load balancing with built-in DDoS protection\n- The solution should direct users to the nearest backend for lowest latency\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Load Balancer",
+      "Azure Application Gateway",
+      "Azure Front Door",
+      "Azure Traffic Manager"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Azure Load Balancer is Layer 4 (TCP/UDP), regional only, no SSL termination, no URL-based routing. It fails every requirement in the question.",
+      "Application Gateway provides Layer 7, SSL termination, and URL-based routing \u2014 but it's a REGIONAL service. It can't provide global load balancing across Europe and North America or route users to the nearest backend globally.",
+      "This option is correct. Azure Front Door is a global Layer-7 load balancer that provides: SSL termination, URL-based routing, global load balancing across regions, built-in DDoS protection, and automatic routing to the nearest healthy backend (anycast). It's designed exactly for globally distributed web applications with multi-region backends.",
+      "Traffic Manager provides global DNS-based routing, but it's Layer 4 (DNS only). It doesn't provide SSL termination, URL-based routing, or Layer-7 features. It routes at the DNS level, not the HTTP level."
+    ],
+    "tip": "Azure Front Door = global Layer-7 load balancing + WAF + CDN + SSL + URL routing. Application Gateway = regional Layer-7 + WAF + SSL + URL routing. Traffic Manager = global DNS-based routing (no Layer-7 features). If the question says 'global' + 'Layer 7 features' (SSL, URL routing) \u2014 Front Door."
+  },
+  {
+    "id": "AZ900-E01-049",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company currently uses Microsoft Exchange Server on-premises for email\n- They want to move to a cloud-based email solution\n- The IT team should NOT need to manage any email servers, operating systems, or email software updates\n- Users should simply access their email through Outlook and a web browser\n\nQuestion:\nWhich cloud service model does Microsoft 365 Exchange Online represent?",
+    "choices": [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)",
+      "Function as a Service (FaaS)"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "IaaS would mean Microsoft provides the VM and you install and manage Exchange Server yourself. That's essentially what running Exchange on an Azure VM would be \u2014 not the managed experience described.",
+      "PaaS provides a platform for building applications. Exchange Online is a finished product, not a platform for building email systems. PaaS would be like Azure App Service where you deploy your own code.",
+      "This option is correct. Microsoft 365 Exchange Online is a complete, ready-to-use email service. Microsoft manages everything: servers, operating systems, email software, updates, security patches, and scaling. Users just consume the service \u2014 access email through Outlook or a browser. This is the textbook definition of SaaS.",
+      "Function as a Service (FaaS) is serverless computing for running small pieces of code in response to events (like Azure Functions). Email is a complete application, not a function triggered by events."
+    ],
+    "tip": "Microsoft 365 (Exchange Online, SharePoint Online, Teams) = SaaS. Azure App Service / Azure SQL Database = PaaS. Azure Virtual Machines = IaaS. Azure Functions = FaaS/Serverless. The exam frequently asks you to classify specific Microsoft services into service models."
+  },
+  {
+    "id": "AZ900-E01-050",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has adopted the Microsoft Cloud Adoption Framework for Azure\n- The CTO wants to understand Azure's compliance certifications before storing healthcare data\n- They need to verify that Azure meets HIPAA, ISO 27001, and SOC 2 requirements\n- They want access to independent audit reports and compliance documentation\n\nQuestion:\nWhere should the CTO access Azure's compliance certifications and audit reports?",
+    "choices": [
+      "Azure Advisor",
+      "Microsoft Service Trust Portal",
+      "Azure Cost Management",
+      "Azure Active Directory admin centre"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Azure Advisor provides operational recommendations (cost, security, reliability, performance). It doesn't host compliance certifications or audit reports.",
+      "This option is correct. The Microsoft Service Trust Portal (servicetrust.microsoft.com) is the centralised location for accessing Microsoft's compliance documentation, independent audit reports, penetration test results, and compliance guides. It covers certifications like ISO 27001, SOC 1/2/3, HIPAA, FedRAMP, GDPR, and more. This is where auditors and compliance teams go to verify Microsoft's compliance posture.",
+      "Azure Cost Management is for tracking and optimising Azure spending. It has nothing to do with compliance certifications.",
+      "Azure AD admin centre manages identities, authentication, and access. It doesn't host compliance audit reports or certification documentation."
+    ],
+    "tip": "Service Trust Portal = compliance documentation, audit reports, certifications (ISO, SOC, HIPAA, etc.). Microsoft Compliance Manager = assess YOUR organisation's compliance posture. Defender for Cloud = security posture of your deployed resources. Know which tool addresses which aspect of compliance."
+  }
+]
