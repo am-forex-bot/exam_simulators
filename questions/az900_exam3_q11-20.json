@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E03-011",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Active Directory (Entra ID) for identity management\n- Employees need to sign in once and access Microsoft 365, Salesforce, ServiceNow, and a custom internal web application\n- The IT team wants to reduce the number of passwords employees need to remember\n\nQuestion:\nWhich Azure AD feature enables this single sign-in experience across multiple applications?",
+    "choices": [
+      "Multi-Factor Authentication (MFA)",
+      "Single Sign-On (SSO)",
+      "Azure AD B2C",
+      "Self-Service Password Reset (SSPR)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "MFA adds a second verification step during authentication. While it improves security, it doesn't reduce the number of passwords or enable access to multiple applications with a single sign-in.",
+      "This option is correct. Single Sign-On (SSO) allows users to authenticate once with Azure AD and then access all connected applications (Microsoft 365, Salesforce, ServiceNow, custom apps) without re-entering credentials. Azure AD supports SSO via SAML, OIDC, and password-based SSO. Users remember one set of credentials, and Azure AD handles authentication to each application.",
+      "Azure AD B2C (Business-to-Consumer) is an identity solution for customer-facing applications. It manages external consumer identities (sign up with email, Google, Facebook). It's not for internal employee SSO across enterprise applications.",
+      "SSPR allows users to reset their own passwords without contacting IT. It reduces helpdesk calls but doesn't enable single sign-on across multiple applications."
+    ],
+    "tip": "SSO = one sign-in, access many apps. MFA = extra verification step (not fewer passwords). B2B = external business partner identities. B2C = external consumer identities. SSPR = self-service password management. For 'sign in once, access everything' — SSO."
+  },
+  {
+    "id": "AZ900-E03-012",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Azure resources using ARM templates\n- The templates are stored in a Git repository and follow a CI/CD pipeline\n- A developer accidentally modifies an ARM template that removes a critical production network security group\n- The deployment succeeds, and the NSG is deleted\n\nQuestion:\nWhich Azure feature could have PREVENTED the NSG from being deleted?",
+    "choices": [
+      "Azure Monitor alert",
+      "Resource lock (CanNotDelete) on the NSG",
+      "Azure Backup of the NSG",
+      "Azure Policy with Audit effect"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor would detect that the NSG was deleted AFTER the fact and send an alert. It's reactive, not preventive. The damage is already done by the time the alert fires.",
+      "This option is correct. A CanNotDelete resource lock on the NSG prevents ANY deletion — including ARM template deployments that attempt to remove it. The deployment would fail with an error when trying to delete the locked NSG, protecting the critical resource. Resource locks override RBAC permissions, so even an Owner or a CI/CD pipeline with Contributor access cannot delete a locked resource without first removing the lock.",
+      "Azure Backup provides recovery after data loss, but NSGs aren't backed up by Azure Backup (it's for VMs, databases, files). Even if recovery were possible, the question asks about prevention, not recovery.",
+      "Azure Policy with Audit effect would flag the deletion as non-compliant but would NOT prevent it. Audit only creates a compliance entry — it doesn't block operations. A Deny effect could prevent certain configurations but doesn't specifically protect individual resources from deletion like a lock does."
+    ],
+    "tip": "Resource locks = prevent accidental deletion or modification. CanNotDelete = prevents deletion by anyone. ReadOnly = prevents any changes. Locks even override ARM template deployments. If the question says 'prevent accidental deletion of a specific resource' — resource lock."
+  },
+  {
+    "id": "AZ900-E03-013",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A financial services company needs to deploy an application in Azure\n- The application must comply with PCI DSS (Payment Card Industry Data Security Standard)\n- The IT team wants to know whether Azure's infrastructure meets PCI DSS requirements\n- They also need to verify their OWN Azure configuration complies with PCI DSS\n\nQuestion:\nWhich TWO Azure resources address these TWO different needs? (Choose the best combination.)",
+    "choices": [
+      "Azure Advisor for both requirements",
+      "Service Trust Portal for Azure's compliance + Microsoft Purview Compliance Manager for the company's compliance",
+      "Microsoft Defender for Cloud for both requirements",
+      "Azure Policy for both requirements"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Advisor provides best-practice recommendations across cost, security, reliability, performance, and operational excellence. It doesn't provide PCI DSS compliance certification for Azure or assess your organisation's PCI DSS compliance posture.",
+      "This option is correct. The Service Trust Portal provides Microsoft's PCI DSS certification and audit reports — proving that Azure's infrastructure meets PCI DSS requirements. Microsoft Purview Compliance Manager assesses YOUR organisation's compliance posture by evaluating your configurations and controls against standards like PCI DSS, providing an actionable improvement plan. Two different tools for two different scopes.",
+      "Defender for Cloud provides security recommendations and can assess against some regulatory frameworks, but it doesn't provide Microsoft's PCI DSS audit reports (that's Service Trust Portal). It partially addresses the company's compliance but doesn't cover Azure's certification proof.",
+      "Azure Policy enforces rules and evaluates compliance with organisational policies. It doesn't provide Microsoft's PCI DSS certification documentation or a comprehensive compliance assessment tool like Compliance Manager."
+    ],
+    "tip": "Service Trust Portal = Microsoft's compliance proof (their certifications, their audits). Compliance Manager = your organisation's compliance assessment (your posture against standards). These are complementary: STP proves Azure is compliant; Compliance Manager helps YOU become compliant."
+  },
+  {
+    "id": "AZ900-E03-014",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is designing their cloud architecture\n- They need to decide between deploying one very powerful server versus deploying four smaller servers with a load balancer\n- The application receives variable traffic throughout the day\n\nQuestion:\nWhat is the difference between vertical scaling and horizontal scaling?",
+    "choices": [
+      "Vertical scaling adds more servers; horizontal scaling adds more CPU to one server",
+      "Vertical scaling increases the power of one server; horizontal scaling adds more servers",
+      "Vertical scaling is only available in the cloud; horizontal scaling works on-premises only",
+      "There is no difference — both terms mean the same thing"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This is backwards. Vertical scaling makes ONE server more powerful. Horizontal scaling adds MORE servers. Don't confuse the two — the exam relies on this distinction.",
+      "This option is correct. Vertical scaling (scale up/down) increases the power of a single server by adding more CPU, RAM, or storage. Horizontal scaling (scale out/in) adds or removes server instances, distributing the workload across multiple machines. Both are available in the cloud, but horizontal scaling is generally preferred because it has no upper limit and provides better fault tolerance.",
+      "Both scaling types are available in both cloud and on-premises environments. Vertical scaling on-premises means upgrading server hardware; in the cloud, it means changing the VM size. Horizontal scaling works everywhere with proper load balancing.",
+      "They are distinctly different concepts. Vertical = bigger machine. Horizontal = more machines."
+    ],
+    "tip": "Vertical scaling = scale UP (bigger server, has a ceiling). Horizontal scaling = scale OUT (more servers, theoretically unlimited). Cloud favours horizontal scaling because there's no hardware ceiling and it provides redundancy. The exam tests definitions and which is preferred."
+  },
+  {
+    "id": "AZ900-E03-015",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company wants to use a cloud service for their customer-facing mobile application\n- The development team will write the backend API in Node.js\n- They want the cloud provider to manage the operating system, runtime, and auto-scaling\n- They need to focus ONLY on writing and deploying their application code\n\nQuestion:\nWhich cloud service model should they use, and which Azure service is an example?",
+    "choices": [
+      "IaaS — Azure Virtual Machines",
+      "PaaS — Azure App Service",
+      "SaaS — Microsoft 365",
+      "FaaS — Azure Managed Applications"
+    ],
+    "answer": [1],
+    "explanations": [
+      "IaaS with Azure VMs means the company manages the OS, runtime, Node.js installation, and scaling configuration themselves. The question says the provider should manage all of that — IaaS doesn't meet this requirement.",
+      "This option is correct. PaaS (Platform as a Service) is the model where the cloud provider manages the infrastructure, OS, runtime, and scaling — the developer just deploys code. Azure App Service is a PaaS offering that supports Node.js, handles auto-scaling, manages the underlying OS and runtime patches, and provides built-in deployment capabilities. The team focuses only on their API code.",
+      "SaaS is a finished application (like Microsoft 365 email). The company wants to BUILD their own application, not consume a ready-made one.",
+      "FaaS (Functions as a Service) is a subset of serverless computing. Azure Managed Applications is not a FaaS offering — it's a marketplace solution type. Azure Functions would be the FaaS example, but the question describes a full backend API, not individual event-driven functions."
+    ],
+    "tip": "PaaS = deploy your code, provider manages everything else (OS, runtime, scaling). Classic PaaS examples on Azure: App Service (web apps), Azure SQL Database (databases), Azure Cache for Redis (caching). If 'focus only on code' + 'provider manages infrastructure' — PaaS."
+  },
+  {
+    "id": "AZ900-E03-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Files to provide a shared file system for a team of 50 users\n- The file share is mounted as a network drive on Windows workstations using the SMB protocol\n- The team wants to sync a copy of the file share to an on-premises Windows Server for low-latency local access\n- Files not frequently accessed should be automatically tiered to the cloud to free up local disk space\n\nQuestion:\nWhich Azure feature should you use?",
+    "choices": [
+      "Azure Blob Storage lifecycle management",
+      "Azure File Sync",
+      "Azure Data Box",
+      "AzCopy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Blob Storage lifecycle management moves blobs between access tiers (Hot, Cool, Archive). It works with Blob Storage, not Azure Files, and doesn't sync files to on-premises servers.",
+      "This option is correct. Azure File Sync extends Azure Files to on-premises Windows Servers. It syncs files between the Azure file share and local servers, provides cloud tiering (infrequently accessed files are replaced with pointers on the local server and automatically downloaded when opened), and gives users low-latency local access to frequently used files while keeping the full dataset in Azure.",
+      "Azure Data Box is a physical device for transferring large amounts of data to Azure (offline migration). It's a one-time data transfer solution, not an ongoing sync service.",
+      "AzCopy is a command-line tool for copying data to/from Azure Storage. It's a manual or scripted transfer tool, not an ongoing sync service with cloud tiering capabilities."
+    ],
+    "tip": "Azure File Sync = sync Azure Files to on-premises Windows Server + cloud tiering (auto-tier cold files to cloud). If the question mentions 'sync files between Azure and on-premises' or 'cloud tiering for file shares' — Azure File Sync."
+  },
+  {
+    "id": "AZ900-E03-017",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company deploys a web application on Azure App Service\n- The application needs to store user profile images\n- Images should be accessible via a unique URL over HTTPS\n- The company expects to store millions of images totalling 10 TB\n- They want the cheapest storage option for frequently accessed images\n\nQuestion:\nWhich storage service and access tier should they use?",
+    "choices": [
+      "Azure Blob Storage — Hot tier",
+      "Azure Blob Storage — Archive tier",
+      "Azure Files — Standard tier",
+      "Azure Table Storage"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Azure Blob Storage is designed for storing unstructured data like images, accessible via unique URLs over HTTPS. The Hot tier offers the lowest access costs for frequently read data (low per-read cost, higher storage cost). For profile images that are frequently viewed by users, Hot tier balances cost with performance. It scales to petabytes and handles millions of objects.",
+      "Archive tier has the lowest storage cost but very high access costs and hours-long rehydration time. Profile images are accessed frequently — Archive would make them inaccessible for hours on first request. Terrible user experience.",
+      "Azure Files provides file shares via SMB/NFS protocols. While files are accessible via REST API, it's designed for shared file systems, not for serving millions of images via URLs. It's also more expensive per GB than Blob Storage for this use case.",
+      "Table Storage is a NoSQL key-value store for structured data. It's not designed for storing binary objects like images."
+    ],
+    "tip": "Blob Storage access tiers by use case: Hot = frequently accessed (profile images, active data). Cool = infrequently accessed 30+ days (monthly reports). Cold = rarely accessed 90+ days. Archive = almost never accessed 180+ days (compliance archives). Match the tier to the access pattern."
+  },
+  {
+    "id": "AZ900-E03-018",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's Azure environment has the following hierarchy:\n  - Root Management Group\n    - Production Management Group (contains 5 subscriptions)\n    - Development Management Group (contains 3 subscriptions)\n- An Azure Policy is assigned at the Root Management Group that requires all VMs to have a minimum size of Standard_B2s\n- A developer tries to create a Standard_B1s VM in a Development subscription\n\nQuestion:\nWhat happens when the developer tries to create the VM?",
+    "choices": [
+      "The VM is created successfully because Development is separate from Production",
+      "The VM creation is blocked because the policy at the Root Management Group cascades to all subscriptions",
+      "The VM is created but flagged as non-compliant",
+      "The developer is prompted to choose a different VM size"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Management Group separation doesn't override policies from a parent group. Policies cascade downward through the hierarchy. The Development Management Group inherits policies from the Root Management Group.",
+      "This option is correct. Azure Policy assigned at the Root Management Group cascades to ALL child management groups, subscriptions, resource groups, and resources beneath it. Since both Production and Development management groups are children of the Root, the policy applies to both. The Standard_B1s VM violates the minimum size requirement, so the creation is denied with a policy violation error.",
+      "This would only happen if the policy used an Audit effect. The question implies the policy enforces (Deny effect) the minimum VM size. A Deny effect blocks the deployment, not just flags it.",
+      "Azure Policy doesn't interactively prompt users. A Deny effect simply blocks the operation and returns an error message explaining the policy violation."
+    ],
+    "tip": "Policy inheritance: Root MG → Child MGs → Subscriptions → Resource Groups → Resources. Policies cascade DOWN, not up. A policy at a parent management group cannot be overridden by child groups. If a Deny policy is set at the root — it applies everywhere."
+  },
+  {
+    "id": "AZ900-E03-019",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs a mission-critical application\n- They need to ensure that if the entire UK South Azure region becomes unavailable, the application can continue running\n- The recovery target is: application must be operational in a secondary region within 1 hour\n- Data loss of up to 5 minutes is acceptable\n\nQuestion:\nWhich Azure service should you use to replicate VMs to a secondary region and enable failover?",
+    "choices": [
+      "Azure Backup",
+      "Azure Site Recovery",
+      "Azure Traffic Manager",
+      "Azure Availability Zones"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Backup creates point-in-time copies of data for recovery. It doesn't provide continuous replication to a secondary region or automated failover. Restoring from backup takes much longer than 1 hour for a full application stack.",
+      "This option is correct. Azure Site Recovery (ASR) continuously replicates Azure VMs to a secondary region. If the primary region fails, you can fail over to the secondary region within minutes. ASR provides RPO (Recovery Point Objective) of seconds to minutes (matching the 5-minute data loss tolerance) and RTO (Recovery Time Objective) well within 1 hour. It handles VM replication, networking, and orchestrated failover/failback.",
+      "Traffic Manager routes DNS queries to different endpoints. It can direct traffic to a secondary region AFTER failover, but it doesn't replicate VMs or manage the failover process itself. Traffic Manager works WITH ASR, not instead of it.",
+      "Availability Zones protect against data centre failures WITHIN a single region. They don't protect against an entire region becoming unavailable. For region-level protection, you need cross-region replication."
+    ],
+    "tip": "Azure Site Recovery = cross-region VM replication + automated failover (disaster recovery). Availability Zones = data centre-level protection within a region. Backup = point-in-time data recovery. For 'entire region fails' scenarios — ASR for DR. Know the difference between RPO (acceptable data loss) and RTO (acceptable downtime)."
+  },
+  {
+    "id": "AZ900-E03-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Azure resources using a CI/CD pipeline\n- All deployments go through Azure Resource Manager (ARM)\n- The security team wants to see a log of every resource creation, modification, and deletion across all subscriptions\n- They need to send this log data to a SIEM (Security Information and Event Management) tool for long-term retention and analysis\n\nQuestion:\nWhich Azure feature provides this management-plane audit trail, and where should it be sent for long-term retention?",
+    "choices": [
+      "Azure Monitor Metrics → Azure Blob Storage",
+      "Azure Activity Log → Log Analytics workspace (or Event Hub for SIEM integration)",
+      "Azure Advisor recommendations → Azure SQL Database",
+      "Microsoft Defender for Cloud alerts → Azure Queue Storage"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor Metrics tracks performance data (CPU, memory, disk IOPS), not management operations. Metrics don't tell you who created or deleted a resource.",
+      "This option is correct. The Azure Activity Log records all management-plane operations (create, update, delete, role assignments) across your subscriptions. By default it's retained for 90 days. To send it to a SIEM for long-term retention, you configure a diagnostic setting to forward Activity Log data to a Log Analytics workspace (for querying with KQL) and/or to an Event Hub (for streaming to third-party SIEM tools like Splunk or Sentinel).",
+      "Azure Advisor provides recommendations, not an audit trail of operations. Recommendations can't be exported to SQL Database for this purpose.",
+      "Defender for Cloud alerts are security-specific notifications, not a comprehensive management-plane audit log. They cover a subset of events, not every create/modify/delete operation."
+    ],
+    "tip": "Activity Log = WHO did WHAT to WHICH resource and WHEN. Default retention: 90 days. For longer retention: send to Log Analytics workspace or storage account. For SIEM integration: stream to Event Hub. If the question mentions 'audit trail' + 'long-term retention' + 'SIEM' — Activity Log + Event Hub/Log Analytics."
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AZ900-E04-011",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to connect 20 branch offices to Azure\n- Each branch has its own local network and internet connection\n- Employees at branches need secure access to Azure-hosted applications\n- The solution must encrypt traffic between branches and Azure\n\nQuestion:\nWhich Azure service provides encrypted connectivity from branch offices to Azure over the internet?",
+    "choices": [
+      "Azure ExpressRoute",
+      "Azure VPN Gateway (Point-to-Site VPN)",
+      "Azure VPN Gateway (Site-to-Site VPN)",
+      "Azure Private Link"
+    ],
+    "answer": [2],
+    "explanations": [
+      "ExpressRoute provides a private dedicated connection that bypasses the internet. It's more expensive and typically connects data centres, not 20 individual branch offices. Branches use their internet connections — ExpressRoute would require each branch to have a connectivity provider relationship.",
+      "Point-to-Site VPN connects individual client devices (laptops) to Azure — not entire branch office networks. You'd need S2S for connecting branch network infrastructure.",
+      "This option is correct. Site-to-Site VPN creates encrypted IPsec/IKE tunnels between each branch office's local network device (router/firewall) and Azure VPN Gateway. Traffic flows over each branch's existing internet connection but is encrypted end-to-end. You can connect up to 30 sites to a single VPN Gateway (Standard SKU) or more with a higher SKU. This is the standard solution for branch office connectivity to Azure.",
+      "Private Link provides private connectivity from a VNet to Azure PaaS services. It doesn't connect branch office networks to Azure — it connects Azure services to VNets."
+    ],
+    "tip": "Site-to-Site VPN = connect entire networks (branch offices, data centres) to Azure over encrypted internet tunnels. Point-to-Site VPN = connect individual devices (remote workers). ExpressRoute = private dedicated connection (no internet). Match the connectivity type to the scenario."
+  },
+  {
+    "id": "AZ900-E04-012",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores files in Azure Blob Storage\n- The security team requires that all data at rest must be encrypted\n- They ask: 'Do we need to enable encryption on our storage accounts, or is it already encrypted?'\n\nQuestion:\nWhat is the default encryption behaviour for Azure Storage?",
+    "choices": [
+      "Encryption must be manually enabled for each storage account",
+      "All Azure Storage data is encrypted at rest by default using Microsoft-managed keys",
+      "Only Premium storage accounts are encrypted by default",
+      "Encryption is optional and costs extra"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Storage encryption at rest is NOT something you need to manually enable. It's automatic and cannot be disabled.",
+      "This option is correct. Azure Storage Service Encryption (SSE) automatically encrypts all data at rest using 256-bit AES encryption with Microsoft-managed keys. This is enabled by default for all storage accounts (Standard and Premium), cannot be disabled, and has no additional cost. If you want to use your own keys (customer-managed keys), you can configure that optionally, but the default encryption is always on.",
+      "Both Standard and Premium storage accounts are encrypted by default. There's no distinction between tiers for encryption.",
+      "Encryption is not optional and does not cost extra. It's mandatory, automatic, and included at no additional charge. This is a fundamental Azure security feature."
+    ],
+    "tip": "Azure Storage encryption: ALWAYS on, ALWAYS free, uses AES-256. Microsoft-managed keys by default. Optional upgrade to customer-managed keys (CMK) via Key Vault. You CANNOT turn off encryption. The exam loves testing that encryption is default and mandatory."
+  },
+  {
+    "id": "AZ900-E04-013",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs VMs in Azure that require specific software configurations\n- The operations team uses Azure Automation Desired State Configuration (DSC)\n- They want to define the desired state of each VM and have Azure automatically maintain that configuration\n- If a VM drifts from the desired state (e.g., someone manually changes a setting), it should be automatically corrected\n\nQuestion:\nWhat does Desired State Configuration (DSC) ensure?",
+    "choices": [
+      "That VMs are always the cheapest possible SKU",
+      "That VM configurations match a defined desired state and drift is automatically corrected",
+      "That VMs are automatically patched with the latest OS updates",
+      "That VMs are distributed across Availability Zones"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DSC has nothing to do with VM sizing or cost. It manages software configurations, not infrastructure sizing.",
+      "This option is correct. Desired State Configuration (DSC) is a configuration management framework. You define a configuration (desired state) — for example: IIS must be installed, specific registry keys must be set, certain services must be running. Azure Automation DSC continuously monitors the VM and if it drifts from the desired state (someone stops a service or uninstalls a feature), DSC automatically corrects it back to the defined configuration.",
+      "OS patching is handled by Azure Update Management, not DSC. DSC manages application and software configurations, not Windows/Linux updates.",
+      "VM distribution across Availability Zones is an infrastructure decision made during deployment. DSC manages what's INSIDE the VM (software configuration), not where the VM is placed."
+    ],
+    "tip": "DSC = ensure VMs maintain a defined configuration (drift detection + auto-correction). Update Management = OS patching. Azure Policy = resource governance. If the question mentions 'maintain configuration state' or 'prevent configuration drift' — DSC."
+  },
+  {
+    "id": "AZ900-E04-014",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A healthcare company needs to deploy an application that complies with HIPAA regulations\n- They want to know if Azure meets HIPAA requirements\n- They also need Microsoft to sign a Business Associate Agreement (BAA)\n\nQuestion:\nWhich statement about Azure compliance with HIPAA is correct?",
+    "choices": [
+      "Azure is not compliant with HIPAA",
+      "Azure offers HIPAA compliance coverage and Microsoft provides a BAA as part of the Microsoft Online Services Terms",
+      "Azure is HIPAA compliant, so the customer has no additional compliance responsibilities",
+      "HIPAA compliance is only available on Azure Government"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure IS compliant with HIPAA. Microsoft has undergone independent audits that verify Azure services meet HIPAA security and privacy requirements.",
+      "This option is correct. Microsoft offers HIPAA/HITECH coverage for Azure and provides a Business Associate Agreement (BAA) as part of the Microsoft Online Services Terms (or Microsoft Customer Agreement). The BAA is automatically available to customers — no separate negotiation needed. However, the customer must still configure their Azure environment in a HIPAA-compliant manner.",
+      "While Azure's infrastructure meets HIPAA requirements, the customer is still responsible for configuring their application, managing access controls, encrypting data appropriately, and maintaining their own compliance obligations. Using Azure doesn't make the customer automatically HIPAA-compliant — shared responsibility applies.",
+      "HIPAA compliance is available on both commercial Azure and Azure Government. Azure Government provides additional compliance coverage for US federal requirements (FedRAMP High, DoD IL4/5), but HIPAA is available on commercial Azure."
+    ],
+    "tip": "Azure compliance = Microsoft's infrastructure meets the standard. Customer compliance = you must configure your environment correctly. Both are required. The BAA is available to all Azure customers — no special request needed. Key exam point: using a compliant platform doesn't make YOUR deployment compliant."
+  },
+  {
+    "id": "AZ900-E04-015",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company wants to understand the support options available for Azure\n- They need 24/7 technical support with a response time of less than 1 hour for critical business-impacting issues\n- They also want access to a Technical Account Manager (TAM) for proactive guidance\n\nQuestion:\nWhich Azure support plan provides these capabilities?",
+    "choices": [
+      "Basic support plan",
+      "Developer support plan",
+      "Professional Direct support plan",
+      "Unified (Premier) support plan"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Basic support is free and provides billing/subscription support, self-help resources, and Azure Service Health. No technical support for break-fix issues, no response time guarantees, no TAM.",
+      "Developer support provides email-based technical support during business hours only, with a response time of less than 8 hours for severity C issues. No 24/7 support, no sub-1-hour response, no TAM.",
+      "Professional Direct provides 24/7 technical support with a 1-hour response time for critical issues (Severity A) and includes ProDirect delivery managers. However, it does NOT include a dedicated Technical Account Manager (TAM).",
+      "This option is correct. Unified support (formerly Premier) provides 24/7 technical support with less than 15-minute response for critical issues, a dedicated Technical Account Manager (TAM) for proactive guidance, and additional benefits like advisory services, on-demand assessments, and training credits. It's the highest tier of Microsoft support."
+    ],
+    "tip": "Support tiers: Basic (free, no technical support) → Developer (business hours, $29/month) → Standard (24/7, $100/month) → Professional Direct (24/7, 1-hour response, $1000/month) → Unified/Premier (TAM, fastest response). If the question mentions TAM — Unified/Premier."
+  },
+  {
+    "id": "AZ900-E04-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to integrate data from on-premises SQL Server, Azure Blob Storage, and a third-party REST API into a single data warehouse\n- The data pipeline must run on a schedule (nightly at 2 AM)\n- Data must be transformed during the process (cleaning, deduplication, format conversion)\n- The solution should be visual and low-code\n\nQuestion:\nWhich Azure service should you use to build this data integration pipeline?",
+    "choices": [
+      "Azure Stream Analytics",
+      "Azure Data Factory",
+      "Azure Synapse Analytics (SQL pools only)",
+      "Azure Logic Apps"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Stream Analytics processes real-time streaming data. The question describes a nightly batch ETL pipeline, not a real-time stream. Different use case entirely.",
+      "This option is correct. Azure Data Factory (ADF) is a cloud-based data integration service (ETL/ELT) with a visual designer. It connects to 90+ data sources (on-premises SQL Server, Blob Storage, REST APIs), supports scheduled triggers (nightly at 2 AM), and provides data transformation capabilities through Mapping Data Flows (visual, low-code transformations). It's the standard Azure service for orchestrated data pipelines.",
+      "Synapse Analytics SQL pools can store and query the data after it arrives, but they don't provide the pipeline orchestration, source connectivity, or visual transformation capabilities. Synapse does include Data Factory integration, but the pipeline service is ADF.",
+      "Logic Apps orchestrates workflows and connects SaaS applications. While it can move data, it's not designed for large-scale ETL with transformation capabilities. It lacks the data transformation tools (Mapping Data Flows) that ADF provides."
+    ],
+    "tip": "Data Factory = batch ETL/ELT (scheduled data pipelines, visual designer, 90+ connectors). Stream Analytics = real-time stream processing. If 'nightly batch' + 'multiple data sources' + 'transform data' — Data Factory."
+  },
+  {
+    "id": "AZ900-E04-017",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses multiple Azure services across 10 subscriptions\n- The IT director wants a comprehensive view of security across all subscriptions\n- They need: security posture assessment, vulnerability detection, threat protection for VMs, and regulatory compliance tracking\n- The solution must work across all 10 subscriptions from a single dashboard\n\nQuestion:\nWhich Azure service provides this unified security management?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Advisor",
+      "Microsoft Defender for Cloud",
+      "Azure Policy"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Monitor provides performance monitoring and alerting. While it collects security-relevant data, it doesn't provide security posture assessment, threat protection, vulnerability scanning, or regulatory compliance tracking in a unified dashboard.",
+      "Advisor provides best-practice recommendations including some security items, but it's not a comprehensive security management platform. It lacks vulnerability scanning, threat protection, and regulatory compliance assessment.",
+      "This option is correct. Microsoft Defender for Cloud (formerly Azure Security Center + Azure Defender) provides: Secure Score (security posture assessment), vulnerability scanning for VMs and containers, threat protection with real-time alerts, regulatory compliance tracking against standards (CIS, PCI DSS, ISO 27001, HIPAA), and it works across multiple subscriptions from a single dashboard. The free tier (CSPM) covers posture management; paid tier (CWP) adds threat protection.",
+      "Azure Policy enforces and audits compliance with organisational rules. It's a governance tool, not a comprehensive security platform. It doesn't provide vulnerability scanning, threat detection, or the unified security dashboard that Defender for Cloud offers."
+    ],
+    "tip": "Defender for Cloud = comprehensive security: posture (Secure Score), protection (threat alerts), compliance (regulatory frameworks), vulnerability scanning. It's the 'security nerve centre' for Azure. If the question lists multiple security needs in one platform — Defender for Cloud."
+  },
+  {
+    "id": "AZ900-E04-018",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has users who work remotely\n- Remote users need secure access to internal Azure-hosted web applications\n- You don't want to expose the web applications to the public internet\n- Users should be able to access the apps through their web browser with Azure AD authentication\n- No VPN client installation should be required on user devices\n\nQuestion:\nWhich Azure service provides secure remote access to internal web apps without a VPN?",
+    "choices": [
+      "Azure VPN Gateway (Point-to-Site)",
+      "Azure Application Gateway",
+      "Azure AD Application Proxy",
+      "Azure Front Door"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Point-to-Site VPN requires installing a VPN client on each user's device. The question explicitly says no VPN client installation should be required.",
+      "Application Gateway is a regional load balancer for web applications. While it can provide WAF protection, it doesn't specifically provide remote access to internal applications without exposing them publicly.",
+      "This option is correct. Azure AD Application Proxy publishes internal web applications to external users without exposing them on the public internet. Users authenticate through Azure AD, and Application Proxy securely proxies the connection to the internal app. No VPN client needed — users access apps through their web browser with SSO. It supports Conditional Access policies and MFA for additional security.",
+      "Azure Front Door is a global load balancer and CDN. It distributes traffic to public-facing applications but doesn't provide authenticated proxy access to internal, non-public applications."
+    ],
+    "tip": "Azure AD Application Proxy = secure remote access to internal web apps (no VPN, browser-based, Azure AD auth). VPN Gateway = network-level connectivity (requires client). If 'access internal apps' + 'no VPN client' + 'Azure AD authentication' — Application Proxy."
+  },
+  {
+    "id": "AZ900-E04-019",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A multinational company has strict data residency requirements\n- European customer data must be stored in Europe\n- US customer data must be stored in the United States\n- Asian customer data must be stored in Asia Pacific\n- The application must enforce these requirements at the infrastructure level\n\nQuestion:\nHow does Azure help enforce data residency requirements?",
+    "choices": [
+      "Azure automatically detects customer nationality and routes data to the correct region",
+      "Azure Regions are organised into Geographies with data residency boundaries, and you select the deployment region",
+      "Azure stores all data in the nearest data centre regardless of configuration",
+      "Data residency is not possible in public cloud environments"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure does NOT automatically detect or route data based on customer nationality. Data residency is a configuration choice made by the application architect — you choose which region to deploy resources in.",
+      "This option is correct. Azure organises its 60+ regions into Geographies (e.g., Europe, United States, Asia Pacific). Each Geography is a defined market with data residency and compliance boundaries. When you create resources, you select the Azure region — data stays in that region unless you explicitly configure replication to another region. By deploying European data to West Europe/North Europe, US data to East US/West US, and Asian data to Southeast Asia/East Asia, you enforce data residency at the infrastructure level.",
+      "Azure stores data only where you tell it to — in the region you select during resource deployment. It does not automatically move data to the nearest data centre.",
+      "Data residency is absolutely possible in public cloud. Azure, AWS, and GCP all provide region selection and data residency controls. Many Azure services are designed with data residency in mind."
+    ],
+    "tip": "Azure Geography = data residency boundary. Azure Region = physical deployment location within a Geography. You choose the region; data stays there. For data residency questions, the answer involves selecting appropriate Azure regions within the correct Geography."
+  },
+  {
+    "id": "AZ900-E04-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Azure resources using Bicep templates and a CI/CD pipeline\n- The DevOps team wants to ensure that all deployments follow a 'What-If' review before actually deploying\n- They want to preview what changes a template deployment would make WITHOUT actually making the changes\n\nQuestion:\nWhich Azure Resource Manager feature provides this pre-deployment preview?",
+    "choices": [
+      "Azure Policy evaluation",
+      "ARM/Bicep What-If operation",
+      "Azure Advisor recommendations",
+      "Azure Activity Log"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Policy evaluates resource compliance but doesn't preview what a specific template deployment would change. It operates on existing resources and new resource requests, not on template analysis.",
+      "This option is correct. The ARM What-If operation analyses a template deployment and shows what changes would occur WITHOUT actually deploying anything. It identifies resources that would be created, modified, deleted, or left unchanged. This lets the team review the impact before committing. It works with both ARM JSON templates and Bicep files. In CI/CD, you run What-If as a review step before the actual deployment.",
+      "Advisor provides best-practice recommendations based on existing resources. It doesn't preview template deployments or show potential changes.",
+      "Activity Log records operations that have ALREADY occurred. It's retrospective (what happened), not predictive (what would happen)."
+    ],
+    "tip": "ARM What-If = dry run of a template deployment. Shows creates, modifies, deletes, no-change for each resource. Use in CI/CD as a pre-deployment review gate. If the question says 'preview deployment changes without deploying' — What-If operation."
+  },
+  {
+    "id": "AZ900-E04-021",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has applications deployed in Azure\n- The CTO asks: 'What happens if we exceed the SLA limit — for example, if our Azure SQL Database has more downtime than the SLA allows?'\n\nQuestion:\nWhat is the remedy when Microsoft fails to meet an Azure SLA?",
+    "choices": [
+      "Microsoft provides a full refund for the affected month",
+      "Microsoft provides service credits as a percentage of the monthly service fee",
+      "Microsoft automatically migrates your resources to a different region",
+      "Microsoft provides free premium support for 3 months"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Microsoft does not provide full refunds for SLA breaches. The remedy is proportional service credits, not a refund. The credit amount depends on how far below the SLA the actual uptime was.",
+      "This option is correct. When Azure fails to meet an SLA, customers can claim service credits. The credit is a percentage of the monthly fee for the affected service. Typical credit amounts: <99.9% uptime → 10% credit, <99% → 25% credit, <95% → 100% credit (varies by service). Customers must file a claim through Azure support within the allowed timeframe.",
+      "Microsoft does not automatically migrate resources to a different region during an SLA breach. Resource placement is the customer's architectural decision.",
+      "SLA breach remediation is financial (service credits), not support-related. Premium support upgrades are not part of SLA compensation."
+    ],
+    "tip": "SLA breach → service credits (a percentage discount on your bill). NOT a refund, NOT an automatic fix. The customer must file a claim. The credit percentage increases the worse the downtime was. Know that service credits are the standard SLA remedy."
+  },
+  {
+    "id": "AZ900-E04-022",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs a critical application on Azure VMs\n- The application must survive the complete failure of an Azure region\n- Recovery Point Objective (RPO): maximum 5 minutes of data loss\n- Recovery Time Objective (RTO): application must be online within 2 hours\n\nQuestion:\nWhat is the difference between RPO and RTO?",
+    "choices": [
+      "RPO is the maximum acceptable downtime; RTO is the maximum acceptable data loss",
+      "RPO is the maximum acceptable data loss; RTO is the maximum acceptable downtime to restore service",
+      "RPO and RTO are the same thing — both measure downtime",
+      "RPO measures network latency; RTO measures storage throughput"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This answer reverses the definitions. RPO is about DATA loss, not downtime. RTO is about downtime, not data loss.",
+      "This option is correct. RPO (Recovery Point Objective) = the maximum acceptable amount of data loss measured in time. An RPO of 5 minutes means you could lose up to 5 minutes of data. RTO (Recovery Time Objective) = the maximum acceptable time to restore the service after a disruption. An RTO of 2 hours means the application must be back online within 2 hours of the failure.",
+      "RPO and RTO measure different things. RPO = data loss tolerance. RTO = downtime tolerance. A system could have a 0-minute RPO (zero data loss) but a 4-hour RTO (takes 4 hours to restore).",
+      "RPO and RTO are disaster recovery metrics, not performance metrics. They have nothing to do with network latency or storage throughput."
+    ],
+    "tip": "RPO = how much data can you AFFORD TO LOSE? (measured in time: 0 minutes = zero data loss). RTO = how long can your service be DOWN? (measured in time: 0 = instant failover). These determine your DR architecture: lower RPO/RTO = more replication, more cost."
+  },
+  {
+    "id": "AZ900-E04-023",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A retail company receives customer orders through a web API\n- During flash sales, order volume spikes from 100 orders/minute to 50,000 orders/minute\n- The web API can process 500 orders/minute\n- Orders that can't be processed immediately should be queued and processed as capacity becomes available\n- No orders should be lost during traffic spikes\n\nQuestion:\nWhich architecture pattern prevents order loss during traffic spikes?",
+    "choices": [
+      "Synchronous processing — API processes each order immediately",
+      "Load shedding — API rejects excess orders with HTTP 503",
+      "Queue-based load levelling — API writes orders to a queue for asynchronous processing",
+      "Caching — API caches order data in Redis"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Synchronous processing would cause the API to become overwhelmed at 50,000 orders/minute when it can only handle 500. Excess orders would time out or fail — losing orders.",
+      "Load shedding intentionally rejects excess requests to protect the system. While it prevents system crashes, it LOSES orders — rejected orders are not processed. The question says no orders should be lost.",
+      "This option is correct. Queue-based load levelling uses a message queue (Azure Service Bus or Azure Queue Storage) as a buffer. The web API writes all incoming orders to the queue (fast, high-throughput operation). Backend processors consume orders from the queue at their own pace (500/minute). During spikes, the queue grows; during lulls, it drains. No orders are lost — they wait in the queue until processed.",
+      "Caching stores frequently accessed data for fast retrieval. It doesn't help with processing order volume or buffering request spikes. Caching is for read optimisation, not write-heavy order processing."
+    ],
+    "tip": "Queue-based load levelling = buffer between producers (fast) and consumers (slow). Producers write to queue at any speed; consumers process at their own pace. No data loss during spikes. This is a fundamental cloud architecture pattern tested on AZ-900."
+  },
+  {
+    "id": "AZ900-E04-024",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure AD (Entra ID) to manage identities\n- A user signs in from an IP address that Azure identifies as a Tor exit node\n- The sign-in behaviour is flagged as high-risk\n- The security team wants to automatically require the user to change their password when high-risk sign-ins are detected\n\nQuestion:\nWhich Azure AD feature detects and responds to risky sign-in behaviour?",
+    "choices": [
+      "Azure AD Conditional Access only",
+      "Azure AD Identity Protection",
+      "Azure AD Multi-Factor Authentication",
+      "Azure AD Privileged Identity Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Conditional Access can use risk level as a condition (require MFA for high-risk sign-ins), but it doesn't detect the risk itself. Conditional Access consumes risk signals from Identity Protection but doesn't generate them.",
+      "This option is correct. Azure AD Identity Protection uses Microsoft's threat intelligence and machine learning to detect risky sign-in behaviour (anonymous IP addresses, Tor nodes, impossible travel, malware-linked IPs, credential leaks). It calculates a risk level (low, medium, high) for each sign-in. You can configure policies to automatically respond: require password change, require MFA, or block access. Identity Protection generates the risk signals that Conditional Access can also consume.",
+      "MFA adds a second verification step, which is a possible response to a risky sign-in. But MFA itself doesn't detect Tor exit nodes or risky behaviour — Identity Protection does the detection and can trigger MFA as a response.",
+      "PIM manages time-bound privileged role access. It doesn't detect risky sign-in behaviour or respond to anonymous IP addresses."
+    ],
+    "tip": "Identity Protection = DETECT risky sign-ins (risk calculation, machine learning). Conditional Access = RESPOND to conditions including risk level. They work together: Identity Protection feeds risk signals into Conditional Access policies. If 'detect risk' — Identity Protection. If 'enforce rules based on conditions' — Conditional Access."
+  },
+  {
+    "id": "AZ900-E04-025",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs a managed Apache Kafka service in Azure for event streaming\n- They process millions of events per second from IoT devices and application logs\n- The team already has Kafka expertise and wants to use Kafka APIs and protocols\n\nQuestion:\nWhich Azure service provides a managed Kafka-compatible event streaming platform?",
+    "choices": [
+      "Azure Service Bus",
+      "Azure Event Hubs with Kafka protocol support",
+      "Azure Queue Storage",
+      "Azure Notification Hubs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Service Bus is an enterprise message broker supporting AMQP protocol. It doesn't support Kafka APIs or protocols. It's designed for transactional messaging, not high-throughput event streaming.",
+      "This option is correct. Azure Event Hubs provides a Kafka-compatible endpoint — Kafka applications can connect to Event Hubs using Kafka protocol (1.0+) without code changes. Event Hubs handles the infrastructure (no Kafka cluster to manage) while your existing Kafka producers and consumers work as-is. It supports millions of events per second and integrates with the Azure ecosystem.",
+      "Queue Storage is a simple message queue with no Kafka compatibility. It doesn't support the Kafka protocol, high-throughput event streaming, or the consumer group pattern Kafka uses.",
+      "Notification Hubs is for sending push notifications to mobile devices. Completely different use case from event streaming."
+    ],
+    "tip": "Event Hubs = Kafka-compatible event streaming (no cluster management). If the question mentions 'Kafka' or 'high-throughput event streaming' on Azure — Event Hubs. It's the managed alternative to running your own Kafka cluster."
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E01-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your company currently runs all workloads on physical servers in a single on-premises data centre\n- The CTO wants to reduce upfront hardware spending and shift to a monthly billing model\n- The IT team must retain the ability to scale compute resources up or down based on seasonal demand\n\nQuestion:\nWhich cloud characteristic BEST addresses the CTO's financial requirement?",
+    "choices": [
+      "High availability",
+      "Consumption-based pricing (OpEx model)",
+      "Geo-distribution",
+      "Fault tolerance"
+    ],
+    "answer": [1],
+    "explanations": [
+      "High availability ensures uptime and redundancy, but it does not directly address the shift from capital expenditure to operational expenditure.",
+      "This option is correct. Consumption-based pricing means you pay only for the resources you use, shifting from large upfront CapEx (buying servers) to predictable OpEx (monthly bills). This directly addresses the CTO's requirement to reduce upfront spending and move to monthly billing.",
+      "Geo-distribution places resources in multiple regions for latency and redundancy. It's a deployment benefit, not a financial model.",
+      "Fault tolerance ensures continued operation during component failures. Like high availability, it's an operational benefit, not a financial one."
+    ],
+    "tip": "Exam pattern: When a question mentions reducing upfront costs, shifting to monthly billing, or eliminating capital expenditure — the answer is always about the consumption-based/OpEx model. Microsoft frames this as a core cloud benefit."
+  },
+  {
+    "id": "AZ900-E01-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A startup is building a new web application\n- They want to deploy code without managing the underlying operating system, patching, or runtime environment\n- They need automatic scaling during traffic spikes\n\nQuestion:\nWhich cloud service type should the startup use?",
+    "choices": [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)",
+      "Desktop as a Service (DaaS)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "IaaS provides virtual machines, networking, and storage — but the customer still manages the OS, patching, and runtime. The startup explicitly wants to avoid this responsibility.",
+      "This option is correct. PaaS provides a managed platform where the cloud provider handles the OS, patching, and runtime. Developers just deploy their code. Azure App Service is the classic PaaS example. Auto-scaling is a built-in PaaS capability.",
+      "SaaS is a complete application consumed by end users (e.g., Microsoft 365, Salesforce). The startup is building their own application, not consuming a finished one.",
+      "DaaS provides virtual desktops (e.g., Azure Virtual Desktop). This has nothing to do with hosting a web application."
+    ],
+    "tip": "IaaS = you manage the most (OS, runtime, app). PaaS = you manage only your code and data. SaaS = you manage nothing, just use the app. If the question says 'deploy code without managing infrastructure' — it's PaaS."
+  },
+  {
+    "id": "AZ900-E01-003",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A financial services company has strict regulatory requirements that prevent customer data from leaving their own data centre\n- They also want to use Azure AI and machine learning services for fraud detection\n- The solution must satisfy both requirements simultaneously\n\nQuestion:\nWhich cloud deployment model should the company use?",
+    "choices": [
+      "Public cloud only",
+      "Private cloud only",
+      "Hybrid cloud",
+      "Multi-cloud"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Public cloud alone would mean customer data goes to Azure data centres. This violates the regulatory requirement to keep data on-premises.",
+      "Private cloud alone keeps data on-premises, but doesn't provide access to Azure's AI and ML services. The company needs both.",
+      "This option is correct. Hybrid cloud combines on-premises infrastructure (private) with Azure services (public). Customer data stays in the local data centre to satisfy regulations, while Azure AI/ML services are consumed from the public cloud for fraud detection. This is the textbook hybrid cloud use case.",
+      "Multi-cloud means using multiple public cloud providers (e.g., Azure + AWS). This doesn't solve the data residency requirement — it just adds another public cloud."
+    ],
+    "tip": "Hybrid cloud questions almost always involve a regulatory/compliance constraint keeping some data on-premises PLUS a need for public cloud services. If you see both requirements in one question, it's hybrid."
+  },
+  {
+    "id": "AZ900-E01-004",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation hosts a customer-facing e-commerce website\n- During Black Friday sales, traffic increases by 800%\n- After the sale period, traffic returns to normal levels\n- You want to automatically add compute resources during the spike and remove them afterwards to control costs\n\nQuestion:\nWhich cloud characteristic describes this ability?",
+    "choices": [
+      "Agility",
+      "High availability",
+      "Elasticity",
+      "Disaster recovery"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Agility refers to the ability to quickly deploy and configure cloud resources. While related, agility is about speed of provisioning, not automatic scaling in response to demand.",
+      "High availability ensures services remain accessible during failures (e.g., 99.9% uptime SLA). It doesn't specifically address scaling resources up and down with demand.",
+      "This option is correct. Elasticity is the ability to automatically increase or decrease resources based on demand. Resources scale out during the Black Friday spike and scale back in afterwards — you only pay for what you use. This is the definition of elasticity.",
+      "Disaster recovery is about restoring services after a catastrophic event (flood, fire, region failure). Traffic spikes are not disasters — they're expected demand patterns."
+    ],
+    "tip": "Elasticity = automatic scale out/in based on demand. Scalability = ability to handle growth (can be manual). Microsoft distinguishes these: elasticity is specifically about dynamic, automatic adjustment. If the question says 'automatically add and remove resources based on demand' — it's elasticity."
+  },
+  {
+    "id": "AZ900-E01-005",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 for email and collaboration\n- The IT security team asks: 'Who is responsible for ensuring the physical security of the data centres where our email data is stored?'\n\nQuestion:\nAccording to the shared responsibility model, who is responsible for physical data centre security when using a SaaS service like Microsoft 365?",
+    "choices": [
+      "The customer (your company)",
+      "The cloud provider (Microsoft)",
+      "Shared between the customer and Microsoft",
+      "A third-party security vendor"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The customer is never responsible for physical data centre security in any cloud model (IaaS, PaaS, or SaaS). Physical security always belongs to the cloud provider.",
+      "This option is correct. In the shared responsibility model, physical security of data centres is ALWAYS the cloud provider's responsibility — regardless of whether you're using IaaS, PaaS, or SaaS. Microsoft secures the buildings, hardware, and physical access controls.",
+      "Physical security is not a shared responsibility. Some things are shared (like network controls in IaaS), but physical security is exclusively the provider's domain.",
+      "Microsoft does not delegate physical data centre security to third parties. They manage it directly."
+    ],
+    "tip": "Shared responsibility model is heavily tested on AZ-900. Remember: Physical security, host infrastructure, and the physical network are ALWAYS Microsoft's responsibility. Data, endpoints, accounts, and access management are ALWAYS the customer's. Everything in between depends on the service model."
+  },
+  {
+    "id": "AZ900-E01-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys virtual machines in the Azure UK South region\n- The architecture team needs to protect against a single data centre failure within that region\n- They do NOT want to replicate to a different Azure region due to data sovereignty concerns\n\nQuestion:\nWhat should the architecture team use to protect the VMs against a single data centre failure within UK South?",
+    "choices": [
+      "Azure Traffic Manager",
+      "Availability Zones",
+      "Azure Site Recovery to UK West",
+      "A single Availability Set"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Traffic Manager is a DNS-based load balancer that routes traffic across regions or endpoints. It doesn't protect individual VMs against data centre failures within a region — it operates at a higher level.",
+      "This option is correct. Availability Zones are physically separate data centres within an Azure region, each with independent power, cooling, and networking. Deploying VMs across Availability Zones in UK South protects against a single data centre failure while keeping all resources within the same region (satisfying data sovereignty).",
+      "Azure Site Recovery to UK West replicates to a different region. The question explicitly says they don't want cross-region replication due to data sovereignty.",
+      "An Availability Set protects against rack-level and update-domain failures within a SINGLE data centre. It does NOT protect against an entire data centre going down. This is a critical exam distinction."
+    ],
+    "tip": "Availability Zones = protection against data centre failure (within one region). Availability Sets = protection against rack/update failures (within one data centre). The exam LOVES testing this distinction. Zone > Set for resilience."
+  },
+  {
+    "id": "AZ900-E01-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to organise Azure resources for three departments: Finance, Marketing, and Engineering\n- Each department has its own budget and cost centre\n- You need to track Azure spending per department for chargeback purposes\n- Resources from different departments sometimes share the same subscription\n\nQuestion:\nWhat is the MOST efficient way to track costs per department?",
+    "choices": [
+      "Create a separate Azure subscription for each department",
+      "Create a separate resource group for each department",
+      "Apply Azure tags to resources with a Department key",
+      "Use Azure Management Groups for each department"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Separate subscriptions would work for cost separation, but the question states resources sometimes share the same subscription. Additionally, creating separate subscriptions adds administrative overhead and isn't the most efficient approach for cost tracking alone.",
+      "Resource groups provide logical grouping, but a resource can only belong to one resource group. If resources are already organised differently (e.g., by application), reorganising by department would break existing structure. Tags are more flexible.",
+      "This option is correct. Azure tags are key-value pairs (e.g., Department: Finance) that can be applied to any resource regardless of its subscription or resource group. Cost Management can filter and group spending by tag, making chargeback reports straightforward. Tags are the recommended Microsoft approach for cost allocation across shared infrastructure.",
+      "Management Groups are for organising subscriptions and applying governance policies (like Azure Policy) at scale. They don't directly provide cost tracking per department within a subscription."
+    ],
+    "tip": "When the exam asks about cost tracking, chargeback, or cost allocation across departments — think Tags first. Tags are the most flexible cost categorisation tool because they work across resource groups and subscriptions. Microsoft recommends tags as the primary mechanism for cost allocation."
+  },
+  {
+    "id": "AZ900-E01-008",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to run a batch processing job that analyses large datasets\n- The job runs once per month and takes approximately 4 hours to complete\n- During the other 716+ hours of the month, no compute resources are needed\n- The company wants to minimise costs\n\nQuestion:\nWhich Azure compute option is MOST cost-effective for this workload?",
+    "choices": [
+      "An Azure Virtual Machine running 24/7 on a Reserved Instance",
+      "Azure Functions with a Consumption plan",
+      "Azure Batch with low-priority VMs",
+      "An Azure App Service on a Standard tier plan"
+    ],
+    "answer": [2],
+    "explanations": [
+      "A 24/7 VM with a Reserved Instance is cost-effective for always-on workloads, but paying for a VM that runs 720 hours to use it for 4 hours is extremely wasteful — even with the RI discount.",
+      "Azure Functions (Consumption plan) is designed for short-lived, event-driven tasks. It has a 10-minute execution timeout per invocation and isn't designed for 4-hour batch processing of large datasets.",
+      "This option is correct. Azure Batch is purpose-built for large-scale batch processing. Low-priority VMs offer up to 80% discount compared to regular VMs, and you only pay while the job runs. Batch handles provisioning the compute pool, running the job, and deallocating resources — ideal for a monthly 4-hour job.",
+      "App Service Standard tier runs continuously and is designed for web applications, not batch processing. You'd pay for 720+ hours for 4 hours of work."
+    ],
+    "tip": "Azure Batch + low-priority VMs is the go-to answer for large-scale, periodic batch processing. If the question describes a job that runs infrequently and processes large amounts of data, Azure Batch is almost always the answer."
+  },
+  {
+    "id": "AZ900-E01-009",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores files that are accessed frequently during the first 30 days after creation\n- After 30 days, files are rarely accessed but must be available within milliseconds if requested\n- After 180 days, files are almost never accessed and can tolerate retrieval delays of several hours\n- You need to minimise storage costs while meeting access requirements\n\nQuestion:\nWhich combination of Azure Blob Storage access tiers should you use?",
+    "choices": [
+      "Hot tier → Cool tier → Archive tier",
+      "Hot tier → Cool tier → Cold tier",
+      "Premium tier → Hot tier → Cool tier",
+      "Cool tier → Cold tier → Archive tier"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Hot tier for the first 30 days (frequent access, low access cost), Cool tier from 30-180 days (infrequent access, lower storage cost, still millisecond retrieval), and Archive tier after 180 days (near-zero storage cost, hours to rehydrate). This matches all three access patterns described in the scenario.",
+      "Cold tier exists but the question says files after 180 days can tolerate hours of retrieval delay. Cool tier data is still available in milliseconds — you need Archive tier for the cheapest long-term storage where hours of latency is acceptable.",
+      "Premium tier is for block blob storage requiring consistent low latency (e.g., interactive workloads). It's the most expensive tier and overkill for general file storage.",
+      "Starting with Cool tier ignores that files are accessed frequently in the first 30 days. Cool tier has higher per-access costs — using it for frequently accessed data would increase costs unnecessarily."
+    ],
+    "tip": "Storage tier questions follow a pattern: Hot = frequent access, Cool = infrequent (30+ day minimum), Cold = rare (90+ day minimum), Archive = almost never (180+ day minimum, hours to rehydrate). Match the access pattern to the tier. The exam often describes lifecycle scenarios — map each phase to a tier."
+  },
+  {
+    "id": "AZ900-E01-010",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation has 15 Azure subscriptions across multiple departments\n- The IT governance team needs to enforce a policy that all resources must be deployed in UK South or UK West regions only\n- This policy must apply to ALL subscriptions, including any new ones created in the future\n- Individual departments must NOT be able to override this restriction\n\nQuestion:\nWhat should the governance team configure?",
+    "choices": [
+      "An Azure RBAC role assignment at each subscription level",
+      "Azure Policy assigned at the Management Group level",
+      "Resource locks on all existing resource groups",
+      "Azure Blueprints assigned to each subscription individually"
+    ],
+    "answer": [1],
+    "explanations": [
+      "RBAC controls who can do what (permissions), not what configurations are allowed. You could restrict who can create resources, but you can't use RBAC alone to restrict which regions resources are deployed to.",
+      "This option is correct. Azure Policy can enforce allowed locations (built-in policy: 'Allowed locations'). Assigning it at the Management Group level means it automatically applies to all subscriptions under that group — including future ones. Departments can't override policies inherited from a parent management group. This is the exact use case Management Groups + Azure Policy were designed for.",
+      "Resource locks prevent deletion or modification of existing resources. They don't control where new resources can be deployed, and they don't apply to future resource groups automatically.",
+      "Assigning Blueprints to each subscription individually would work, but fails the 'including any new subscriptions' requirement — you'd have to manually assign the Blueprint to each new subscription. The Management Group approach is automatic."
+    ],
+    "tip": "Azure Policy + Management Groups is Microsoft's recommended governance pattern for organisation-wide rules. If the question says 'all subscriptions including future ones' or 'cannot be overridden by departments' — Management Group-level Azure Policy is the answer. The 'Allowed locations' built-in policy is a favourite exam topic."
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E02-011",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A multinational company operates in 30 countries\n- Each country has different data protection regulations\n- The company needs to deploy applications in Azure regions closest to their users in each country\n- They also need to comply with local data residency laws that require data to be stored within specific geographic boundaries\n\nQuestion:\nWhich Azure concept helps the company deploy resources near users while respecting data residency requirements?",
+    "choices": [
+      "Azure Availability Zones",
+      "Azure Regions and Geographies",
+      "Azure Resource Groups",
+      "Azure Subscriptions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Availability Zones are separate data centres within a SINGLE region. They provide high availability, not geographic distribution across countries or data residency compliance.",
+      "This option is correct. Azure Regions are physical locations around the world (60+ regions in 30+ countries). Azure organises regions into Geographies — geographic boundaries that respect data residency and compliance requirements (e.g., the UK geography contains UK South and UK West). By selecting regions within the appropriate geography, the company can serve local users with low latency while keeping data within the required geographic boundaries.",
+      "Resource Groups are logical containers for managing resources. They don't determine where resources are geographically deployed — that's determined by the region you select during deployment.",
+      "Subscriptions are billing and access management boundaries. They don't control geographic deployment of resources."
+    ],
+    "tip": "Azure Geography = compliance boundary (data residency). Azure Region = physical deployment location. Azure Availability Zone = data centre within a region. The hierarchy is Geography → Region → Availability Zone. Data residency questions point to Geographies/Regions."
+  },
+  {
+    "id": "AZ900-E02-012",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is adopting cloud services and wants to understand the cost implications\n- They currently spend £500,000 per year on data centre operations including:\n  - Hardware depreciation: £200,000\n  - Electricity and cooling: £120,000\n  - Data centre staff: £100,000\n  - Maintenance contracts: £80,000\n- With Azure, they would pay approximately £280,000 per year for equivalent services\n\nQuestion:\nWhat is the primary financial benefit of moving to the cloud in this scenario?",
+    "choices": [
+      "Eliminating all IT-related costs",
+      "Converting Capital Expenditure (CapEx) to Operating Expenditure (OpEx) and reducing total cost",
+      "Guaranteeing costs will never increase",
+      "Avoiding the need for any IT staff"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud computing doesn't eliminate ALL IT costs. The company still pays £280,000/year for Azure services. You still need IT staff to manage cloud resources, security, and applications. It reduces and shifts costs, not eliminates them.",
+      "This option is correct. The move from on-premises to cloud converts large upfront capital expenditures (hardware purchases, data centre construction) to predictable monthly operational expenditure (Azure subscriptions). Additionally, the total cost drops from £500,000 to £280,000 — a 44% reduction. The company eliminates hardware depreciation, reduces electricity/cooling costs, and shifts from maintenance contracts to a managed service model.",
+      "Cloud costs can and do increase — with more usage comes more spending. Azure pricing changes over time, and there's no guarantee costs remain static. The benefit is flexibility and potential reduction, not a guarantee of fixed costs.",
+      "Cloud adoption doesn't eliminate the need for IT staff. You still need people to manage cloud architecture, security, applications, and operations. The staff focus shifts from managing hardware to managing cloud services."
+    ],
+    "tip": "The CapEx to OpEx shift is one of the most tested financial concepts on AZ-900. CapEx = buy it upfront, depreciate over years. OpEx = pay monthly for what you use. Cloud converts CapEx to OpEx while often reducing the total amount spent."
+  },
+  {
+    "id": "AZ900-E02-013",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A software development company builds applications for multiple clients\n- Each client application has different scaling requirements\n- Some applications have predictable daily patterns, others have unpredictable traffic spikes\n- The company wants to pay only for the resources each application actually consumes\n\nQuestion:\nWhich cloud pricing model best suits this company's diverse workload requirements?",
+    "choices": [
+      "Reserved capacity pricing",
+      "Consumption-based (pay-as-you-go) pricing",
+      "Fixed monthly subscription",
+      "Upfront annual payment"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Reserved capacity provides a discount for committing to 1-3 years of specific resource usage. It's optimal for steady, predictable workloads, but the company has diverse applications with unpredictable patterns — reserved pricing would risk overpaying for underutilised reservations.",
+      "This option is correct. Consumption-based pricing means you pay only for resources actually used. Each client application scales independently — when demand is low, costs are low; when demand spikes, you pay more but get the capacity needed. This model handles both predictable and unpredictable workloads efficiently without upfront commitments.",
+      "A fixed monthly subscription charges the same regardless of usage. Applications with low usage overpay, while applications with high usage may be capped. This doesn't suit diverse, variable workloads.",
+      "Upfront annual payment is another form of committed spend. Like reserved pricing, it assumes you can predict your usage — which the company can't across diverse client applications."
+    ],
+    "tip": "Consumption-based pricing is the default cloud model and the answer for 'pay only for what you use' questions. Reserved pricing = committed, predictable workloads (discount for commitment). Pay-as-you-go = variable, unpredictable workloads (flexibility over discount)."
+  },
+  {
+    "id": "AZ900-E02-014",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a web application running on Azure VMs\n- The application needs a message queue to decouple the frontend (which accepts orders) from the backend (which processes orders)\n- If the backend goes down, orders must not be lost — they should remain in the queue until the backend recovers\n- The solution must be serverless with no infrastructure to manage\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Event Hubs",
+      "Azure Queue Storage",
+      "Azure Service Bus Queue",
+      "Azure Event Grid"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Event Hubs is designed for massive-scale event streaming (millions of events per second) — think telemetry ingestion and analytics pipelines. It's not designed for transactional message queuing with delivery guarantees for individual orders.",
+      "Azure Queue Storage provides basic message queuing and is serverless. However, it lacks advanced features like guaranteed FIFO ordering, dead-letter queues, duplicate detection, and transactions that enterprise order processing typically requires.",
+      "This option is correct. Azure Service Bus Queue is an enterprise-grade message broker that provides guaranteed delivery, FIFO ordering, duplicate detection, dead-letter handling, and transactions. Messages persist in the queue until the consumer processes and acknowledges them — if the backend is down, orders wait safely. It's fully managed (serverless) with no infrastructure to maintain.",
+      "Azure Event Grid is an event routing service that reacts to events from Azure services or custom sources. It's designed for reactive event-driven architectures (pub/sub), not for persistent message queuing where messages must be stored until consumed."
+    ],
+    "tip": "Service Bus = enterprise messaging (queues with guaranteed delivery, ordered, transactional). Queue Storage = simple, cheap queuing (basic, no ordering guarantee). Event Hubs = high-throughput event streaming. Event Grid = event-driven reactive routing. For 'orders must not be lost' — Service Bus."
+  },
+  {
+    "id": "AZ900-E02-015",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription with resources across multiple resource groups\n- A new compliance requirement mandates that all resources must be tagged with a CostCenter value\n- Existing resources that are missing the tag should be automatically remediated\n- New resources created without the tag should be blocked\n\nQuestion:\nWhat combination of Azure Policy effects should you use?",
+    "choices": [
+      "Audit for existing resources and Deny for new resources",
+      "DeployIfNotExists for existing resources and Deny for new resources",
+      "Append for existing resources and Deny for new resources",
+      "Modify for existing resources and Deny for new resources"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Audit only flags non-compliant existing resources — it doesn't automatically remediate them by adding the missing tag. The question requires automatic remediation.",
+      "DeployIfNotExists is designed for deploying a RELATED resource (e.g., deploy a diagnostic setting on a VM). It's not the right effect for adding a tag to the existing resource itself.",
+      "Append can add fields to a resource during creation or update, but it's being superseded by Modify for tag management. Append also has limitations — it can add but has difficulty modifying existing properties. Microsoft recommends Modify for tag operations.",
+      "This option is correct. Modify effect can automatically add, update, or remove tags on existing resources through a remediation task — satisfying the 'automatically remediated' requirement. Deny effect blocks the creation of new resources that don't include the CostCenter tag. This combination ensures both existing compliance (Modify + remediation) and ongoing compliance (Deny)."
+    ],
+    "tip": "Azure Policy effects for tags: Modify = add/change/remove tags (supports remediation tasks for existing resources). Deny = block creation of non-compliant resources. Use Modify + Deny together when you need to fix existing resources AND prevent new non-compliant ones."
+  },
+  {
+    "id": "AZ900-E02-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A data analytics company needs to run Apache Spark and Hadoop workloads on Azure\n- They process terabytes of log data daily from IoT sensors\n- The team needs collaborative notebooks for data scientists\n- They want a unified analytics platform that handles data engineering and data science workloads\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure HDInsight",
+      "Azure Databricks",
+      "Azure Data Factory",
+      "Azure Stream Analytics"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure HDInsight is a managed Hadoop/Spark service that can run these workloads, but it lacks the collaborative notebook experience and unified analytics platform that the question emphasises. It's more of a traditional big data cluster approach.",
+      "This option is correct. Azure Databricks is a unified analytics platform built on Apache Spark. It provides collaborative notebooks for data scientists and data engineers, handles both data engineering (ETL/ELT pipelines) and data science (ML training, experimentation) workloads, and processes massive datasets. It's the premium choice for organisations that need a collaborative, unified analytics environment.",
+      "Azure Data Factory is a data integration and orchestration service (ETL/ELT pipelines). It moves and transforms data but doesn't provide a Spark processing engine or collaborative notebooks for data scientists.",
+      "Azure Stream Analytics is for real-time stream processing of data as it arrives. While the IoT sensors generate streaming data, the question describes batch processing of daily logs, not real-time stream processing. Stream Analytics also doesn't provide collaborative notebooks."
+    ],
+    "tip": "Databricks = unified analytics platform (Spark + notebooks + collaboration). HDInsight = managed Hadoop/Spark clusters (traditional big data). Data Factory = data integration/orchestration (move and transform). Synapse Analytics = data warehousing + analytics. If the question mentions 'collaborative notebooks' + 'data science' + 'Spark' — Databricks."
+  },
+  {
+    "id": "AZ900-E02-017",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure and needs to protect against Distributed Denial of Service (DDoS) attacks\n- They host public-facing web applications behind Azure Application Gateway\n- They want DDoS mitigation that is specifically tuned to their Azure resource traffic patterns\n- They also need DDoS attack analytics, alerts, and access to a DDoS Rapid Response team\n\nQuestion:\nWhich Azure DDoS Protection tier should they select?",
+    "choices": [
+      "DDoS Infrastructure Protection (Basic/default)",
+      "DDoS Network Protection (Standard)",
+      "Azure Firewall only",
+      "Network Security Groups only"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DDoS Infrastructure Protection (formerly Basic) is enabled for free on all Azure resources. It provides basic protection against common network-layer attacks, but it is NOT tuned to your specific traffic patterns, doesn't provide attack analytics or alerts, and doesn't include access to a DDoS Rapid Response (DRR) team.",
+      "This option is correct. DDoS Network Protection (formerly Standard) provides advanced DDoS mitigation tuned to your Azure Virtual Network's specific traffic patterns using adaptive machine learning. It includes real-time attack metrics and diagnostic logs, DDoS attack analytics, configurable alerts, and access to the DDoS Rapid Response (DRR) team during active attacks. It also includes a cost protection guarantee.",
+      "Azure Firewall is a network security service that filters traffic based on rules (FQDN, threat intelligence). It can complement DDoS protection but doesn't provide DDoS-specific mitigation, analytics, or the DRR team.",
+      "NSGs filter traffic based on IP/port/protocol rules. They don't provide DDoS mitigation, adaptive learning, attack analytics, or rapid response services."
+    ],
+    "tip": "DDoS Infrastructure Protection = free, basic, automatic for all Azure resources. DDoS Network Protection = paid, advanced, tuned to your traffic, includes analytics/alerts/DRR team. If the question mentions 'tuned to traffic patterns', 'attack analytics', or 'rapid response team' — Network Protection (Standard)."
+  },
+  {
+    "id": "AZ900-E02-018",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A company wants to estimate the monthly cost of running the following Azure resources:\n  - 4 x D4s_v3 virtual machines running Windows Server in UK South\n  - 1 x Azure SQL Database (Standard tier, S3)\n  - 500 GB of Azure Blob Storage (Hot tier)\n  - 1 x Azure Application Gateway (WAF v2)\n\nQuestion:\nWhich tool should you use to estimate these costs BEFORE deployment?",
+    "choices": [
+      "Azure Cost Management + Billing",
+      "Azure Pricing Calculator",
+      "Azure TCO Calculator",
+      "Azure Monitor"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cost Management + Billing analyses spending on resources that are ALREADY deployed and running. It can't estimate costs for resources you haven't created yet.",
+      "This option is correct. The Azure Pricing Calculator lets you select specific Azure services, configure their specifications (VM size, tier, region, quantity), and calculate an estimated monthly cost BEFORE you deploy anything. You can build a complete estimate with multiple services, adjust quantities, and compare pricing options. It's the pre-deployment cost estimation tool.",
+      "The TCO Calculator compares on-premises costs versus Azure costs for migration planning. It doesn't estimate costs for specific Azure resources — it takes your on-premises workload description and models the comparative cost.",
+      "Azure Monitor collects performance metrics and logs from running resources. It has nothing to do with cost estimation."
+    ],
+    "tip": "Pricing Calculator = estimate FUTURE Azure costs (before deployment). Cost Management = analyse CURRENT Azure spending (after deployment). TCO Calculator = compare on-premises vs Azure costs (migration planning). Three different tools, three different purposes."
+  },
+  {
+    "id": "AZ900-E02-019",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to deploy identical Azure environments for Development, Staging, and Production\n- Each environment includes: 2 VMs, a VNet with 3 subnets, an NSG, and a storage account\n- The infrastructure team wants to use Infrastructure as Code (IaC)\n- The code should be human-readable, concise, and natively supported by Azure\n- They prefer a declarative domain-specific language over JSON\n\nQuestion:\nWhich IaC tool should the infrastructure team use?",
+    "choices": [
+      "Azure Resource Manager (ARM) JSON templates",
+      "Bicep",
+      "Azure CLI scripts",
+      "Terraform"
+    ],
+    "answer": [1],
+    "explanations": [
+      "ARM JSON templates are declarative IaC natively supported by Azure, but they use JSON which is verbose, hard to read, and painful to write by hand. The team specifically wants something more human-readable and concise than JSON.",
+      "This option is correct. Bicep is Azure's domain-specific language for deploying Azure resources declaratively. It compiles to ARM JSON templates but is dramatically more readable and concise. It's natively supported by Azure (first-party), declarative, and designed to be human-friendly. Bicep files are about 50% shorter than equivalent ARM JSON templates.",
+      "Azure CLI scripts are imperative (step-by-step commands), not declarative. The question specifically asks for a declarative approach where you define the desired state.",
+      "Terraform is a popular multi-cloud IaC tool that uses HCL (declarative). However, it's a third-party tool from HashiCorp, not natively supported by Azure. The question asks for a solution natively supported by Azure — that's Bicep."
+    ],
+    "tip": "Bicep = Azure-native declarative IaC (human-readable, compiles to ARM). ARM templates = Azure-native declarative IaC (JSON, verbose). Terraform = multi-cloud declarative IaC (third-party). If the question says 'Azure-native' + 'human-readable' + 'declarative' — Bicep."
+  },
+  {
+    "id": "AZ900-E02-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to save money on Azure Virtual Machines used for production workloads\n- The workloads run 24/7 and will continue for at least the next 3 years\n- The VM sizes and configurations are stable and unlikely to change\n- Downtime is not acceptable — the VMs must be continuously available\n\nQuestion:\nWhich pricing option provides the BEST cost savings for these VMs?",
+    "choices": [
+      "Pay-as-you-go pricing",
+      "Azure Spot Virtual Machines",
+      "Azure Reserved Virtual Machine Instances (3-year term)",
+      "Dev/Test pricing"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Pay-as-you-go is the most flexible but most expensive option per hour. For workloads that run 24/7 for 3 years, you'd pay full price for every hour — no discounts. This is the baseline pricing other options discount from.",
+      "Spot VMs offer up to 90% discount but can be evicted at any time when Azure needs the capacity back. The question says downtime is not acceptable — Spot VMs cannot guarantee availability.",
+      "This option is correct. Reserved Instances (RIs) offer up to 72% discount over pay-as-you-go for committing to 1 or 3 years. The 3-year term gives the deepest discount. Since the workloads are stable, run 24/7, and will continue for 3+ years, this is the perfect RI scenario. Reservations don't affect VM availability — they're a billing construct, not a scheduling one.",
+      "Dev/Test pricing provides discounts on specific services for development and testing purposes under Visual Studio subscriptions. It's not available for production workloads and requires specific licensing — the question describes production workloads."
+    ],
+    "tip": "Reserved Instances = best for steady, predictable, long-running workloads (up to 72% saving). Spot VMs = best for interruptible workloads (up to 90% saving but evictable). Pay-as-you-go = best for unpredictable or short-term workloads. Match the pricing model to the workload characteristics."
+  }
+]

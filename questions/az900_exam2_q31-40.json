@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E02-031",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to create an isolated network environment in Azure\n- The network must have its own private IP address space (10.0.0.0/16)\n- Resources in this network need to communicate with each other privately\n- The network must be segmented into separate subnets for web servers, application servers, and database servers\n\nQuestion:\nWhich Azure resource should you create?",
+    "choices": [
+      "Azure ExpressRoute circuit",
+      "Azure Virtual Network (VNet)",
+      "Azure Traffic Manager profile",
+      "Azure DNS zone"
+    ],
+    "answer": [1],
+    "explanations": [
+      "ExpressRoute provides a private dedicated connection from on-premises to Azure. It's a connectivity service, not a network environment within Azure. You'd connect an ExpressRoute circuit TO a VNet, not use it instead of one.",
+      "This option is correct. An Azure Virtual Network (VNet) is the fundamental building block for private networking in Azure. You define an IP address space (e.g., 10.0.0.0/16), create subnets within it (web, app, database tiers), and resources deployed into those subnets can communicate privately. VNets provide isolation, segmentation, and the ability to control traffic flow using NSGs and route tables.",
+      "Traffic Manager routes DNS queries to different endpoints based on routing rules. It doesn't create network environments or private IP address spaces.",
+      "Azure DNS zones host DNS records for name resolution. They don't create network environments, define IP address spaces, or provide subnet segmentation."
+    ],
+    "tip": "Azure Virtual Network = your private network in Azure (IP address space, subnets, isolation). It's the foundation — almost every Azure resource that needs networking connects to a VNet. Subnets segment the VNet for security and organisation."
+  },
+  {
+    "id": "AZ900-E02-032",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates Azure resources across 50 subscriptions\n- The root management group contains all subscriptions\n- The security team needs to ensure ALL resources across ALL subscriptions have diagnostic logging enabled\n- This requirement must apply to current subscriptions and any future subscriptions automatically\n\nQuestion:\nAt which level should you assign the Azure Policy?",
+    "choices": [
+      "At each resource group individually",
+      "At each subscription individually",
+      "At the root management group",
+      "At each resource individually"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Assigning at each resource group would require managing policies across potentially hundreds of resource groups. New resource groups wouldn't automatically get the policy unless manually assigned. This is not scalable.",
+      "Assigning at each subscription means managing 50 policy assignments and manually adding the policy to every new subscription. This fails the 'future subscriptions automatically' requirement.",
+      "This option is correct. Policies assigned at the root management group cascade down to ALL subscriptions, resource groups, and resources beneath it — including any new subscriptions created in the future. This is a single policy assignment that governs the entire Azure estate. It's the most efficient and comprehensive approach.",
+      "Assigning policies to individual resources is impractical at scale and doesn't apply to future resources. This would require thousands of individual assignments."
+    ],
+    "tip": "Management Group hierarchy for policy: Root MG → Child MGs → Subscriptions → Resource Groups → Resources. Policies cascade downward. For 'all subscriptions including future ones' — assign at the root management group. One assignment, universal coverage."
+  },
+  {
+    "id": "AZ900-E02-033",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A healthcare company needs to store patient records in Azure\n- Records must be retained for 7 years to comply with regulations\n- After 7 years, records must be automatically deleted\n- During the 7-year period, records must not be modifiable or deletable by anyone (immutable)\n\nQuestion:\nWhich Azure Blob Storage feature should you configure?",
+    "choices": [
+      "Soft delete with a 7-year retention period",
+      "Immutable storage with a time-based retention policy",
+      "Azure Blob Storage lifecycle management rules",
+      "Azure Storage access tiers (Archive)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Soft delete recovers accidentally deleted blobs within a retention window, but it doesn't prevent modification or intentional deletion. Users with appropriate permissions can still delete blobs — soft delete just provides a recovery mechanism.",
+      "This option is correct. Immutable storage with a time-based retention policy makes blobs WORM (Write Once, Read Many). Once the policy is locked, data cannot be modified or deleted until the retention period expires. After 7 years, the data can be deleted (or auto-managed). This meets regulatory requirements like SEC 17a-4, HIPAA, and others that mandate immutable record keeping.",
+      "Lifecycle management automatically moves blobs between tiers (Hot → Cool → Archive) or deletes them based on age. It can handle the 'delete after 7 years' part, but it doesn't make data immutable during the retention period. Users could still modify or delete records.",
+      "Archive tier is a low-cost storage tier for rarely accessed data. It reduces cost but doesn't enforce immutability or retention policies. Data in Archive can still be deleted if the user has permissions."
+    ],
+    "tip": "Immutable storage = WORM compliance (Write Once, Read Many). Time-based retention = cannot be deleted until period expires. Legal hold = cannot be deleted until hold is removed. If the question mentions regulatory retention, compliance, or 'must not be deletable' — immutable storage."
+  },
+  {
+    "id": "AZ900-E02-034",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Azure resources tagged with environment names: Production, Staging, Development\n- The finance team wants to see a cost breakdown by environment\n- They also want to forecast next month's spending based on current trends\n- The analysis must cover all 12 subscriptions\n\nQuestion:\nWhich Azure tool should the finance team use?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure Cost Management + Billing",
+      "Azure Advisor",
+      "Azure TCO Calculator"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Pricing Calculator estimates costs for planned Azure services before deployment. It can't analyse actual spending by tags or forecast based on current usage trends.",
+      "This option is correct. Azure Cost Management + Billing provides cost analysis views that can filter and group by tags (e.g., environment: Production/Staging/Development), covers multiple subscriptions in a single view, and includes forecasting that projects future spending based on current trends. It's the operational cost analysis tool for active Azure environments.",
+      "Azure Advisor provides cost-saving recommendations (e.g., 'resize this VM to save £50/month'), but it doesn't provide cost breakdown by tags, cross-subscription cost analysis, or spending forecasts.",
+      "TCO Calculator compares on-premises costs to Azure costs for migration planning. It doesn't analyse actual current Azure spending or provide tag-based breakdowns."
+    ],
+    "tip": "Cost Management + Billing = analyse current spending (by tag, subscription, resource group), create budgets and alerts, forecast future costs. It's the operational cost tool. Pricing Calculator = estimate future costs. TCO = compare on-prem vs Azure."
+  },
+  {
+    "id": "AZ900-E02-035",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has two Azure Virtual Networks:\n  - VNet-A (10.1.0.0/16) in UK South — hosts the web application\n  - VNet-B (10.2.0.0/16) in UK South — hosts the database servers\n- Resources in VNet-A need to communicate with resources in VNet-B over Azure's backbone network\n- Communication must be private (no traffic over the public internet)\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Azure VPN Gateway (site-to-site)",
+      "VNet Peering between VNet-A and VNet-B",
+      "Azure ExpressRoute",
+      "Public IP addresses on all resources"
+    ],
+    "answer": [1],
+    "explanations": [
+      "VPN Gateway (site-to-site) creates an encrypted tunnel, typically used for connecting on-premises networks to Azure or connecting VNets across regions. For two VNets in the same region, it's unnecessarily complex and adds latency compared to VNet Peering.",
+      "This option is correct. VNet Peering connects two virtual networks over Azure's backbone network with low latency and high bandwidth. Traffic between peered VNets stays on Microsoft's private network — it never touches the public internet. Peering within the same region (local peering) has no additional cost beyond normal egress. It's the simplest and most efficient way to connect two VNets.",
+      "ExpressRoute connects on-premises networks to Azure via a private connection. Both VNets are already in Azure — ExpressRoute is for hybrid connectivity, not VNet-to-VNet communication within Azure.",
+      "Using public IP addresses would route traffic over the public internet, which violates the 'private, no public internet' requirement. It's also a security risk and adds latency."
+    ],
+    "tip": "VNet Peering = connect VNets within Azure (private, low latency, backbone network). VPN Gateway = connect on-premises to Azure (encrypted tunnel over internet) or VNets across regions (more complex). ExpressRoute = private dedicated connection from on-premises. For VNet-to-VNet within Azure — Peering."
+  },
+  {
+    "id": "AZ900-E02-036",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company's application currently runs on a single on-premises server\n- When the server needs maintenance or reboots, the application is completely unavailable\n- The company wants to achieve 99.99% uptime by deploying to the cloud\n- They're willing to run multiple instances of the application\n\nQuestion:\nWhat must the company implement to achieve 99.99% uptime in Azure?",
+    "choices": [
+      "Deploy to a single Azure VM with Premium SSD storage",
+      "Deploy across multiple Availability Zones",
+      "Use Azure Spot VMs for cost savings",
+      "Deploy to a single Azure region with Standard storage"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A single Azure VM with Premium SSD provides 99.9% SLA (three nines). This is better than on-premises single server, but it doesn't reach 99.99% (four nines). A single VM is still a single point of failure.",
+      "This option is correct. Deploying across multiple Availability Zones (separate data centres within a region) with multiple VM instances achieves 99.99% SLA. If one zone goes down, the other zones keep the application running. This is the standard Azure architecture for achieving four nines of availability.",
+      "Spot VMs can be evicted at any time when Azure needs capacity. They have NO uptime SLA — the exact opposite of 99.99% availability. Spot VMs are for cost savings on interruptible workloads only.",
+      "A single region with Standard storage provides limited redundancy. Standard storage doesn't offer the same SLA as Premium, and without availability zones, you can't achieve 99.99%."
+    ],
+    "tip": "Azure VM SLAs: Single VM (Premium SSD) = 99.9%. Availability Set = 99.95%. Availability Zones = 99.99%. The exam loves testing these exact numbers. For 99.99% — deploy across Availability Zones with multiple instances."
+  },
+  {
+    "id": "AZ900-E02-037",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to implement Zero Trust security for Azure resources\n- The security team needs to require Multi-Factor Authentication (MFA) for all users accessing Azure resources from outside the corporate network\n- Users inside the corporate network should be able to access resources without MFA\n- The policy should apply to all cloud applications\n\nQuestion:\nWhat should you configure in Azure Active Directory (Entra ID)?",
+    "choices": [
+      "Azure AD Multi-Factor Authentication server",
+      "Conditional Access policy with a named location condition",
+      "Azure AD Identity Protection risk-based policies",
+      "Azure AD Privileged Identity Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "MFA Server is a legacy on-premises component that has been deprecated. Microsoft recommends cloud-based Conditional Access for all new MFA implementations. Even when it was active, MFA Server couldn't differentiate access requirements based on network location as elegantly as Conditional Access.",
+      "This option is correct. Conditional Access policies let you define IF/THEN rules: IF a user accesses cloud apps from outside a named location (corporate network IP ranges), THEN require MFA. You define the corporate network as a 'named location' with trusted IP ranges, and the policy exempts users connecting from those IPs while requiring MFA for all other locations. This is the Microsoft-recommended Zero Trust approach.",
+      "Identity Protection risk-based policies require MFA based on sign-in risk levels (e.g., unfamiliar location, impossible travel, anonymous IP). While useful, the question asks specifically about corporate network vs external — a location-based condition, not risk-based.",
+      "Privileged Identity Management (PIM) manages just-in-time access to privileged roles. It's about activating admin roles for a limited time, not about requiring MFA based on network location for all users."
+    ],
+    "tip": "Conditional Access = IF (condition) THEN (control). Conditions: user, location, device, app, risk level. Controls: MFA, block, require compliant device, limit access. If the question describes 'require MFA when [condition]' — Conditional Access policy."
+  },
+  {
+    "id": "AZ900-E02-038",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to run containerised applications without managing any container orchestration infrastructure\n- The application consists of a single container that processes messages from a queue\n- The container should start, process the messages, and stop\n- No persistent infrastructure should be running between processing jobs\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Kubernetes Service (AKS)",
+      "Azure Container Instances (ACI)",
+      "Azure App Service (container deployment)",
+      "Azure Virtual Machine with Docker"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AKS is a managed Kubernetes platform for orchestrating multiple containers in complex microservices architectures. The question describes a single container that runs temporarily — AKS would mean maintaining a persistent cluster that runs between jobs, which violates the 'no persistent infrastructure' requirement.",
+      "This option is correct. Azure Container Instances provides the simplest way to run a container in Azure. No orchestration overhead, no persistent infrastructure — you start a container, it runs, it stops. ACI charges per-second of execution. For a single container that processes queue messages and stops, ACI is the perfect fit. It's serverless containers.",
+      "App Service can run containers but runs on persistent App Service plans (always-on infrastructure). You pay for the plan even when no messages are being processed. Doesn't meet the 'no persistent infrastructure' requirement.",
+      "A VM with Docker requires managing the VM, OS, and Docker runtime. It's always-on infrastructure with the most management overhead — the opposite of what's needed."
+    ],
+    "tip": "ACI = simple, single containers, on-demand, serverless (pay per second). AKS = complex, multi-container, orchestrated, persistent cluster. If the question says 'single container' + 'no infrastructure to manage' + 'start/stop' — ACI. If it says 'microservices' + 'orchestration' + 'scaling' — AKS."
+  },
+  {
+    "id": "AZ900-E02-039",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure environment that has grown organically over 2 years\n- Resources are scattered across resource groups with inconsistent naming\n- Multiple people have Owner access at the subscription level\n- No policies or governance controls are in place\n- The new CIO wants to implement proper governance using Microsoft best practices\n\nQuestion:\nWhich Microsoft framework provides guidance for establishing cloud governance, including identity, security, and cost management best practices?",
+    "choices": [
+      "Azure Well-Architected Framework",
+      "Microsoft Cloud Adoption Framework (CAF)",
+      "Azure Solution Architecture guides",
+      "Microsoft Security Development Lifecycle (SDL)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Well-Architected Framework (WAF) focuses on optimising existing workloads across five pillars (cost, security, reliability, performance, operational excellence). It's a workload-level framework, not an organisation-level governance and adoption framework.",
+      "This option is correct. The Microsoft Cloud Adoption Framework (CAF) is a comprehensive guide for cloud governance and adoption. It covers the entire cloud journey: Strategy, Plan, Ready, Adopt, Govern, and Manage. The Govern methodology specifically addresses identity baseline, security baseline, cost management, resource consistency, and deployment acceleration. It's the framework for establishing organisational governance.",
+      "Azure Solution Architecture guides provide reference architectures for specific technical scenarios. They're helpful for designing solutions but don't provide organisational governance frameworks.",
+      "The Security Development Lifecycle (SDL) is a software development security framework — it guides how to build secure software, not how to govern a cloud environment."
+    ],
+    "tip": "Cloud Adoption Framework (CAF) = organisation-level guidance for adopting and governing cloud (strategy, planning, governance). Well-Architected Framework (WAF) = workload-level guidance for optimising existing architectures. CAF = 'how do we adopt cloud?' WAF = 'is our workload designed well?'"
+  },
+  {
+    "id": "AZ900-E02-040",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to build a serverless API backend\n- The API must handle HTTP requests and return JSON responses\n- Individual API operations take less than 30 seconds to complete\n- You want to pay nothing when the API is not being called\n- The team wants to write the API logic in Python\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Virtual Machines",
+      "Azure App Service (Standard tier)",
+      "Azure Functions with HTTP trigger (Consumption plan)",
+      "Azure API Management"
+    ],
+    "answer": [2],
+    "explanations": [
+      "VMs run continuously and you pay 24/7 regardless of API usage. This directly violates the 'pay nothing when not being called' requirement.",
+      "App Service Standard tier runs on always-on dedicated compute. You pay a fixed monthly rate whether the API handles 0 requests or 1 million requests. Doesn't meet the pay-per-use requirement.",
+      "This option is correct. Azure Functions with HTTP triggers on a Consumption plan is the serverless answer. Functions executes your Python code when an HTTP request arrives and charges only for the execution time (per GB-second). When no requests are coming in, you pay nothing. The Consumption plan auto-scales and supports Python, with a 10-minute max execution time per invocation (30 seconds is well within this limit).",
+      "Azure API Management is a gateway/proxy that sits in front of your APIs. It provides rate limiting, authentication, documentation, and analytics — but it's not the API backend itself. You still need a compute service (like Functions) behind it."
+    ],
+    "tip": "Azure Functions (Consumption plan) = serverless, pay-per-execution, scales to zero. HTTP trigger = respond to HTTP requests (build APIs). If the question says 'serverless API' + 'pay nothing when idle' + 'short-running operations' — Functions with Consumption plan."
+  }
+]

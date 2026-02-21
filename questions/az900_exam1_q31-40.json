@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E01-031",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has servers running in Azure, AWS, and on-premises\n- The operations team needs a single pane of glass to manage and govern ALL servers regardless of where they run\n- They want to apply Azure Policy, monitor compliance, and use Azure security features across the entire estate\n\nQuestion:\nWhich Azure service enables management of non-Azure servers through the Azure control plane?",
+    "choices": [
+      "Azure Migrate",
+      "Azure Arc",
+      "Azure Site Recovery",
+      "Azure Lighthouse"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Migrate is a tool for discovering, assessing, and migrating on-premises workloads TO Azure. It doesn't provide ongoing management of servers outside Azure — it's a migration tool, not a management tool.",
+      "This option is correct. Azure Arc extends Azure's management plane to servers running anywhere — on-premises, AWS, GCP, or edge locations. By installing the Azure Connected Machine agent, you can apply Azure Policy, use Microsoft Defender for Cloud, run Azure Monitor, and manage these machines as if they were Azure resources. It's the single pane of glass for hybrid/multi-cloud management.",
+      "Azure Site Recovery is a disaster recovery service that replicates workloads for failover. It doesn't provide day-to-day management, governance, or policy enforcement across multi-cloud environments.",
+      "Azure Lighthouse enables cross-tenant management for service providers managing multiple customer Azure tenants. It doesn't extend Azure management to non-Azure servers like on-premises or AWS."
+    ],
+    "tip": "Azure Arc = extend Azure management to ANY infrastructure (on-premises, other clouds, edge). If the question mentions managing non-Azure resources through Azure, applying Azure Policy to on-premises servers, or 'single pane of glass' for hybrid/multi-cloud — it's Azure Arc."
+  },
+  {
+    "id": "AZ900-E01-032",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A developer accidentally deploys a VM using a D-series SKU that costs £2,000/month\n- The company policy states that only B-series VMs should be used in the development subscription\n- Management wants to prevent this from happening again by blocking non-compliant VM sizes at deployment time\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "An Azure RBAC custom role that excludes D-series VM creation",
+      "An Azure Policy that restricts allowed VM SKUs",
+      "An Azure Budget alert set to £500",
+      "An Azure Advisor cost recommendation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A custom RBAC role controls what actions a user can perform (e.g., Microsoft.Compute/virtualMachines/write), but RBAC doesn't have the granularity to allow VM creation while restricting specific SKU sizes. You can either allow or deny VM creation entirely.",
+      "This option is correct. Azure Policy has a built-in policy called 'Allowed virtual machine size SKUs' that lets you specify exactly which VM sizes can be deployed. If someone tries to deploy a D-series VM, the policy blocks the deployment with a deny effect. This prevents non-compliant resources from being created in the first place.",
+      "Budget alerts notify you when spending approaches a threshold, but they don't prevent deployments. The D-series VM would still be created — you'd just get an email afterwards.",
+      "Azure Advisor might recommend downsizing an oversized VM after it's deployed, but it doesn't prevent the deployment. It's reactive guidance, not preventive enforcement."
+    ],
+    "tip": "Azure Policy = PREVENT non-compliant resources from being created (enforce rules). RBAC = control WHO can do WHAT (permissions). Budget = ALERT on spending. If the question says 'prevent' or 'block' non-compliant configurations — Azure Policy with a Deny effect."
+  },
+  {
+    "id": "AZ900-E01-033",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to store 50 TB of unstructured data (images, videos, log files)\n- The data must be accessible over HTTP/HTTPS\n- Different files have different access frequencies — some are accessed daily, others haven't been accessed in years\n- You need the most cost-effective Azure storage solution\n\nQuestion:\nWhich Azure Storage service should you use?",
+    "choices": [
+      "Azure Files",
+      "Azure Blob Storage",
+      "Azure Queue Storage",
+      "Azure Disk Storage"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Files provides managed file shares accessible via SMB or NFS protocols. While it can serve files, it's designed for shared file systems (lift-and-shift of file servers), not for HTTP-accessible unstructured data at scale with tiered access.",
+      "This option is correct. Azure Blob Storage is designed specifically for storing massive amounts of unstructured data (images, videos, logs, backups). It's accessible over HTTP/HTTPS, supports access tiers (Hot, Cool, Cold, Archive) for cost optimisation based on access frequency, and scales to petabytes. It matches every requirement in the scenario.",
+      "Azure Queue Storage is for storing messages in a queue for asynchronous processing between application components. It stores messages, not files or unstructured data.",
+      "Azure Disk Storage provides managed disks for Azure Virtual Machines. Disks are attached to VMs and aren't directly accessible over HTTP/HTTPS. They're for VM workloads, not general-purpose unstructured data storage."
+    ],
+    "tip": "Blob Storage = unstructured data (files, images, videos, backups) accessible via HTTP. Files = managed file shares (SMB/NFS). Queue = messages between app components. Table = NoSQL key-value data. Disk = VM disks. For 'unstructured data over HTTP' — always Blob Storage."
+  },
+  {
+    "id": "AZ900-E01-034",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed an application across two Azure regions: UK South (primary) and North Europe (secondary)\n- You need to route users to the closest healthy region automatically\n- If UK South experiences an outage, all traffic should fail over to North Europe\n- Routing decisions should be based on DNS\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Load Balancer",
+      "Azure Application Gateway",
+      "Azure Traffic Manager",
+      "Azure Content Delivery Network"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Load Balancer distributes traffic within a single region across VMs or VMSS instances. It cannot route traffic between regions — it's a regional Layer-4 service.",
+      "Application Gateway is also a regional service (Layer-7) that load balances within a single region. It doesn't provide cross-region routing or DNS-based failover.",
+      "This option is correct. Azure Traffic Manager is a DNS-based global traffic router. It uses health probes to monitor endpoints in multiple regions and routes users to the closest healthy endpoint. If UK South fails, Traffic Manager's health probe detects the outage and automatically routes DNS responses to North Europe. It supports multiple routing methods: Priority (failover), Performance (closest), Weighted, and Geographic.",
+      "CDN caches static content at edge locations worldwide. It doesn't route application traffic between regions based on health or perform DNS-based failover."
+    ],
+    "tip": "Traffic Manager = DNS-based routing across REGIONS (global). Load Balancer = traffic distribution within ONE region (Layer 4). Application Gateway = traffic distribution within ONE region (Layer 7). If the question mentions cross-region routing, DNS-based failover, or geographic routing — Traffic Manager."
+  },
+  {
+    "id": "AZ900-E01-035",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A university currently spends £200,000 annually on on-premises servers\n- This includes: £120,000 for server hardware refresh, £30,000 for electricity/cooling, £25,000 for data centre space rental, and £25,000 for full-time system administrators\n- They are evaluating a move to Azure where equivalent services cost £90,000 per year\n\nQuestion:\nWhich costs from the on-premises calculation are examples of Capital Expenditure (CapEx)?",
+    "choices": [
+      "Electricity, cooling, and data centre space rental",
+      "Server hardware refresh",
+      "Full-time system administrator salaries",
+      "All of the above are CapEx"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Electricity, cooling, and data centre space rental are recurring operational costs — you pay them monthly/annually regardless of whether you buy new hardware. These are Operating Expenditure (OpEx).",
+      "This option is correct. Server hardware purchases are Capital Expenditure — large upfront investments in physical assets that depreciate over time. The hardware refresh cycle (buying new servers every 3-5 years) is the classic example of CapEx that cloud computing eliminates by shifting to a pay-as-you-go OpEx model.",
+      "Salaries are ongoing operational costs paid regularly, not one-time capital investments. System administrator salaries are OpEx.",
+      "Only the hardware refresh is CapEx. Electricity, cooling, rent, and salaries are all OpEx (recurring operational costs). The exam frequently tests the CapEx vs OpEx distinction."
+    ],
+    "tip": "CapEx = upfront investment in physical assets (servers, networking equipment, data centre construction). OpEx = ongoing operational costs (electricity, rent, salaries, cloud subscriptions). Cloud computing shifts CapEx to OpEx. The exam loves asking you to categorise specific costs."
+  },
+  {
+    "id": "AZ900-E01-036",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is selecting a cloud provider for a new project\n- They want to avoid being locked into a single cloud vendor\n- Their strategy requires the ability to move workloads between Azure and AWS if pricing or features change\n- They plan to use Kubernetes for container orchestration\n\nQuestion:\nWhich cloud strategy does this describe?",
+    "choices": [
+      "Hybrid cloud",
+      "Multi-cloud",
+      "Private cloud",
+      "Community cloud"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Hybrid cloud combines on-premises (private) infrastructure with public cloud services. The company isn't using on-premises infrastructure — they're choosing between two public cloud providers.",
+      "This option is correct. Multi-cloud means using services from multiple public cloud providers (Azure + AWS + GCP). The strategy described — avoiding vendor lock-in and maintaining portability between Azure and AWS — is the definition of multi-cloud. Kubernetes is a popular multi-cloud choice because it runs identically across cloud providers.",
+      "Private cloud is infrastructure dedicated to a single organisation, either on-premises or hosted by a provider. The company is using public cloud providers, not a private setup.",
+      "Community cloud is shared infrastructure used by organisations with common concerns (e.g., government agencies, healthcare institutions). This isn't relevant to the scenario."
+    ],
+    "tip": "Multi-cloud = multiple PUBLIC cloud providers (avoid lock-in). Hybrid cloud = on-premises + public cloud. The exam distinguishes these clearly. If the question mentions using Azure AND AWS (or GCP), or 'avoiding vendor lock-in' between cloud providers — it's multi-cloud."
+  },
+  {
+    "id": "AZ900-E01-037",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to implement a private DNS zone for name resolution within Azure virtual networks\n- VMs in VNet-A need to resolve hostnames of VMs in VNet-B using custom domain names (e.g., app.contoso.internal)\n- The DNS resolution must not be accessible from the public internet\n\nQuestion:\nWhich Azure service should you configure?",
+    "choices": [
+      "Azure DNS (public zone)",
+      "Azure Private DNS zones",
+      "Azure Traffic Manager",
+      "Custom DNS server on a Virtual Machine"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure DNS public zones are for publicly resolvable domain names (e.g., contoso.com). Records in a public zone are accessible from the internet — the question explicitly requires private, non-internet-accessible resolution.",
+      "This option is correct. Azure Private DNS zones provide name resolution within virtual networks without exposing records to the public internet. You create a private zone (e.g., contoso.internal), link it to VNet-A and VNet-B, and VMs in both VNets can resolve each other's hostnames. It's fully managed — no DNS servers to maintain.",
+      "Traffic Manager is a DNS-based global traffic router for directing users to endpoints. It's not designed for internal hostname resolution between VMs in virtual networks.",
+      "Running a custom DNS server on a VM works but requires managing the VM, DNS software, updates, and high availability yourself. Azure Private DNS zones provide the same functionality as a managed service with zero infrastructure to maintain."
+    ],
+    "tip": "Azure DNS = public name resolution (internet-facing). Azure Private DNS = name resolution within VNets (private, no internet access). If the question says 'private DNS', 'internal name resolution', or 'not accessible from the internet' — Private DNS zones."
+  },
+  {
+    "id": "AZ900-E01-038",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- An Azure outage in the West Europe region is impacting your production workloads\n- The operations team needs to determine:\n  1. What Azure services are affected\n  2. Whether Microsoft has acknowledged the issue\n  3. The estimated time to resolution\n  4. Root cause analysis after the incident\n\nQuestion:\nWhich Azure service provides this information?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Advisor",
+      "Azure Service Health",
+      "Azure Activity Log"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Monitor tracks metrics, logs, and traces from YOUR resources. It can tell you your VM's CPU is high or your app is throwing errors, but it doesn't provide information about Azure platform-level outages or Microsoft's response.",
+      "Azure Advisor provides recommendations for optimising your resources. It doesn't track or report on Azure service outages.",
+      "This option is correct. Azure Service Health provides three types of information: Service Issues (current outages affecting your resources), Planned Maintenance (upcoming changes that could affect you), and Health Advisories (service changes requiring action). During an outage, it shows affected services, Microsoft's status updates, estimated resolution times, and post-incident root cause analysis (RCA). It's personalised to show only the services and regions you actually use.",
+      "The Activity Log records management-plane operations on your resources (who created/deleted/modified what). It doesn't track Azure platform outages or provide incident information."
+    ],
+    "tip": "Service Health = Azure platform issues affecting YOUR resources (outages, maintenance, advisories). Azure Status page = global Azure status (affects everyone). Monitor = YOUR resource metrics/logs. If the question asks about Azure outages, planned maintenance, or incident RCA — Service Health."
+  },
+  {
+    "id": "AZ900-E01-039",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A gaming company needs to run Linux and Windows virtual machines in Azure\n- Some VMs need GPU-accelerated processing for rendering\n- Other VMs need high memory for in-memory caching\n- The company needs to select the right VM family for each workload\n\nQuestion:\nWhich VM series is optimised for GPU-accelerated workloads like rendering and machine learning?",
+    "choices": [
+      "D-series (General purpose)",
+      "E-series (Memory optimised)",
+      "N-series (GPU enabled)",
+      "F-series (Compute optimised)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "D-series VMs are general purpose — balanced CPU-to-memory ratio suitable for most production workloads. They don't include GPU hardware.",
+      "E-series VMs are memory-optimised — high memory-to-CPU ratio ideal for in-memory caching, database servers, and analytics. No GPUs.",
+      "This option is correct. N-series VMs (NC, ND, NV families) include NVIDIA GPU hardware. NC-series is for compute-intensive GPU workloads (ML training), ND-series for deep learning, and NV-series for visualisation and rendering. GPU-accelerated rendering is exactly what N-series is designed for.",
+      "F-series VMs are compute-optimised — high CPU-to-memory ratio for CPU-intensive workloads like batch processing and web servers. No GPU hardware."
+    ],
+    "tip": "Azure VM families: B = burstable (dev/test), D = general purpose, E = memory optimised, F = compute optimised, N = GPU-enabled, L = storage optimised, M = very large memory. The exam expects you to match workload characteristics to VM family letters."
+  },
+  {
+    "id": "AZ900-E01-040",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription managed by multiple team members\n- The security team wants to review who performed the following actions in the last 90 days:\n  - Created new virtual machines\n  - Modified network security groups\n  - Deleted storage accounts\n  - Changed role assignments\n\nQuestion:\nWhere should the security team look to find this information?",
+    "choices": [
+      "Azure Monitor Metrics",
+      "Azure Activity Log",
+      "Azure Advisor",
+      "Azure Cost Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor Metrics shows performance telemetry about resources (CPU%, memory usage, network throughput). It doesn't record who performed management operations on resources.",
+      "This option is correct. The Azure Activity Log records all management-plane (control-plane) operations on resources in a subscription — who created, modified, or deleted what, and when. It captures VM creation, NSG changes, storage account deletions, and RBAC role assignment changes. Activity Log data is retained for 90 days by default, matching the security team's requirement.",
+      "Azure Advisor provides optimisation recommendations. It doesn't log or audit user actions on resources.",
+      "Cost Management tracks spending and provides cost analysis. It doesn't record who performed specific resource management operations."
+    ],
+    "tip": "Activity Log = WHO did WHAT to WHICH resource and WHEN (management-plane audit trail). Retained 90 days by default. If the question asks about auditing user actions on Azure resources (create, delete, modify, role changes) — Activity Log. For longer retention, send Activity Log data to a Log Analytics workspace."
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E02-021",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs a web application on Azure App Service\n- The application uses Azure SQL Database for data storage\n- Currently, the application connects to the database using a connection string with a username and password stored in the app settings\n- The security team says credentials in app settings are a security risk\n\nQuestion:\nWhat is the Microsoft-recommended approach to eliminate stored credentials?",
+    "choices": [
+      "Store the credentials in Azure Key Vault and reference them from App Service",
+      "Use Azure Managed Identity for the App Service to authenticate to Azure SQL Database",
+      "Encrypt the connection string in the app settings",
+      "Use Azure Active Directory admin credentials in the connection string"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Storing credentials in Key Vault is better than app settings, but there's still a credential (the Key Vault access token or certificate). It adds a layer of security but doesn't eliminate credentials entirely — it moves them.",
+      "This option is correct. Azure Managed Identity provides an automatically managed identity for the App Service in Azure AD (Entra ID). The App Service authenticates to Azure SQL Database using this identity — no passwords, no connection strings with credentials, no secrets to manage or rotate. Microsoft calls this 'passwordless authentication' and it's the recommended approach for Azure service-to-service communication.",
+      "Encrypting the connection string adds protection at rest, but the application still needs to decrypt it to use it. The credentials still exist — they're just encrypted. This is security through obscurity, not elimination of credentials.",
+      "Using Azure AD admin credentials in a connection string is worse than the current situation. Admin credentials have excessive privileges, and they're still stored as a credential in the connection string."
+    ],
+    "tip": "Managed Identity = passwordless, credential-free authentication between Azure services. No secrets to manage, rotate, or leak. If the question asks about eliminating credentials or the most secure way for Azure services to communicate — Managed Identity."
+  },
+  {
+    "id": "AZ900-E02-022",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a globally distributed application\n- The application stores user session data that must be read in under 10 milliseconds\n- An in-memory caching layer is needed to reduce database load\n- The cache must support data structures like strings, hashes, lists, and sets\n\nQuestion:\nWhich Azure service should you use for this caching layer?",
+    "choices": [
+      "Azure Cosmos DB",
+      "Azure Cache for Redis",
+      "Azure Blob Storage (Hot tier)",
+      "Azure SQL Database (In-Memory OLTP)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cosmos DB provides single-digit millisecond reads and is globally distributed, but it's a full database service, not a caching layer. Using Cosmos DB as a cache is over-engineering — it's far more expensive and complex than a dedicated cache.",
+      "This option is correct. Azure Cache for Redis is a fully managed, in-memory data store based on Redis. It delivers sub-millisecond latency, supports rich data structures (strings, hashes, lists, sets, sorted sets), and is purpose-built for caching. It reduces database load by serving frequently accessed data from memory. Premium/Enterprise tiers support clustering for global distribution.",
+      "Blob Storage is object storage for files, not an in-memory cache. Even the Hot tier has significantly higher latency than an in-memory store, and it doesn't support data structures like hashes, lists, or sets.",
+      "Azure SQL In-Memory OLTP optimises transaction processing within SQL Database. It's a database engine feature, not an external caching layer. It doesn't support Redis-style data structures."
+    ],
+    "tip": "Azure Cache for Redis = in-memory caching (sub-millisecond, data structures, session store, message broker). If the question mentions caching, session data, or reducing database load with an in-memory layer — Redis Cache."
+  },
+  {
+    "id": "AZ900-E02-023",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is migrating 200 on-premises servers to Azure\n- Before migrating, they need to:\n  - Discover all servers and their dependencies\n  - Assess which servers are suitable for Azure migration\n  - Estimate the cost of running these servers in Azure\n  - Plan the migration strategy (rehost, refactor, rearchitect)\n\nQuestion:\nWhich Azure service provides these pre-migration capabilities?",
+    "choices": [
+      "Azure Site Recovery",
+      "Azure Migrate",
+      "Azure Arc",
+      "Azure Database Migration Service"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Site Recovery replicates workloads to Azure for disaster recovery and can be used during the actual migration (executing the lift-and-shift). But it doesn't provide discovery, assessment, dependency mapping, or cost estimation — it's the execution tool, not the planning tool.",
+      "This option is correct. Azure Migrate is the centralised hub for discovering, assessing, and migrating on-premises workloads to Azure. It provides server discovery with dependency mapping, Azure readiness assessment, cost estimation for running in Azure, and migration strategy recommendations. It supports servers, databases, web apps, and virtual desktop infrastructure.",
+      "Azure Arc extends Azure management to non-Azure servers. It's for ongoing management of hybrid environments, not for pre-migration assessment and planning.",
+      "Azure Database Migration Service specifically handles database migrations (SQL Server to Azure SQL, PostgreSQL, MySQL, etc.). It doesn't assess or migrate entire servers with their OS and applications."
+    ],
+    "tip": "Azure Migrate = discover + assess + migrate (the planning and execution hub). Site Recovery = disaster recovery + actual VM migration execution. Arc = ongoing management of hybrid servers. If the question mentions 'discover', 'assess', or 'plan a migration' — Azure Migrate."
+  },
+  {
+    "id": "AZ900-E02-024",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs a SaaS application (Salesforce) for their CRM\n- They also use Azure Virtual Machines for a custom internal application\n- A security breach occurs in the Salesforce application due to a vulnerability in the Salesforce platform code\n- A separate security breach occurs on one of the Azure VMs due to an unpatched Windows vulnerability\n\nQuestion:\nAccording to the shared responsibility model, which security breach is the CUSTOMER'S responsibility?",
+    "choices": [
+      "The Salesforce platform code vulnerability (SaaS)",
+      "The unpatched Windows vulnerability on the Azure VM (IaaS)",
+      "Both are the customer's responsibility",
+      "Neither — Microsoft and Salesforce are responsible for both"
+    ],
+    "answer": [1],
+    "explanations": [
+      "In SaaS, the provider (Salesforce) is responsible for the application code and platform. A vulnerability in Salesforce's platform code is Salesforce's responsibility to patch and fix — the customer has no control over Salesforce's codebase.",
+      "This option is correct. In IaaS, the customer is responsible for the guest operating system, including applying Windows patches. An unpatched Windows vulnerability on an Azure VM is the customer's failure to maintain their OS. Azure provides the infrastructure; the customer manages everything above the hypervisor.",
+      "The Salesforce platform vulnerability is NOT the customer's responsibility. In SaaS, the provider manages the application and platform. Only the IaaS VM patching falls on the customer.",
+      "The Azure VM breach IS the customer's responsibility. While Salesforce owns their platform vulnerability, Microsoft (Azure) does not own the guest OS on IaaS VMs — the customer does."
+    ],
+    "tip": "Shared responsibility changes by service model: SaaS = provider owns almost everything (customer owns data and identity). PaaS = customer owns apps and data. IaaS = customer owns OS, apps, and data. The more control you have, the more responsibility you have."
+  },
+  {
+    "id": "AZ900-E02-025",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Virtual Machines in the UK South region\n- The operations team wants to receive alerts when any VM's CPU usage exceeds 90% for more than 5 minutes\n- They also want to collect and query log data from all VMs in a central location\n- They need visualisation dashboards showing VM performance trends\n\nQuestion:\nWhich Azure service provides these monitoring capabilities?",
+    "choices": [
+      "Azure Service Health",
+      "Azure Advisor",
+      "Azure Monitor",
+      "Microsoft Defender for Cloud"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Service Health monitors the health of Azure PLATFORM services (outages, maintenance). It doesn't monitor your individual VM metrics like CPU usage or collect VM logs.",
+      "Azure Advisor provides best-practice recommendations. While it might notice an underutilised VM, it doesn't provide real-time CPU monitoring, alerting, log collection, or custom dashboards.",
+      "This option is correct. Azure Monitor is the comprehensive monitoring platform for Azure. It collects metrics (CPU, memory, disk) and logs from VMs, enables alert rules (e.g., CPU > 90% for 5 minutes → send notification), stores logs in Log Analytics workspaces for querying with KQL, and provides visualisation through Azure Dashboards and Workbooks. It's the central monitoring solution for all Azure resources.",
+      "Defender for Cloud focuses on security posture and threat protection. While it integrates with Monitor data, it's not the tool for performance monitoring, custom metric alerts, or log analytics dashboards."
+    ],
+    "tip": "Azure Monitor = metrics + logs + alerts + dashboards (performance and health monitoring). Service Health = Azure platform status. Advisor = best-practice recommendations. Defender for Cloud = security posture. For 'monitor performance and set alerts' — Azure Monitor."
+  },
+  {
+    "id": "AZ900-E02-026",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to implement network security for their Azure Virtual Network\n- External threats are a concern — they need threat intelligence-based filtering\n- The solution must support FQDN (fully qualified domain name) filtering rules\n- They also need centralised network logging and analytics\n\nQuestion:\nWhich Azure service should you deploy?",
+    "choices": [
+      "Network Security Groups (NSGs)",
+      "Azure Firewall",
+      "Azure DDoS Protection",
+      "Azure VPN Gateway"
+    ],
+    "answer": [1],
+    "explanations": [
+      "NSGs filter traffic using IP addresses, ports, and protocols. They do NOT support FQDN filtering, threat intelligence, or centralised network logging with analytics. NSGs are basic traffic filters, not advanced firewalls.",
+      "This option is correct. Azure Firewall is a managed, cloud-based network security service that provides threat intelligence-based filtering (automatically blocks traffic from known malicious IPs and domains), FQDN filtering rules (allow/deny traffic to specific domain names), and centralised logging through Azure Monitor and Log Analytics. It's a stateful firewall with full Layer-3 to Layer-7 filtering capabilities.",
+      "DDoS Protection defends against volumetric denial-of-service attacks. It doesn't provide FQDN filtering, threat intelligence-based blocking, or network traffic logging and analytics.",
+      "VPN Gateway creates encrypted tunnels between Azure and on-premises or other Azure VNets. It's a connectivity service, not a security filtering service."
+    ],
+    "tip": "Azure Firewall = FQDN filtering + threat intelligence + centralised logging + stateful inspection. NSGs = basic IP/port/protocol filtering. If the question mentions FQDN filtering, threat intelligence, or 'advanced network security' — Azure Firewall."
+  },
+  {
+    "id": "AZ900-E02-027",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed resources in Azure\n- The IT manager wants to see a personalised list of recommendations to:\n  - Reduce unnecessary spending\n  - Improve the security of their deployment\n  - Increase reliability of critical resources\n  - Optimise performance of applications\n\nQuestion:\nWhich Azure service provides personalised recommendations across ALL of these areas in a single dashboard?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Advisor",
+      "Azure Service Health",
+      "Azure Cost Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor collects metrics and logs for monitoring and alerting. It provides observability data but doesn't generate personalised best-practice recommendations across multiple pillars.",
+      "This option is correct. Azure Advisor analyses your Azure resource configuration and usage, then provides personalised recommendations across five categories: Cost (reduce spending), Security (fix vulnerabilities), Reliability (improve resilience), Operational Excellence (follow best practices), and Performance (optimise speed). All recommendations appear in a single Advisor dashboard in the Azure portal.",
+      "Service Health informs you about Azure platform issues (outages, maintenance). It doesn't provide recommendations to improve your resources' cost, security, reliability, or performance.",
+      "Cost Management focuses exclusively on cost analysis and budgeting. It doesn't provide security, reliability, or performance recommendations."
+    ],
+    "tip": "Azure Advisor covers 5 pillars: Cost, Security, Reliability, Operational Excellence, Performance. It's the only service that gives recommendations across ALL these areas. If the question mentions 'recommendations across multiple areas' or lists multiple pillars — Advisor."
+  },
+  {
+    "id": "AZ900-E02-028",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to host a static website (HTML, CSS, JavaScript only — no server-side code)\n- The website must be highly available and globally accessible\n- Cost must be minimised\n- The team does not want to manage any web servers or application platforms\n\nQuestion:\nWhat is the most cost-effective way to host this static website on Azure?",
+    "choices": [
+      "Azure App Service (Free tier)",
+      "Azure Virtual Machine with IIS/Nginx",
+      "Azure Blob Storage static website hosting",
+      "Azure Kubernetes Service"
+    ],
+    "answer": [2],
+    "explanations": [
+      "App Service Free tier can host websites, but it has limitations (shared compute, no custom domains with SSL on free tier, limited storage). It's a compute platform designed for dynamic applications — overkill for static HTML/CSS/JS files.",
+      "Running a VM with a web server is the most expensive and management-heavy option. You'd manage the VM, OS, web server software, and security updates — all for serving static files. Complete overkill.",
+      "This option is correct. Azure Blob Storage static website hosting serves HTML, CSS, JS, and image files directly from a storage container. It's extremely cost-effective (you pay only for storage and bandwidth), requires zero server management, and can be paired with Azure CDN for global distribution and custom domains with SSL. It's the Microsoft-recommended approach for static websites.",
+      "AKS is a container orchestration platform for complex microservices applications. Using Kubernetes to serve static HTML files is absurdly over-engineered and expensive."
+    ],
+    "tip": "Static website hosting: Blob Storage is the cheapest and simplest option. Add Azure CDN for global distribution and custom domains. If the question mentions 'static website' + 'minimise cost' + 'no server management' — Blob Storage static hosting."
+  },
+  {
+    "id": "AZ900-E02-029",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has experienced a fire in their primary data centre\n- All on-premises servers are destroyed\n- Fortunately, they had been replicating critical workloads to Azure using Azure Site Recovery\n- They need to bring their applications online in Azure while the data centre is rebuilt\n\nQuestion:\nWhich cloud concept does this scenario demonstrate?",
+    "choices": [
+      "High availability",
+      "Elasticity",
+      "Disaster recovery",
+      "Scalability"
+    ],
+    "answer": [2],
+    "explanations": [
+      "High availability is about maintaining service during component failures (e.g., a single server crash). A complete data centre fire is a disaster, not a routine component failure. HA keeps things running; DR brings things back after catastrophic failure.",
+      "Elasticity is the ability to scale resources up and down based on demand. It has nothing to do with recovering from a data centre fire.",
+      "This option is correct. Disaster recovery (DR) is the process of recovering IT systems after a catastrophic event (fire, flood, earthquake, power failure). Azure Site Recovery replicating workloads and enabling failover to Azure is a textbook DR scenario. The company fails over to Azure, runs from there while rebuilding, then fails back to on-premises when the data centre is restored.",
+      "Scalability is about handling growth. The data centre fire has nothing to do with growing the user base or increasing capacity."
+    ],
+    "tip": "Disaster Recovery = recover after catastrophic failure (data centre destroyed, region-wide outage). High Availability = stay running during minor failures (single server, single rack). If the scenario involves a major disaster with recovery to a secondary location — DR."
+  },
+  {
+    "id": "AZ900-E02-030",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company assigns the Contributor role to a developer at the subscription level\n- The developer can create, modify, and delete ANY resource in the subscription\n- However, the developer should NOT be able to assign roles to other users\n- The security team wants to verify this is the case\n\nQuestion:\nWhich statement about the Contributor built-in role is correct?",
+    "choices": [
+      "Contributor can manage all resources AND assign roles to other users",
+      "Contributor can manage all resources but CANNOT assign roles to other users",
+      "Contributor can only read resources, not create or modify them",
+      "Contributor can only manage resources in a specific resource group, not the entire subscription"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This describes the Owner role, not Contributor. Owner has full access including role assignment (Microsoft.Authorization/*). Contributor explicitly excludes role management permissions.",
+      "This option is correct. The Contributor built-in role grants full permissions to manage all Azure resources (create, read, update, delete) but does NOT include permissions to assign roles to other users or manage access (no Microsoft.Authorization/roleAssignments/write). Only Owner and User Access Administrator roles can assign RBAC roles.",
+      "This describes the Reader role, which only has read access to resources. Contributor can create, modify, and delete resources.",
+      "Contributor's scope depends on where it's assigned. When assigned at the subscription level (as stated in the scenario), it applies to ALL resource groups in that subscription. RBAC is inherited downward."
+    ],
+    "tip": "Three key built-in roles: Owner = full access + role assignment. Contributor = full access, NO role assignment. Reader = read only. The exam frequently tests the difference between Owner and Contributor — the distinction is role management (Microsoft.Authorization). Contributor = 'do everything except manage access.'"
+  }
+]

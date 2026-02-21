@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E01-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 500 Windows 11 devices that are currently joined to on-premises Active Directory\n- The IT team wants to manage these devices using Microsoft Intune\n- The devices must retain their existing on-premises AD domain membership for legacy application access\n- Users should get single sign-on to both on-premises and cloud resources\n\nQuestion:\nWhich device identity configuration should you implement?",
+    "choices": [
+      "Azure AD registered (Workplace joined)",
+      "Azure AD joined (cloud-only)",
+      "Hybrid Azure AD joined",
+      "On-premises AD joined with no Azure AD integration"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure AD registered is for personal devices (BYOD). The device is registered with Azure AD but NOT joined to any domain. Users sign in with a local account and add their work account separately. This doesn't maintain on-premises AD membership and isn't suitable for corporate-owned devices requiring domain access.",
+      "Azure AD joined means the device is joined ONLY to Azure AD (Entra ID) — no on-premises AD membership. The requirement explicitly states devices must retain their on-premises AD domain membership for legacy applications. Pure Azure AD join would break that.",
+      "This option is correct. Hybrid Azure AD join means devices are joined to BOTH on-premises Active Directory AND Azure AD simultaneously. They maintain existing AD domain membership (for legacy apps, Group Policy, network resources) while also being registered in Azure AD (enabling Intune management, Conditional Access, SSO to cloud apps). Azure AD Connect synchronises the device objects. This is the standard migration path for existing domain-joined devices.",
+      "Keeping devices on-premises only with no Azure AD integration means Intune cannot manage them. Intune requires Azure AD identity for device enrolment. This option fails the core requirement."
+    ],
+    "tip": "Hybrid Azure AD join = both AD + Azure AD. Best for: existing domain-joined devices migrating to cloud management. Azure AD join = cloud only. Best for: new devices, no on-premises dependency. Azure AD registered = BYOD personal devices. If devices need both on-premises AD AND Intune — Hybrid Azure AD join."
+  },
+  {
+    "id": "MS102-E01-002",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage Windows 11 devices\n- The security team requires that all managed devices must:\n  - Have BitLocker encryption enabled\n  - Run a minimum OS version of Windows 11 22H2\n  - Have a password with at least 8 characters\n- Devices that don't meet these requirements should be marked as non-compliant\n- Non-compliant devices should be blocked from accessing Microsoft 365 services\n\nQuestion:\nWhat TWO things must you configure? (Choose the best single answer that covers both requirements.)",
+    "choices": [
+      "An Intune device compliance policy AND a Conditional Access policy requiring compliant devices",
+      "An Intune device configuration profile with BitLocker settings only",
+      "A Group Policy Object (GPO) enforcing BitLocker and password requirements",
+      "Microsoft Defender for Endpoint device risk policy only"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. This requires TWO components working together: (1) An Intune device compliance policy defines what 'compliant' means — BitLocker required, minimum OS version 22H2, minimum password length 8 characters. Intune evaluates each device and marks it compliant or non-compliant. (2) A Conditional Access policy in Azure AD uses the compliance state as a grant condition — 'Require device to be marked as compliant.' Non-compliant devices are blocked from accessing Microsoft 365. Compliance policy defines the rules; Conditional Access enforces access decisions.",
+      "A device configuration profile can deploy BitLocker settings TO a device, but it doesn't evaluate compliance or mark devices as non-compliant. Configuration profiles CONFIGURE devices; compliance policies EVALUATE them. You need a compliance policy to assess the state and Conditional Access to enforce access.",
+      "Group Policy Objects are for on-premises AD-managed devices. They can enforce settings but don't integrate with Intune compliance evaluation or Conditional Access. GPOs don't mark devices as compliant/non-compliant in Azure AD.",
+      "Defender for Endpoint provides device risk scores (low, medium, high) based on threats detected. While risk level can be used in compliance policies, it doesn't evaluate BitLocker, OS version, or password length. It's one input into compliance, not the complete solution."
+    ],
+    "tip": "The compliance + Conditional Access pattern: (1) Compliance policy = DEFINES rules (what must be true). (2) Conditional Access = ENFORCES access (block if non-compliant). They work together. Compliance policy alone = just marks devices. Conditional Access alone = doesn't know what 'compliant' means. You need BOTH."
+  },
+  {
+    "id": "MS102-E01-003",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is deploying Microsoft 365 Apps to 2,000 managed Windows devices\n- Devices are currently on different Office versions (2016, 2019, and some with no Office)\n- The IT team wants to:\n  - Deploy Microsoft 365 Apps (Current Channel) to all devices\n  - Remove all previous Office versions before installing\n  - Manage the deployment centrally through Intune\n\nQuestion:\nHow should you deploy Microsoft 365 Apps through Intune?",
+    "choices": [
+      "Create a Win32 app package with the Office Deployment Tool and upload to Intune",
+      "Use the built-in Microsoft 365 Apps for Windows app type in Intune",
+      "Download the Office installer and deploy it as a line-of-business (LOB) app",
+      "Use Windows Autopilot to install Office during OOBE"
+    ],
+    "answer": [1],
+    "explanations": [
+      "While you CAN package Office with ODT as a Win32 app, this is unnecessary complexity. Intune has a dedicated, built-in app type specifically for Microsoft 365 Apps that handles the configuration through a guided wizard — no manual packaging needed.",
+      "This option is correct. Intune provides a built-in 'Microsoft 365 Apps for Windows' app type. You configure it through a wizard: select the apps to include (Word, Excel, etc.), choose the update channel (Current Channel), set architecture (64-bit), and enable 'Remove other versions of Office' to uninstall Office 2016/2019. Intune handles the download, installation, and removal of previous versions — all centrally managed. This is the Microsoft-recommended approach.",
+      "Uploading the Office installer as a LOB app doesn't support the guided configuration options (channel selection, previous version removal, app selection). LOB app type is for simple MSI/MSIX packages, not for complex Office deployments with specific configuration requirements.",
+      "Autopilot runs during the initial device setup (OOBE) for new or reset devices. It doesn't address deploying Office to 2,000 existing devices that are already in use. Autopilot is provisioning, not app deployment to existing devices."
+    ],
+    "tip": "Microsoft 365 Apps deployment via Intune: use the dedicated 'Microsoft 365 Apps for Windows' app type (not Win32, not LOB). It provides a configuration wizard for: app selection, update channel, architecture, language, and removal of previous Office versions. This is always the correct exam answer for 'deploy M365 Apps through Intune.'"
+  },
+  {
+    "id": "MS102-E01-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to automate the deployment of new Windows 11 devices\n- When a new employee receives a device, they should:\n  - Power on the device and connect to the internet\n  - Sign in with their Azure AD credentials\n  - Automatically receive company policies, apps, and configurations\n- No IT technician should need to touch the device for imaging or setup\n- The device should be ready for use within 30 minutes of first power-on\n\nQuestion:\nWhich Microsoft service enables this zero-touch provisioning experience?",
+    "choices": [
+      "Microsoft Deployment Toolkit (MDT)",
+      "Windows Autopilot",
+      "System Center Configuration Manager (SCCM/MECM) OSD",
+      "Azure VM Image Builder"
+    ],
+    "answer": [1],
+    "explanations": [
+      "MDT is an on-premises deployment tool that requires creating and maintaining Windows images, PXE boot infrastructure, and IT technician involvement. It's the traditional imaging approach — the opposite of zero-touch, cloud-driven provisioning.",
+      "This option is correct. Windows Autopilot is a cloud-based provisioning service. The device's hardware hash is pre-registered in Intune. When a user powers on a new device, it connects to the internet, downloads the Autopilot profile, presents a customised sign-in screen (company branding), and automatically joins Azure AD, enrols in Intune, and receives all assigned policies, apps, and configurations. Zero IT intervention required. The device is shipped directly from the manufacturer to the user.",
+      "SCCM/MECM Operating System Deployment requires on-premises infrastructure (distribution points, PXE servers, task sequences) and typically involves IT creating and deploying custom Windows images. It's not a zero-touch, cloud-driven solution.",
+      "Azure VM Image Builder creates custom images for Azure Virtual Machines in the cloud. It has nothing to do with provisioning physical Windows devices for end users."
+    ],
+    "tip": "Windows Autopilot = zero-touch, cloud-driven device provisioning. User powers on → signs in → device auto-configures. Key concepts: hardware hash registration, Autopilot profile, self-deploying mode (kiosk), user-driven mode (standard), pre-provisioning (white glove). If the question describes 'zero-touch' or 'cloud provisioning' — Autopilot."
+  },
+  {
+    "id": "MS102-E01-005",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages iOS devices with Microsoft Intune\n- The security team wants to ensure that:\n  - Company data in managed apps (Outlook, Teams, OneDrive) is protected\n  - Users cannot copy text from Outlook and paste it into personal apps\n  - Company data is wiped from the device if the user leaves the company\n  - Personal data on the device must NOT be affected by any IT actions\n\nQuestion:\nWhich Intune feature should you configure?",
+    "choices": [
+      "Device compliance policy",
+      "Device configuration profile",
+      "App protection policy (MAM)",
+      "Device wipe command"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Device compliance policies evaluate whether a device meets requirements (encryption, PIN, OS version). They don't control data flow between apps or provide selective wipe of company data from managed apps.",
+      "Device configuration profiles push settings to devices (Wi-Fi, VPN, email accounts, restrictions). They don't control cut/copy/paste between managed and personal apps or provide app-level data protection.",
+      "This option is correct. App protection policies (also called MAM — Mobile Application Management) protect company data at the app level WITHOUT requiring device enrolment. They control: data transfer between managed and unmanaged apps (block copy/paste to personal apps), require PIN to access managed apps, encrypt app data, and enable selective wipe (remove only company data from managed apps, leaving personal data untouched). This is the key feature for protecting corporate data on personal or BYOD devices.",
+      "A device wipe command erases the ENTIRE device — including personal photos, apps, and data. The question explicitly requires that personal data must NOT be affected. Device wipe is the nuclear option; app protection policies enable surgical (selective) wipe of company data only."
+    ],
+    "tip": "App protection policy (MAM) = protect company data WITHOUT device enrolment. Controls: copy/paste, save-as, screenshots between managed/personal apps. Selective wipe = remove only company data. Works on BYOD and enrolled devices. If the question mentions 'protect company data', 'copy/paste restriction', or 'personal data unaffected' — App protection policy."
+  },
+  {
+    "id": "MS102-E01-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Windows Autopilot to provision new devices\n- A batch of 200 new laptops arrives from the manufacturer\n- Before users can enrol these devices via Autopilot, you need to register them\n- The manufacturer has provided a CSV file containing the hardware hash for each device\n\nQuestion:\nHow do you register these devices for Windows Autopilot?",
+    "choices": [
+      "Manually join each device to Azure AD through the Settings app",
+      "Import the CSV file containing hardware hashes into Microsoft Intune (or Autopilot service)",
+      "Install the Intune Company Portal app on each device and sign in",
+      "Create an Azure AD dynamic device group based on serial numbers"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Manually joining each device to Azure AD is Azure AD join, not Autopilot registration. Autopilot requires the device's hardware hash to be registered BEFORE the user turns on the device. Manual Azure AD join happens AFTER the device is running — it's not zero-touch.",
+      "This option is correct. Import the manufacturer-provided CSV file containing hardware hashes (4K hash) into Microsoft Intune under Devices → Windows enrolment → Devices. Each hardware hash uniquely identifies a device. Once imported, assign an Autopilot deployment profile to these devices. When a user powers on the device and connects to the internet, the Autopilot service recognises the hardware hash and applies the assigned profile. OEMs like Dell, HP, and Lenovo can also register devices directly.",
+      "Company Portal is used for user-initiated enrolment of existing devices, not for Autopilot registration. Autopilot requires hardware hash pre-registration — the device needs to be known to the service BEFORE the user touches it.",
+      "Dynamic device groups can organise Autopilot devices AFTER registration (using the ZTDID or order ID attributes), but they don't register devices for Autopilot. Registration is done by importing hardware hashes."
+    ],
+    "tip": "Autopilot registration = import hardware hashes (CSV) into Intune. Sources: OEM direct registration, partner/reseller upload, manual CSV from Get-WindowsAutopilotInfo script, or manufacturer-provided CSV. The hardware hash (4K hash) uniquely identifies each device. Import FIRST, then assign profiles."
+  },
+  {
+    "id": "MS102-E01-007",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages 1,000 Windows 11 devices with Microsoft Intune\n- The IT team wants to configure the following on all devices:\n  - Wi-Fi profile for the corporate wireless network\n  - VPN profile for remote access\n  - Email profile for Exchange Online\n  - Restrictions (disable camera, block USB storage)\n\nQuestion:\nWhich Intune feature should you use to push these settings to devices?",
+    "choices": [
+      "Device compliance policies",
+      "Device configuration profiles",
+      "App protection policies",
+      "Endpoint security policies"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Compliance policies EVALUATE whether devices meet requirements (password, encryption, OS version). They don't PUSH settings like Wi-Fi profiles, VPN configurations, or device restrictions. Compliance = assessment. Configuration = deployment of settings.",
+      "This option is correct. Device configuration profiles push settings and configurations to managed devices. Profile types include: Wi-Fi (SSID, authentication), VPN (connection settings), Email (Exchange server, authentication), Device restrictions (camera, USB, Bluetooth, screenshots), and many more (certificates, SCEP, PKCS, edition upgrade, custom OMA-URI). You create profiles, assign them to device or user groups, and Intune deploys them automatically.",
+      "App protection policies protect data within managed apps (copy/paste, save-as restrictions). They don't configure device-level settings like Wi-Fi, VPN, or hardware restrictions.",
+      "Endpoint security policies focus on security-specific configurations: antivirus, disk encryption (BitLocker), firewall, endpoint detection and response (EDR). While there's overlap with device restrictions, the bulk of the requirements (Wi-Fi, VPN, email) are device configuration profile tasks, not endpoint security."
+    ],
+    "tip": "Intune policy types: Configuration profiles = PUSH settings (Wi-Fi, VPN, email, restrictions). Compliance policies = EVALUATE device state (is it compliant?). App protection = PROTECT data in apps. Endpoint security = SECURE devices (AV, firewall, BitLocker). For 'configure settings on devices' — Device configuration profiles."
+  },
+  {
+    "id": "MS102-E01-008",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has both Windows and macOS devices managed by Microsoft Intune\n- A critical Windows security update was released by Microsoft\n- The IT team wants to:\n  - Approve the update for deployment to all Windows devices\n  - Set a deadline so devices install the update within 5 days\n  - Pause updates for a group of test devices if issues are found\n\nQuestion:\nWhich Intune feature should you configure for Windows update management?",
+    "choices": [
+      "Windows Update for Business policies (Update rings)",
+      "Feature update policies",
+      "Microsoft Store app updates",
+      "Win32 app deployment with the update as a package"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Windows Update for Business policies (Update rings) in Intune control how and when Windows quality (security) and feature updates are installed. You configure: deferral periods (delay updates by X days), deadline settings (force install within Y days), pause updates (temporarily stop updates for a ring), and maintenance windows. Create separate rings for test/pilot/production groups. Update rings are the primary mechanism for managing Windows security updates through Intune.",
+      "Feature update policies target a specific Windows feature update version (e.g., Windows 11 23H2) and control which feature update version devices move to. They don't manage monthly security (quality) updates — that's what update rings do.",
+      "Microsoft Store app updates manage updates for Store apps. They have nothing to do with Windows OS security updates.",
+      "Packaging a Windows security update as a Win32 app is technically possible but completely wrong. Windows updates should be managed through Windows Update for Business, not manually packaged and deployed as applications. This approach would bypass the update infrastructure and create management nightmares."
+    ],
+    "tip": "Windows update management in Intune: Update rings = quality (security) updates — deferral, deadline, pause. Feature update policies = target specific Windows version. Driver update policies = manage driver updates. Expedite updates = force critical updates immediately. For 'security update management' — Update rings."
+  },
+  {
+    "id": "MS102-E01-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company provides virtual desktops to 300 remote workers using Azure Virtual Desktop (AVD)\n- Users connect from personal devices that are not managed by Intune\n- The IT team wants to optimise the Teams calling experience in AVD sessions\n- Users report poor audio and video quality during Teams meetings in their virtual desktops\n\nQuestion:\nWhich feature should be enabled to improve Teams performance in AVD?",
+    "choices": [
+      "Install Teams directly on each user's personal device instead",
+      "Enable Teams media optimisation (multimedia redirection) for AVD",
+      "Increase the AVD session host VM size to handle more CPU load",
+      "Configure Azure ExpressRoute for all remote workers"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Installing Teams on personal devices doesn't solve the problem — users need Teams within their AVD session for access to corporate data and integrated workflows. Personal device Teams would be a separate, unmanaged instance without corporate policies.",
+      "This option is correct. Teams media optimisation (also called multimedia redirection) offloads audio/video processing from the AVD session host to the user's local device. Instead of encoding/decoding media streams on the remote VM (consuming CPU and adding latency), the local Teams client handles media directly peer-to-peer. This dramatically improves call quality, reduces latency, and lowers session host resource consumption. It requires the Remote Desktop client (not browser) and the Teams WebSocket service.",
+      "Increasing VM size adds CPU and memory but doesn't fix the fundamental architecture problem: encoding/decoding video on a remote VM and streaming it as RDP pixels is inherently inefficient. Media optimisation redirects the processing to the local device — a far more effective solution that also reduces VM costs.",
+      "ExpressRoute provides private connectivity to Azure, but remote workers connect from home internet. ExpressRoute doesn't extend to individual homes. Even with better network connectivity, the core issue is media processing location, not network path."
+    ],
+    "tip": "AVD Teams optimisation = media redirection to local device. Audio/video processed locally, not on session host. Requires: Remote Desktop client (not browser), WebRTC redirection. This reduces session host CPU and latency. Same concept applies to Citrix HDX and VMware Blast. If the question mentions 'Teams quality in AVD/VDI' — media optimisation."
+  },
+  {
+    "id": "MS102-E01-010",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to provision cloud-based Windows desktops for contractors\n- Contractors need a consistent Windows 11 experience with Microsoft 365 Apps\n- The IT team wants a predictable per-user monthly cost\n- No infrastructure should be managed — no VM sizing, no session host management, no scaling decisions\n\nQuestion:\nWhich Microsoft service provides this fully managed cloud PC experience?",
+    "choices": [
+      "Azure Virtual Desktop (AVD)",
+      "Windows 365 Cloud PC",
+      "Microsoft Dev Box",
+      "Azure Virtual Machines with Windows 11"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AVD requires you to manage session host VMs, choose VM sizes, configure scaling plans, manage images, and plan capacity. It's IaaS/PaaS — you manage the infrastructure. The question explicitly says 'no infrastructure management.' AVD has variable costs based on consumption, not predictable per-user pricing.",
+      "This option is correct. Windows 365 Cloud PC provides a fully managed, dedicated cloud PC per user. Microsoft handles all infrastructure: provisioning, sizing, patching, scaling, and maintenance. Each user gets their own persistent Windows 11 desktop with Microsoft 365 Apps. Pricing is a simple per-user per-month fee based on the chosen configuration (CPU, RAM, storage). It's a true SaaS Cloud PC — no infrastructure decisions needed.",
+      "Microsoft Dev Box provides cloud-based developer workstations with pre-configured development environments. It's designed for developers, not general contractor use. While similar in concept to Windows 365, it's targeted at dev scenarios with project-based configurations.",
+      "Azure VMs with Windows 11 require full IaaS management: VM sizing, networking, patching, monitoring, cost management. This is the most management-heavy option and provides variable (not predictable per-user) costs."
+    ],
+    "tip": "Windows 365 = SaaS Cloud PC (fully managed, per-user pricing, predictable cost). AVD = PaaS/IaaS virtual desktops (you manage session hosts, variable cost, multi-session). Key difference: Windows 365 = DEDICATED per-user PC, no infrastructure management. AVD = shared session hosts, more control but more management. If 'predictable per-user cost' + 'no infrastructure' — Windows 365."
+  }
+]

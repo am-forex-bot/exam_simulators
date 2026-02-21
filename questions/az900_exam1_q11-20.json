@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E01-011",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is considering migrating 50 on-premises servers to Azure\n- The CFO needs a cost comparison between running the servers on-premises for the next 3 years versus running them in Azure\n- The comparison must include electricity, cooling, data centre labour, and networking costs\n\nQuestion:\nWhich Azure tool should you use to generate this comparison?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure Cost Management + Billing",
+      "Azure Total Cost of Ownership (TCO) Calculator",
+      "Azure Advisor"
+    ],
+    "answer": [2],
+    "explanations": [
+      "The Pricing Calculator estimates the cost of specific Azure services you plan to use. It does NOT compare Azure costs against on-premises costs — it only shows the Azure side of the equation.",
+      "Cost Management + Billing tracks and analyses spending on resources you're ALREADY using in Azure. It can't estimate future costs or compare against on-premises infrastructure.",
+      "This option is correct. The TCO Calculator is specifically designed to compare on-premises costs versus Azure costs. You input your current on-premises workloads (servers, databases, storage, networking) and it factors in hidden costs like electricity, cooling, data centre space, and IT labour to produce a multi-year cost comparison.",
+      "Azure Advisor provides recommendations for improving cost efficiency, security, reliability, and performance of existing Azure resources. It doesn't generate migration cost comparisons."
+    ],
+    "tip": "TCO Calculator = compare on-prem vs Azure (pre-migration planning). Pricing Calculator = estimate Azure-only costs for planned services. Cost Management = analyse existing Azure spending. These three tools appear constantly on AZ-900."
+  },
+  {
+    "id": "AZ900-E01-012",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A production Azure SQL Database was accidentally deleted by a junior administrator\n- This caused a 4-hour outage and significant business impact\n- Management wants to prevent this from happening again\n- The junior administrator still needs read access to the database for reporting purposes\n\nQuestion:\nWhat should you implement to prevent accidental deletion while maintaining the administrator's read access?",
+    "choices": [
+      "Remove the junior administrator's Contributor role and assign Reader only",
+      "Apply a Delete lock on the Azure SQL Database resource",
+      "Enable soft delete on the Azure SQL Database",
+      "Move the database to a dedicated subscription with restricted access"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Assigning Reader role would prevent deletion, but the question says the admin needs 'read access for reporting purposes' — Reader role works for Azure portal access but may not be sufficient for actual database query access. More importantly, this approach would affect ALL operations, not just deletion. It's overly restrictive.",
+      "This option is correct. A CanNotDelete resource lock prevents any user from deleting the resource, regardless of their RBAC role — even Owners can't delete a locked resource without first removing the lock. The junior admin retains all their existing access for reporting, they just can't delete the database. This is the most targeted solution.",
+      "Azure SQL Database doesn't have a 'soft delete' feature like Azure Blob Storage does. This option is a fabricated distractor. Even if it existed, prevention is better than recovery.",
+      "Moving to a dedicated subscription adds significant administrative complexity and doesn't directly prevent deletion — unless you also configure restrictive RBAC in that subscription. The lock is far simpler and more targeted."
+    ],
+    "tip": "Resource locks come in two types: CanNotDelete (prevents deletion) and ReadOnly (prevents any changes). They apply regardless of RBAC permissions. If the exam describes accidental deletion of a critical resource, think resource locks immediately."
+  },
+  {
+    "id": "AZ900-E01-013",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A healthcare company needs to deploy a new patient records system\n- They evaluate three options: build custom software on Azure VMs, use a managed database platform, or purchase a cloud-based SaaS healthcare records system\n- The company has a very small IT team with limited cloud expertise\n- They need the solution deployed within 2 weeks\n\nQuestion:\nWhich approach requires the LEAST management responsibility from the IT team?",
+    "choices": [
+      "Deploy custom software on Azure Virtual Machines (IaaS)",
+      "Build the application using Azure SQL Database and Azure App Service (PaaS)",
+      "Subscribe to a cloud-based SaaS healthcare records system",
+      "Use Azure Kubernetes Service to containerise the application"
+    ],
+    "answer": [2],
+    "explanations": [
+      "IaaS (VMs) requires the customer to manage the OS, patching, runtime, middleware, and the application itself. This is the highest management burden and would take the longest to deploy with a small team.",
+      "PaaS reduces infrastructure management (no OS patching), but the team still needs to build, deploy, and maintain the custom application code. With limited cloud expertise and a 2-week deadline, this is challenging.",
+      "This option is correct. SaaS is a complete, ready-to-use application. The healthcare company just subscribes, configures it, and starts using it. Microsoft manages everything — infrastructure, platform, and application. This requires the least management responsibility and can be deployed fastest.",
+      "AKS (Kubernetes) is an orchestration platform for containers. It requires significant expertise to configure and manage — the opposite of what a small team with limited cloud knowledge needs."
+    ],
+    "tip": "Management responsibility decreases as you go up the stack: IaaS > PaaS > SaaS. SaaS = least customer responsibility. The exam tests this constantly. If the question mentions 'least management effort' or 'small team with limited expertise' — SaaS is usually the answer."
+  },
+  {
+    "id": "AZ900-E01-014",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation is reviewing its cloud security posture\n- The CISO asks: 'In our Azure IaaS deployment, who is responsible for patching the operating systems on our virtual machines?'\n\nQuestion:\nAccording to the Microsoft shared responsibility model, who is responsible for OS patching on Azure IaaS virtual machines?",
+    "choices": [
+      "Microsoft (the cloud provider)",
+      "The customer (your organisation)",
+      "Shared responsibility between Microsoft and the customer",
+      "The VM operating system vendor (e.g., Canonical for Ubuntu)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Microsoft is responsible for the physical infrastructure, host OS, and physical network. They do NOT patch guest operating systems on IaaS VMs — that's explicitly the customer's responsibility.",
+      "This option is correct. In IaaS, the customer is responsible for the guest OS, including patching, configuration, and security updates. Microsoft provides the underlying physical infrastructure and hypervisor, but everything from the OS upward is the customer's domain. This is a fundamental IaaS principle.",
+      "OS patching on IaaS is not shared — it falls entirely on the customer. Shared responsibilities include things like network controls and identity/directory infrastructure.",
+      "The OS vendor provides patches and updates, but the responsibility to apply them lies with the customer who deployed the VM. Microsoft doesn't involve third-party vendors in the shared responsibility model."
+    ],
+    "tip": "IaaS shared responsibility is heavily tested. Customer responsibilities in IaaS: guest OS, patches, applications, data, network config, identity. Microsoft responsibilities: physical hosts, physical network, physical data centre. If it's 'above' the hypervisor, you own it."
+  },
+  {
+    "id": "AZ900-E01-015",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A software company has development teams in London, New York, and Sydney\n- Each team needs identical development environments\n- New developers join frequently and need to be productive on day one\n- The company wants to eliminate the 'it works on my machine' problem\n\nQuestion:\nWhich cloud characteristic BEST enables the company to rapidly provision identical environments worldwide?",
+    "choices": [
+      "Elasticity",
+      "Agility",
+      "Disaster recovery",
+      "Consumption-based pricing"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Elasticity is about automatically scaling resources up or down based on demand. The question is about rapidly provisioning environments, not scaling based on load.",
+      "This option is correct. Agility in cloud computing refers to the ability to rapidly provision and deploy resources. Teams can spin up identical environments in minutes using templates (ARM/Bicep), regardless of geographic location. New developers get productive immediately because environments are standardised and instantly available.",
+      "Disaster recovery is about restoring services after failures. While deploying across regions is mentioned, the question is about development productivity, not business continuity.",
+      "Consumption-based pricing means pay-for-what-you-use. It's a financial benefit, not a speed-of-deployment benefit."
+    ],
+    "tip": "Agility = speed of deploying and configuring resources. Elasticity = automatic scaling based on demand. The exam distinguishes these carefully. 'Rapidly provision' or 'deploy quickly' = agility. 'Automatically scale with demand' = elasticity."
+  },
+  {
+    "id": "AZ900-E01-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to connect its on-premises data centre to Azure with a private, dedicated connection\n- The connection must NOT traverse the public internet\n- They require consistent low latency and bandwidth of at least 1 Gbps\n- Regulatory requirements mandate that data never travels over public networks\n\nQuestion:\nWhich Azure networking service should you use?",
+    "choices": [
+      "Azure VPN Gateway (site-to-site VPN)",
+      "Azure ExpressRoute",
+      "Azure Virtual WAN",
+      "Azure Front Door"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Site-to-site VPN creates an encrypted tunnel over the PUBLIC internet. The question explicitly states the connection must not traverse the public internet. VPN Gateway is suitable when internet-based connectivity is acceptable, but not here.",
+      "This option is correct. ExpressRoute provides a private, dedicated connection between your on-premises network and Azure through a connectivity provider. Traffic never touches the public internet, latency is consistent and low, and bandwidth options go up to 100 Gbps. This meets all the stated requirements: private, dedicated, low latency, high bandwidth, no public internet.",
+      "Azure Virtual WAN is a networking service that brings together VPN, ExpressRoute, and SD-WAN into a unified hub. It's an orchestration layer, not a connectivity type itself. The question asks which service to use for the connection — that's ExpressRoute.",
+      "Azure Front Door is a global load balancer and CDN for web applications. It has nothing to do with connecting an on-premises data centre to Azure."
+    ],
+    "tip": "VPN Gateway = encrypted tunnel OVER the public internet. ExpressRoute = private dedicated connection that BYPASSES the public internet. If the question says 'must not use public internet' or 'private dedicated connection' — it's always ExpressRoute."
+  },
+  {
+    "id": "AZ900-E01-017",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is building a microservices application\n- Each microservice runs in its own container\n- The application needs automated container orchestration, scaling, and self-healing\n- The development team has Kubernetes expertise\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Container Instances (ACI)",
+      "Azure Kubernetes Service (AKS)",
+      "Azure App Service",
+      "Azure Virtual Machines with Docker installed"
+    ],
+    "answer": [1],
+    "explanations": [
+      "ACI is designed for simple, single-container workloads — quick bursts of containers without orchestration. It doesn't provide the automated orchestration, scaling, and self-healing across multiple microservices that the question requires.",
+      "This option is correct. AKS is a managed Kubernetes service that provides automated container orchestration, horizontal scaling, self-healing (restarting failed containers), and rolling updates. The team already has Kubernetes expertise, making AKS the natural fit. Microsoft manages the control plane; you manage the worker nodes.",
+      "App Service can run containers, but it's primarily designed for web applications. It doesn't provide Kubernetes-level orchestration for complex microservices architectures with multiple interconnected services.",
+      "Running Docker on VMs gives full control but requires managing the orchestration yourself — installing Kubernetes, managing the cluster, patching VMs. This defeats the purpose of using a managed service and adds unnecessary operational burden."
+    ],
+    "tip": "ACI = simple, quick containers (no orchestration). AKS = full Kubernetes orchestration (complex microservices). App Service = web apps (can run containers but simpler model). If the question mentions microservices + orchestration + Kubernetes — it's AKS."
+  },
+  {
+    "id": "AZ900-E01-018",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A retail company wants to process credit card transactions\n- The application code runs only when a transaction occurs (event-driven)\n- Between transactions, no compute resources should be running\n- The average transaction processing time is 2 seconds\n- The company wants to pay ONLY for the time the code executes\n\nQuestion:\nWhich Azure compute service should you use?",
+    "choices": [
+      "Azure Virtual Machines",
+      "Azure App Service (Basic tier)",
+      "Azure Functions (Consumption plan)",
+      "Azure Batch"
+    ],
+    "answer": [2],
+    "explanations": [
+      "VMs run continuously and you pay for them whether they're processing transactions or idle. This directly violates the 'no resources running between transactions' and 'pay only for execution time' requirements.",
+      "App Service Basic tier runs on dedicated VMs that are always on. You pay a fixed monthly rate regardless of usage. Doesn't meet the pay-per-execution requirement.",
+      "This option is correct. Azure Functions on a Consumption plan is serverless — code runs only when triggered by an event (the transaction), and you pay only for the execution time (per GB-second). Between transactions, no compute resources are allocated. A 2-second execution time is well within the 10-minute limit. This is the textbook serverless use case.",
+      "Azure Batch is designed for large-scale parallel batch processing jobs. It provisions pools of VMs to process workloads. Overkill for a 2-second event-driven transaction, and the pool management doesn't align with 'no resources between transactions.'"
+    ],
+    "tip": "Azure Functions (Consumption plan) is THE answer when you see: event-driven, pay-per-execution, no idle resources, short execution times. It's Microsoft's serverless compute offering. If the question describes a workload that runs briefly in response to events — Functions."
+  },
+  {
+    "id": "AZ900-E01-019",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a web application that serves users globally\n- Users in Asia report significantly slower page load times compared to users in Europe (where the app is hosted)\n- The application serves mostly static content: images, CSS, JavaScript, and videos\n- You need to improve performance for Asian users without deploying additional application instances\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Traffic Manager",
+      "Azure Content Delivery Network (CDN)",
+      "Azure Application Gateway",
+      "Azure Load Balancer"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Traffic Manager uses DNS-based routing to direct users to different endpoints. But the question says you don't want to deploy additional application instances — Traffic Manager needs multiple endpoints to route between.",
+      "This option is correct. Azure CDN caches static content (images, CSS, JS, videos) at edge locations worldwide, including locations close to Asian users. Subsequent requests are served from the nearest edge node rather than travelling to the European origin server. This dramatically improves load times without deploying additional app instances.",
+      "Application Gateway is a regional Layer-7 load balancer with WAF capabilities. It operates within a single region and wouldn't help users in Asia access a European-hosted application faster.",
+      "Azure Load Balancer distributes traffic across VMs within a region (Layer-4). It doesn't cache content or reduce latency for geographically distant users."
+    ],
+    "tip": "CDN = cache static content at edge locations worldwide for faster delivery. Traffic Manager = route users to the nearest deployment. If the question mentions static content + global users + slow performance — CDN. If it mentions multiple app deployments + routing — Traffic Manager."
+  },
+  {
+    "id": "AZ900-E01-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Monitor to collect metrics and logs from Azure resources\n- The operations team wants proactive recommendations to improve the security, reliability, performance, and cost-effectiveness of their Azure deployment\n- They want a single dashboard showing prioritised, actionable recommendations\n\nQuestion:\nWhich Azure service provides these proactive recommendations?",
+    "choices": [
+      "Azure Monitor",
+      "Azure Service Health",
+      "Azure Advisor",
+      "Microsoft Defender for Cloud"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure Monitor collects and analyses telemetry data (metrics, logs, traces). It's the data collection and alerting platform, but it doesn't generate proactive best-practice recommendations across the five pillars.",
+      "Azure Service Health notifies you about Azure service issues, planned maintenance, and health advisories that affect YOUR resources. It's reactive (telling you about problems), not proactive (suggesting improvements).",
+      "This option is correct. Azure Advisor analyses your Azure configuration and usage telemetry, then provides personalised, actionable recommendations across five categories: Cost, Security, Reliability, Operational Excellence, and Performance. It's your built-in cloud consultant — proactive, prioritised, and integrated into the Azure portal.",
+      "Microsoft Defender for Cloud focuses specifically on security posture and threat protection. While it provides security recommendations, it doesn't cover cost, performance, or operational excellence — the question asks for all categories."
+    ],
+    "tip": "Azure Advisor = proactive recommendations across 5 pillars (Cost, Security, Reliability, Operational Excellence, Performance). Azure Monitor = data collection and alerting. Service Health = Azure platform issues. Defender for Cloud = security-specific. If the question mentions 'recommendations' across multiple areas — it's Advisor."
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E04-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A law firm currently stores all client files on a local NAS (Network Attached Storage) device\n- The NAS failed last month, and the firm lost 3 days of work before it was repaired\n- The managing partner wants to move file storage to the cloud\n- They need file storage accessible from any device, anywhere, with automatic redundancy\n\nQuestion:\nWhich cloud benefit directly addresses the law firm's file loss issue?",
+    "choices": [
+      "Agility",
+      "Reliability and redundancy",
+      "Cost reduction",
+      "Elasticity"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Agility is about rapid provisioning of resources. While the firm could quickly set up cloud storage, agility doesn't address the data loss problem.",
+      "This option is correct. Cloud storage services like Azure Files and OneDrive provide automatic redundancy — data is replicated across multiple storage nodes (and optionally across regions). If one storage node fails, data is still available from the replicas. This directly addresses the NAS failure scenario: no single point of failure, no data loss, continuous availability.",
+      "Cost reduction may be a side benefit, but the firm's primary concern is data loss and availability, not cost. You can't put a price on lost legal work.",
+      "Elasticity is about scaling resources based on demand. The firm's problem is data availability, not storage capacity fluctuations."
+    ],
+    "tip": "When a scenario describes data loss or service unavailability due to hardware failure — the cloud benefit is reliability/redundancy. Cloud storage automatically replicates data, eliminating single points of failure."
+  },
+  {
+    "id": "AZ900-E04-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs a PaaS application on Azure App Service\n- The application experiences a data breach because a developer hardcoded an API key in the source code\n- The API key was committed to a public GitHub repository\n\nQuestion:\nAccording to the shared responsibility model, who is responsible for this security breach?",
+    "choices": [
+      "Microsoft, because the application runs on Azure infrastructure",
+      "GitHub, because the API key was exposed through their platform",
+      "The customer, because application security and data protection are the customer's responsibility",
+      "Shared between Microsoft and the customer"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Microsoft is responsible for the platform infrastructure (OS, runtime, physical security), but not for how customers write their application code or manage secrets. A hardcoded API key is an application-level security failure.",
+      "GitHub provides a code hosting platform. While GitHub offers secret scanning features, the responsibility for not hardcoding secrets in source code lies with the development team, not the hosting platform.",
+      "This option is correct. In all cloud models (IaaS, PaaS, SaaS), the customer is always responsible for their data, application code, identity management, and credentials. Hardcoding an API key in source code and committing it to a public repository is an application security failure — entirely the customer's responsibility. Microsoft provides tools (Key Vault, Managed Identities) to avoid this, but the customer must use them.",
+      "This is not a shared responsibility. Application code security is exclusively the customer's domain. Microsoft has no visibility into or control over what developers put in their source code."
+    ],
+    "tip": "Application code, data, credentials, and identity management are ALWAYS the customer's responsibility — in every cloud model. If a breach occurs because of how the customer built their application, it's the customer's responsibility. Microsoft provides security tools; customers must use them."
+  },
+  {
+    "id": "AZ900-E04-003",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to deploy 500 identical virtual machines for a load testing exercise\n- All VMs must have the same configuration: Ubuntu 22.04, 4 vCPUs, 16 GB RAM\n- The VMs are needed for 4 hours and then must be deleted\n- The deployment must be automated — manually creating 500 VMs is not acceptable\n\nQuestion:\nWhich Azure feature is BEST suited for deploying and managing these identical VMs as a single unit?",
+    "choices": [
+      "Azure Virtual Machine Scale Sets",
+      "Individual Azure Virtual Machines created via ARM template",
+      "Azure Container Instances",
+      "Azure App Service Plan"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Virtual Machine Scale Sets (VMSS) deploy and manage a group of identical, auto-scaling VMs as a single resource. You specify the VM configuration once and set the instance count to 500. VMSS handles deployment, load balancing, and when finished, you scale to 0 or delete the scale set. It's purpose-built for scenarios requiring many identical VMs.",
+      "An ARM template could deploy 500 VMs, but each VM would be a separate resource to manage. Deleting 500 individual VMs is cumbersome compared to deleting a single VMSS. ARM templates are the deployment mechanism, but VMSS is the better management abstraction for identical VMs.",
+      "Container Instances run containers, not full VMs. The scenario requires Ubuntu VMs with specific vCPU and RAM specifications — a VM workload, not a container workload.",
+      "App Service Plan hosts web applications, not arbitrary VM workloads for load testing. It doesn't provide the VM-level control needed."
+    ],
+    "tip": "VM Scale Sets = deploy and manage identical VMs as a group. Key benefits: uniform configuration, automatic scaling, single-unit management, integrated load balancing. If 'many identical VMs' or 'auto-scaling group of VMs' — VMSS."
+  },
+  {
+    "id": "AZ900-E04-004",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Storage Accounts for various purposes\n- They need to understand the difference between storage account types\n- The team is confused about when to use Standard vs Premium storage\n\nQuestion:\nWhat is the PRIMARY difference between Standard and Premium Azure Storage accounts?",
+    "choices": [
+      "Standard uses HDDs; Premium uses SSDs — resulting in different performance characteristics",
+      "Standard is for production; Premium is for development",
+      "Standard supports Blob storage; Premium supports only File storage",
+      "Standard is available in all regions; Premium is only in select regions"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Standard storage uses Hard Disk Drives (HDDs) — good for bulk storage, backups, and infrequently accessed data with lower cost. Premium storage uses Solid State Drives (SSDs) — providing significantly higher IOPS, lower latency, and better throughput for performance-sensitive workloads like databases and transaction processing. The price reflects the performance difference.",
+      "Both Standard and Premium are suitable for production workloads. Premium is for performance-demanding production workloads; Standard is for cost-conscious production workloads. Neither is specifically for development.",
+      "Both Standard and Premium support Blob storage. Premium also offers premium file shares (Azure Files), premium block blobs, and premium page blobs. The difference is performance backing, not storage type availability.",
+      "Both Standard and Premium storage are widely available across Azure regions. Availability is not the primary differentiator."
+    ],
+    "tip": "Standard = HDD-backed (lower cost, higher latency). Premium = SSD-backed (higher cost, lower latency, higher IOPS). Choose based on workload requirements: databases and transactional apps → Premium. Backups and archives → Standard."
+  },
+  {
+    "id": "AZ900-E04-005",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company signs a contract with Microsoft for Azure services\n- The contract specifies that Azure Virtual Machines in Availability Zones will have 99.99% uptime\n- During a quarter, the company experiences 1 hour of unplanned downtime\n- The total hours in the quarter are approximately 2,190\n\nQuestion:\nDid Microsoft meet the SLA, and what recourse does the company have?",
+    "choices": [
+      "Yes, the SLA was met — 1 hour is acceptable",
+      "No, the SLA was breached — the company can claim service credits",
+      "No, the SLA was breached — Microsoft must refund the full subscription cost",
+      "SLAs are non-binding guidelines, so no recourse is available"
+    ],
+    "answer": [1],
+    "explanations": [
+      "99.99% uptime over 2,190 hours allows only about 13 minutes of downtime per quarter (0.01% × 2,190 hours ≈ 0.219 hours ≈ 13 minutes). One hour (60 minutes) significantly exceeds the allowed downtime. The SLA was NOT met.",
+      "This option is correct. The SLA was breached — 1 hour of downtime far exceeds the 13-minute allowance for 99.99% uptime. When Azure fails to meet an SLA, customers can claim service credits (typically 10-100% of the monthly bill for the affected service, depending on the actual uptime percentage achieved). The company should file a support ticket to claim credits.",
+      "Microsoft does not refund the full subscription cost. SLA remedies are service credits (a percentage discount on the affected service's monthly bill), not full refunds. The credit amount depends on how far below the SLA the actual uptime was.",
+      "Azure SLAs are contractual commitments, not non-binding guidelines. They are legally enforceable, and Microsoft provides service credits when they fail to meet committed uptime percentages."
+    ],
+    "tip": "SLA breach → service credits (not refunds). 99.99% = ~4.3 min downtime/month. 99.95% = ~21.6 min/month. 99.9% = ~43.8 min/month. The exam tests both SLA percentages and the remediation mechanism (service credits)."
+  },
+  {
+    "id": "AZ900-E04-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure AD (Entra ID) for identity management\n- A security audit reveals that 15 user accounts haven't been used in over 90 days\n- Some of these accounts still have privileged roles assigned\n- The security team wants to regularly review and remove unnecessary access\n\nQuestion:\nWhich Azure AD feature automates the periodic review of user access?",
+    "choices": [
+      "Azure AD Conditional Access",
+      "Azure AD Access Reviews",
+      "Azure AD Privileged Identity Management (PIM)",
+      "Azure AD Identity Protection"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Conditional Access defines rules for HOW users access resources (require MFA, block locations). It doesn't review WHO has access or remove stale access.",
+      "This option is correct. Azure AD Access Reviews automate periodic reviews of user access to groups, applications, and roles. You configure a review schedule (e.g., quarterly), assign reviewers (managers, resource owners, or users themselves), and the system automatically sends review requests. Reviewers approve or deny continued access. Denied access is automatically revoked. This catches stale accounts and excessive privileges systematically.",
+      "PIM provides just-in-time role activation and time-bound role assignments. While PIM helps reduce standing privileged access, it doesn't perform periodic reviews of all user access — that's Access Reviews' job. However, PIM and Access Reviews work well together.",
+      "Identity Protection detects risky sign-ins and compromised accounts using machine learning. It's about real-time risk detection, not periodic access certification."
+    ],
+    "tip": "Access Reviews = periodic certification of who has access (should this user still have this role?). PIM = time-bound privileged access (activate admin role for 4 hours). These complement each other. If 'review and remove unnecessary access periodically' — Access Reviews."
+  },
+  {
+    "id": "AZ900-E04-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's developers need to build, test, and deploy applications using a CI/CD pipeline\n- The pipeline must support: source control (Git), automated builds, automated testing, and deployment to Azure App Service\n- The team wants a fully integrated platform from Microsoft\n\nQuestion:\nWhich Microsoft service provides an integrated CI/CD platform?",
+    "choices": [
+      "Azure Monitor",
+      "Azure DevOps Services",
+      "Azure Automation",
+      "Azure Resource Manager"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor provides monitoring, logging, and alerting for Azure resources. It doesn't provide CI/CD pipeline capabilities, source control, or automated builds/deployments.",
+      "This option is correct. Azure DevOps Services is Microsoft's integrated DevOps platform providing: Azure Repos (Git source control), Azure Pipelines (CI/CD build and release), Azure Test Plans (automated and manual testing), Azure Boards (work tracking), and Azure Artifacts (package management). It supports deployment to Azure App Service and virtually any other target. It's the all-in-one DevOps solution from Microsoft.",
+      "Azure Automation runs PowerShell/Python runbooks for IT process automation (start/stop VMs, resource cleanup). It's not a CI/CD platform for building and deploying applications.",
+      "Azure Resource Manager is the deployment and management layer for Azure resources. While ARM templates are deployed as part of CI/CD, ARM itself is not a CI/CD pipeline platform."
+    ],
+    "tip": "Azure DevOps = full CI/CD platform (repos, pipelines, testing, boards, artifacts). GitHub Actions is another Microsoft CI/CD option. Azure Automation = IT operations automation. If the question mentions 'CI/CD', 'build pipeline', or 'source control + automated deployment' — Azure DevOps."
+  },
+  {
+    "id": "AZ900-E04-008",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to ensure all Azure resources follow a consistent tagging strategy\n- The strategy requires every resource to have: Department, CostCenter, and Environment tags\n- Resources missing any of these tags should be denied creation\n- Existing non-compliant resources should have tags added automatically\n\nQuestion:\nWhich combination of Azure Policy effects achieves both requirements?",
+    "choices": [
+      "Audit for both new and existing resources",
+      "Deny for new resources + Modify with remediation for existing resources",
+      "DeployIfNotExists for both new and existing resources",
+      "Append for new resources + Audit for existing resources"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Audit only flags non-compliance — it doesn't deny creation or add tags. Both requirements need active enforcement, not just reporting.",
+      "This option is correct. Deny effect blocks the creation of new resources that are missing required tags — meeting the first requirement. Modify effect with a remediation task automatically adds the missing tags to existing non-compliant resources — meeting the second requirement. This combination provides both prevention (Deny) and remediation (Modify) in a comprehensive tagging enforcement strategy.",
+      "DeployIfNotExists deploys a RELATED resource when a condition isn't met (e.g., deploy a diagnostic extension on a VM). It's not the right effect for adding tags to the resource itself — Modify is designed for that.",
+      "Append can add fields but has limitations and is being superseded by Modify for tag management. Audit doesn't add tags automatically — it just reports non-compliance."
+    ],
+    "tip": "Tag enforcement combo: Deny (block non-compliant new resources) + Modify (auto-fix existing resources). These two effects together provide a complete tagging governance strategy. Microsoft's recommended approach for mandatory tags."
+  },
+  {
+    "id": "AZ900-E04-009",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to use artificial intelligence to extract text from scanned documents (invoices, receipts, contracts)\n- The documents are uploaded as images and PDFs\n- The development team needs a pre-built service — they don't want to train custom models\n- Extracted text should be structured and searchable\n\nQuestion:\nWhich Azure AI service should you use?",
+    "choices": [
+      "Azure Machine Learning",
+      "Azure AI Document Intelligence (formerly Form Recognizer)",
+      "Azure Cognitive Search",
+      "Azure Computer Vision (OCR only)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Machine Learning requires building and training custom models. The team explicitly wants a pre-built service without custom model training.",
+      "This option is correct. Azure AI Document Intelligence (formerly Form Recognizer) is a pre-built AI service that extracts text, key-value pairs, tables, and structured data from documents (invoices, receipts, contracts, IDs). It uses pre-built models that understand document layouts without any custom training. It goes beyond simple OCR by understanding the structure of common document types.",
+      "Azure Cognitive Search (AI Search) is a search service that indexes and makes content searchable. While it can integrate with AI enrichment, it's not the extraction service itself — it's the search layer that would sit on top of extracted data.",
+      "Azure Computer Vision provides basic OCR (optical character recognition) that extracts raw text from images. However, it doesn't understand document structure (tables, key-value pairs, field extraction). For structured document processing, Document Intelligence is more capable and appropriate."
+    ],
+    "tip": "Document Intelligence = extract structured data from documents (invoices, receipts, forms). Computer Vision OCR = extract raw text from images. Cognitive Search = make content searchable. If the question mentions 'invoices', 'receipts', or 'structured document extraction' — Document Intelligence."
+  },
+  {
+    "id": "AZ900-E04-010",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A startup founder is evaluating cloud options\n- They ask: 'I've heard that with cloud computing, I can deploy my application and have it accessible to users worldwide within minutes. Is this true?'\n\nQuestion:\nWhich cloud benefit enables rapid global deployment of applications?",
+    "choices": [
+      "Economies of scale",
+      "Global reach and agility",
+      "Shared responsibility",
+      "Consumption-based pricing"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Economies of scale is about cost reduction through the provider's massive purchasing power. It doesn't specifically enable rapid global deployment.",
+      "This option is correct. Azure has 60+ regions worldwide. Global reach means your application can be deployed to data centres on every continent. Agility means you can provision resources in these regions within minutes. Combined, global reach + agility enables a startup to go from 'no infrastructure' to 'live in 10 regions worldwide' in under an hour. This would take months with physical data centres.",
+      "Shared responsibility defines who manages security — the provider or the customer. It doesn't enable rapid deployment.",
+      "Consumption-based pricing means pay-for-what-you-use. While it enables cost-effective global deployment, it's not the specific benefit that describes rapid worldwide availability."
+    ],
+    "tip": "Global reach = Azure's 60+ regions worldwide. Agility = speed of deployment. Together they enable 'deploy globally in minutes.' If the question combines worldwide availability with rapid deployment — global reach + agility."
+  }
+]

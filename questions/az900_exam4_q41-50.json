@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E04-041",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Active Directory (Entra ID) for identity\n- An external partner company needs to collaborate on a shared SharePoint site\n- Partner employees should use their own corporate Azure AD accounts to sign in\n- You don't want to create new accounts in your Azure AD for each partner employee\n\nQuestion:\nWhich Azure AD feature enables this cross-organisation collaboration?",
+    "choices": [
+      "Azure AD B2C (Business-to-Consumer)",
+      "Azure AD B2B (Business-to-Business)",
+      "Azure AD Domain Services",
+      "Azure AD Connect"
+    ],
+    "answer": [1],
+    "explanations": [
+      "B2C is for consumer-facing applications where customers sign in with personal identities (Gmail, Facebook, email signup). It's not designed for business partner collaboration with corporate accounts.",
+      "This option is correct. Azure AD B2B (Business-to-Business) collaboration lets you invite external users from partner organisations to access your resources. Partners sign in using their own corporate Azure AD (or other identity provider) credentials. You don't create or manage accounts for them — they use their existing corporate identity. You control what they can access through RBAC and Conditional Access.",
+      "Azure AD Domain Services provides managed domain services (LDAP, Kerberos) in Azure. It doesn't enable cross-organisation identity collaboration.",
+      "Azure AD Connect synchronises on-premises AD to Azure AD. It's for your own identity infrastructure, not for enabling external partner access."
+    ],
+    "tip": "B2B = business partners using THEIR corporate accounts to access YOUR resources. B2C = consumers using personal accounts to access YOUR customer-facing apps. If 'partner collaboration' + 'use their own corporate accounts' — B2B."
+  },
+  {
+    "id": "AZ900-E04-042",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to deploy infrastructure using the Azure portal\n- The IT manager asks: 'What layer processes our deployment requests when we click Create in the Azure portal?'\n- They want to understand how Azure manages resource deployments\n\nQuestion:\nWhich Azure component handles all resource deployment and management requests?",
+    "choices": [
+      "Azure Active Directory",
+      "Azure Resource Manager (ARM)",
+      "Azure Monitor",
+      "Azure Marketplace"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD handles authentication and identity management. It verifies who you are, but it doesn't process resource deployment requests.",
+      "This option is correct. Azure Resource Manager (ARM) is the deployment and management layer for Azure. Every request to create, update, delete, or manage an Azure resource goes through ARM — whether from the Azure portal, Azure CLI, PowerShell, REST API, or SDKs. ARM authenticates the request (via Azure AD), authorises it (via RBAC), validates it (via Azure Policy), and then processes the operation. It's the single, consistent management endpoint.",
+      "Azure Monitor collects and analyses telemetry after resources are deployed. It doesn't handle deployment requests.",
+      "Azure Marketplace is an online store for finding and deploying solutions. When you deploy from the Marketplace, the actual deployment goes through ARM."
+    ],
+    "tip": "ARM = the management plane for ALL Azure operations. Every tool (portal, CLI, PowerShell, API) sends requests through ARM. ARM handles: authentication → authorisation (RBAC) → policy evaluation → resource operation. It's the gatekeeper for all resource management."
+  },
+  {
+    "id": "AZ900-E04-043",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company has Azure resources deployed in multiple regions\n- They want to enable multi-factor authentication (MFA) for all users when signing into Azure\n- MFA should be required regardless of where users sign in from\n- The implementation should be centralised and apply to all Azure AD users\n\nQuestion:\nWhich Azure AD feature should you configure to enforce MFA for all users?",
+    "choices": [
+      "Per-user MFA settings",
+      "Conditional Access policy requiring MFA for all users and all cloud apps",
+      "Azure AD Identity Protection sign-in risk policy",
+      "Azure AD Security Defaults"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Per-user MFA settings enable MFA for individual users one at a time. This is the legacy approach — difficult to manage at scale, no granular conditions, and not recommended by Microsoft for organisations with Azure AD Premium.",
+      "This option is correct. A Conditional Access policy is the Microsoft-recommended way to enforce MFA. Create a policy targeting all users (or a group), for all cloud apps, with the 'Require multi-factor authentication' grant control. This provides centralised enforcement with the flexibility to add exceptions (break-glass accounts, service accounts) and conditions as needed. It's the enterprise-grade approach.",
+      "Identity Protection sign-in risk policies trigger MFA only when risky sign-in behaviour is detected. The question requires MFA for ALL sign-ins regardless of risk, not just risky ones.",
+      "Security Defaults enable basic MFA for all users and are a good option for organisations without Azure AD Premium. However, Security Defaults are an all-or-nothing setting with no customisation (no exceptions, no conditions). For centralised, configurable enforcement — Conditional Access is the proper solution."
+    ],
+    "tip": "MFA enforcement methods: Security Defaults (basic, free, no customisation) → Per-user MFA (legacy, manual) → Conditional Access (recommended, flexible, requires Premium P1). Microsoft recommends Conditional Access for MFA enforcement in all organisations with Premium licenses."
+  },
+  {
+    "id": "AZ900-E04-044",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys an application to Azure App Service\n- Before deploying a new version to production, they want to test it in an environment identical to production\n- If the new version works correctly, they want to swap it into production instantly with zero downtime\n- If issues are found, they want to swap back to the previous version immediately\n\nQuestion:\nWhich App Service feature enables this deployment pattern?",
+    "choices": [
+      "Azure DevOps Pipelines",
+      "App Service Deployment Slots",
+      "Azure Traffic Manager",
+      "Blue/Green deployment on Azure VMs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure DevOps Pipelines can deploy to App Service but doesn't provide the instant swap and rollback mechanism natively. It's the CI/CD tool that would trigger a deployment, but deployment slots is the specific App Service feature that enables slot swapping.",
+      "This option is correct. App Service Deployment Slots are separate instances of your app (e.g., production, staging) within the same App Service plan. Deploy the new version to a staging slot, test it thoroughly, then perform a swap — the staging slot becomes production and vice versa, instantly and with zero downtime. If issues arise, swap back. The swap operation redirects traffic at the load balancer level (no restart needed).",
+      "Traffic Manager routes DNS queries and could implement blue/green across regions, but it operates at the DNS level (which has TTL propagation delays) and is overkill for single-app deployments. Deployment slots provide the same capability natively in App Service.",
+      "Blue/Green deployment on VMs requires managing multiple VM sets, load balancer configuration, and manual traffic switching. App Service deployment slots provide the same pattern built-in with zero infrastructure management."
+    ],
+    "tip": "Deployment Slots = staging environments within App Service for safe deployments. Deploy to staging → test → swap to production (instant, zero downtime) → swap back if issues. Available in Standard tier and above. This is the AZ-900 answer for 'zero-downtime deployment to App Service.'"
+  },
+  {
+    "id": "AZ900-E04-045",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 30 Azure subscriptions\n- Each subscription was created independently with no governance structure\n- Subscriptions are not organised into any hierarchy\n- The IT governance team wants to create a governance hierarchy without affecting existing resources\n\nQuestion:\nWhat is the FIRST step to organise these subscriptions into a governance hierarchy?",
+    "choices": [
+      "Create Azure Policy assignments on each subscription",
+      "Create Management Groups and move subscriptions into them",
+      "Create new subscriptions and migrate all resources",
+      "Assign RBAC roles at the subscription level"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Creating policies on individual subscriptions is possible but doesn't create a hierarchy. You'd manage 30 separate policy assignments. The governance team needs a hierarchy FIRST, then they can apply policies at the management group level to cascade down.",
+      "This option is correct. Management Groups create a hierarchy above subscriptions. Create groups (e.g., 'Production', 'Development', 'Sandbox'), then move existing subscriptions into the appropriate groups. Moving a subscription into a management group doesn't affect the resources inside it — they continue working normally. Once the hierarchy is in place, apply Azure Policy and RBAC at the management group level to cascade governance down.",
+      "Creating new subscriptions and migrating resources is extremely disruptive, time-consuming, and unnecessary. You can organise existing subscriptions into management groups without touching any resources.",
+      "RBAC assignments are important but don't create a hierarchy. They should be applied AFTER the management group hierarchy is established, so you can assign roles at the management group level instead of 30 individual subscriptions."
+    ],
+    "tip": "Governance setup order: (1) Create Management Group hierarchy, (2) Move subscriptions into groups, (3) Apply Azure Policy at management group level, (4) Assign RBAC at management group level. Start with the hierarchy — everything else builds on it."
+  },
+  {
+    "id": "AZ900-E04-046",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to translate text between languages in real-time\n- The application serves users who speak English, Spanish, French, German, and Japanese\n- Translation must be integrated via API calls\n- No custom ML models should be needed\n\nQuestion:\nWhich Azure AI service provides text translation capabilities?",
+    "choices": [
+      "Azure AI Speech",
+      "Azure AI Translator",
+      "Azure AI Language (Text Analytics)",
+      "Azure OpenAI Service"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AI Speech handles speech-to-text, text-to-speech, and speech translation (spoken language). The question asks about TEXT translation specifically — different service.",
+      "This option is correct. Azure AI Translator is a cloud-based neural machine translation service that provides real-time text translation across 100+ languages. It's accessed via REST API, requires no custom ML models, and supports features like language detection, transliteration, and dictionary lookups. It's the pre-built service for text translation.",
+      "Azure AI Language (formerly Text Analytics) analyses text for sentiment, key phrases, entities, and language detection. It understands text but doesn't translate it between languages.",
+      "Azure OpenAI Service (GPT models) can translate text as part of its general capabilities, but it's not purpose-built for translation. Translator is optimised specifically for translation quality, speed, and cost. For dedicated translation — use Translator."
+    ],
+    "tip": "Azure AI services by function: Translator = text translation. Speech = speech-to-text, text-to-speech, speech translation. Language = text analytics (sentiment, entities, key phrases). Vision = image analysis. Each service is purpose-built for its domain."
+  },
+  {
+    "id": "AZ900-E04-047",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company evaluates cloud vs on-premises for a new database workload\n- The workload requires consistent performance and will run for 5 years\n- On-premises: £50,000 upfront for server hardware + £10,000/year maintenance = £100,000 over 5 years\n- Azure: £1,800/month = £108,000 over 5 years\n\nQuestion:\nGiven that the cloud option costs more over 5 years, why might the company STILL choose cloud?",
+    "choices": [
+      "Cloud is always cheaper than on-premises",
+      "Cloud eliminates upfront CapEx, provides scalability, and removes hardware management burden — non-financial benefits have value",
+      "The on-premises cost calculation must be wrong",
+      "Azure will automatically reduce the price over time"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud is NOT always cheaper. For some steady-state workloads, on-premises can be cheaper over long periods. The exam tests this nuance — cloud's value isn't solely about cost.",
+      "This option is correct. Cloud benefits extend beyond raw cost comparison: no £50,000 upfront capital expenditure (important for cash flow), no hardware procurement delays (agility), built-in high availability and disaster recovery, no physical server management (reduces IT staff burden), ability to scale if requirements change, automatic security patches, and no end-of-life hardware refresh cycles. These operational and strategic benefits may outweigh the £8,000 cost difference.",
+      "The on-premises calculation may be valid. In fact, it's often accurate that dedicated hardware is cheaper for fixed, long-running workloads when looking at raw costs alone.",
+      "While Azure prices generally decrease over time as technology improves, there's no guarantee of specific price reductions. Cloud cost advantages come from operational flexibility, not automatic price decreases."
+    ],
+    "tip": "Cloud value ≠ just cost savings. Benefits include: no CapEx, agility, scalability, reduced management burden, built-in resilience, global availability. The exam tests that cloud isn't always cheaper — but it often provides more VALUE even when the raw cost is higher."
+  },
+  {
+    "id": "AZ900-E04-048",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed Azure resources and needs network-level isolation between different application tiers\n- The web tier should only accept traffic on port 443 from the internet\n- The application tier should only accept traffic from the web tier on port 8080\n- The database tier should only accept traffic from the application tier on port 1433\n\nQuestion:\nHow should you implement this network segmentation?",
+    "choices": [
+      "Deploy all tiers in the same subnet with no NSG",
+      "Deploy each tier in a separate subnet with Network Security Groups (NSGs) controlling traffic between subnets",
+      "Deploy each tier in a separate Azure subscription",
+      "Use Azure Policy to restrict network traffic"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Deploying all tiers in the same subnet with no NSG provides zero network isolation. All resources can communicate freely. This violates the requirement for tier-level traffic control.",
+      "This option is correct. Deploy a separate subnet for each tier (web, app, database) within a VNet. Apply NSGs to each subnet: web subnet NSG allows inbound 443 from internet only, app subnet NSG allows inbound 8080 from web subnet only, database subnet NSG allows inbound 1433 from app subnet only. This is the standard multi-tier network architecture pattern in Azure — defence in depth through network segmentation.",
+      "Separate subscriptions for network isolation is massive overkill. Subnets with NSGs within a single VNet provide the necessary isolation without the cross-subscription complexity.",
+      "Azure Policy governs resource configurations (e.g., required tags, allowed VM sizes), not real-time network traffic flow. NSGs are the correct tool for network-level traffic control."
+    ],
+    "tip": "Multi-tier network architecture: separate subnet per tier + NSG per subnet. Web → App → Database, each with progressively restrictive NSG rules. This is a foundational Azure networking pattern and a common exam topic."
+  },
+  {
+    "id": "AZ900-E04-049",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to implement a 'landing zone' in Azure\n- The landing zone must include: identity management, networking, governance, security, and monitoring — all pre-configured and ready for application teams to deploy into\n- The company wants to follow Microsoft's recommended practices\n\nQuestion:\nWhich Microsoft guidance provides the reference architecture for Azure landing zones?",
+    "choices": [
+      "Azure Well-Architected Framework",
+      "Microsoft Cloud Adoption Framework (CAF) — Azure Landing Zone accelerator",
+      "Azure Quickstart Templates",
+      "Azure Solution Architectures"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Well-Architected Framework provides guidance for optimising individual workloads across five pillars. It's workload-level guidance, not organisation-level landing zone architecture.",
+      "This option is correct. The Microsoft Cloud Adoption Framework (CAF) includes the Azure Landing Zone accelerator — a reference architecture and implementation for creating a standardised, governed Azure environment. It pre-configures: identity (Azure AD), networking (hub-and-spoke or Virtual WAN), governance (management groups, policies), security (Defender for Cloud, Sentinel), and monitoring (Azure Monitor). It's Microsoft's recommended foundation for enterprise Azure adoption.",
+      "Quickstart Templates are individual ARM/Bicep templates for specific resources or configurations. They don't provide a comprehensive landing zone architecture.",
+      "Azure Solution Architectures are reference designs for specific workloads (e.g., web applications, IoT solutions). They don't provide the enterprise-wide landing zone foundation."
+    ],
+    "tip": "Azure Landing Zone = pre-configured Azure environment (identity, networking, governance, security, monitoring). Part of the Cloud Adoption Framework. If 'enterprise landing zone' or 'standardised Azure environment following Microsoft best practices' — CAF Landing Zone."
+  },
+  {
+    "id": "AZ900-E04-050",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure and wants to manage cloud spending proactively\n- The CTO asks for a monthly report that shows:\n  - Total spend by subscription\n  - Spend by resource type (VMs, storage, databases)\n  - Month-over-month spending trends\n  - Spending forecast for the next 3 months\n\nQuestion:\nWhich Azure tool provides all of these cost analysis capabilities?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure TCO Calculator",
+      "Azure Cost Management + Billing",
+      "Azure Advisor"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Pricing Calculator estimates FUTURE costs for planned Azure services before deployment. It doesn't analyse actual historical spending or provide forecasts based on current trends.",
+      "TCO Calculator compares on-premises vs Azure costs for migration planning. It doesn't provide ongoing spending analysis, breakdowns by subscription/resource type, or spending forecasts.",
+      "This option is correct. Azure Cost Management + Billing provides comprehensive cost analysis: filter by subscription, resource type, tag, or time period; view month-over-month trends; see spending breakdowns by any dimension; and forecast future spending based on current patterns. It also supports budget creation, alert thresholds, and cost allocation to departments or projects via tags.",
+      "Advisor provides cost-saving recommendations (e.g., resize underutilised VMs, buy reservations), but it doesn't provide the detailed cost analysis views, spending breakdowns, trend analysis, or forecasting that Cost Management offers."
+    ],
+    "tip": "Cost Management + Billing = the comprehensive cost tool (analysis, breakdown, trends, forecasts, budgets, exports). Pricing Calculator = estimate future costs. TCO = compare on-prem vs Azure. Advisor = cost-saving recommendations. For 'show me where my money goes and where it's going' — Cost Management."
+  }
+]

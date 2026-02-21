@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E03-041",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's Azure subscription has resources created by multiple team members over 18 months\n- Many resources were created for testing but never deleted\n- Some VMs are running but have 0% CPU usage for the past 30 days\n- The finance team asks: 'How can we identify resources that are wasting money?'\n\nQuestion:\nWhich Azure tool can identify idle and underutilised resources with specific cost-saving recommendations?",
+    "choices": [
+      "Azure Activity Log",
+      "Azure Advisor (Cost category)",
+      "Azure Monitor Metrics",
+      "Azure Resource Graph"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Activity Log records management operations (who created/deleted what) but doesn't analyse resource utilisation or provide cost-saving recommendations.",
+      "This option is correct. Azure Advisor's Cost category analyses resource utilisation patterns and identifies: idle VMs with 0% CPU that should be deallocated, underutilised VMs that should be downsized, unused public IPs, and unattached disks. Each recommendation includes the estimated monthly savings. It's the go-to tool for finding wasted spend.",
+      "Azure Monitor Metrics shows CPU, memory, and other performance data, but it doesn't automatically analyse this data to generate cost-saving recommendations. You'd have to manually review metrics for each resource — Advisor does this automatically.",
+      "Resource Graph is a query engine for exploring Azure resources at scale (find all VMs in a subscription, list all resources with a specific tag). It can find resources but doesn't analyse utilisation or calculate potential savings."
+    ],
+    "tip": "Azure Advisor Cost recommendations automatically detect: idle VMs, underutilised VMs, orphaned disks, unused public IPs, and RI purchase opportunities. If 'find wasted resources' or 'identify cost savings' — Advisor Cost category."
+  },
+  {
+    "id": "AZ900-E03-042",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to provide users with access to a full Windows 10/11 desktop environment from any device\n- Users work remotely from personal laptops, tablets, and thin clients\n- The IT team wants to centrally manage the desktop environment, including security policies and installed applications\n- The solution must be cloud-hosted — no on-premises infrastructure\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Virtual Machines (individual VMs per user)",
+      "Azure Virtual Desktop (AVD)",
+      "Azure App Service",
+      "Microsoft 365 web apps"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Individual VMs per user would work technically, but it's extremely expensive and difficult to manage at scale. Each user would need a dedicated VM, separate management, and individual patching. AVD is purpose-built for this scenario with much better economics and management.",
+      "This option is correct. Azure Virtual Desktop (AVD) is a cloud-hosted desktop and application virtualisation service. Users connect from any device to a full Windows desktop running in Azure. IT centrally manages the environment through Intune and Azure AD. AVD supports multi-session Windows 10/11 (unique to Azure — multiple users share one VM), which dramatically reduces costs compared to individual VMs. It's fully cloud-hosted with no on-premises infrastructure needed.",
+      "App Service hosts web applications and APIs. It doesn't provide a full Windows desktop environment for end users.",
+      "Microsoft 365 web apps provide browser-based access to Office applications (Word, Excel, etc.), not a full Windows desktop environment with locally installed applications, file explorer, and other desktop functionality."
+    ],
+    "tip": "Azure Virtual Desktop = cloud-hosted full Windows desktops. Key benefit: Windows 10/11 multi-session (multiple users on one VM — Azure exclusive). If the question mentions 'virtual desktop', 'remote desktop for users', or 'DaaS (Desktop as a Service)' — AVD."
+  },
+  {
+    "id": "AZ900-E03-043",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure Storage account\n- They need to copy 10 TB of data from an on-premises file server to Azure Blob Storage\n- Their internet connection is 100 Mbps — transferring 10 TB would take approximately 9 days\n- They need the data in Azure within 2 days\n- They don't want to upgrade their internet connection\n\nQuestion:\nWhich Azure service can transfer this data within the time constraint?",
+    "choices": [
+      "AzCopy over the existing internet connection",
+      "Azure Data Box (physical device)",
+      "Azure ExpressRoute",
+      "Azure File Sync"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AzCopy over a 100 Mbps connection would take approximately 9 days — exceeding the 2-day requirement. The bottleneck is bandwidth, and AzCopy can't solve that.",
+      "This option is correct. Azure Data Box is a physical device that Microsoft ships to your location. You copy 10 TB of data to the device locally (via USB 3.0 or network, much faster than internet upload), ship it back to Microsoft, and they upload it to your Azure Storage account. The physical shipping + upload process takes 1-2 days in most regions. It bypasses your internet connection entirely — perfect when bandwidth is the bottleneck.",
+      "ExpressRoute provides a dedicated private connection to Azure, but it requires provisioning through a connectivity provider (takes weeks/months to set up). It also costs significantly more than a Data Box for a one-time transfer. Not practical for a 2-day deadline.",
+      "Azure File Sync provides ongoing synchronisation between on-premises file servers and Azure Files. While it could eventually sync the data, it still uses your 100 Mbps connection and would face the same 9-day timeline."
+    ],
+    "tip": "Azure Data Box family: Data Box Disk (up to 35 TB), Data Box (up to 80 TB), Data Box Heavy (up to 800 TB). If the question describes a large data transfer where internet bandwidth is insufficient — Data Box. It's Microsoft's offline data transfer solution."
+  },
+  {
+    "id": "AZ900-E03-044",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is reviewing their Azure spending report\n- They notice charges for network data transfer\n- Data transfer INTO Azure is free\n- Data transfer OUT of Azure is charged\n\nQuestion:\nWhat is the term for data transfer OUT of Azure (to the internet or to another region)?",
+    "choices": [
+      "Ingress",
+      "Egress",
+      "Peering",
+      "Transit"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Ingress is data transfer INTO Azure. Ingress is free in Azure — you don't pay to upload data. This is the opposite of what the question asks.",
+      "This option is correct. Egress is data transfer OUT of Azure — to the internet, to another Azure region, or to on-premises. Azure charges for egress data transfer, with costs varying by volume and destination. Ingress (inbound) is free; egress (outbound) is metered. Understanding this distinction is important for cost planning.",
+      "Peering is a VNet-to-VNet connectivity mechanism. While peering between VNets in different regions incurs data transfer costs, 'peering' is not the general term for outbound data transfer.",
+      "Transit is not a standard Azure billing term for data transfer. It's used in networking contexts (transit VNet, transit gateway) but not as the billing category for outbound data."
+    ],
+    "tip": "Azure data transfer pricing: Ingress (inbound) = FREE. Egress (outbound) = CHARGED. The first 5 GB/month of egress is free, then charged per GB in tiered pricing. Intra-region traffic between Azure services is often free or low-cost. Cross-region traffic costs more."
+  },
+  {
+    "id": "AZ900-E03-045",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has three teams: Platform, Security, and Application Development\n- Platform team needs to manage subscriptions and resource groups\n- Security team needs to manage Azure Policy and security settings but NOT create resources\n- Application Development team needs to create and manage resources in specific resource groups but NOT manage subscriptions\n\nQuestion:\nWhich Azure feature should you use to give each team appropriate permissions following the principle of least privilege?",
+    "choices": [
+      "Azure Active Directory groups only",
+      "Azure Role-Based Access Control (RBAC) with different roles at different scopes",
+      "Azure Policy with different effects",
+      "Azure Management Groups only"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD groups help organise users, but groups alone don't grant permissions. You need to assign RBAC roles to those groups. Groups are a useful complement to RBAC but aren't the permission mechanism themselves.",
+      "This option is correct. Azure RBAC enables assigning specific roles at specific scopes: Platform team gets Owner/Contributor at the subscription level. Security team gets Security Admin or a custom role (with policy management permissions) at the subscription level — without resource creation rights. Application Development team gets Contributor at specific resource group scopes. This gives each team exactly the permissions they need at the narrowest possible scope — the definition of least privilege.",
+      "Azure Policy enforces rules about resource configurations (e.g., allowed regions, required tags). It doesn't manage user permissions or team access levels. Policy says 'what can be done'; RBAC says 'who can do it.'",
+      "Management Groups organise subscriptions and enable policy inheritance. They don't directly grant team-specific permissions. RBAC roles assigned at management group scope cascade to all subscriptions — that's not the granularity needed here."
+    ],
+    "tip": "RBAC = who can do what, and where. Three elements: security principal (who), role definition (what permissions), scope (where). Least privilege = minimum role + narrowest scope. If the question describes different teams needing different permissions at different levels — RBAC."
+  },
+  {
+    "id": "AZ900-E03-046",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company wants to build an AI-powered customer support chatbot\n- The chatbot must understand natural language questions and provide relevant answers\n- The development team has no machine learning expertise\n- They need pre-built AI capabilities they can integrate via API calls\n\nQuestion:\nWhich Azure service provides pre-built AI models accessible via APIs?",
+    "choices": [
+      "Azure Machine Learning",
+      "Azure AI Services (formerly Cognitive Services)",
+      "Azure Databricks",
+      "Azure HDInsight"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Machine Learning is a platform for building, training, and deploying CUSTOM machine learning models. It requires ML expertise to create models from scratch. The team has no ML expertise — they need pre-built capabilities.",
+      "This option is correct. Azure AI Services (formerly Cognitive Services) provides pre-built AI models accessible via REST APIs. For a chatbot, the team can use: Azure AI Language (natural language understanding), Azure Bot Service (bot framework), and Azure OpenAI Service (GPT models for conversational AI). No ML expertise required — just make API calls. Services cover vision, speech, language, and decision categories.",
+      "Azure Databricks is a data analytics and ML platform based on Apache Spark. It's designed for data engineers and data scientists building custom analytics pipelines, not for integrating pre-built AI via APIs.",
+      "HDInsight is a managed Hadoop/Spark cluster service for big data processing. It's not an AI/ML service and doesn't provide pre-built AI capabilities."
+    ],
+    "tip": "Azure AI Services = pre-built AI models via APIs (no ML expertise needed). Azure Machine Learning = build CUSTOM ML models (requires expertise). If the team 'has no ML expertise' and needs 'pre-built AI' — AI Services (Cognitive Services)."
+  },
+  {
+    "id": "AZ900-E03-047",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's application has grown from 100 users to 100,000 users\n- The Azure SQL Database needs more compute power to handle the increased query load\n- You want to increase the database performance tier from Standard S3 to Premium P4\n- The change should happen without application downtime\n\nQuestion:\nCan you change the Azure SQL Database performance tier without downtime?",
+    "choices": [
+      "No — you must create a new database and migrate data",
+      "No — the database must be taken offline during the tier change",
+      "Yes — Azure SQL Database supports online scaling of performance tiers",
+      "Yes — but only if you use Azure Data Migration Service"
+    ],
+    "answer": [2],
+    "explanations": [
+      "You do NOT need to create a new database. Azure SQL Database supports in-place scaling — changing the performance tier of the existing database without creating a new one.",
+      "The database does NOT need to go offline. Azure SQL Database handles tier changes with minimal impact — there may be a brief connection interruption (typically under 30 seconds) at the very end when the database switches to the new tier, but applications with retry logic handle this transparently.",
+      "This option is correct. Azure SQL Database supports online scaling of compute resources. You can change the performance tier (DTU model: Basic → Standard → Premium, or vCore model: adjust cores/memory) through the Azure portal, PowerShell, or CLI. The operation happens while the database remains online and serving queries. This is a key PaaS benefit — try doing this with a self-managed SQL Server without downtime!",
+      "Database Migration Service is for migrating between different database platforms or from on-premises to Azure. Scaling an existing Azure SQL Database's performance tier doesn't require a migration service."
+    ],
+    "tip": "Azure SQL Database = online scaling (change tiers without significant downtime). This is a PaaS advantage. Azure VMs would require stopping the VM to resize in some scenarios. If the question asks about scaling database performance — Azure SQL Database supports it online."
+  },
+  {
+    "id": "AZ900-E03-048",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to ensure that all Azure VMs have a specific antivirus extension installed\n- Any VM without the extension should be automatically remediated — the extension should be deployed without manual intervention\n- New VMs created without the extension should also be automatically remediated\n\nQuestion:\nWhich Azure Policy effect should you use?",
+    "choices": [
+      "Deny",
+      "Audit",
+      "DeployIfNotExists",
+      "Disabled"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Deny prevents the creation of non-compliant resources entirely. It would block VM creation if the extension isn't specified at deployment time. But the question wants remediation (automatically fix), not prevention (block creation).",
+      "Audit flags non-compliant resources but takes no action. The extension wouldn't be installed — it would just appear in the compliance report as non-compliant. The question requires automatic remediation.",
+      "This option is correct. DeployIfNotExists evaluates resources and, if a related resource or extension doesn't exist, automatically deploys it through a remediation task. For VMs without the antivirus extension, DeployIfNotExists triggers a deployment that installs the extension. This works for both existing VMs (via remediation tasks) and newly created VMs (evaluated at creation time). It's the auto-remediation effect.",
+      "Disabled turns off the policy evaluation entirely. No compliance checking, no remediation, no auditing. The opposite of what's needed."
+    ],
+    "tip": "Policy effects for remediation: DeployIfNotExists = auto-deploy a missing related resource/extension. Modify = auto-change properties on the resource itself (e.g., add tags). Both support remediation tasks. Deny = prevent creation. Audit = flag only. Match the effect to the desired outcome."
+  },
+  {
+    "id": "AZ900-E03-049",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates an application that requires extremely low-latency access to data\n- The data must be available in multiple Azure regions simultaneously\n- Users in each region should read from their local copy for single-digit millisecond latency\n- The database must support multiple write regions for global applications\n\nQuestion:\nWhich Azure database service supports multi-region writes with guaranteed low latency?",
+    "choices": [
+      "Azure SQL Database with geo-replication",
+      "Azure Cosmos DB with multi-region writes",
+      "Azure Database for MySQL with read replicas",
+      "Azure Cache for Redis with geo-replication"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database geo-replication creates readable secondary replicas in other regions, but writes can only go to the primary region. It supports multi-region READS but not multi-region WRITES. The question requires writes in multiple regions.",
+      "This option is correct. Azure Cosmos DB is the only Azure database that supports multi-region writes (also called multi-master). You can configure write regions globally — applications in each region write to their local Cosmos DB instance with single-digit millisecond latency. Cosmos DB handles conflict resolution automatically. It guarantees <10ms reads and <10ms writes at the 99th percentile worldwide.",
+      "Azure Database for MySQL supports read replicas in other regions, but like SQL Database, writes must go to the primary region. It doesn't support multi-region writes.",
+      "Azure Cache for Redis supports geo-replication for read caching across regions, but it's a cache, not a database. Writes go to the primary cache. It also doesn't support multi-region writes with the guarantees Cosmos DB provides."
+    ],
+    "tip": "Multi-region writes = Azure Cosmos DB (exclusive feature). If the question mentions 'write in multiple regions simultaneously' or 'multi-master' — Cosmos DB is the only answer. SQL Database, MySQL, and PostgreSQL support multi-region reads (replicas) but NOT multi-region writes."
+  },
+  {
+    "id": "AZ900-E03-050",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has decided to use Azure for all new projects\n- The CTO mandates that no new on-premises hardware will be purchased\n- All new applications will be developed using Azure services\n- Existing on-premises systems will be gradually migrated to Azure over 3 years\n\nQuestion:\nWhich term describes the CTO's strategy of fully adopting Azure and eliminating on-premises infrastructure?",
+    "choices": [
+      "Cloud-first strategy",
+      "Hybrid cloud strategy",
+      "Multi-cloud strategy",
+      "Cloud-native strategy"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. A cloud-first strategy means all new initiatives use cloud services by default, and existing systems are migrated over time. The CTO's mandate (no new on-premises hardware, all new apps in Azure, gradual migration) is the textbook definition of cloud-first. During the 3-year migration, the company is technically hybrid (using both on-premises and cloud), but the STRATEGY is cloud-first because the end goal is full cloud adoption.",
+      "A hybrid cloud strategy involves permanently maintaining both on-premises and cloud infrastructure. The CTO's goal is to eliminate on-premises entirely over 3 years — hybrid is the transition state, not the strategy.",
+      "Multi-cloud means using multiple public cloud providers (Azure + AWS + GCP). The CTO specified Azure only — not a multi-cloud approach.",
+      "Cloud-native refers to applications specifically designed for the cloud using microservices, containers, and serverless patterns. The CTO's strategy is broader than application architecture — it's an organisational IT strategy covering all workloads."
+    ],
+    "tip": "Cloud-first = default to cloud for all new projects. Cloud-only = no on-premises at all. Hybrid = permanent mix of cloud and on-premises. Cloud-native = applications designed specifically for cloud patterns (microservices, containers). Know the strategy terminology."
+  }
+]

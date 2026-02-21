@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E02-041",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- An insurance company has 10,000 employees\n- They want to adopt cloud services but are concerned about security\n- The CISO asks: 'How can we ensure that Microsoft meets our security and compliance requirements?'\n- They need to review Microsoft's ISO 27001 audit results, SOC reports, and penetration test results\n\nQuestion:\nWhere can the CISO access these trust and compliance documents from Microsoft?",
+    "choices": [
+      "Azure Compliance Manager",
+      "Microsoft Service Trust Portal",
+      "Azure Security Centre (Defender for Cloud)",
+      "Azure Policy compliance dashboard"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Compliance Manager helps YOU assess your ORGANISATION'S compliance posture against standards. It doesn't provide Microsoft's audit reports or third-party assessment results. It's about your compliance, not Microsoft's.",
+      "This option is correct. The Microsoft Service Trust Portal (servicetrust.microsoft.com) is the centralised repository for Microsoft's compliance documentation: ISO 27001 audit reports, SOC 1/2/3 reports, penetration test results, GDPR assessments, and more. It's designed for CISOs, auditors, and compliance officers who need to verify Microsoft's security posture.",
+      "Defender for Cloud assesses the security posture of YOUR Azure resources. It provides recommendations for your deployment, not Microsoft's compliance certifications.",
+      "The Azure Policy compliance dashboard shows whether YOUR resources comply with the policies you've defined. It has nothing to do with Microsoft's ISO or SOC compliance."
+    ],
+    "tip": "Service Trust Portal = Microsoft's compliance proof (their audits, their certifications). Compliance Manager = your organisation's compliance assessment (your compliance posture). Defender for Cloud = your Azure resource security posture. Three different scopes — Microsoft's, your organisation's, your resources'."
+  },
+  {
+    "id": "AZ900-E02-042",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs a data warehouse solution in Azure\n- They have 50 TB of structured data from multiple sources (ERP, CRM, web analytics)\n- Data analysts need to run complex SQL queries across all this data\n- The solution must support both batch data loading and real-time analytics\n- They want a managed service that can scale compute and storage independently\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure SQL Database",
+      "Azure Synapse Analytics",
+      "Azure Cosmos DB",
+      "Azure Data Lake Storage"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database is designed for transactional (OLTP) workloads, not data warehousing (OLAP). It has a maximum database size of 100 TB but isn't optimised for the complex analytical queries across massive datasets that a data warehouse requires.",
+      "This option is correct. Azure Synapse Analytics (formerly SQL Data Warehouse) is Azure's enterprise analytics service. It provides a unified experience for data warehousing, data integration, big data analytics, and real-time analytics. It handles petabytes of data, supports T-SQL queries, scales compute and storage independently (Dedicated SQL pools), and integrates with Power BI for visualisation. It can handle both batch loading (Synapse Pipelines) and real-time streaming.",
+      "Cosmos DB is a globally distributed NoSQL database optimised for low-latency reads/writes. It's not designed for complex SQL analytical queries across 50 TB of structured data from multiple sources. Different use case entirely.",
+      "Data Lake Storage is a storage service for big data analytics — it stores raw data at massive scale. But it's just storage — it doesn't provide SQL query capabilities, compute scaling, or a data warehouse engine. Synapse Analytics often USES Data Lake Storage as its underlying storage layer."
+    ],
+    "tip": "Synapse Analytics = data warehouse + analytics (structured data, SQL queries, OLAP). SQL Database = transactional database (OLTP). Cosmos DB = globally distributed NoSQL. Data Lake Storage = raw data storage at scale. For 'data warehouse' + 'complex SQL' + 'multiple data sources' — Synapse."
+  },
+  {
+    "id": "AZ900-E02-043",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company grants a consultant temporary access to Azure resources\n- The consultant needs Contributor access to a specific resource group for a 3-month project\n- After the project ends, the access should be automatically revoked\n- The security team wants to ensure no permanent elevated access is granted to external parties\n\nQuestion:\nWhich Azure AD (Entra ID) feature should you use to provide time-limited role assignment?",
+    "choices": [
+      "Azure AD Access Reviews",
+      "Azure AD Privileged Identity Management (PIM)",
+      "Azure AD Guest Access (B2B)",
+      "Conditional Access policies"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Access Reviews periodically review and certify who has access to what. They can help identify stale access after the fact, but they don't provide time-bound, automatically expiring role assignments. You'd still need someone to manually revoke access during a review.",
+      "This option is correct. Azure AD Privileged Identity Management (PIM) enables time-bound role assignments — you assign the Contributor role with a start and end date. When the 3-month period expires, access is automatically revoked. PIM also provides audit trails, approval workflows, and notifications. It's designed exactly for this scenario: temporary, governed, elevated access.",
+      "Guest Access (B2B) invites external users to your directory, but the invitation itself doesn't provide time-limited RBAC role assignments. The guest account would persist and the role assignment wouldn't auto-expire without PIM.",
+      "Conditional Access controls HOW users access resources (require MFA, block locations), not WHEN their role assignments expire. It's about access conditions, not time-bound role management."
+    ],
+    "tip": "PIM = just-in-time, time-bound role activation/assignment. Access Reviews = periodic certification of who has access. Conditional Access = conditions under which access is granted. For 'temporary role assignment' or 'time-limited access that auto-expires' — PIM."
+  },
+  {
+    "id": "AZ900-E02-044",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company builds IoT solutions for smart buildings\n- Thousands of IoT sensors send temperature, humidity, and occupancy data to Azure\n- The system must ingest millions of events per second\n- Data needs to be processed in real-time and also stored for batch analytics\n\nQuestion:\nWhich Azure service should you use for the high-throughput event ingestion?",
+    "choices": [
+      "Azure Queue Storage",
+      "Azure Event Hubs",
+      "Azure Service Bus",
+      "Azure Notification Hubs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Queue Storage handles simple message queuing with much lower throughput. It processes messages individually and isn't designed for millions of events per second from thousands of producers.",
+      "This option is correct. Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second from thousands of concurrent sources (IoT sensors). It supports partitioning for parallel processing, integrates with Azure Stream Analytics for real-time processing, and can capture data to Azure Data Lake or Blob Storage for batch analytics. It's the purpose-built solution for high-throughput telemetry ingestion.",
+      "Azure Service Bus is an enterprise message broker designed for transactional messaging with delivery guarantees (FIFO, dead-letter, transactions). It's for application-to-application messaging, not high-throughput telemetry ingestion from thousands of IoT sensors.",
+      "Azure Notification Hubs sends push notifications to mobile devices. It pushes messages OUT to devices, not IN from IoT sensors. Completely different direction of data flow."
+    ],
+    "tip": "Event Hubs = high-throughput event streaming (millions/sec, big data, telemetry). Service Bus = enterprise messaging (transactions, ordering, delivery guarantees). Queue Storage = simple queuing. If the question mentions 'millions of events per second' or 'IoT telemetry ingestion' — Event Hubs."
+  },
+  {
+    "id": "AZ900-E02-045",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed Azure resources using pay-as-you-go pricing\n- After analysing usage patterns, you find that several VMs run 24/7 with consistent utilisation\n- Azure Advisor recommends purchasing Reserved Instances for these VMs\n- The operations team also notices some VMs are significantly underutilised (CPU < 5%)\n\nQuestion:\nWhich Azure Advisor recommendation category identifies both the Reserved Instance opportunity and the underutilised VM observation?",
+    "choices": [
+      "Security",
+      "Reliability",
+      "Cost",
+      "Performance"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Security recommendations cover topics like enabling MFA, applying NSG rules, and patching VMs. They don't address cost optimisation or purchasing strategies.",
+      "Reliability recommendations help improve the resilience of your applications (e.g., enable backup, add redundancy). They don't focus on cost savings or resource utilisation for financial purposes.",
+      "This option is correct. Azure Advisor's Cost category identifies opportunities to reduce spending. This includes: recommending Reserved Instances for steady-state VMs (save up to 72%), identifying underutilised or idle resources that should be resized or deallocated, and suggesting other cost optimisation strategies. Both scenarios in the question — RI recommendations and underutilised VM detection — fall under Cost recommendations.",
+      "Performance recommendations suggest ways to improve the speed and responsiveness of resources. While an underutilised VM might also appear under Performance (suggesting it's over-provisioned), the primary categorisation for cost-saving actions like RI purchases and rightsizing is the Cost category."
+    ],
+    "tip": "Advisor Cost recommendations: buy RIs for steady workloads, resize/deallocate underutilised VMs, delete unused resources, use cheaper tiers. The Cost category is purely about saving money. Performance might note the same VM is over-provisioned, but the financial recommendation comes from Cost."
+  },
+  {
+    "id": "AZ900-E02-046",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a web application that authenticates users\n- They need a cloud-based identity service for:\n  - User authentication (username/password, MFA)\n  - Single sign-on (SSO) to multiple SaaS applications\n  - Self-service password reset\n  - External identity provider federation (Google, Facebook)\n\nQuestion:\nWhich Azure service provides these identity management capabilities?",
+    "choices": [
+      "Azure Key Vault",
+      "Azure Active Directory (Microsoft Entra ID)",
+      "Azure Information Protection",
+      "Azure Role-Based Access Control (RBAC)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Key Vault stores secrets, keys, and certificates. It manages cryptographic material, not user identities. It doesn't provide authentication, SSO, or password management.",
+      "This option is correct. Azure Active Directory (now Microsoft Entra ID) is Microsoft's cloud-based identity and access management service. It provides: user authentication with MFA, SSO to thousands of SaaS apps (Salesforce, ServiceNow, etc.), self-service password reset for end users, and external identity federation (B2C for consumer identities like Google/Facebook, B2B for business partner identities). It's the identity backbone for Azure and Microsoft 365.",
+      "Azure Information Protection (now part of Microsoft Purview) classifies, labels, and protects documents. It's a data protection service, not an identity management service.",
+      "RBAC controls what authenticated users can do with Azure resources (authorization). It doesn't handle authentication, SSO, password resets, or identity federation. RBAC works ON TOP of Azure AD — Azure AD authenticates, RBAC authorises."
+    ],
+    "tip": "Azure AD (Entra ID) = authentication (who are you?) + identity management (SSO, MFA, password reset, federation). RBAC = authorization (what can you do?). Azure AD proves identity; RBAC grants permissions. If the question is about 'sign in', 'SSO', 'MFA', or 'identity' — Azure AD."
+  },
+  {
+    "id": "AZ900-E02-047",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A logistics company has 50 branch offices worldwide\n- Each branch currently runs its own email server, file server, and CRM system\n- The CTO wants to eliminate all branch office servers and move to cloud-based equivalents\n- After migration: Exchange Online for email, SharePoint Online for files, Dynamics 365 for CRM\n\nQuestion:\nWhat type of cloud migration is this?",
+    "choices": [
+      "Lift and shift (rehost)",
+      "Refactor (replatform)",
+      "Replace (SaaS adoption)",
+      "Retain (keep on-premises)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Lift and shift means moving existing applications as-is to cloud infrastructure (e.g., running your Exchange Server on an Azure VM). The company is NOT moving their existing servers to the cloud — they're replacing them with different SaaS products.",
+      "Refactoring means modifying an application to take advantage of cloud-native features (e.g., changing an app to use Azure SQL instead of SQL Server, or adding auto-scaling). The company isn't modifying their existing applications — they're abandoning them for SaaS alternatives.",
+      "This option is correct. Replace (also called 'repurchase' in the 6 Rs of migration) means retiring existing applications and subscribing to SaaS equivalents. Exchange Server → Exchange Online, file servers → SharePoint Online, on-premises CRM → Dynamics 365. The company is replacing custom/on-premises solutions with SaaS products. No code is migrated — they adopt a completely new product.",
+      "Retain means keeping applications on-premises because they can't or shouldn't be migrated. The question explicitly states they're eliminating all branch office servers — the opposite of retaining."
+    ],
+    "tip": "Migration strategies (6 Rs): Rehost = lift and shift (move as-is). Refactor = optimise for cloud (modify code). Replace = adopt SaaS (abandon old, subscribe to new). Retire = decommission (no longer needed). Retain = keep on-premises. Rearchitect = rebuild cloud-native."
+  },
+  {
+    "id": "AZ900-E02-048",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is planning to deploy resources in multiple Azure regions\n- The networking team needs to understand Azure's global network architecture\n- They want to know how data travels between Azure regions\n\nQuestion:\nWhat is the name of Microsoft's global private network that connects Azure data centres?",
+    "choices": [
+      "Azure ExpressRoute",
+      "Azure Virtual WAN",
+      "Microsoft global network (backbone)",
+      "Azure Content Delivery Network"
+    ],
+    "answer": [2],
+    "explanations": [
+      "ExpressRoute provides private connections from YOUR on-premises network to Azure. It's a customer connectivity product, not Microsoft's internal data centre interconnect.",
+      "Azure Virtual WAN is a networking service that connects branches, VPNs, and ExpressRoute into a unified hub-and-spoke topology. It's a customer-facing product for hub networking, not Microsoft's internal backbone.",
+      "This option is correct. Microsoft's global network (backbone) is one of the largest in the world, with over 165,000 miles of fibre optic and submarine cables connecting 60+ Azure regions. When data travels between Azure regions (e.g., UK South to West Europe), it stays on Microsoft's private network — it doesn't traverse the public internet. This ensures low latency, high security, and reliable inter-region communication.",
+      "Azure CDN caches content at edge locations. While CDN uses Microsoft's network, it's a content delivery service, not the name of the global backbone itself."
+    ],
+    "tip": "Microsoft's global backbone network connects all Azure regions privately. Traffic between Azure services in different regions stays on this private network by default. This is a security and performance benefit — data doesn't cross the public internet when moving between Azure regions."
+  },
+  {
+    "id": "AZ900-E02-049",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs a production SQL Server database on-premises\n- They need to migrate the database to Azure with minimal downtime\n- The migration must happen live — the on-premises database must continue serving requests during migration\n- Once migration is complete, they'll cut over to Azure SQL\n\nQuestion:\nWhich Azure service facilitates this online database migration?",
+    "choices": [
+      "Azure Migrate",
+      "Azure Database Migration Service (DMS)",
+      "Azure Data Factory",
+      "Azure Site Recovery"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Migrate is the hub for discovering, assessing, and planning migrations. While it integrates with DMS for database migration, Migrate itself doesn't perform the actual database migration — it's the assessment and orchestration layer.",
+      "This option is correct. Azure Database Migration Service (DMS) supports online (continuous sync) migration from on-premises SQL Server to Azure SQL. During an online migration, DMS replicates data to Azure SQL while the source database continues serving production traffic. When the data is synchronised, you perform a quick cutover with minimal downtime. DMS also supports migration of PostgreSQL, MySQL, and other database engines.",
+      "Azure Data Factory is a data integration service for ETL/ELT pipelines. It can copy data between sources, but it's not designed for live database migration with continuous synchronisation and minimal-downtime cutover.",
+      "Azure Site Recovery replicates VMs and physical servers for disaster recovery. It doesn't migrate individual databases — it replicates entire machines. You'd use ASR to migrate the whole SQL Server VM, not just the database."
+    ],
+    "tip": "Database Migration Service = live, online database migration with minimal downtime (continuous sync + cutover). Azure Migrate = overall migration assessment hub. Data Factory = data integration and ETL. If the question says 'database migration' + 'minimal downtime' + 'live/online' — DMS."
+  },
+  {
+    "id": "AZ900-E02-050",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company currently runs all applications on two physical servers in their office\n- Both servers are 5 years old and approaching end of life\n- The company has 25 employees and a limited IT budget\n- They want to move to the cloud to avoid purchasing new hardware\n- The CTO asks: 'What is the MAIN risk of cloud computing that we should be aware of?'\n\nQuestion:\nWhich of the following is a commonly cited risk or limitation of cloud computing?",
+    "choices": [
+      "Inability to scale resources",
+      "Dependency on internet connectivity",
+      "Higher physical security requirements for the company",
+      "Increased hardware maintenance costs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud computing's primary advantage IS the ability to scale resources. This is a benefit, not a risk. Cloud enables scaling that small companies couldn't achieve on-premises.",
+      "This option is correct. Cloud services require reliable internet connectivity. If the company's internet connection goes down, employees cannot access cloud-hosted applications, email, or data. This is a widely recognised risk of cloud adoption — especially for small offices that may have a single internet connection. Mitigation strategies include redundant ISP connections and offline-capable applications.",
+      "Moving to the cloud REDUCES physical security requirements for the company. They no longer need to secure servers in their office — Microsoft handles physical security of Azure data centres. This is a benefit, not a risk.",
+      "Moving to the cloud ELIMINATES hardware maintenance costs. There's no hardware to maintain. The cloud provider manages all physical infrastructure. This is a benefit, not a risk."
+    ],
+    "tip": "Common cloud risks: internet dependency, data sovereignty/residency, vendor lock-in, limited control over infrastructure, potential cost overruns without proper governance. The exam tests both benefits AND risks of cloud computing. Internet dependency is the most commonly cited operational risk."
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "MS102-E01-011",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 E5 and Exchange Online\n- The compliance team discovers that employees are emailing credit card numbers to external recipients\n- They want to:\n  - Detect emails containing credit card numbers before they are sent\n  - Block the email and notify the sender that it violates policy\n  - Allow the sender to override the block with a business justification\n  - Generate a report of all DLP policy matches\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Exchange Online mail flow rules (transport rules) to block credit card patterns",
+      "Microsoft Purview Data Loss Prevention (DLP) policy with a rule targeting credit card number sensitive information type",
+      "Microsoft Defender for Office 365 Safe Attachments policy",
+      "Azure Information Protection sensitivity labels"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Mail flow rules can use regex to detect patterns, but they lack the sophisticated sensitive information type detection (Luhn algorithm validation for credit cards), user override with justification capability, and integrated DLP reporting/dashboard. Transport rules are a basic tool; DLP is the full-featured solution.",
+      "This option is correct. Microsoft Purview DLP policies detect sensitive information types (like credit card numbers, using the Luhn algorithm for validation) across Exchange, SharePoint, OneDrive, Teams, and endpoints. Configure a DLP rule: condition = 'Content contains credit card number sensitive info type' sent to external recipients, action = block with notification and user override with justification. DLP provides a centralised Activity Explorer and DLP alerts dashboard for reporting. This is the purpose-built solution for this exact scenario.",
+      "Safe Attachments scans email attachments for malware by detonating them in a sandbox. It doesn't detect or block sensitive information like credit card numbers in email body text. It's a threat protection feature, not a data loss prevention feature.",
+      "Sensitivity labels classify and protect documents and emails (encryption, watermarks, headers). Labels don't detect sensitive content patterns like credit card numbers in emails. Labels are applied by users or auto-labelling rules — but the detection and blocking of sensitive data is DLP's job."
+    ],
+    "tip": "DLP = detect and protect sensitive data (credit cards, SSNs, health records). Works across: Exchange, SharePoint, OneDrive, Teams, Endpoints, Power BI. Key features: sensitive information types, user override with justification, incident reports, Activity Explorer. If the question mentions detecting and blocking sensitive data — DLP."
+  },
+  {
+    "id": "MS102-E01-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is subject to a legal investigation\n- The legal team requires that ALL emails and Teams messages for 10 specific employees must be preserved\n- No content should be modified or deleted, even if the retention policy would normally delete it\n- The preservation must remain in place until the legal team releases it\n\nQuestion:\nWhich Microsoft Purview feature should you use?",
+    "choices": [
+      "Retention policy with a 'Retain forever' setting",
+      "eDiscovery hold (litigation hold or eDiscovery case hold)",
+      "Sensitivity labels with encryption",
+      "Data lifecycle management auto-labelling"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A retention policy with 'Retain forever' applies broadly to locations (all Exchange mailboxes, all SharePoint sites) and is designed for organisational data lifecycle management. It's not targeted to specific users under legal investigation, and it doesn't signal a legal hold that prevents deletion. Users could potentially still purge items from Recoverable Items.",
+      "This option is correct. An eDiscovery hold (also called litigation hold) preserves ALL content in a user's mailbox and OneDrive indefinitely, regardless of other retention policies or user actions. Content in Recoverable Items cannot be purged. You can place holds on specific custodians (the 10 employees) through an eDiscovery case. The hold remains until explicitly released by the legal team. This is the legally defensible way to preserve data for investigations.",
+      "Sensitivity labels classify and protect documents with encryption, watermarks, and access restrictions. They don't preserve content or prevent deletion. Encryption protects confidentiality, not data preservation.",
+      "Auto-labelling applies retention labels or sensitivity labels based on content. It's not a hold mechanism for legal investigations. Auto-labelling is a classification tool, not a preservation tool."
+    ],
+    "tip": "eDiscovery hold = legal preservation. Preserves ALL content for specific users, prevents deletion/modification. Types: litigation hold (Exchange) or eDiscovery case hold (Exchange, SharePoint, OneDrive, Teams). Retention policies = organisational lifecycle. If the question mentions 'legal', 'investigation', 'preserve', or 'litigation' — eDiscovery hold."
+  },
+  {
+    "id": "MS102-E01-013",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 E5\n- The security team wants to protect users from:\n  - Phishing emails that contain malicious URLs\n  - Emails with weaponised attachments (zero-day malware)\n  - Business email compromise (BEC) impersonation attacks\n\nQuestion:\nWhich Microsoft 365 security service provides these email threat protection capabilities?",
+    "choices": [
+      "Exchange Online Protection (EOP)",
+      "Microsoft Defender for Office 365",
+      "Microsoft Defender for Endpoint",
+      "Microsoft Defender for Identity"
+    ],
+    "answer": [1],
+    "explanations": [
+      "EOP is included with all Exchange Online plans and provides baseline protection: anti-spam, basic anti-malware (known signatures), and mail flow rules. However, EOP does NOT provide advanced threat protection like Safe Links (URL detonation), Safe Attachments (sandbox detonation), or anti-phishing impersonation detection. EOP catches known threats; Defender for Office 365 catches unknown/sophisticated threats.",
+      "This option is correct. Microsoft Defender for Office 365 (Plan 1 and Plan 2) provides advanced email threat protection beyond EOP: Safe Links (real-time URL scanning and detonation — blocks malicious links at time-of-click), Safe Attachments (sandbox detonation of attachments to detect zero-day malware), Anti-phishing policies with impersonation protection (detects BEC attacks impersonating executives or domains), and Threat Explorer for investigation. Plan 2 adds Threat Trackers, Automated Investigation and Response (AIR), and Attack Simulation Training.",
+      "Defender for Endpoint protects device endpoints (Windows, macOS, Linux, mobile) against threats — not email. It handles endpoint detection and response (EDR), vulnerability management, and device security. Different protection domain from email.",
+      "Defender for Identity monitors on-premises Active Directory signals to detect identity-based attacks (pass-the-hash, pass-the-ticket, lateral movement). It doesn't protect against email phishing, malicious attachments, or BEC."
+    ],
+    "tip": "Microsoft 365 email protection stack: EOP (baseline, all plans) → Defender for Office 365 P1 (Safe Links, Safe Attachments, anti-phishing) → Defender for Office 365 P2 (Threat Explorer, AIR, Attack Simulation). If the question mentions phishing, malicious URLs, zero-day attachments, or impersonation — Defender for Office 365."
+  },
+  {
+    "id": "MS102-E01-014",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to ensure that documents in SharePoint Online are automatically classified and labelled\n- Documents containing medical record numbers should be labelled as 'Highly Confidential'\n- The label should apply encryption so only users within the organisation can open the document\n- External users who receive the document should be unable to open it\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "A DLP policy that blocks external sharing of medical records",
+      "A sensitivity label with encryption AND an auto-labelling policy that detects medical record numbers",
+      "A retention label that marks documents as records",
+      "SharePoint Information Rights Management (IRM) on the document library"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A DLP policy can detect medical record numbers and block sharing, but it doesn't CLASSIFY documents with a label or apply persistent encryption. DLP prevents data loss; sensitivity labels classify and protect. The question asks for classification AND encryption.",
+      "This option is correct. Configure a sensitivity label named 'Highly Confidential' with encryption settings (permissions = organisation members only, external users blocked). Then create an auto-labelling policy that detects the 'medical record number' sensitive information type in SharePoint documents and automatically applies the 'Highly Confidential' label. The label persists with the document — even if downloaded, the encryption follows it. Auto-labelling can work service-side (SharePoint, OneDrive, Exchange) or client-side (Office apps).",
+      "Retention labels manage the lifecycle of content (retain for X years, then delete, or declare as a record). They don't classify based on sensitivity, don't apply encryption, and don't restrict access. Retention = lifecycle. Sensitivity = classification and protection.",
+      "SharePoint IRM protects documents at the library level, but it's a legacy feature being replaced by sensitivity labels. IRM doesn't provide content-based auto-classification (detecting medical records). Sensitivity labels with auto-labelling provide the same protection with intelligent detection."
+    ],
+    "tip": "Sensitivity labels = classify + protect (encryption, watermarks, headers/footers). Auto-labelling = automatically apply labels based on sensitive info types. Retention labels = lifecycle management (retain/delete/record). DLP = detect and block sensitive data sharing. If the question asks for 'classify AND protect' — sensitivity labels."
+  },
+  {
+    "id": "MS102-E01-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure AD Conditional Access\n- The security team wants to block sign-ins from countries where the company has no business operations\n- Employees travelling to approved countries should be able to sign in normally\n- The policy should apply to all users except the break-glass emergency access account\n\nQuestion:\nWhich Conditional Access condition should you configure?",
+    "choices": [
+      "Device platform condition filtering by operating system",
+      "Named locations condition with countries/regions",
+      "Client app condition filtering by browser type",
+      "User risk condition from Identity Protection"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device platform conditions filter by OS type (Windows, iOS, Android, macOS, Linux). They have nothing to do with geographic location of sign-in attempts. A Windows device can sign in from any country.",
+      "This option is correct. Named locations in Conditional Access allow you to define trusted and untrusted geographic locations. Create a named location listing the countries where your company operates (approved countries). Then create a Conditional Access policy: condition = 'Any location EXCEPT approved countries', grant = 'Block access', exclude = break-glass account. Sign-ins from non-business countries are blocked; sign-ins from approved countries and the break-glass account proceed normally. Azure AD determines location from the sign-in IP address geolocation.",
+      "Client app conditions filter by how users authenticate (browser, mobile app, desktop client, legacy auth). They don't evaluate geographic location.",
+      "User risk evaluates the likelihood that a user account has been compromised (leaked credentials, impossible travel). While impossible travel considers location, user risk is a calculated score — not a configurable list of approved/blocked countries. Named locations provide explicit geographic control."
+    ],
+    "tip": "Conditional Access named locations = geographic access control. Define locations by: countries/regions (IP geolocation) or IP address ranges (trusted office IPs). Common patterns: block sign-ins from non-business countries, require MFA outside office network, trust compliant network locations. If the question mentions geographic restriction — named locations."
+  },
+  {
+    "id": "MS102-E01-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 500 Android personal devices (BYOD) used by employees\n- The IT team wants to manage ONLY the work profile on these devices\n- Corporate apps and data should be in a separate container on the device\n- Personal apps and data must be completely untouched by IT\n\nQuestion:\nWhich Android enrolment method in Intune supports this requirement?",
+    "choices": [
+      "Android Enterprise fully managed (device owner)",
+      "Android Enterprise work profile (personally-owned)",
+      "Android device administrator enrolment",
+      "Android Enterprise dedicated device"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Fully managed (device owner) gives IT complete control over the entire device — all apps, settings, and data. This is for corporate-owned devices where the company owns the device. It does NOT separate personal and work data because there IS no personal side — IT manages everything.",
+      "This option is correct. Android Enterprise work profile (personally-owned) creates a separate, encrypted container on the device for work apps and data. IT manages ONLY the work profile: corporate apps, email, policies. Personal apps, photos, and data remain completely private — IT cannot see or manage them. If the employee leaves, IT can wipe only the work profile. The personal side is untouched. This is the standard BYOD enrolment for Android.",
+      "Android device administrator is a legacy enrolment method that Google is deprecating. It gives IT broad device-level control without the clean separation of work and personal data. It's not recommended for BYOD scenarios and doesn't provide the container-based isolation that work profile offers.",
+      "Dedicated device mode is for single-purpose, corporate-owned devices (kiosks, digital signage, shared devices). There's no user — the device runs specific apps for a specific purpose. Not applicable to BYOD employee devices."
+    ],
+    "tip": "Android Enterprise enrolment modes: Work profile (personally-owned) = BYOD, separate container. Work profile (corporate-owned) = company device with personal use allowed. Fully managed = company device, IT controls everything. Dedicated = kiosk/single-purpose. If 'BYOD' + 'separate container' + 'personal untouched' — work profile (personally-owned)."
+  },
+  {
+    "id": "MS102-E01-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company must retain all emails for 7 years to comply with financial regulations\n- After 7 years, emails should be automatically deleted\n- The policy must apply to all Exchange Online mailboxes, including new mailboxes created in the future\n- No user action should be required — retention should be automatic\n\nQuestion:\nWhat should you configure in Microsoft Purview?",
+    "choices": [
+      "A retention policy applied to all Exchange mailboxes with 7-year retain-then-delete settings",
+      "A retention label published to all mailboxes that users manually apply to emails",
+      "An eDiscovery hold on all mailboxes for 7 years",
+      "Exchange Online mailbox archive with a 7-year archive policy"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. A Microsoft Purview retention policy applied to the Exchange Online location with settings 'Retain items for 7 years, then delete automatically' enforces automatic retention across ALL mailboxes (existing and future). No user action is required — the policy is applied at the organisational level. Items are preserved in place for 7 years (even if users delete them — they go to Recoverable Items). After 7 years, items are permanently deleted. This is the standard approach for regulatory email retention.",
+      "Retention labels require user action (manual application) unless auto-apply is configured. Even with auto-apply, labels are item-level (applied to individual emails matching conditions). The question says 'no user action' and 'all emails' — a retention POLICY is the location-wide, automatic approach. Labels are for specific items; policies are for entire locations.",
+      "eDiscovery holds are for legal investigations and preserve content indefinitely until released. They don't automatically delete after a period. Using eDiscovery holds for routine regulatory retention is a misuse of the feature and creates management overhead.",
+      "Online Archive (In-Place Archive) moves older emails to an archive mailbox to manage primary mailbox size. It doesn't enforce retention periods or automatic deletion. Archive = storage management. Retention policy = compliance lifecycle management."
+    ],
+    "tip": "Retention policies vs retention labels: Policies = automatic, location-wide (all Exchange, all SharePoint), no user action. Labels = item-level, can be manual or auto-applied, more granular. For 'apply to everything automatically' — retention POLICY. For 'classify specific items differently' — retention LABELS. Both can retain-then-delete."
+  },
+  {
+    "id": "MS102-E01-018",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage devices\n- The security team wants to deploy BitLocker encryption to all Windows 11 devices\n- BitLocker recovery keys must be stored in Azure AD for IT support access\n- The encryption should be enforced silently without user interaction\n\nQuestion:\nHow should you deploy BitLocker through Intune?",
+    "choices": [
+      "Create an Intune device configuration profile with a BitLocker template",
+      "Create an Intune endpoint security disk encryption policy for BitLocker",
+      "Use a PowerShell script deployed through Intune to run manage-bde commands",
+      "Deploy BitLocker through Group Policy and wait for Hybrid Azure AD sync"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A device configuration profile with the Endpoint protection template CAN configure BitLocker, but Intune has since introduced dedicated endpoint security policies specifically for disk encryption. The endpoint security approach provides a more focused, cleaner configuration experience with all BitLocker settings in one place. Microsoft recommends using endpoint security policies for security configurations.",
+      "This option is correct. Intune endpoint security policies include a dedicated Disk encryption profile type for BitLocker. Configure: silent encryption (no user interaction required — works on modern TPM 2.0 devices with Azure AD join), recovery key escrow to Azure AD (stored automatically — IT can retrieve via Azure AD or Intune portal), encryption method (XTS-AES 256), and which drives to encrypt. This is the Microsoft-recommended approach for managing BitLocker through Intune. Recovery keys are automatically backed up to Azure AD.",
+      "PowerShell scripts for BitLocker are unnecessarily complex and don't provide the managed policy experience. Recovery key escrow to Azure AD wouldn't be handled natively. Scripts run once; policies continuously evaluate and enforce.",
+      "Group Policy is for on-premises AD environments and doesn't back up recovery keys to Azure AD natively. For Intune-managed devices, use Intune policies. Hybrid scenarios add unnecessary complexity when Intune endpoint security policies handle it directly."
+    ],
+    "tip": "BitLocker through Intune: use Endpoint security → Disk encryption policy. Key settings: silent encryption (no user prompt), recovery key escrow to Azure AD, XTS-AES 256-bit. Silent encryption requires: TPM 2.0, UEFI, Azure AD joined (or Hybrid), no pre-provisioned OS volume. Recovery keys viewable in Azure AD and Intune device properties."
+  },
+  {
+    "id": "MS102-E01-019",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Microsoft 365 E5 licenses\n- The security team discovers suspicious sign-in activity:\n  - A user signed in from London at 9:00 AM\n  - The same user signed in from Tokyo at 9:30 AM (impossible travel)\n  - The sign-in from Tokyo used a legacy authentication protocol\n- The security team wants automatic detection and response to these types of threats\n\nQuestion:\nWhich Microsoft service automatically detects impossible travel and risky sign-in behaviour?",
+    "choices": [
+      "Azure AD Conditional Access",
+      "Azure AD Identity Protection",
+      "Microsoft Defender for Cloud Apps",
+      "Microsoft Sentinel"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Conditional Access enforces access policies based on conditions (location, device, risk level), but it doesn't DETECT impossible travel or calculate risk scores. Conditional Access consumes risk information from Identity Protection — it doesn't generate it. It's the enforcement engine, not the detection engine.",
+      "This option is correct. Azure AD Identity Protection uses machine learning to detect risky sign-in behaviours including: impossible travel (signing in from geographically distant locations in impossible time), anonymous IP address use, malware-linked IP addresses, unfamiliar sign-in properties, and legacy authentication from unusual locations. It calculates sign-in risk (low, medium, high) and user risk. You can configure automated responses: require MFA for medium risk, block sign-in for high risk, require password change for compromised users.",
+      "Defender for Cloud Apps (formerly Cloud App Security) is a CASB that monitors cloud app usage, detects shadow IT, and provides threat detection across SaaS applications. While it has anomaly detection, Identity Protection is the purpose-built service for Azure AD sign-in risk and impossible travel detection.",
+      "Microsoft Sentinel is a SIEM/SOAR platform that aggregates security data from multiple sources for threat detection and incident response. It can ingest Identity Protection alerts but doesn't perform the primary detection of impossible travel — that's Identity Protection's role."
+    ],
+    "tip": "Identity Protection = detect risky sign-ins and compromised users. Risk types: impossible travel, anonymous IP, unfamiliar properties, leaked credentials. Risk levels: low, medium, high. Automated responses: require MFA, block, force password change. Conditional Access CONSUMES risk signals from Identity Protection. If 'detect risky sign-in' — Identity Protection."
+  },
+  {
+    "id": "MS102-E01-020",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to deploy a custom line-of-business (LOB) Windows application to managed devices\n- The application is packaged as an MSI installer\n- The app must be installed silently without user interaction\n- You want to track installation success and failure through Intune\n\nQuestion:\nWhich Intune app type should you use?",
+    "choices": [
+      "Microsoft Store app (new)",
+      "Web link",
+      "Windows app (Win32)",
+      "Microsoft 365 Apps for Windows"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Microsoft Store app (new) deploys apps from the Microsoft Store or private store. A custom LOB MSI installer is not in the Microsoft Store. This app type is for Store-published applications only.",
+      "A web link creates a shortcut to a URL — it doesn't install a native Windows application. It's for web-based apps and bookmarks, not MSI installer packages.",
+      "This option is correct. The Win32 app type in Intune handles MSI, EXE, and MSIX packages for Windows applications. You wrap the MSI with the Microsoft Win32 Content Prep Tool (IntuneWinAppUtil.exe) to create a .intunewin package, upload it to Intune, configure silent install commands (msiexec /i app.msi /qn), detection rules (MSI product code, file existence, or registry key), and dependencies. Intune tracks installation status (installed, failed, pending) in the device install status report.",
+      "Microsoft 365 Apps for Windows is a dedicated app type specifically for deploying the Office suite. It's not for custom LOB applications."
+    ],
+    "tip": "Intune app types for Windows: Win32 = MSI/EXE/MSIX (most flexible, detection rules, dependencies, requirements). LOB = simple MSI/APPX without Win32 wrapping. Store app = Microsoft Store apps. M365 Apps = Office suite only. For custom LOB applications — Win32 app type is the recommended approach."
+  },
+  {
+    "id": "MS102-E01-021",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage devices\n- The IT team wants to deploy apps with the following assignment types:\n  - Required apps: automatically installed on all devices in the assigned group\n  - Available apps: users can choose to install from the Company Portal\n  - Uninstall: removes the app from all devices in the assigned group\n- They assign a LOB app as 'Required' to the Sales group and 'Available' to the Marketing group\n\nQuestion:\nWhat happens for a user who is in BOTH the Sales and Marketing groups?",
+    "choices": [
+      "The app appears as Available in the Company Portal — the user can choose to install it",
+      "The app is automatically installed (Required) — Required takes precedence over Available",
+      "A conflict occurs and the app is not deployed to the user",
+      "The user is prompted to choose between Required and Available installation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Available means optional — the user can install from Company Portal if they want. But since the user is also in the Sales group where the app is Required, Intune enforces the Required assignment. Required is a stronger intent than Available.",
+      "This option is correct. When a user is targeted by both Required and Available assignments for the same app, Intune applies the most restrictive (strongest) intent. The precedence order is: Uninstall > Required > Available. Since Required is stronger than Available, the app is automatically installed. The user doesn't get a choice — the Required assignment wins. This conflict resolution is handled automatically by Intune.",
+      "Intune does not create conflicts for overlapping assignment types — it resolves them using intent precedence. No deployment failure occurs.",
+      "Intune doesn't prompt users to resolve assignment conflicts. The precedence rules are applied automatically."
+    ],
+    "tip": "Intune app assignment precedence: Uninstall > Required > Available. If a user is in multiple groups with different assignment types, the strongest intent wins. Required + Available = Required (auto-install). Required + Uninstall = Uninstall (removed). No user choice in conflicts — Intune resolves automatically."
+  },
+  {
+    "id": "MS102-E01-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 and wants to implement the Zero Trust security model\n- The CISO asks: 'What are the core principles of Zero Trust that we should follow?'\n\nQuestion:\nWhich set of principles defines the Zero Trust model?",
+    "choices": [
+      "Trust the internal network, verify external access, use firewalls",
+      "Verify explicitly, use least privilege access, assume breach",
+      "Encrypt everything, use VPNs, trust verified users indefinitely",
+      "Block all external access, allow only internal access, use on-premises security"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Trusting the internal network is the OPPOSITE of Zero Trust. Zero Trust eliminates the concept of a trusted internal network — every access request is verified regardless of network location. This is the traditional perimeter-based security model that Zero Trust replaces.",
+      "This option is correct. Zero Trust is built on three core principles: (1) Verify explicitly — always authenticate and authorise based on all available data points (identity, location, device health, service, data, anomalies). (2) Use least privilege access — limit user access with just-in-time and just-enough-access (JIT/JEA), risk-based adaptive policies, and data protection. (3) Assume breach — minimise blast radius, segment access, verify end-to-end encryption, use analytics for detection and response.",
+      "VPNs and trusting users indefinitely contradict Zero Trust. Zero Trust doesn't trust any user indefinitely — every access is continuously verified. VPNs are a perimeter-based tool; Zero Trust works regardless of network location.",
+      "Blocking all external access is impractical for modern cloud-based organisations using SaaS services. Zero Trust enables secure access from anywhere by verifying every request — it doesn't block access based on location."
+    ],
+    "tip": "Zero Trust principles: (1) Verify explicitly (always authenticate, use all signals). (2) Least privilege access (JIT/JEA, just enough permissions). (3) Assume breach (minimise blast radius, segment, detect). Microsoft implements Zero Trust through: Azure AD, Conditional Access, Intune, Defender, Purview. This is a common exam topic."
+  },
+  {
+    "id": "MS102-E01-023",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft 365 and Azure AD\n- The Global Administrator account has been compromised\n- The attacker has:\n  - Changed the admin password\n  - Added their own MFA method\n  - Created new admin accounts\n  - Modified Conditional Access policies\n\nQuestion:\nWhich emergency access mechanism should have been in place to recover from this scenario?",
+    "choices": [
+      "Azure AD Connect with on-premises AD admin fallback",
+      "Break-glass emergency access accounts excluded from Conditional Access",
+      "Microsoft support ticket to reset the Global Admin password",
+      "Azure subscription owner account with Azure AD management rights"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD Connect synchronises on-premises AD to Azure AD, but on-premises admin accounts don't automatically have Azure AD Global Admin privileges. If the attacker has modified Azure AD directly, on-premises AD admin access doesn't help recover Azure AD control. They're separate admin planes.",
+      "This option is correct. Break-glass (emergency access) accounts are highly privileged Azure AD accounts specifically designed for emergency scenarios when normal admin accounts are compromised or locked out. Best practices: at least 2 break-glass accounts, excluded from ALL Conditional Access policies (including MFA requirements), cloud-only (no on-premises sync), not assigned to any individual, passwords stored securely offline (safe/vault), monitored with alerts for any sign-in activity. These accounts let you regain control of Azure AD even when all other admin accounts are compromised.",
+      "While Microsoft support can assist, it's a slow process with identity verification requirements. By the time support resolves it, the attacker has had extended access. Break-glass accounts provide immediate, self-service recovery.",
+      "Azure subscription owner and Azure AD Global Admin are separate roles. Subscription owner manages Azure resources (VMs, storage), not Azure AD (users, policies, Conditional Access). They can't reset Azure AD admin passwords or modify Conditional Access policies."
+    ],
+    "tip": "Break-glass accounts: 2 cloud-only accounts, Global Admin role, excluded from ALL Conditional Access, strong passwords stored offline, monitored with Azure Monitor alerts. NEVER use for daily admin work. Test periodically. If the question mentions emergency access or admin lockout recovery — break-glass accounts."
+  },
+  {
+    "id": "MS102-E01-024",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps to 1,500 devices\n- The IT team wants to:\n  - Deploy the Monthly Enterprise Channel for stability\n  - Exclude Access and Publisher from the installation\n  - Include the Microsoft Teams desktop app\n  - Use 64-bit architecture\n\nQuestion:\nWhere do you configure these installation settings when deploying through Intune?",
+    "choices": [
+      "In the Office Customization Tool (OCT) and deploy via SCCM",
+      "In the Intune Microsoft 365 Apps for Windows app configuration (App suite information and settings)",
+      "In a PowerShell script that runs the Office Deployment Tool with a configuration.xml",
+      "In the Microsoft 365 admin centre Apps settings page"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The OCT and SCCM are for on-premises deployment. Intune is a cloud management tool and doesn't use SCCM deployment infrastructure. While you can use ODT with configuration.xml for manual deployments, Intune has a built-in wizard for this.",
+      "This option is correct. When you add a 'Microsoft 365 Apps for Windows' app in Intune, the configuration wizard lets you specify all these settings through the UI: select apps to include/exclude (remove Access and Publisher), choose update channel (Monthly Enterprise Channel), select architecture (64-bit), include Teams, set language, and configure other options. These settings are configured in the 'App suite information' and 'App suite settings' tabs during app creation. No manual XML editing required.",
+      "While PowerShell with ODT and configuration.xml works for manual deployments, Intune provides a native GUI-based configuration experience. Using PowerShell scripts bypasses Intune's deployment tracking, reporting, and assignment capabilities.",
+      "The Microsoft 365 admin centre manages organisation-wide settings (update channel defaults, feature access), but it doesn't handle per-device deployment configuration through Intune. The app deployment settings are configured within Intune itself."
+    ],
+    "tip": "Microsoft 365 Apps deployment via Intune wizard: App suite information (name, description) → App suite settings (products to include/exclude, update channel, architecture, language, Teams). All configurable through the Intune UI. The wizard generates the ODT configuration behind the scenes. If 'deploy M365 Apps through Intune' — use the built-in app type wizard."
+  },
+  {
+    "id": "MS102-E01-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Defender for Endpoint on all Windows devices\n- A suspicious file is detected on a device and Defender for Endpoint flags it as malicious\n- The security analyst wants to:\n  - Isolate the affected device from the network\n  - Collect an investigation package (forensic data)\n  - Run an antivirus scan on the device\n- All actions should be performed remotely without physical access to the device\n\nQuestion:\nWhere does the security analyst perform these response actions?",
+    "choices": [
+      "Microsoft Intune device actions (remote wipe, retire)",
+      "Microsoft Defender portal — device page response actions",
+      "Azure AD admin centre — device management",
+      "Exchange Online admin centre — mobile device management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Intune device actions include remote wipe, retire, restart, and sync. These are device management actions, not security investigation and response actions. Intune doesn't provide network isolation, forensic investigation packages, or targeted antivirus scans for security incidents.",
+      "This option is correct. The Microsoft Defender portal (security.microsoft.com) provides response actions on the device page: Isolate device (cut network access while maintaining Defender connectivity for remote management), Collect investigation package (gathers forensic data — running processes, network connections, registry, event logs), Run antivirus scan (trigger Microsoft Defender Antivirus remotely), Restrict app execution (block unsigned processes), Initiate automated investigation, and Initiate Live Response (remote shell). All done remotely through the portal.",
+      "Azure AD admin centre manages device identity (registered, joined, compliant status). It doesn't provide security response actions like network isolation, forensic collection, or antivirus scanning.",
+      "Exchange Online MDM manages mobile device access to Exchange. It has basic wipe capabilities but no advanced security investigation or response features."
+    ],
+    "tip": "Defender for Endpoint response actions: Isolate device (network isolation), Collect investigation package (forensics), Run AV scan, Restrict app execution, Live Response (remote shell), Automated investigation. All in Microsoft Defender portal → Device page → Response actions. Different from Intune device actions (management, not security response)."
+  }
+]

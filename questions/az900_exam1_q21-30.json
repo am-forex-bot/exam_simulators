@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E01-021",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to deploy a standardised environment for new projects\n- Each environment must include: a resource group, a virtual network, a network security group, an Azure Policy assignment, and RBAC role assignments\n- The deployment must be repeatable and consistent across multiple subscriptions\n- All components must be deployed as a single unit with version control\n\nQuestion:\nWhich Azure governance tool should you use?",
+    "choices": [
+      "Azure Resource Manager (ARM) templates only",
+      "Azure Blueprints",
+      "Azure Management Groups",
+      "Azure Automation runbooks"
+    ],
+    "answer": [1],
+    "explanations": [
+      "ARM templates can deploy resources (VNet, NSG, etc.), but they cannot natively assign Azure Policy or RBAC roles as part of a governed, versioned deployment package. You'd need separate processes for policy and role assignments.",
+      "This option is correct. Azure Blueprints package together ARM templates, resource groups, policy assignments, and role assignments into a single, versioned, repeatable deployment artifact. Blueprints can be assigned to subscriptions and maintain a relationship between the definition and the deployment for auditing. This is exactly what the scenario describes.",
+      "Management Groups organise subscriptions into a hierarchy for governance, but they don't deploy resources or create standardised environments. They're a grouping mechanism, not a deployment tool.",
+      "Automation runbooks can script deployments, but they lack the built-in governance features of Blueprints — no native versioning of environment definitions, no built-in policy/RBAC assignment, and no deployment tracking."
+    ],
+    "tip": "Azure Blueprints = standardised environment as a governed package (resources + policies + RBAC). ARM/Bicep templates = infrastructure deployment only. If the question combines resource deployment WITH policy and role assignments in a repeatable package — Blueprints."
+  },
+  {
+    "id": "AZ900-E01-022",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a subscription with rapidly growing costs\n- The finance team wants to set spending limits and receive alerts when costs approach certain thresholds\n- They need to create budgets tied to specific resource groups and receive email notifications at 50%, 75%, and 100% of the budget\n\nQuestion:\nWhich tool should the finance team use?",
+    "choices": [
+      "Azure Pricing Calculator",
+      "Azure Cost Management budgets and alerts",
+      "Azure Advisor cost recommendations",
+      "Azure Reservations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Pricing Calculator estimates costs for Azure services you plan to deploy. It's a planning tool, not a monitoring/alerting tool for existing spending.",
+      "This option is correct. Azure Cost Management allows you to create budgets scoped to subscriptions, resource groups, or management groups. You set the budget amount and configure alert thresholds (e.g., 50%, 75%, 100%) that trigger email notifications to specified recipients. This is the exact tool for spending limits and alerts.",
+      "Azure Advisor provides cost-saving recommendations (e.g., resize underutilised VMs, buy reservations), but it doesn't create budgets or send threshold-based alerts.",
+      "Azure Reservations provide discounted pricing for committing to 1- or 3-year terms on specific services. They help reduce costs but don't monitor spending or send budget alerts."
+    ],
+    "tip": "Cost Management budgets = set spending limits + alerts at thresholds. Advisor = cost optimisation recommendations. Pricing Calculator = estimate future costs. TCO Calculator = compare on-prem vs Azure. Know which cost tool does what — the exam tests all four."
+  },
+  {
+    "id": "AZ900-E01-023",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores sensitive customer documents in Azure Blob Storage\n- Regulatory requirements state that documents must be encrypted at rest\n- The security team wants to use their own encryption keys rather than Microsoft-managed keys\n- They need to manage key lifecycle (rotation, expiration) themselves\n\nQuestion:\nWhich feature should the security team configure?",
+    "choices": [
+      "Azure Storage Service Encryption (SSE) with Microsoft-managed keys",
+      "Azure Storage Service Encryption (SSE) with customer-managed keys in Azure Key Vault",
+      "Client-side encryption before uploading to Blob Storage",
+      "Azure Disk Encryption for the storage account"
+    ],
+    "answer": [1],
+    "explanations": [
+      "SSE with Microsoft-managed keys encrypts data at rest by default (all Azure Storage is encrypted), but Microsoft controls the keys. The security team explicitly wants to manage their own keys.",
+      "This option is correct. SSE with customer-managed keys (CMK) stores encryption keys in Azure Key Vault, where the security team has full control over key lifecycle — creation, rotation, expiration, and revocation. Data is still encrypted at rest using SSE, but the encryption keys are managed by the customer.",
+      "Client-side encryption means encrypting data before uploading it. While this works, it puts the encryption burden on the application code and doesn't leverage Azure's built-in storage encryption infrastructure. The question asks about encryption at rest configuration, not application-level encryption.",
+      "Azure Disk Encryption is for encrypting VM disks (OS and data disks), not Blob Storage accounts. Different service, different purpose."
+    ],
+    "tip": "Azure Storage encryption: Microsoft-managed keys (default, zero effort) vs Customer-managed keys (CMK in Key Vault, you control lifecycle) vs Customer-provided keys (you supply the key per-request). If the question says 'own keys' + 'manage lifecycle' — it's CMK with Key Vault."
+  },
+  {
+    "id": "AZ900-E01-024",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed a web application on two Azure Virtual Machines\n- Both VMs are in the same Azure region and availability zone\n- The application needs to distribute incoming HTTP traffic evenly across both VMs\n- You also need Web Application Firewall (WAF) protection against common web exploits\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Load Balancer (Standard SKU)",
+      "Azure Application Gateway with WAF",
+      "Azure Traffic Manager",
+      "Azure Front Door"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Load Balancer operates at Layer 4 (TCP/UDP) and distributes traffic across VMs. However, it does NOT include WAF capabilities. You'd need a separate WAF solution, which doesn't meet the 'single service' requirement implied by the question.",
+      "This option is correct. Azure Application Gateway is a Layer-7 (HTTP/HTTPS) load balancer that distributes web traffic across backend servers. The WAF SKU (WAF_v2) includes built-in Web Application Firewall protection against OWASP top-10 vulnerabilities like SQL injection and XSS. It handles both requirements in a single service.",
+      "Traffic Manager is a DNS-based global load balancer that routes across regions or endpoints. It doesn't distribute traffic within a single region across VMs, and it doesn't provide WAF.",
+      "Azure Front Door is a global Layer-7 load balancer with WAF capabilities, but it's designed for multi-region, globally distributed applications. For VMs within the same region/zone, Application Gateway is the appropriate choice — Front Door would be over-engineering."
+    ],
+    "tip": "Load Balancer = Layer 4 (TCP/UDP), no WAF. Application Gateway = Layer 7 (HTTP), has WAF option. Traffic Manager = DNS-based global routing. Front Door = global Layer 7 + WAF + CDN. If the question mentions HTTP traffic + WAF in a single region — Application Gateway."
+  },
+  {
+    "id": "AZ900-E01-025",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A research university needs a globally distributed NoSQL database\n- The database must support multiple data models (key-value, document, graph, column-family)\n- Researchers across five continents need single-digit millisecond read latency from their local region\n- The solution must provide multiple consistency levels to balance between performance and data accuracy\n\nQuestion:\nWhich Azure database service should the university use?",
+    "choices": [
+      "Azure SQL Database",
+      "Azure Cosmos DB",
+      "Azure Database for PostgreSQL",
+      "Azure Table Storage"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database is a relational (SQL) database. It doesn't support multiple data models (graph, key-value, document, column-family), and while it can be geo-replicated, it doesn't offer the multiple consistency levels described.",
+      "This option is correct. Azure Cosmos DB is a globally distributed, multi-model NoSQL database that supports document, key-value, graph (Gremlin), column-family (Cassandra), and table APIs. It guarantees single-digit millisecond reads and writes, supports multi-region replication, and uniquely offers five consistency levels (Strong, Bounded Staleness, Session, Consistent Prefix, Eventual). It ticks every box in the scenario.",
+      "Azure Database for PostgreSQL is a managed relational database. While PostgreSQL supports JSON documents, it's not a multi-model NoSQL database and doesn't offer the global distribution and consistency level options of Cosmos DB.",
+      "Azure Table Storage supports key-value data only. It doesn't support document, graph, or column-family models, doesn't offer global distribution with multi-region writes, and has limited consistency options."
+    ],
+    "tip": "Cosmos DB is THE answer when you see: globally distributed + NoSQL + multi-model + low latency + multiple consistency levels. It's Azure's flagship NoSQL offering. The five consistency levels are a unique Cosmos DB feature that appears frequently on the exam."
+  },
+  {
+    "id": "AZ900-E01-026",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages Azure resources using the Azure portal\n- The infrastructure team wants to define infrastructure as code for repeatable deployments\n- They need to declare the desired state of resources in a template file\n- The template must be idempotent — deploying it multiple times should produce the same result\n\nQuestion:\nWhich approach should the infrastructure team use?",
+    "choices": [
+      "Azure CLI scripts",
+      "Azure PowerShell scripts",
+      "Azure Resource Manager (ARM) templates or Bicep",
+      "Manual deployment through the Azure portal"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Azure CLI scripts are imperative (step-by-step instructions). They're not inherently idempotent — running 'az vm create' twice would fail or create duplicates. You'd need custom logic to check state before each command.",
+      "PowerShell scripts are also imperative. Like CLI, they execute commands in sequence and require additional logic to achieve idempotency. They define HOW to deploy, not WHAT to deploy.",
+      "This option is correct. ARM templates and Bicep are declarative — you define the desired end state, and Azure Resource Manager figures out how to get there. They are idempotent by design: deploying the same template multiple times will always result in the same resource configuration. This is the Microsoft-recommended Infrastructure as Code approach for Azure.",
+      "Manual portal deployment is not infrastructure as code, not repeatable, and not idempotent. It's the opposite of what the question asks."
+    ],
+    "tip": "Declarative (ARM/Bicep) = define WHAT you want, idempotent, infrastructure as code. Imperative (CLI/PowerShell) = define HOW to get there, not inherently idempotent. If the exam mentions 'desired state', 'idempotent', or 'infrastructure as code' — think ARM templates or Bicep."
+  },
+  {
+    "id": "AZ900-E01-027",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to reduce Azure Virtual Machine costs\n- You have several VMs that run development workloads 8 hours per day, Monday to Friday\n- These VMs are idle for the remaining 128 hours per week\n- The workloads are interruptible — it's acceptable if a VM is deallocated with short notice\n\nQuestion:\nWhich cost-saving option provides the GREATEST discount for these VMs?",
+    "choices": [
+      "Azure Reserved Virtual Machine Instances (1-year term)",
+      "Azure Spot Virtual Machines",
+      "Auto-shutdown schedule to deallocate VMs outside business hours",
+      "Downsize the VMs to a smaller SKU"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Reserved Instances provide up to 72% discount but require a 1- or 3-year commitment for always-on workloads. For VMs that run only 40 hours/week, you'd pay for 168 hours of reservation but use only 40 — the discount is wasted on idle hours.",
+      "This option is correct. Azure Spot VMs use unused Azure capacity at discounts up to 90% off pay-as-you-go prices. Since the workloads are interruptible (the key qualifier), Spot VMs provide the greatest discount. Development workloads are ideal candidates — if a Spot VM is evicted, developers can restart it.",
+      "Auto-shutdown prevents paying for idle hours (good practice), but doesn't discount the hours the VMs ARE running. You'd still pay full pay-as-you-go rates for the 40 active hours. This helps, but doesn't provide the greatest discount.",
+      "Downsizing reduces the per-hour cost but doesn't address the 128 idle hours or provide a significant discount percentage. It's a complementary strategy, not the greatest savings."
+    ],
+    "tip": "Spot VMs = greatest discount (up to 90%), BUT workload must be interruptible. Reserved Instances = great discount (up to 72%), for steady-state always-on workloads. If the question says 'interruptible' or 'can be evicted' — Spot VMs give the biggest discount."
+  },
+  {
+    "id": "AZ900-E01-028",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates entirely on Azure\n- The security team needs to control which network traffic is allowed into and out of an Azure Virtual Network subnet\n- They need to create rules based on source IP, destination IP, port, and protocol\n- The rules must be applied at the subnet level\n\nQuestion:\nWhich Azure resource should the security team use?",
+    "choices": [
+      "Azure Firewall",
+      "Network Security Group (NSG)",
+      "Azure DDoS Protection",
+      "Azure Private Link"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Firewall is a managed, cloud-based network security service that filters traffic at the VNet level with advanced features (FQDN filtering, threat intelligence, IDPS). It's more powerful but also more complex and expensive than what's needed for basic subnet-level traffic filtering rules.",
+      "This option is correct. Network Security Groups (NSGs) contain inbound and outbound security rules that filter traffic based on source/destination IP, port, and protocol. NSGs can be associated with subnets or individual NICs. They're the standard, cost-effective way to control traffic at the subnet level — exactly what the scenario describes.",
+      "Azure DDoS Protection defends against distributed denial-of-service attacks. It doesn't create traffic filtering rules based on IP/port/protocol for normal operational traffic.",
+      "Azure Private Link provides private connectivity to Azure services over a private endpoint in your VNet. It's about private access to PaaS services, not traffic filtering rules."
+    ],
+    "tip": "NSG = basic traffic filtering (IP, port, protocol) at subnet or NIC level. Azure Firewall = advanced filtering (FQDN, threat intelligence, TLS inspection) at VNet level. If the question describes simple allow/deny rules based on IP and port — NSG. If it mentions FQDN filtering or advanced threat features — Azure Firewall."
+  },
+  {
+    "id": "AZ900-E01-029",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs a critical application on two servers\n- If one server fails, the other server continues handling all requests\n- The application experiences zero downtime during a single server failure\n- The company's SLA guarantees 99.99% uptime\n\nQuestion:\nWhich cloud concept does this architecture demonstrate?",
+    "choices": [
+      "Scalability",
+      "High availability",
+      "Elasticity",
+      "Agility"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Scalability is the ability to increase capacity to handle growing demand (more users, more data). The scenario describes surviving failures, not handling increased load.",
+      "This option is correct. High availability means a system remains operational and accessible even when components fail. Two servers in a failover configuration, zero downtime during a failure, and a 99.99% uptime SLA — this is the textbook definition of high availability.",
+      "Elasticity is automatic scaling up/down based on demand fluctuations. The scenario describes failure handling, not demand-based scaling.",
+      "Agility is the ability to rapidly deploy and configure resources. The scenario describes an already-deployed architecture's resilience, not speed of deployment."
+    ],
+    "tip": "High availability = system stays up despite failures (redundancy, failover, uptime SLAs). Fault tolerance = system continues with zero impact during failures. Disaster recovery = system recovers after a major failure. The exam distinguishes all three — HA is about uptime percentage and redundancy."
+  },
+  {
+    "id": "AZ900-E01-030",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to migrate an on-premises Microsoft SQL Server database to Azure\n- The database team wants a fully managed service with automatic patching, backups, and high availability\n- They need to retain full SQL Server compatibility, including cross-database queries, SQL Server Agent jobs, and Service Broker\n- Minimal application code changes are required\n\nQuestion:\nWhich Azure database service should you use?",
+    "choices": [
+      "Azure SQL Database (single database)",
+      "Azure SQL Managed Instance",
+      "Azure Database for PostgreSQL",
+      "SQL Server on Azure Virtual Machines"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database is a fully managed PaaS database, but it doesn't support cross-database queries (within a single logical server), SQL Server Agent, or Service Broker. It's designed for modern cloud-native applications that don't rely on these instance-level features.",
+      "This option is correct. Azure SQL Managed Instance provides near-100% compatibility with on-premises SQL Server, including cross-database queries, SQL Server Agent, Service Broker, CLR, linked servers, and more. It's fully managed (automatic patching, backups, HA) while maintaining the instance-level features that SQL Database lacks. It's Microsoft's recommended lift-and-shift target for SQL Server.",
+      "Azure Database for PostgreSQL is a different database engine entirely. Migrating from SQL Server to PostgreSQL would require significant application code changes and query rewriting.",
+      "SQL Server on Azure VMs gives full SQL Server compatibility, but it's IaaS — you manage OS patching, backups, and high availability yourself. The question specifically requires a fully managed service. SQL MI provides the same compatibility with managed service benefits."
+    ],
+    "tip": "SQL Database = cloud-native PaaS, some SQL Server features missing. SQL Managed Instance = near-100% SQL Server compatibility + fully managed. SQL Server on VM = full compatibility but IaaS (you manage everything). If the question mentions SQL Server Agent, cross-database queries, or Service Broker — it's Managed Instance."
+  }
+]

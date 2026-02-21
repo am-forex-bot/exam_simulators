@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E03-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your organisation operates a global SaaS platform\n- A data centre hosting your application experiences a catastrophic power failure\n- The application automatically continues running from a secondary data centre in the same region with no data loss\n\nQuestion:\nWhich cloud concept is demonstrated when the application continues operating despite the data centre failure?",
+    "choices": [
+      "Fault tolerance",
+      "Scalability",
+      "Agility",
+      "Consumption-based pricing"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Fault tolerance is the ability of a system to continue operating without interruption when a component fails. The application seamlessly continued from a secondary data centre with zero data loss and no service interruption — this is fault tolerance. It goes beyond high availability (which may allow brief disruption) by ensuring zero impact on the end user.",
+      "Scalability is the ability to increase or decrease resources to match demand. The data centre failure isn't a demand issue — it's a failure scenario.",
+      "Agility is the speed at which you can deploy and configure cloud resources. The scenario describes failure resilience, not rapid deployment.",
+      "Consumption-based pricing is a billing model. It has no relation to failure handling or resilience."
+    ],
+    "tip": "Fault tolerance vs High availability: Fault tolerance = zero interruption during failure (seamless failover). High availability = minimal interruption (brief failover, 99.9%+ uptime). If the question says 'continues with no impact' or 'zero downtime during failure' — fault tolerance."
+  },
+  {
+    "id": "AZ900-E03-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A large bank wants to use Azure but has concerns\n- Their legal team asks: 'If Microsoft goes bankrupt or discontinues Azure, what happens to our data and applications?'\n- The CTO raises a related concern: 'If we build everything on Azure-specific services, how difficult would it be to move to another provider?'\n\nQuestion:\nWhat cloud risk are the bank's legal team and CTO describing?",
+    "choices": [
+      "Data breach risk",
+      "Vendor lock-in",
+      "Compliance risk",
+      "Latency risk"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Data breach risk involves unauthorised access to data. The concerns are about provider dependency and portability, not data security incidents.",
+      "This option is correct. Vendor lock-in is the risk that deep dependency on a single cloud provider makes it difficult or expensive to switch providers. Using Azure-specific services (e.g., Azure Functions, Cosmos DB, Azure AD B2C) creates tight coupling. If the provider's business changes or pricing becomes unfavourable, migration costs could be significant. This is a well-recognised cloud risk that multi-cloud strategies and open standards help mitigate.",
+      "Compliance risk involves failing to meet regulatory requirements. While related to data governance, the specific concerns raised are about provider dependency and portability, not regulatory compliance.",
+      "Latency risk involves network delays affecting application performance. The concerns are about business continuity and portability, not network performance."
+    ],
+    "tip": "Vendor lock-in is mitigated by: using open standards (Kubernetes, PostgreSQL), avoiding proprietary-only services where possible, and maintaining data export capabilities. The exam may test your understanding of cloud risks alongside benefits."
+  },
+  {
+    "id": "AZ900-E03-003",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A small company has 20 employees\n- They use a local file server for document storage\n- They use a locally installed accounting application\n- The IT manager (who is also the receptionist) manages both systems\n- The company experiences frequent issues with the file server crashing\n\nQuestion:\nWhich cloud benefit would MOST improve this company's situation?",
+    "choices": [
+      "Elasticity — automatic scaling based on demand",
+      "Reliability — built-in redundancy and fault tolerance",
+      "Geo-distribution — deploying across multiple regions",
+      "Cost optimisation — economies of scale"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A 20-person company with a single file server doesn't need automatic scaling. Their demand is stable and small. Elasticity solves a problem they don't have.",
+      "This option is correct. Reliability is the biggest improvement for this company. Their file server crashes frequently, causing business disruption. Cloud services like SharePoint Online or Azure Files provide built-in redundancy (multiple copies of data), automatic failover, and SLA-backed uptime guarantees. The part-time IT manager no longer needs to troubleshoot server crashes — Microsoft handles infrastructure reliability.",
+      "A 20-person company in one location doesn't need global geo-distribution. Their users are all in one office.",
+      "While cloud may reduce costs, the company's primary pain point is server crashes and reliability, not cost. Solving the reliability problem is the most impactful improvement."
+    ],
+    "tip": "When the exam presents a scenario with a specific pain point, choose the cloud benefit that directly addresses it. Frequent crashes → reliability. Unpredictable demand → elasticity. High upfront costs → OpEx model. Slow deployments → agility."
+  },
+  {
+    "id": "AZ900-E03-004",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys an application across three Azure Availability Zones in a region\n- Availability Zone 1 hosts the primary database\n- Availability Zone 2 hosts a synchronous replica of the database\n- Availability Zone 3 hosts another synchronous replica\n- A natural disaster destroys the data centre in Availability Zone 1\n\nQuestion:\nWhat happens to the application's database availability?",
+    "choices": [
+      "The database becomes unavailable until Zone 1 is restored",
+      "The database remains available — a replica in Zone 2 or Zone 3 is promoted to primary",
+      "All data since the last backup is lost",
+      "The database is available in read-only mode until Zone 1 recovers"
+    ],
+    "answer": [1],
+    "explanations": [
+      "If the architecture uses synchronous replicas across zones, the loss of Zone 1 does NOT make the database unavailable. The surviving zones hold identical copies of the data.",
+      "This option is correct. With synchronous replicas across Availability Zones, the data in Zone 2 and Zone 3 is identical to Zone 1 (zero data loss). When Zone 1 fails, one of the surviving replicas is automatically promoted to primary. The application continues with full read-write capability. This is the purpose of zone-redundant deployment — survive the complete loss of any single data centre.",
+      "Synchronous replication means every write is committed to all replicas before being acknowledged. When Zone 1 is destroyed, Zones 2 and 3 have all the data up to the last committed transaction — zero data loss.",
+      "With synchronous replicas, the promoted replica has full read-write capability. Read-only mode would only apply if the replicas were asynchronous and couldn't be safely promoted to primary, which isn't the case here."
+    ],
+    "tip": "Availability Zones + synchronous replicas = survive data centre loss with zero data loss and automatic failover. This is why zone-redundant deployments achieve 99.99% SLA. The exam tests understanding of what happens when a zone fails."
+  },
+  {
+    "id": "AZ900-E03-005",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription with multiple resource groups\n- A developer creates a virtual machine in 'ResourceGroup-Dev'\n- The developer later needs to move the VM to 'ResourceGroup-Prod'\n- The VM has a public IP address, a managed disk, and a network interface\n\nQuestion:\nCan you move an Azure resource between resource groups?",
+    "choices": [
+      "No — resources are permanently assigned to the resource group they were created in",
+      "Yes — you can move most Azure resources between resource groups within the same subscription",
+      "Yes — but only if you delete and recreate the resource in the new resource group",
+      "Yes — but only if both resource groups are in the same Azure region"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Resources are NOT permanently assigned to a resource group. Azure supports moving resources between resource groups. This is a common misconception the exam tests.",
+      "This option is correct. Most Azure resources can be moved between resource groups (and even between subscriptions). The move operation changes the resource's logical grouping without changing the resource's physical location, configuration, or functionality. VMs, their disks, NICs, and public IPs can be moved together. The move operation is a management-plane operation — no downtime is typically required.",
+      "You do NOT need to delete and recreate resources. Azure's move operation transfers the resource's metadata to the new resource group without affecting the resource itself. Deleting and recreating would cause downtime and potential data loss.",
+      "Resource groups and resource locations are independent. A resource group can be in UK South, but contain resources deployed in West Europe. When you move a resource between groups, the resource's deployed region doesn't change."
+    ],
+    "tip": "Resources can be moved between resource groups and subscriptions. The resource group's region is just metadata — it doesn't constrain where resources inside it are deployed. A resource in UK South can be in a resource group tagged as 'North Europe.' The exam tests this distinction."
+  },
+  {
+    "id": "AZ900-E03-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed Azure resources and wants to control network access to an Azure SQL Database\n- The database should only be accessible from resources within a specific Azure Virtual Network\n- No traffic from the public internet should reach the database\n- The solution must provide a private IP address for the database within the VNet\n\nQuestion:\nWhich Azure networking feature should you configure?",
+    "choices": [
+      "Service Endpoints",
+      "Private Endpoints (Azure Private Link)",
+      "Azure Firewall rules",
+      "Network Security Group rules"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Service Endpoints route traffic from a VNet to Azure SQL over the Azure backbone, but the database still has a public IP address. Traffic is secured by the route, but the public endpoint still exists and could potentially be exposed. The question asks for a private IP address within the VNet.",
+      "This option is correct. Private Endpoints (powered by Azure Private Link) create a private network interface with a private IP address in your VNet that connects to the Azure SQL Database. The database is accessible ONLY via this private IP within the VNet — no public IP, no public internet access. This is the most secure option and provides exactly what the question asks: a private IP for the database within the VNet.",
+      "Azure Firewall can filter traffic to/from the database, but it doesn't give the database a private IP address within the VNet. It's a network security appliance, not a private connectivity mechanism for PaaS services.",
+      "NSGs filter traffic by IP/port/protocol, but they can't assign a private IP to an Azure PaaS service like SQL Database. NSGs work at the subnet/NIC level for VNet-connected resources."
+    ],
+    "tip": "Private Endpoint = private IP in YOUR VNet for Azure PaaS services (SQL, Storage, Cosmos DB, etc.). Service Endpoint = optimised routing from VNet to PaaS (still uses public IP). If the question says 'private IP address' or 'no public endpoint' for a PaaS service — Private Endpoint."
+  },
+  {
+    "id": "AZ900-E03-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A media company needs to process video files uploaded by users\n- When a video is uploaded to Azure Blob Storage, a function should automatically trigger to transcode the video into multiple resolutions\n- The transcoding function runs for approximately 2 minutes per video\n- The company wants a serverless, event-driven solution\n\nQuestion:\nWhich combination of Azure services should you use?",
+    "choices": [
+      "Azure Blob Storage + Azure Logic Apps",
+      "Azure Blob Storage + Azure Functions (Blob trigger)",
+      "Azure Queue Storage + Azure Virtual Machines",
+      "Azure Event Grid + Azure App Service"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Logic Apps can trigger on blob creation and orchestrate workflows, but Logic Apps is designed for workflow orchestration and integrations (connecting SaaS services, sending emails, etc.), not for executing custom video transcoding code. Logic Apps also has per-action pricing that gets expensive for compute-intensive operations.",
+      "This option is correct. Azure Functions with a Blob trigger automatically executes code when a new blob is created in a storage container. The function runs your transcoding logic, processes the video, and saves the output. It's serverless (no infrastructure to manage), event-driven (triggered by the upload), and 2 minutes is well within the Functions timeout. Blob Storage + Blob-triggered Functions is a standard serverless pattern.",
+      "Using VMs for transcoding means maintaining always-on infrastructure. You'd need to build the queue polling, processing, and scaling logic yourself. This is the opposite of serverless.",
+      "Event Grid + App Service could work (Event Grid reacts to blob events and routes to App Service), but App Service runs continuously with dedicated infrastructure — not serverless. Functions is the serverless compute option."
+    ],
+    "tip": "Blob Storage + Functions (Blob trigger) is a classic serverless pattern: file lands in storage → function automatically processes it. If the question describes 'when a file is uploaded, do something' in a serverless context — this is the pattern."
+  },
+  {
+    "id": "AZ900-E03-008",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription with 100+ resources\n- You need to give a contractor read-only access to all resources in a single resource group named 'RG-Analytics'\n- The contractor should NOT be able to modify, create, or delete any resources\n- The contractor should NOT have any access to resources in other resource groups\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Assign the Contributor role at the RG-Analytics resource group scope",
+      "Assign the Reader role at the RG-Analytics resource group scope",
+      "Assign the Reader role at the subscription scope",
+      "Assign a custom role with no permissions at the subscription scope"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Contributor allows creating, modifying, and deleting resources. The contractor needs READ-ONLY access. Contributor is far too permissive.",
+      "This option is correct. The Reader built-in role grants read-only access to all resources. Assigning it at the resource group scope (RG-Analytics) means the contractor can view everything in that resource group but cannot modify, create, or delete anything. Because it's scoped to the resource group, they have zero access to other resource groups. RBAC assignments are inherited downward, so the contractor can read all resources within RG-Analytics.",
+      "Reader at the subscription scope would give read access to ALL resource groups in the subscription, not just RG-Analytics. This violates the 'no access to other resource groups' requirement.",
+      "A custom role with no permissions is useless — it wouldn't grant any access. The Reader built-in role is the correct choice for read-only access."
+    ],
+    "tip": "RBAC scope matters: subscription-level assignments cascade to ALL resource groups and resources. Resource group-level assignments apply only to that group. If the question says 'only this resource group' — assign at the resource group scope, not the subscription."
+  },
+  {
+    "id": "AZ900-E03-009",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A university runs a research computing cluster on-premises\n- During term time, 200 researchers use the cluster at full capacity\n- During summer holidays (3 months), only 20 researchers use it\n- The university wants to reduce the cluster to 10% capacity during summer and restore it for term time\n- They DON'T want to own hardware that sits idle for 3 months\n\nQuestion:\nWhich TWO cloud characteristics address this requirement? (Select the BEST single answer that combines both needs.)",
+    "choices": [
+      "Elasticity and consumption-based pricing",
+      "High availability and fault tolerance",
+      "Geo-distribution and compliance",
+      "Security and governance"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Elasticity allows the university to scale from 10% to 100% capacity based on the academic calendar. Consumption-based pricing means they only pay for the resources they use — 10% of the cost during summer, full cost during term. Together, these two characteristics solve both requirements: dynamic capacity adjustment and no wasted hardware investment.",
+      "High availability and fault tolerance are about uptime and resilience. The university's problem is seasonal capacity variation, not uptime concerns.",
+      "Geo-distribution is about deploying across regions for global access. Compliance is about meeting regulations. Neither addresses seasonal capacity variation or cost optimisation.",
+      "Security and governance are important but don't address the specific requirements of scaling capacity seasonally and avoiding idle hardware costs."
+    ],
+    "tip": "Many exam questions combine multiple cloud characteristics. Elasticity (dynamic scaling) + consumption-based pricing (pay-for-use) is a powerful combination for variable workloads. If a scenario describes seasonal/periodic capacity changes plus cost concerns — these two together."
+  },
+  {
+    "id": "AZ900-E03-010",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to automate repetitive IT processes in Azure\n- Tasks include: starting and stopping VMs on a schedule, cleaning up unused resources, and generating weekly reports\n- The automation must run on a schedule without manual intervention\n- The team prefers to write automation scripts in PowerShell\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure Functions (Timer trigger)",
+      "Azure Automation with PowerShell runbooks",
+      "Azure Logic Apps",
+      "Azure DevOps Pipelines"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Functions can run PowerShell on a timer, but it's designed for short-lived, event-driven functions. For operational IT automation tasks like starting/stopping VMs and resource cleanup, Azure Automation is purpose-built and provides better tooling (runbook management, credential management, shared modules).",
+      "This option is correct. Azure Automation is specifically designed for IT process automation. PowerShell runbooks let you write scripts to manage Azure resources, schedules trigger them automatically, and the service provides credential management (Run As accounts, managed identities) for secure access. It's the go-to service for operational tasks like VM start/stop schedules and resource cleanup.",
+      "Logic Apps is a visual workflow automation tool that connects services with pre-built connectors. While it can schedule tasks, it's designed for workflow integration (connect SaaS apps, route data), not PowerShell-based IT automation. The team specifically wants to write PowerShell scripts.",
+      "Azure DevOps Pipelines is for CI/CD — building, testing, and deploying applications. It's not designed for operational IT automation tasks like starting/stopping VMs or cleaning up resources."
+    ],
+    "tip": "Azure Automation = IT operations automation (PowerShell/Python runbooks, schedules, credential management). Functions = event-driven code execution (short-lived, serverless). Logic Apps = workflow orchestration (visual designer, SaaS connectors). If the question mentions 'PowerShell scripts' + 'scheduled IT tasks' — Azure Automation."
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AZ900-E04-026",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's Azure environment uses several services with SLAs:\n  - Azure VMs in Availability Zones: 99.99% SLA\n  - Azure SQL Database (Business Critical): 99.995% SLA\n  - Azure Load Balancer (Standard): 99.99% SLA\n- The application requires ALL three services to be operational\n\nQuestion:\nWhat is the composite SLA for this application?",
+    "choices": [
+      "99.99% — the same as the lowest individual SLA",
+      "99.995% — the same as the highest individual SLA",
+      "Approximately 99.975% — calculated by multiplying individual SLAs",
+      "100% — because multiple services provide redundancy"
+    ],
+    "answer": [2],
+    "explanations": [
+      "The composite SLA is NOT the lowest individual SLA. When services are in series (ALL must work), the composite SLA is always LOWER than the lowest individual SLA.",
+      "The composite SLA cannot be higher than the individual SLAs when all services are required. Each additional dependency reduces the overall guarantee.",
+      "This option is correct. When services are in series (all required), the composite SLA is calculated by multiplying: 99.99% × 99.995% × 99.99% = approximately 99.975%. This is LOWER than any individual SLA. Every additional dependency reduces the composite SLA. The more services in the chain, the lower the overall guarantee.",
+      "No cloud service provides 100% SLA, and adding more services actually decreases the composite SLA. Multiple services in series add failure points, not redundancy."
+    ],
+    "tip": "Composite SLA (services in series): multiply individual SLAs. Result is ALWAYS lower than the lowest individual. Composite SLA (services in parallel for redundancy): increases availability. The exam tests SLA multiplication. Know that more dependencies = lower composite SLA."
+  },
+  {
+    "id": "AZ900-E04-027",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to implement passwordless authentication for their employees\n- Users should sign in to Azure AD using biometrics (fingerprint, facial recognition) or a security key\n- No passwords should be required\n\nQuestion:\nWhich Azure AD feature enables passwordless authentication?",
+    "choices": [
+      "Azure AD Self-Service Password Reset",
+      "Windows Hello for Business / FIDO2 security keys",
+      "Azure AD Password Protection",
+      "Azure AD Application Proxy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Self-Service Password Reset helps users reset forgotten passwords. It's about managing passwords, not eliminating them. Ironically, it emphasises passwords rather than removing them.",
+      "This option is correct. Azure AD supports three passwordless authentication methods: Windows Hello for Business (biometrics — fingerprint, facial recognition + PIN), FIDO2 security keys (physical USB/NFC keys), and the Microsoft Authenticator app (phone-based approval). These methods authenticate users without a password, using cryptographic keys tied to biometrics or physical devices.",
+      "Password Protection prevents users from setting weak or commonly breached passwords. It improves password security but still relies on passwords. Not passwordless.",
+      "Application Proxy provides secure remote access to internal web applications. It doesn't implement passwordless authentication methods."
+    ],
+    "tip": "Azure AD passwordless options: Windows Hello for Business (biometrics), FIDO2 security keys (physical keys), Microsoft Authenticator (phone approval). If 'passwordless' or 'biometric authentication' — Windows Hello/FIDO2. Microsoft is pushing passwordless as the future of authentication."
+  },
+  {
+    "id": "AZ900-E04-028",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to use Azure for big data analytics\n- They have 100 TB of raw log data stored in Azure Data Lake Storage Gen2\n- Data analysts need to run SQL queries directly against the raw data without loading it into a separate database\n- They want to pay only for the queries they run, not for provisioned compute capacity\n\nQuestion:\nWhich Azure service enables SQL queries directly against Data Lake Storage with pay-per-query pricing?",
+    "choices": [
+      "Azure SQL Database",
+      "Azure Synapse Analytics (Serverless SQL pool)",
+      "Azure Databricks",
+      "Azure HDInsight"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database is a managed relational database. You'd need to load the data from Data Lake into SQL Database first — it can't query Data Lake files directly. It also requires provisioned compute (DTU or vCore), not pay-per-query.",
+      "This option is correct. Azure Synapse Analytics Serverless SQL pool allows you to run T-SQL queries directly against files in Azure Data Lake Storage Gen2 (Parquet, CSV, JSON) without loading the data into a database. It's pay-per-query — you're charged based on the amount of data processed by each query, not for standing compute capacity. Perfect for ad-hoc exploration of large datasets.",
+      "Databricks can query Data Lake data, but it uses compute clusters that you provision and pay for by the hour/minute. It's not a pay-per-query model. It's designed more for data engineering and data science workloads.",
+      "HDInsight runs Hadoop/Spark clusters on provisioned infrastructure. You pay for the cluster, not per query. More suitable for long-running big data processing jobs."
+    ],
+    "tip": "Synapse Serverless SQL pool = query files in Data Lake directly with SQL, pay-per-query. Synapse Dedicated SQL pool = data warehouse with provisioned capacity. If 'query raw files' + 'pay per query' + 'no data loading needed' — Serverless SQL pool."
+  },
+  {
+    "id": "AZ900-E04-029",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company's web application currently runs on two on-premises servers\n- The application is stateless — any server can handle any request\n- During peak hours, both servers are at 95% capacity\n- The company wants to handle 3x the current traffic without re-architecting the application\n\nQuestion:\nWhich scaling approach requires the LEAST changes to the existing application?",
+    "choices": [
+      "Vertical scaling — deploy on a more powerful server",
+      "Horizontal scaling — add more identical servers behind a load balancer",
+      "Rearchitect the application as microservices",
+      "Migrate to a different programming language for better performance"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Vertical scaling (getting a bigger server) works without application changes BUT has an upper limit. A single server can only get so powerful. To handle 3x traffic, you'd need a server 3x more powerful than current ones, which may not be available or cost-effective. Also, vertical scaling creates a single point of failure.",
+      "This option is correct. Since the application is stateless (any server can handle any request), horizontal scaling is ideal — just add more identical servers behind a load balancer. No application code changes needed. To handle 3x traffic, add 4 more servers (6 total). In Azure, this translates to a VM Scale Set or App Service with autoscaling. Stateless applications are designed for horizontal scaling.",
+      "Rearchitecting as microservices is a major undertaking requiring significant code changes, new deployment patterns, and new operational expertise. It's the opposite of 'least changes.'",
+      "Migrating to a different language requires rewriting the entire application. This is the most extreme change possible and doesn't address the scalability need efficiently."
+    ],
+    "tip": "Stateless applications + horizontal scaling = minimal changes, maximum scalability. Stateless means no session data stored locally, so requests can go to any server. This is why cloud-native design principles emphasise stateless architecture — it enables effortless horizontal scaling."
+  },
+  {
+    "id": "AZ900-E04-030",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Azure resources managed by 3 different teams\n- Team Alpha manages VMs and networking\n- Team Beta manages databases\n- Team Gamma manages storage accounts\n- Each team should ONLY be able to manage their specific resource types\n\nQuestion:\nHow should you implement this separation of duties?",
+    "choices": [
+      "Create separate Azure subscriptions for each team",
+      "Assign built-in RBAC roles scoped to specific resource groups dedicated to each team's resource types",
+      "Use Azure Policy to restrict which resources each team can see",
+      "Give all teams Owner access and rely on verbal agreements about who manages what"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Separate subscriptions could work but adds administrative overhead (cross-subscription networking, billing complexity). Resource groups within a single subscription provide the same isolation more efficiently.",
+      "This option is correct. Create dedicated resource groups for each team's resources (e.g., RG-Compute for VMs/networking, RG-Database, RG-Storage). Assign each team the appropriate RBAC role (Contributor or a custom role) scoped to their resource group only. Team Alpha gets Contributor on RG-Compute, Team Beta on RG-Database, Team Gamma on RG-Storage. Each team can only manage resources in their resource group.",
+      "Azure Policy controls what configurations are allowed (e.g., allowed VM sizes, required tags). It doesn't control which users can access which resources — that's RBAC's job. Policy says 'what'; RBAC says 'who.'",
+      "Giving everyone Owner access with verbal agreements violates the principle of least privilege and is a major security risk. One team could accidentally or intentionally modify another team's resources. Never rely on verbal agreements for access control."
+    ],
+    "tip": "Separation of duties pattern: create resource groups per team → assign team-specific RBAC roles at the resource group scope. This gives each team full control over their resources and zero access to others. RBAC + resource groups = clean separation."
+  },
+  {
+    "id": "AZ900-E04-031",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to modernise a legacy .NET application\n- The application currently runs on Windows Server with IIS\n- The development team wants to containerise the application using Docker\n- They need a managed platform to host the containerised application with auto-scaling\n- They don't need full Kubernetes orchestration — the application is a single container\n\nQuestion:\nWhich Azure service is the SIMPLEST option for hosting a single Docker container with managed scaling?",
+    "choices": [
+      "Azure Kubernetes Service (AKS)",
+      "Azure App Service (Web App for Containers)",
+      "Azure Container Instances (ACI)",
+      "Azure Virtual Machines with Docker"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AKS provides full Kubernetes orchestration. The question says they DON'T need full orchestration — it's a single container. AKS adds unnecessary complexity for this use case.",
+      "This option is correct. Azure App Service for Containers lets you deploy a Docker container to a managed App Service plan with built-in auto-scaling, custom domains, SSL, deployment slots, and continuous deployment from container registries. It's the simplest platform for hosting a containerised web application that needs production-grade features like scaling and load balancing. No Kubernetes knowledge required.",
+      "ACI is good for simple, short-running containers, but it doesn't provide built-in auto-scaling, deployment slots, or the production web hosting features that App Service offers. It's better for batch jobs or sidecar containers.",
+      "VMs with Docker means managing the VM, OS, Docker runtime, scaling, and networking yourself. Maximum complexity for hosting a container."
+    ],
+    "tip": "App Service for Containers = managed hosting for Docker containers with PaaS features (auto-scale, SSL, deployment slots). ACI = simple, serverless containers (no PaaS features). AKS = full Kubernetes (complex orchestration). For 'single container' + 'production features' + 'simplest option' — App Service for Containers."
+  },
+  {
+    "id": "AZ900-E04-032",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A manufacturing company runs SAP ERP on-premises\n- They want to move SAP to Azure but are concerned about performance\n- SAP requires specific VM sizes, high-performance storage, and guaranteed network throughput\n- The company needs assurance that Azure can handle enterprise SAP workloads\n\nQuestion:\nWhich Azure feature provides VMs specifically certified and optimised for SAP workloads?",
+    "choices": [
+      "Any Azure VM can run SAP with no special configuration",
+      "Azure offers SAP-certified VMs (M-series, E-series) with dedicated hosting options",
+      "SAP can only run on Azure Government cloud",
+      "Azure does not support SAP workloads"
+    ],
+    "answer": [1],
+    "explanations": [
+      "While many Azure VMs CAN run SAP technically, SAP has specific certification requirements for production workloads. Not every VM SKU is SAP-certified. You should use certified VMs for supported, production-grade SAP deployments.",
+      "This option is correct. Azure offers SAP-certified virtual machines — particularly M-series (memory-optimised with up to 12 TB RAM for SAP HANA) and E-series (memory-optimised for SAP applications). Microsoft and SAP have a close partnership: Azure is a certified and preferred cloud platform for SAP. Azure also offers Azure Large Instances for SAP HANA workloads exceeding standard VM capabilities.",
+      "SAP is fully supported on commercial Azure — not limited to Azure Government. Most enterprise SAP customers run on standard Azure commercial regions.",
+      "Azure is one of the leading cloud platforms for SAP. Microsoft and SAP have a strategic partnership. Thousands of organisations run SAP on Azure in production."
+    ],
+    "tip": "Azure + SAP: Microsoft has a strategic partnership with SAP. M-series VMs are certified for SAP HANA (up to 12 TB RAM). Azure is the most popular cloud for SAP workloads. If the exam mentions SAP, know that Azure has certified VMs and dedicated hosting options."
+  },
+  {
+    "id": "AZ900-E04-033",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to create a custom network routing table for an Azure Virtual Network subnet\n- They want to force all internet-bound traffic from VMs to route through a network virtual appliance (NVA) for inspection\n- Default Azure routing sends internet traffic directly from VMs to the internet\n\nQuestion:\nWhat should you configure to override the default routing?",
+    "choices": [
+      "Network Security Group (NSG) rules",
+      "User-Defined Routes (UDR) / Route Table",
+      "Azure DNS configuration",
+      "Azure Traffic Manager"
+    ],
+    "answer": [1],
+    "explanations": [
+      "NSGs filter traffic (allow/deny) based on IP/port/protocol, but they don't control WHERE traffic is routed. An NSG can't redirect internet-bound traffic through an NVA — it can only allow or block the traffic.",
+      "This option is correct. User-Defined Routes (UDRs) override Azure's default system routes. You create a route table with a custom route that sends internet-bound traffic (0.0.0.0/0) to the NVA's IP address instead of directly to the internet. Associate the route table with the VM subnet, and all internet-bound traffic from those VMs goes through the NVA for inspection first.",
+      "Azure DNS handles name resolution (translating domain names to IP addresses). It doesn't control routing paths or redirect traffic through appliances.",
+      "Traffic Manager is a DNS-based global traffic router for directing users to different endpoints. It doesn't control routing within a Virtual Network."
+    ],
+    "tip": "UDR (User-Defined Routes) = override Azure's default routing. Common use case: force traffic through an NVA (firewall, proxy) for inspection. If 'custom routing' or 'force traffic through an appliance' — UDR/Route Table."
+  },
+  {
+    "id": "AZ900-E04-034",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed resources in Azure over 2 years\n- The Resource Graph Explorer shows 500+ resources across 8 subscriptions\n- The operations team needs to quickly query all resources to find:\n  - All VMs with a specific tag\n  - All storage accounts in a specific region\n  - All resources without a required tag\n\nQuestion:\nWhich Azure tool enables fast, cross-subscription resource queries?",
+    "choices": [
+      "Azure Monitor Log Analytics",
+      "Azure Resource Graph Explorer",
+      "Azure CLI (az resource list)",
+      "Azure Portal resource browser"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Log Analytics queries logs and metrics data using KQL. It's designed for monitoring data (performance metrics, application logs), not for querying Azure resource metadata (tags, locations, properties) at scale.",
+      "This option is correct. Azure Resource Graph Explorer enables fast queries across all your Azure subscriptions using Kusto Query Language (KQL). It indexes resource metadata (tags, properties, locations, types) and returns results in milliseconds — even across hundreds of subscriptions and thousands of resources. You can filter by tags, regions, resource types, and any resource property. It's the fastest way to explore your Azure estate.",
+      "Azure CLI 'az resource list' can query resources but is limited to one subscription at a time and is much slower than Resource Graph for complex queries. It also lacks the rich KQL query syntax.",
+      "The Azure Portal resource browser lets you browse resources visually, but it's slow for complex queries across many subscriptions and doesn't support the advanced filtering that Resource Graph provides."
+    ],
+    "tip": "Resource Graph = fast, cross-subscription resource queries using KQL. Use it for: 'find all VMs with tag X', 'count resources by region', 'list resources without required tags'. If 'query resource metadata across subscriptions' — Resource Graph Explorer."
+  },
+  {
+    "id": "AZ900-E04-035",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company uses Azure Blob Storage and needs to automatically manage the lifecycle of their data\n- Requirements:\n  - Move blobs to Cool tier after 30 days of no access\n  - Move blobs to Archive tier after 90 days of no access\n  - Delete blobs after 365 days\n- These rules should apply automatically without manual intervention\n\nQuestion:\nWhich Azure Storage feature should you configure?",
+    "choices": [
+      "Azure Storage soft delete",
+      "Azure Blob Storage lifecycle management policy",
+      "Azure Storage immutable policy",
+      "Azure Data Box for data archival"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Soft delete provides a recovery window for accidentally deleted blobs. It doesn't move blobs between tiers or automatically delete old data based on age.",
+      "This option is correct. Blob Storage lifecycle management policies define rules that automatically transition blobs between access tiers and delete them based on conditions (age, last access time, creation date). You configure rules: move to Cool after 30 days, move to Archive after 90 days, delete after 365 days. The policy runs daily and applies automatically — no manual intervention needed.",
+      "Immutable policies prevent modification or deletion of data during a retention period. This is the opposite of what's needed — the question wants to move and eventually delete data, not make it immutable.",
+      "Data Box is a physical device for bulk data transfer. It doesn't provide ongoing lifecycle management of blob data."
+    ],
+    "tip": "Lifecycle management = automated tier transitions and deletion based on rules (age, access patterns). Hot → Cool → Cold → Archive → Delete. Set it and forget it. If 'automatically move between tiers' or 'delete after X days' — lifecycle management policy."
+  },
+  {
+    "id": "AZ900-E04-036",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company deploys an application using a single Azure service\n- That service has a 99.9% SLA\n- The company then adds a second dependency — another Azure service also with 99.9% SLA\n- Both services must be operational for the application to work\n\nQuestion:\nHow does adding the second dependency affect the application's availability?",
+    "choices": [
+      "Availability increases to 99.99%",
+      "Availability stays at 99.9%",
+      "Availability decreases to approximately 99.8%",
+      "Availability doubles to 199.8%"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Adding more dependencies in series NEVER increases availability. Each additional required service adds a potential point of failure.",
+      "Availability only stays the same if the second service has 100% SLA (impossible). Any SLA less than 100% reduces the composite.",
+      "This option is correct. When both services must be operational (in series): 99.9% × 99.9% = 99.80%. The composite SLA is LOWER than either individual SLA. Each additional serial dependency multiplies the probability of downtime. 99.9% = 8.76 hours downtime/year, but 99.8% = 17.52 hours — nearly double the downtime.",
+      "You cannot add SLA percentages. SLAs are multiplied for serial dependencies and calculated differently for parallel (redundant) configurations."
+    ],
+    "tip": "More serial dependencies = lower composite SLA. Two 99.9% services in series = 99.8%. Three = 99.7%. This is why Azure solutions should minimise dependencies. The only way to INCREASE availability is parallel redundancy, not additional serial components."
+  },
+  {
+    "id": "AZ900-E04-037",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company operates a web application that stores user-uploaded images\n- Images are currently stored on the web server's local disk\n- During a server restart, the web server is replaced with a new instance and all local images are lost\n- The team needs a durable storage solution that persists independently of the web server lifecycle\n\nQuestion:\nWhere should the images be stored?",
+    "choices": [
+      "On the web server's local temporary storage",
+      "In Azure Blob Storage",
+      "In Azure App Service's built-in file system",
+      "In the application's database (Azure SQL)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Local temporary storage on a VM or App Service instance is ephemeral — it's lost when the instance is replaced, restarted, or scaled. This is exactly the problem the team is experiencing.",
+      "This option is correct. Azure Blob Storage is durable, independent of any compute instance, and designed for storing unstructured data like images. Images persist regardless of what happens to the web server. It provides automatic redundancy (3+ copies), HTTP/HTTPS access for serving images to users, and integration with CDN for global distribution. This is the standard pattern for user-uploaded files in cloud applications.",
+      "App Service's built-in file system (/home) persists across restarts within the same plan, but it has performance limitations, storage size limits, and isn't designed for serving large volumes of images. Blob Storage is the recommended approach for file storage in Azure applications.",
+      "Storing images as binary data (BLOBs) in Azure SQL Database works technically, but it's expensive, impacts database performance, and complicates image serving. Databases should store structured data; object storage (Blob) should store files."
+    ],
+    "tip": "Cloud design principle: never store persistent data on ephemeral compute instances. Use durable storage services (Blob Storage, Azure Files) that persist independently of the compute lifecycle. If 'data lost during restart/replace' — move to external storage."
+  },
+  {
+    "id": "AZ900-E04-038",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company subscribes to Azure and uses multiple services\n- The billing administrator wants to organise charges by project\n- Some projects span multiple resource groups and subscriptions\n- The billing needs to show costs aggregated by project, regardless of where resources are deployed\n\nQuestion:\nWhat is the BEST way to organise billing by project across resource groups and subscriptions?",
+    "choices": [
+      "Create separate subscriptions for each project",
+      "Use Azure Tags with a 'Project' key on all resources",
+      "Use separate Azure AD tenants for each project",
+      "Create separate management groups for each project"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Separate subscriptions per project would provide clean billing separation, but the question says projects already span multiple subscriptions. Reorganising resources into project-specific subscriptions would be disruptive and not always practical.",
+      "This option is correct. Azure Tags are the most flexible way to categorise costs across organisational boundaries. Apply a 'Project' tag (e.g., Project: Alpha, Project: Beta) to every resource, regardless of its resource group or subscription. Azure Cost Management can then filter and group costs by the Project tag, providing clean cost aggregation across the entire Azure estate. Tags work across all resource groups and subscriptions.",
+      "Separate Azure AD tenants would be extreme overkill and create massive management overhead. Tenants are organisational boundaries, not billing categorisation tools.",
+      "Management groups organise subscriptions into hierarchies for governance. They don't provide the cross-cutting billing categorisation that tags offer for projects spanning multiple subscriptions."
+    ],
+    "tip": "Tags are the universal cost categorisation mechanism in Azure. They work across resource groups and subscriptions. For cost allocation by project, department, environment, or any custom dimension — tags + Cost Management filtering. This is Microsoft's recommended approach."
+  },
+  {
+    "id": "AZ900-E04-039",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed an Azure SQL Database\n- The database needs to be accessible from a specific Azure Virtual Network\n- The database should ALSO remain accessible from a specific on-premises IP range (203.0.113.0/24)\n- No other traffic should reach the database\n\nQuestion:\nHow should you configure network access to the Azure SQL Database?",
+    "choices": [
+      "Configure only a VNet service endpoint for the Azure VNet",
+      "Configure a VNet service endpoint for the Azure VNet AND a firewall rule for the on-premises IP range",
+      "Make the database public with no restrictions",
+      "Use Azure Private Link only"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A VNet service endpoint alone would allow traffic from the Azure VNet but would block the on-premises IP range. You need both access paths configured.",
+      "This option is correct. Configure a VNet service endpoint (or VNet rule) to allow traffic from the specific Azure VNet. Additionally, configure a server-level IP firewall rule to allow the on-premises IP range (203.0.113.0/24). Deny public access from all other IPs by not adding any other firewall rules. This provides exactly the two access paths needed while blocking everything else.",
+      "Making the database publicly accessible with no restrictions is a major security vulnerability. Any IP address on the internet could attempt to connect. Never do this for production databases.",
+      "Private Link provides a private endpoint within the VNet (great for VNet access), but it doesn't directly support allowing access from specific on-premises IP ranges unless those IPs are routed through the VNet via VPN/ExpressRoute. The question implies direct on-premises access via IP firewall rules."
+    ],
+    "tip": "Azure SQL Database network security: VNet rules (allow specific VNets via service endpoints), IP firewall rules (allow specific IP ranges), Private Endpoints (private IP in your VNet). Combine these for defence in depth. If 'VNet access + specific external IPs' — service endpoint + firewall rule combo."
+  },
+  {
+    "id": "AZ900-E04-040",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company deploys a web application to Azure App Service\n- The App Service plan is configured with auto-scaling (minimum 2 instances, maximum 10 instances)\n- During low traffic, only 2 instances run\n- During peak traffic, all 10 instances run\n- The company pays for instances proportional to usage\n\nQuestion:\nThis scenario demonstrates which TWO cloud characteristics?",
+    "choices": [
+      "Elasticity and consumption-based pricing",
+      "High availability and disaster recovery",
+      "Security and compliance",
+      "Agility and fault tolerance"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Elasticity: the application automatically scales between 2 and 10 instances based on traffic — expanding during peaks and contracting during lulls. Consumption-based pricing: the company pays for the number of instances running, which varies with demand. More instances during peak = higher cost; fewer during lull = lower cost. These two characteristics work together for cost-efficient, responsive scaling.",
+      "High availability and disaster recovery involve resilience and recovery from failures, not dynamic scaling with demand. While multiple instances provide some HA, the scenario focuses on scaling behaviour and cost.",
+      "Security and compliance aren't relevant to the auto-scaling and pricing behaviour described.",
+      "Agility (speed of provisioning) and fault tolerance (zero-impact failures) are not the primary characteristics demonstrated. Auto-scaling with proportional billing is elasticity + consumption-based pricing."
+    ],
+    "tip": "Elasticity + consumption-based pricing is the classic cloud combo: scale dynamically + pay proportionally. Many exam questions describe this pairing. If auto-scaling instances + paying for what you use — these two characteristics."
+  }
+]

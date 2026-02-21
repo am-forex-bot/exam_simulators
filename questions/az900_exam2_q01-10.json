@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E02-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A retail company runs an online store on-premises\n- During normal operations, the store handles 1,000 concurrent users\n- The company wants to be able to handle up to 50,000 concurrent users during flash sales without purchasing permanent hardware\n- After the sale ends, they want to release the extra capacity\n\nQuestion:\nWhich cloud computing benefit PRIMARILY enables this capability?",
+    "choices": [
+      "Predictability",
+      "Economies of scale",
+      "Elasticity",
+      "Security"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Predictability in cloud computing refers to the ability to forecast costs and performance. While helpful for planning, it doesn't describe the ability to dynamically acquire and release compute capacity.",
+      "Economies of scale means cloud providers can offer lower per-unit costs because they operate at massive scale. This reduces costs but doesn't describe the dynamic scaling capability the question asks about.",
+      "This option is correct. Elasticity is the ability to dynamically acquire resources when demand increases (scale out to 50,000 users) and release them when demand decreases (back to 1,000 users). The company scales up for flash sales and scales back down afterward — paying only for what they use during the peak. This is the defining advantage of cloud over on-premises for variable workloads.",
+      "Security in the cloud is a shared responsibility benefit, but it doesn't describe the ability to dynamically scale resources up and down based on demand."
+    ],
+    "tip": "Elasticity = dynamic, often automatic, scaling to match demand. The key differentiator: you don't pre-purchase capacity for peak demand. If the question describes temporary spikes with release of resources afterward — elasticity."
+  },
+  {
+    "id": "AZ900-E02-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Virtual Machines (IaaS)\n- A critical security vulnerability is discovered in the Windows Server operating system\n- The vulnerability affects all Windows VMs in your Azure environment\n\nQuestion:\nAccording to the shared responsibility model, who is responsible for patching this OS vulnerability on the Azure VMs?",
+    "choices": [
+      "Microsoft, because the VMs run on Azure infrastructure",
+      "The customer, because guest OS management is their responsibility in IaaS",
+      "Shared between Microsoft and the customer",
+      "The operating system vendor (Microsoft Windows), not Azure"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Microsoft manages the physical infrastructure and the host operating system (the hypervisor layer). However, the GUEST operating system inside an IaaS VM is entirely the customer's responsibility. Microsoft does not patch your VMs for you.",
+      "This option is correct. In the IaaS model, the customer is responsible for the guest OS, including applying security patches, configuring the firewall, and managing updates. Azure provides tools to help (Azure Update Management, Microsoft Defender for Cloud recommendations), but the responsibility to act lies with the customer.",
+      "Guest OS patching in IaaS is NOT shared — it falls entirely on the customer. Shared responsibilities exist (like network controls), but the OS inside a VM is the customer's domain.",
+      "While Microsoft produces Windows Server patches, the responsibility to apply those patches to YOUR Azure VMs lies with you as the customer. The vendor provides the patch; the customer deploys it."
+    ],
+    "tip": "IaaS shared responsibility: Microsoft manages BELOW the hypervisor (physical security, network, host OS). Customer manages ABOVE it (guest OS, apps, data, patching). PaaS shifts OS responsibility to Microsoft. SaaS shifts nearly everything to Microsoft."
+  },
+  {
+    "id": "AZ900-E02-003",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A startup is building a mobile application\n- They initially need a small database and one application server\n- Over the next two years, they expect to grow from 1,000 users to 1 million users\n- They want their infrastructure to grow with demand without needing to re-architect the application\n\nQuestion:\nWhich cloud benefit ensures the startup can grow their infrastructure capacity as their user base expands?",
+    "choices": [
+      "Scalability",
+      "Disaster recovery",
+      "Compliance",
+      "Cost management"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Scalability is the ability of a system to handle increased load by adding resources. The startup can start small and scale their database and compute as they grow from 1,000 to 1 million users. Azure services like Azure SQL Database and App Service can scale their performance tiers upward as demand grows. Scalability in the cloud means growth doesn't require re-architecture.",
+      "Disaster recovery ensures systems can recover from failures. It doesn't address the ability to grow capacity with an expanding user base.",
+      "Compliance refers to meeting regulatory and industry standards. Important, but not related to infrastructure growth capacity.",
+      "Cost management helps optimise spending, but it doesn't describe the ability to increase infrastructure capacity. You could manage costs perfectly and still not have the scalability needed."
+    ],
+    "tip": "Scalability = ability to handle growth (long-term capacity increase). Elasticity = ability to handle fluctuating demand (dynamic, often temporary). A startup growing from 1K to 1M users = scalability. A retailer handling Black Friday spikes = elasticity. The exam distinguishes these."
+  },
+  {
+    "id": "AZ900-E02-004",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A government agency manages classified data that must never leave government-controlled facilities\n- They want cloud benefits (self-service provisioning, resource pooling, rapid elasticity)\n- The infrastructure must be exclusively used by government organisations\n- The hardware must be located inside a government-secured building\n\nQuestion:\nWhich cloud deployment model meets these requirements?",
+    "choices": [
+      "Public cloud",
+      "Private cloud",
+      "Hybrid cloud",
+      "Multi-cloud"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Public cloud resources (Azure, AWS, GCP) are shared across many tenants and located in the provider's data centres. The government cannot guarantee data stays in government-controlled facilities or that infrastructure is exclusively theirs.",
+      "This option is correct. A private cloud is dedicated to a single organisation (or group of related organisations) and can be hosted on-premises in a government-secured building. It still delivers cloud benefits like self-service provisioning, elasticity, and resource pooling — it's just not shared with the public. Azure Stack HCI or Azure Stack Hub can bring Azure services into a private cloud environment.",
+      "Hybrid cloud combines private and public cloud. The question doesn't mention any need for public cloud services — everything must stay in government facilities.",
+      "Multi-cloud uses multiple public cloud providers. This is the opposite of what the agency needs — they want private, government-exclusive infrastructure."
+    ],
+    "tip": "Private cloud = dedicated infrastructure for one organisation (on-premises or hosted). Still has cloud characteristics (elasticity, self-service, pooling). If the question mentions exclusive use, data that can't leave specific facilities, or government/classified requirements — private cloud."
+  },
+  {
+    "id": "AZ900-E02-005",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A manufacturing company runs production control systems on-premises 24/7\n- They are planning to move their public-facing website and CRM to Azure\n- The production control systems must remain on-premises due to latency requirements (sub-1ms) with factory floor equipment\n- Data from the factory systems needs to be analysed using Azure Machine Learning\n\nQuestion:\nWhich cloud model should the manufacturing company adopt?",
+    "choices": [
+      "Public cloud only",
+      "Private cloud only",
+      "Hybrid cloud",
+      "Community cloud"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Moving everything to public cloud is not possible — the production control systems require sub-1ms latency to factory equipment, which can only be achieved on-premises. Public cloud introduces network latency that exceeds this requirement.",
+      "Private cloud only would keep the production systems running fine, but the company explicitly wants to move the website and CRM to Azure (public cloud) and use Azure ML for data analysis. Private cloud alone doesn't provide this.",
+      "This option is correct. Hybrid cloud is the perfect fit: production control systems stay on-premises (private) for low-latency factory floor communication, while the website, CRM, and ML workloads run in Azure (public). Data flows between the environments for analysis. This is a textbook hybrid cloud scenario — combining the best of both worlds.",
+      "Community cloud is infrastructure shared among organisations with common concerns (e.g., multiple hospitals sharing a healthcare cloud). This doesn't apply to a single manufacturing company's requirements."
+    ],
+    "tip": "Hybrid cloud scenarios nearly always involve: (1) a workload that MUST stay on-premises (latency, regulation, legacy), PLUS (2) a need for public cloud services (analytics, web hosting, ML). Both requirements in one question = hybrid cloud."
+  },
+  {
+    "id": "AZ900-E02-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs a relational database in Azure for a new application\n- The application requires PostgreSQL compatibility\n- The database team wants a fully managed service — no VM management, automatic backups, and built-in high availability\n- They need the ability to scale compute and storage independently\n\nQuestion:\nWhich Azure service should you use?",
+    "choices": [
+      "Azure SQL Database",
+      "Azure Database for PostgreSQL (Flexible Server)",
+      "PostgreSQL installed on an Azure Virtual Machine",
+      "Azure Cosmos DB with PostgreSQL API"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database is a managed SQL Server-compatible database. It doesn't support PostgreSQL syntax, extensions, or drivers. The application requires PostgreSQL compatibility specifically.",
+      "This option is correct. Azure Database for PostgreSQL (Flexible Server) is a fully managed PostgreSQL service. It handles patching, backups (automatic with point-in-time restore), and high availability (zone-redundant or same-zone). Compute and storage can be scaled independently, and it supports PostgreSQL extensions. Flexible Server is the recommended deployment option (replacing Single Server which is being deprecated).",
+      "PostgreSQL on a VM gives full compatibility, but the team explicitly wants no VM management. Running PostgreSQL on a VM means managing the OS, patches, backups, and HA yourself — this is IaaS, not a managed service.",
+      "Azure Cosmos DB with PostgreSQL API (formerly Citus) is designed for distributed, horizontally scaled PostgreSQL. It's overkill for a standard relational database need and follows a different pricing and architecture model. It's meant for multi-node distributed workloads, not a standard managed PostgreSQL database."
+    ],
+    "tip": "Azure Database for PostgreSQL Flexible Server = managed PostgreSQL. Azure SQL Database = managed SQL Server. Azure Database for MySQL Flexible Server = managed MySQL. If the question specifies a particular database engine, use the corresponding Azure managed service. Flexible Server is always the recommended deployment option."
+  },
+  {
+    "id": "AZ900-E02-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 20 Azure subscriptions across different departments\n- All subscriptions need to follow the same naming convention for resources\n- Resources that don't follow the naming convention should be flagged as non-compliant but NOT blocked\n- The compliance team needs a dashboard showing the percentage of compliant resources\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Azure Policy with an Audit effect",
+      "Azure Policy with a Deny effect",
+      "Azure RBAC with custom roles",
+      "Azure Tags with a naming convention"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Azure Policy with an Audit effect evaluates resources against your naming convention rules and flags non-compliant resources without blocking their creation. The Azure Policy compliance dashboard shows the percentage of compliant vs non-compliant resources across all subscriptions. This is exactly what the compliance team needs — visibility without enforcement.",
+      "Azure Policy with a Deny effect would BLOCK the creation of non-compliant resources. The question specifically says resources should be 'flagged, NOT blocked.' Deny is too aggressive for this requirement.",
+      "RBAC controls who can perform actions (permissions), not naming conventions. You can't use RBAC to evaluate whether a resource name matches a pattern.",
+      "Tags are metadata on resources and don't enforce or evaluate naming conventions. Tags are key-value pairs added to resources — they don't control what the resource itself is named."
+    ],
+    "tip": "Azure Policy effects: Deny = block non-compliant creation. Audit = flag non-compliant but allow creation. DeployIfNotExists = auto-remediate. AuditIfNotExists = audit missing related resources. If the question says 'flag but don't block' — Audit effect. If it says 'prevent' — Deny effect."
+  },
+  {
+    "id": "AZ900-E02-008",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to deploy pre-built solutions from third-party vendors on Azure\n- They need a certified virtual appliance from a firewall vendor\n- The solution should be deployable directly from within the Azure portal\n- All solutions must be certified by Microsoft to run on Azure\n\nQuestion:\nWhere should you find and deploy these pre-built solutions?",
+    "choices": [
+      "Azure Resource Manager template gallery",
+      "Azure Marketplace",
+      "GitHub",
+      "Azure Quickstart Templates"
+    ],
+    "answer": [1],
+    "explanations": [
+      "ARM template gallery is not a specific Azure service. While ARM templates exist in various repositories, they're not a curated marketplace for certified third-party solutions.",
+      "This option is correct. Azure Marketplace is a curated online store of thousands of applications and services certified to run on Azure. Third-party vendors publish virtual appliances, SaaS applications, and solution templates. Everything in the Marketplace is tested and certified by Microsoft. You can deploy solutions directly from the Azure portal with a few clicks.",
+      "GitHub hosts open-source code and templates, but solutions there aren't necessarily certified for Azure. There's no guarantee of compatibility or Microsoft certification.",
+      "Azure Quickstart Templates are Microsoft-provided ARM/Bicep templates for common architectures. They're not a marketplace for third-party vendor solutions like firewall appliances."
+    ],
+    "tip": "Azure Marketplace = certified third-party and Microsoft solutions, deployable from the portal. If the question mentions third-party solutions, certified virtual appliances, or 'deploy from the portal' — Marketplace. It's also where you find BYOL (Bring Your Own License) options."
+  },
+  {
+    "id": "AZ900-E02-009",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs a VM Scale Set behind an Azure Load Balancer\n- Currently 4 VM instances handle the load\n- CPU utilisation on all instances drops to 5% every night between 11 PM and 6 AM\n- The company wants to automatically reduce to 2 instances at night and scale back to 4 during the day\n\nQuestion:\nWhat should you configure on the VM Scale Set?",
+    "choices": [
+      "Scheduled autoscale rules",
+      "Manual scaling to 2 instances each night",
+      "Azure Advisor recommendations",
+      "Availability Zone distribution"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. VM Scale Sets support scheduled autoscale rules that adjust the instance count based on a recurring schedule. You create a rule to scale in to 2 instances at 11 PM and another rule to scale out to 4 instances at 6 AM. This is automated, repeatable, and requires no manual intervention. You can also combine schedule-based rules with metric-based rules (CPU threshold) for maximum flexibility.",
+      "Manually scaling to 2 instances every night requires someone to perform the action at 11 PM and again at 6 AM. This defeats the purpose of automation and introduces human error — someone could forget or be unavailable.",
+      "Azure Advisor might recommend rightsizing VMs, but it doesn't configure autoscale rules or manage VM Scale Set instance counts based on time schedules.",
+      "Availability Zone distribution determines where instances are placed for resilience. It has nothing to do with adjusting the number of instances based on time of day."
+    ],
+    "tip": "VM Scale Set autoscale: metric-based (react to CPU, memory, queue length) or schedule-based (time-of-day patterns). If the question describes a predictable time-based pattern — scheduled autoscale. If it describes unpredictable demand changes — metric-based autoscale."
+  },
+  {
+    "id": "AZ900-E02-010",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores data in Azure and needs to understand the redundancy options\n- They want data replicated across three copies within a single data centre\n- If the data centre fails, data loss is acceptable because they have backups elsewhere\n- They want the lowest cost storage redundancy option\n\nQuestion:\nWhich storage redundancy option should you select?",
+    "choices": [
+      "Locally Redundant Storage (LRS)",
+      "Zone-Redundant Storage (ZRS)",
+      "Geo-Redundant Storage (GRS)",
+      "Read-Access Geo-Redundant Storage (RA-GRS)"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. LRS maintains 3 copies of your data within a single data centre (storage scale unit) in one region. It's the lowest-cost redundancy option. It protects against drive and rack failures but NOT against a data centre outage — which the question says is acceptable since they have backups elsewhere.",
+      "ZRS replicates data across 3 availability zones within one region. More resilient than LRS (survives a data centre failure) but more expensive. The question says data centre failure is acceptable, so the extra cost of ZRS is unnecessary.",
+      "GRS replicates data to a secondary region hundreds of miles away (LRS in primary + LRS in secondary). This provides regional disaster recovery but is significantly more expensive. Not needed when data centre loss is acceptable.",
+      "RA-GRS is like GRS but additionally allows read access from the secondary region. It's the most expensive redundancy option and far exceeds the stated requirements."
+    ],
+    "tip": "Storage redundancy cost order (lowest to highest): LRS < ZRS < GRS < RA-GRS < GZRS < RA-GZRS. LRS = 3 copies, 1 data centre. ZRS = 3 copies, 3 zones. GRS = 6 copies, 2 regions. Match the redundancy to the data criticality."
+  }
+]

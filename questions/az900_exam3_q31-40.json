@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E03-031",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company pays for Azure using pay-as-you-go pricing\n- The finance team is concerned about unexpected cost spikes\n- They want to receive an email notification when monthly Azure spending reaches £5,000\n- They also want a second notification at £8,000\n- No automatic service shutdown is needed — just notifications\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Azure Spending Limit",
+      "Azure Cost Management Budget with alert thresholds",
+      "Azure Reserved Instances",
+      "Azure Advisor cost recommendations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Spending Limit applies to specific offer types (free accounts, MSDN subscriptions) and completely stops services when the limit is reached. It's not available for pay-as-you-go accounts and doesn't just send notifications — it shuts things down.",
+      "This option is correct. Azure Cost Management allows you to create budgets with multiple alert thresholds. You set the monthly budget amount and configure alerts at specific percentages or amounts (e.g., £5,000 and £8,000). When spending hits each threshold, email notifications are sent to specified recipients. No services are stopped — it's purely informational. This is exactly what the finance team needs.",
+      "Reserved Instances reduce costs by committing to 1-3 years of usage. They don't provide spending alerts or budget tracking.",
+      "Advisor provides general cost-saving recommendations (e.g., 'resize this VM to save money'). It doesn't create custom budgets or send threshold-based spending alerts."
+    ],
+    "tip": "Budget alerts = notification when spending approaches/exceeds a threshold. Spending Limit = hard cap that stops services (only for certain account types). These are different mechanisms. For 'notify me at £X' — Budget alerts. For 'stop everything at £X' — Spending Limit (if available)."
+  },
+  {
+    "id": "AZ900-E03-032",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to connect two Azure Virtual Networks that have overlapping IP address ranges\n- VNet-A uses 10.0.0.0/16\n- VNet-B also uses 10.0.0.0/16\n- Resources in both VNets need to communicate with each other\n\nQuestion:\nCan you create VNet Peering between VNet-A and VNet-B?",
+    "choices": [
+      "Yes — VNet Peering works regardless of IP address ranges",
+      "No — VNet Peering requires non-overlapping IP address spaces",
+      "Yes — but only if both VNets are in the same region",
+      "Yes — Azure automatically resolves IP conflicts during peering"
+    ],
+    "answer": [1],
+    "explanations": [
+      "VNet Peering does NOT work with overlapping IP ranges. Azure uses IP addresses for routing between peered VNets. If both VNets use the same addresses, Azure can't determine which VNet a packet should go to.",
+      "This option is correct. VNet Peering requires non-overlapping IP address spaces. If VNet-A and VNet-B both use 10.0.0.0/16, peering cannot be established because Azure's routing would be ambiguous. Before peering, one of the VNets would need to be re-addressed to use a different range (e.g., 10.1.0.0/16 for VNet-B). This is a foundational networking constraint in Azure.",
+      "The region doesn't matter for peering (global peering works across regions). The IP overlap is the problem, not the region.",
+      "Azure does NOT automatically resolve IP conflicts. IP address planning is the customer's responsibility. You must design non-overlapping address spaces before establishing peering or any VNet-to-VNet connectivity."
+    ],
+    "tip": "VNet Peering requirements: non-overlapping IP address spaces. This is a hard constraint. The exam tests this frequently. Always plan IP addressing before creating VNets. Use a scheme like 10.1.0.0/16 for VNet-1, 10.2.0.0/16 for VNet-2, etc."
+  },
+  {
+    "id": "AZ900-E03-033",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A global e-commerce company has Azure deployments in 5 regions\n- They want to optimise their network architecture by creating a hub-and-spoke topology\n- Branch offices worldwide connect via VPN\n- The company also has ExpressRoute connections from two data centres\n- They want a single management point for all this connectivity\n\nQuestion:\nWhich Azure service provides a unified hub for VPN, ExpressRoute, and VNet connectivity at global scale?",
+    "choices": [
+      "Azure VPN Gateway",
+      "Azure ExpressRoute Gateway",
+      "Azure Virtual WAN",
+      "Azure Traffic Manager"
+    ],
+    "answer": [2],
+    "explanations": [
+      "VPN Gateway handles VPN connections for a single VNet. It doesn't provide a unified global hub that manages VPN, ExpressRoute, and VNet-to-VNet connectivity together. You'd need to manage multiple gateways across 5 regions separately.",
+      "ExpressRoute Gateway handles ExpressRoute connections for a single VNet. Like VPN Gateway, it's a per-VNet resource, not a global connectivity hub.",
+      "This option is correct. Azure Virtual WAN provides a unified networking hub that combines VPN (site-to-site and point-to-site), ExpressRoute, and VNet connectivity into a single architecture. It supports multi-region hub-and-spoke topologies with any-to-any connectivity. Virtual WAN hubs in each region automatically mesh with each other over Microsoft's global backbone. One management plane for all connectivity.",
+      "Traffic Manager is a DNS-based traffic router for directing users to the nearest endpoint. It doesn't manage network connectivity between sites, branches, or VNets."
+    ],
+    "tip": "Azure Virtual WAN = unified global networking hub (VPN + ExpressRoute + VNet peering + SD-WAN). It simplifies complex multi-region, multi-connection topologies. If the question mentions 'unified hub' + 'VPN + ExpressRoute + VNet' at global scale — Virtual WAN."
+  },
+  {
+    "id": "AZ900-E03-034",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure and wants to improve their security posture\n- Microsoft Defender for Cloud shows a Secure Score of 45%\n- The security team wants to understand what actions will have the biggest impact on improving the score\n- They want prioritised, actionable recommendations\n\nQuestion:\nWhat does the Secure Score in Microsoft Defender for Cloud represent?",
+    "choices": [
+      "The percentage of Azure resources that are encrypted",
+      "A measurement of your security posture based on implemented security controls",
+      "The percentage of users with MFA enabled",
+      "The number of security incidents detected in the last 30 days"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Secure Score considers encryption as one of many security controls, but it's not limited to encryption. It evaluates dozens of security configurations across compute, networking, data, identity, and applications.",
+      "This option is correct. Secure Score is an aggregate measurement (0-100%) of your organisation's security posture in Azure. It evaluates how many recommended security controls you've implemented across your Azure environment. Each recommendation has a point value based on impact. Fixing high-value recommendations increases your score most. The score helps prioritise which security improvements to tackle first.",
+      "MFA enablement is one factor that affects Secure Score, but the score encompasses far more: network security, data encryption, access controls, vulnerability management, and more.",
+      "Secure Score measures your security configuration posture, not the number of detected incidents. Incidents are tracked separately in Microsoft Sentinel or Defender for Cloud's security alerts."
+    ],
+    "tip": "Secure Score = how well have you implemented security best practices? Higher score = better security posture. Defender for Cloud provides prioritised recommendations to improve your score. Focus on recommendations with the highest point value for maximum impact."
+  },
+  {
+    "id": "AZ900-E03-035",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company's IT director presents a proposal to move to the cloud\n- The board asks: 'What are the guaranteed benefits of using public cloud services?'\n- The IT director needs to accurately describe what cloud computing provides\n\nQuestion:\nWhich of the following is a GUARANTEED characteristic of public cloud computing?",
+    "choices": [
+      "Lower costs than on-premises in all scenarios",
+      "On-demand self-service provisioning of resources",
+      "Zero security vulnerabilities",
+      "100% uptime with no outages"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud is NOT guaranteed to be cheaper in all scenarios. Some workloads (steady-state, predictable, fully utilised servers) may cost more in the cloud. Cloud's cost advantage comes from variable workloads, avoiding CapEx, and scaling. The exam tests the nuance that cloud isn't automatically cheaper.",
+      "This option is correct. On-demand self-service is a defining characteristic of cloud computing (per NIST definition). Users can provision compute, storage, and networking resources as needed without requiring human intervention from the provider. This is guaranteed by the cloud model itself — Azure portal, CLI, and APIs enable instant self-service provisioning.",
+      "No system is free from security vulnerabilities. Cloud providers invest heavily in security, but vulnerabilities can exist in any software. The shared responsibility model means both Microsoft and the customer share security obligations.",
+      "No cloud provider guarantees 100% uptime. Azure SLAs guarantee specific uptime percentages (99.9%, 99.95%, 99.99%), but all include some allowable downtime. Outages, while rare, do occur."
+    ],
+    "tip": "NIST defines 5 essential cloud characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service. These are guaranteed by the cloud model. Things that are NOT guaranteed: lower costs, zero downtime, absolute security."
+  },
+  {
+    "id": "AZ900-E03-036",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to process real-time data from IoT devices\n- Temperature sensors in a warehouse send readings every second\n- The system must detect if temperature exceeds 30°C within 5 seconds and trigger an alert\n- Historical data should be stored for trend analysis\n\nQuestion:\nWhich Azure service should you use for the real-time analysis and alerting?",
+    "choices": [
+      "Azure Data Factory",
+      "Azure Stream Analytics",
+      "Azure Synapse Analytics",
+      "Azure Data Lake Analytics"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Data Factory is for data integration and ETL/ELT batch pipelines. It moves and transforms data between stores. It's not designed for real-time stream processing with sub-5-second alerting requirements.",
+      "This option is correct. Azure Stream Analytics is a real-time analytics service that processes streaming data using SQL-like queries. It can ingest data from IoT Hub or Event Hubs, apply windowing functions to detect temperature thresholds, and trigger alerts within seconds. It can simultaneously output to storage (Blob, Data Lake) for historical trend analysis. It's purpose-built for real-time IoT analytics.",
+      "Synapse Analytics is a data warehouse and analytics service for batch processing of large datasets. It's designed for complex analytical queries over stored data, not real-time stream processing with second-level latency requirements.",
+      "Azure Data Lake Analytics (now deprecated) was a batch analytics service for processing data stored in Data Lake. It was designed for batch, not real-time, analytics."
+    ],
+    "tip": "Stream Analytics = real-time stream processing (SQL queries over streaming data). Data Factory = batch data integration (ETL/ELT). Synapse = data warehousing (batch analytics). If the question mentions 'real-time', 'streaming', or 'detect within seconds' — Stream Analytics."
+  },
+  {
+    "id": "AZ900-E03-037",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has resources deployed across Azure and also uses AWS for some workloads\n- The operations team wants to apply Azure Policy to govern the AWS resources as well\n- They also want to use Microsoft Defender for Cloud to assess the security of AWS workloads\n\nQuestion:\nWhich Azure service extends Azure governance capabilities to non-Azure environments?",
+    "choices": [
+      "Azure Migrate",
+      "Azure Arc",
+      "Azure ExpressRoute",
+      "Azure Virtual WAN"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Migrate is for discovering, assessing, and migrating workloads TO Azure. It doesn't extend Azure governance to other cloud providers.",
+      "This option is correct. Azure Arc extends Azure's control plane to non-Azure environments — on-premises servers, AWS, GCP, edge locations. Once resources are Arc-enabled, you can apply Azure Policy, use Microsoft Defender for Cloud, deploy Azure Monitor agents, and manage these resources through the Azure portal as if they were native Azure resources. Arc supports servers, Kubernetes clusters, SQL Server, and more.",
+      "ExpressRoute provides private network connectivity between on-premises and Azure. It's a network service, not a governance extension tool.",
+      "Virtual WAN provides unified networking connectivity. It's a networking hub, not a governance or management extension tool."
+    ],
+    "tip": "Azure Arc = extend Azure management to ANY infrastructure (multi-cloud, hybrid, edge). Key capabilities: Azure Policy, Defender for Cloud, Azure Monitor, Azure Automation — all extended to non-Azure resources. If 'manage non-Azure resources through Azure' — Arc."
+  },
+  {
+    "id": "AZ900-E03-038",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A developer needs to quickly build and deploy an API that queries Azure SQL Database\n- The API should support authentication with Azure AD\n- The solution should provide built-in API documentation and testing\n- Minimal custom code should be needed — the developer wants to focus on business logic only\n\nQuestion:\nWhich combination provides the most developer-productive solution?",
+    "choices": [
+      "Azure Virtual Machine with custom API code",
+      "Azure App Service with Azure API Management",
+      "Azure Functions with Azure API Management",
+      "Azure Container Instances with Nginx"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Building a custom API on a VM requires managing the OS, web server, framework, and deployment process. Maximum effort for the developer — the opposite of what's asked.",
+      "App Service with API Management works well, but App Service still requires a full application framework setup. It's good, but Functions offers even less code for simple database query APIs.",
+      "This option is correct. Azure Functions lets the developer write minimal code — just the SQL query logic. Each API endpoint is a separate function with an HTTP trigger. Azure API Management adds a layer in front that provides built-in API documentation (developer portal), authentication (Azure AD integration), rate limiting, and testing tools. Together, they maximise developer productivity: Functions for minimal business logic code, APIM for everything else.",
+      "Container Instances with Nginx requires building a container image, configuring a web server, and managing deployment artifacts. No built-in API documentation or AD integration — you'd have to build all of that."
+    ],
+    "tip": "Functions + API Management is a powerful serverless API pattern. Functions = minimal business logic code. API Management = documentation, authentication, rate limiting, monitoring. If the question says 'minimal code' + 'API documentation' + 'authentication' — Functions + APIM."
+  },
+  {
+    "id": "AZ900-E03-039",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company stores backup data in Azure Blob Storage\n- The data is accessed approximately once per year for audit purposes\n- When accessed, the audit team needs the data available within a few hours\n- The company wants the absolute lowest storage cost possible\n\nQuestion:\nWhich Azure Blob Storage access tier should you use?",
+    "choices": [
+      "Hot tier",
+      "Cool tier",
+      "Cold tier",
+      "Archive tier"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Hot tier has the highest storage cost per GB. It's designed for frequently accessed data. Using it for data accessed once per year would waste money on unnecessary availability.",
+      "Cool tier is cheaper than Hot but more expensive than Cold and Archive. It's designed for data accessed at least once per month. Once-per-year access is rarer than Cool tier is optimised for.",
+      "Cold tier is cheaper than Cool but more expensive than Archive. It's designed for data accessed at least once per quarter. For once-per-year access where hours of retrieval time is acceptable, Archive is cheaper.",
+      "This option is correct. Archive tier offers the lowest storage cost per GB in Azure Blob Storage. Data in Archive is offline and takes hours to rehydrate (bring back to an online tier for access). For audit data accessed once per year where a few hours of retrieval time is acceptable, Archive provides the absolute minimum storage cost. The higher per-access cost is offset by the dramatically lower storage cost over the year."
+    ],
+    "tip": "Archive tier = lowest storage cost, highest access cost, hours to retrieve. Use for: compliance archives, annual audits, data you almost never access. If 'lowest cost' + 'hours of retrieval acceptable' + 'rarely accessed' — Archive tier."
+  },
+  {
+    "id": "AZ900-E03-040",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company evaluates Azure for their workloads\n- The CTO asks: 'Azure operates data centres at a scale far beyond what our company could ever build. Does this benefit us as a customer?'\n\nQuestion:\nWhich cloud computing benefit results from the cloud provider's massive operational scale?",
+    "choices": [
+      "Agility",
+      "Economies of scale",
+      "High availability",
+      "Elasticity"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Agility is about speed of deploying resources. While cloud providers can offer faster deployment, it's not directly a result of their massive operational scale.",
+      "This option is correct. Economies of scale means the cost per unit decreases as the scale of operation increases. Microsoft operates millions of servers worldwide and purchases hardware, electricity, and cooling at volumes no single customer could match. These savings are passed on as lower per-unit costs for customers. A company could never build a data centre as cost-efficiently as Azure because they lack the scale advantage.",
+      "High availability is a design property (redundancy, failover). While scale helps fund HA investments, the question specifically asks about the benefit of massive operational scale — that's economies of scale.",
+      "Elasticity is the ability to dynamically scale resources. It's enabled by cloud architecture, not specifically by the provider's purchasing power at scale."
+    ],
+    "tip": "Economies of scale = bulk purchasing power of massive cloud providers reduces per-unit costs for everyone. This is a foundational cloud benefit. If the question mentions 'massive scale' or 'operates at a scale beyond what one company could achieve' — economies of scale."
+  }
+]

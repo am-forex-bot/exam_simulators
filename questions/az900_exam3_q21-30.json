@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E03-021",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Sentinel (formerly Azure Sentinel) for security operations\n- The security team needs a cloud-native SIEM and SOAR solution\n- They want to collect security data from Azure AD, Microsoft 365, Azure resources, and third-party firewalls\n- The solution must support automated threat response through playbooks\n\nQuestion:\nWhich Azure service provides SIEM and SOAR capabilities?",
+    "choices": [
+      "Microsoft Defender for Cloud",
+      "Microsoft Sentinel",
+      "Azure Monitor",
+      "Azure Active Directory Identity Protection"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Defender for Cloud provides cloud security posture management (CSPM) and cloud workload protection (CWP). It's a security assessment and threat protection tool, not a SIEM/SOAR platform. It can feed data INTO Sentinel, but it's not a SIEM itself.",
+      "This option is correct. Microsoft Sentinel is Azure's cloud-native SIEM (Security Information and Event Management) and SOAR (Security Orchestration, Automation, and Response) solution. It collects security data from hundreds of sources (Azure, M365, AWS, firewalls, endpoints), uses AI/ML for threat detection, and supports automated response through Logic App-based playbooks. It's built on Log Analytics workspaces.",
+      "Azure Monitor collects performance and operational telemetry. While Sentinel is built on the same Log Analytics infrastructure, Monitor itself doesn't provide SIEM capabilities, threat detection, or automated security response playbooks.",
+      "Azure AD Identity Protection detects identity-based risks (risky sign-ins, compromised accounts). It's focused on identity security, not a comprehensive SIEM/SOAR platform that ingests data from multiple sources."
+    ],
+    "tip": "Microsoft Sentinel = SIEM (collect, detect, investigate) + SOAR (automate response). Defender for Cloud = security posture + workload protection. Identity Protection = identity risk detection. If the question mentions 'SIEM', 'SOAR', 'security playbooks', or 'collect security data from multiple sources' — Sentinel."
+  },
+  {
+    "id": "AZ900-E03-022",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is designing a solution that needs to store and process structured data\n- The data includes customer orders, products, and inventory\n- The application performs complex JOIN queries across multiple related tables\n- ACID transactions are required to ensure data consistency\n- The team has extensive SQL expertise\n\nQuestion:\nWhich type of Azure database should you use?",
+    "choices": [
+      "Azure Cosmos DB (NoSQL)",
+      "Azure SQL Database (relational)",
+      "Azure Table Storage (key-value)",
+      "Azure Blob Storage (unstructured)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cosmos DB is a NoSQL database that doesn't natively support complex JOIN operations across tables. While it offers some transaction support, it's designed for schema-less, horizontally scaled data — not traditional relational data with complex relationships.",
+      "This option is correct. Azure SQL Database is a fully managed relational database that supports complex SQL JOINs, ACID transactions, stored procedures, and normalised schemas. It's perfect for structured data with relationships (orders → products → inventory). The team's SQL expertise maps directly to Azure SQL Database. It's the go-to for traditional relational workloads.",
+      "Azure Table Storage is a NoSQL key-value store with no support for JOINs, complex queries, or ACID transactions. It's designed for simple lookups by key, not relational data with complex relationships.",
+      "Blob Storage is for unstructured data (files, images, videos). It has no query engine, no tables, and no transaction support."
+    ],
+    "tip": "Relational data (tables, JOINs, ACID, structured schemas) = Azure SQL Database or other managed relational databases. NoSQL (schema-less, global distribution, massive scale) = Cosmos DB. If the question mentions JOINs, ACID transactions, or SQL expertise — relational database."
+  },
+  {
+    "id": "AZ900-E03-023",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- A new Azure administrator joins your company\n- They need to learn how to create resources, configure networking, and manage security in Azure\n- They want a hands-on learning environment where they can practice without affecting production resources\n- They want free Azure credits to experiment with\n\nQuestion:\nWhat should the new administrator use to practice?",
+    "choices": [
+      "The company's production Azure subscription",
+      "Azure free account with free-tier services and credits",
+      "Azure documentation (docs.microsoft.com) only",
+      "Azure Pricing Calculator simulations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Practicing in the production subscription risks accidental changes, deletions, or cost overruns that could impact business operations. Never learn in production.",
+      "This option is correct. Azure offers a free account that includes: $200 credit for the first 30 days (to experiment with any Azure service), 12 months of free popular services (VMs, storage, databases), and 55+ always-free services. Microsoft also provides sandboxed learning environments through Microsoft Learn with hands-on labs. The admin can safely experiment without affecting production or incurring unexpected costs.",
+      "Documentation is valuable for learning concepts, but it doesn't provide hands-on experience with actually creating and managing Azure resources. The admin needs to practice, not just read.",
+      "The Pricing Calculator estimates costs — it doesn't provide an environment to actually create or manage resources. You can't practice networking configuration in a calculator."
+    ],
+    "tip": "Azure free account = $200 credit (30 days) + 12 months free services + always-free services. Microsoft Learn = guided hands-on labs in sandboxed environments. Both are designed for learning without risk to production."
+  },
+  {
+    "id": "AZ900-E03-024",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company builds an e-commerce platform\n- When a customer places an order, the system must:\n  1. Save the order to the database\n  2. Send a confirmation email\n  3. Update inventory\n  4. Notify the warehouse\n- Steps 2-4 should happen asynchronously — the customer shouldn't wait for all steps to complete\n\nQuestion:\nWhich architecture pattern should you use to decouple the order placement from the subsequent processing steps?",
+    "choices": [
+      "Synchronous API calls between services",
+      "Message queue-based asynchronous processing",
+      "Direct database triggers",
+      "Polling the database for new orders"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Synchronous API calls mean the customer waits while the system sequentially calls the email service, inventory service, and warehouse notification. If any service is slow or unavailable, the order response is delayed or fails. This creates tight coupling.",
+      "This option is correct. A message queue decouples the order placement from subsequent processing. After saving the order, the system places a message on a queue (Azure Service Bus or Queue Storage). Separate consumer services pick up messages asynchronously to send emails, update inventory, and notify the warehouse. The customer gets an immediate response while processing happens in the background. If a service is temporarily down, messages wait in the queue until it recovers.",
+      "Database triggers can fire when data changes, but they create tight coupling to the database, don't handle failures gracefully, and can impact database performance. They also don't provide the reliability guarantees of a message queue.",
+      "Polling the database for new orders is inefficient (constant queries even when there are no orders), adds load to the database, and introduces latency (you only detect new orders at the polling interval, not immediately)."
+    ],
+    "tip": "Message queues (Service Bus, Queue Storage) decouple producers from consumers. If a question describes a scenario where 'the user shouldn't wait' or 'processing should happen asynchronously' — message queue pattern. This is a fundamental cloud architecture principle."
+  },
+  {
+    "id": "AZ900-E03-025",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company uses Azure for infrastructure (IaaS) and platform services (PaaS)\n- They want to understand their security responsibilities\n- The security team creates a matrix showing which security tasks belong to Microsoft and which belong to the company\n\nQuestion:\nWhich security task is ALWAYS the customer's responsibility, regardless of the cloud service model used (IaaS, PaaS, or SaaS)?",
+    "choices": [
+      "Physical data centre security",
+      "Operating system patching",
+      "Data classification and accountability",
+      "Network infrastructure"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Physical data centre security is ALWAYS Microsoft's responsibility in all service models. Customers never manage Microsoft's data centres.",
+      "OS patching responsibility varies: in IaaS, the customer patches the guest OS. In PaaS and SaaS, Microsoft handles OS patching. It's not always the customer's responsibility.",
+      "This option is correct. Data classification and accountability is ALWAYS the customer's responsibility, regardless of the service model. Whether you use IaaS, PaaS, or SaaS, YOU are responsible for knowing what data you have, how sensitive it is, who should access it, and ensuring it's properly classified and governed. Microsoft doesn't know which of your data is confidential — only you do.",
+      "Network infrastructure responsibility varies by model. In IaaS, customers manage virtual network configuration. In SaaS, Microsoft manages the network infrastructure. It shifts across models."
+    ],
+    "tip": "Always customer's responsibility (all models): data, endpoints/devices, accounts/identities, data classification. Always Microsoft's responsibility (all models): physical hosts, physical network, physical data centre. Everything in between shifts based on the service model."
+  },
+  {
+    "id": "AZ900-E03-026",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has two Azure subscriptions: one for Production and one for Development\n- A developer in the Development subscription needs temporary access to view (read-only) a specific storage account in the Production subscription\n- The developer should NOT have access to any other Production resources\n\nQuestion:\nHow should you grant this access?",
+    "choices": [
+      "Add the developer as a Co-administrator on the Production subscription",
+      "Assign the Reader role to the developer on the specific storage account resource",
+      "Create a new Azure AD tenant for the developer",
+      "Move the storage account to the Development subscription"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Co-administrator is a legacy role that grants full access to the entire Production subscription. This is massively over-privileged — the developer only needs read access to one storage account.",
+      "This option is correct. Azure RBAC supports assignment at the resource level. You assign the Reader role to the developer specifically on the storage account resource. This grants read-only access to just that storage account — no access to any other Production resources. This follows the principle of least privilege: minimum permissions for the minimum scope.",
+      "Creating a new Azure AD tenant is completely unnecessary. The developer already has an identity in Azure AD. Cross-subscription RBAC works within the same tenant without needing a new one.",
+      "Moving the storage account to Development would disrupt Production workloads that depend on it and change network configurations. You should never move production resources to accommodate a temporary access need."
+    ],
+    "tip": "RBAC scope levels: Management Group > Subscription > Resource Group > Resource. Always assign at the narrowest scope that satisfies the need. For access to ONE specific resource — assign at the resource level. This is the principle of least privilege."
+  },
+  {
+    "id": "AZ900-E03-027",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses multiple Azure services: VMs, App Service, Azure SQL, and Storage Accounts\n- The operations team wants to create custom dashboards that show:\n  - VM CPU and memory utilisation\n  - App Service response times and error rates\n  - SQL Database DTU consumption\n  - Storage account transaction rates\n- All metrics should be visible in a single shared dashboard\n\nQuestion:\nWhich Azure service provides the unified monitoring platform for all these metrics?",
+    "choices": [
+      "Azure Advisor",
+      "Azure Monitor",
+      "Azure Service Health",
+      "Azure Cost Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Advisor provides recommendations, not real-time monitoring dashboards. It doesn't show VM CPU, App Service response times, or SQL DTU metrics in a live dashboard.",
+      "This option is correct. Azure Monitor is the unified monitoring platform for ALL Azure services. It collects metrics (CPU, memory, DTU, response times, transactions) and logs from every Azure resource. You can create custom Azure Dashboards and Workbooks that combine metrics from VMs, App Service, SQL, and Storage into a single view. It also supports alerts, Log Analytics queries, and integration with tools like Grafana.",
+      "Service Health shows Azure platform status and incidents. It doesn't provide resource-level metrics like VM CPU or SQL DTU usage.",
+      "Cost Management tracks spending and budgets. It shows cost data, not performance metrics like CPU utilisation or response times."
+    ],
+    "tip": "Azure Monitor = central monitoring for ALL Azure resources (metrics, logs, dashboards, alerts). It's the single platform for observability. Every other monitoring/assessment service (Advisor, Service Health, Defender for Cloud) complements Monitor but has a specific focus."
+  },
+  {
+    "id": "AZ900-E03-028",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs an application that processes insurance claims\n- Each claim goes through a multi-step workflow: receive claim → validate documents → assess damage → calculate payment → send payment → notify customer\n- Each step involves different systems (document management, AI assessment, payment gateway, email)\n- The workflow must be visually designed and easily modifiable by non-developers\n\nQuestion:\nWhich Azure service should you use to orchestrate this workflow?",
+    "choices": [
+      "Azure Functions",
+      "Azure Logic Apps",
+      "Azure Batch",
+      "Azure DevOps Pipelines"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Functions executes individual pieces of code triggered by events. While Durable Functions can orchestrate workflows, Functions requires coding and isn't designed for visual workflow design by non-developers.",
+      "This option is correct. Azure Logic Apps provides a visual workflow designer where you build multi-step workflows by connecting pre-built connectors to various systems. It supports hundreds of connectors (document management, AI services, payment gateways, email, CRM). Non-developers can modify workflows using the visual designer. It's purpose-built for business process orchestration with complex branching, loops, and error handling.",
+      "Azure Batch is for large-scale parallel computing (running thousands of jobs on a pool of VMs). It's not designed for business workflow orchestration connecting different systems.",
+      "Azure DevOps Pipelines is for CI/CD (building, testing, deploying code). It's not designed for business process workflows like insurance claim processing."
+    ],
+    "tip": "Logic Apps = visual workflow orchestration (connect systems, business processes, non-developer friendly). Functions = code execution (event-driven, developer-focused). If the question mentions 'visual designer', 'non-developers', 'multi-step workflow connecting different systems' — Logic Apps."
+  },
+  {
+    "id": "AZ900-E03-029",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is migrating applications to Azure\n- Some applications use Azure AD (Entra ID) for authentication\n- The company also has an on-premises Active Directory Domain Services (AD DS) environment\n- Users need to use the same username and password for both on-premises and Azure resources\n\nQuestion:\nWhat should you implement to synchronise on-premises AD DS identities with Azure AD?",
+    "choices": [
+      "Azure AD Application Proxy",
+      "Azure AD Connect (or Azure AD Connect Cloud Sync)",
+      "Azure AD B2B Collaboration",
+      "Azure AD Domain Services"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Application Proxy provides remote access to on-premises web applications through Azure AD. It's a reverse proxy for application access, not an identity synchronisation tool.",
+      "This option is correct. Azure AD Connect synchronises user identities (usernames, password hashes or federation) from on-premises AD DS to Azure AD. Users get the same username and password across both environments. Azure AD Connect Cloud Sync is the newer, lighter-weight option for the same purpose. Both enable hybrid identity — the foundation for hybrid Azure deployments.",
+      "B2B Collaboration invites EXTERNAL users (partners, vendors) to access your Azure AD resources using their own identities. It's for cross-organisation collaboration, not synchronising your own on-premises AD to Azure AD.",
+      "Azure AD Domain Services provides managed domain services (domain join, group policy, LDAP) in Azure WITHOUT requiring on-premises domain controllers. It consumes identities from Azure AD but doesn't synchronise on-premises AD to Azure AD — that's Azure AD Connect's job."
+    ],
+    "tip": "Azure AD Connect = sync on-premises AD identities to Azure AD (hybrid identity). Azure AD DS = managed domain services in the cloud (LDAP, Kerberos in Azure). Application Proxy = remote access to on-premises web apps. For 'same credentials on-premises and in Azure' — Azure AD Connect."
+  },
+  {
+    "id": "AZ900-E03-030",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company signs up for Azure and deploys two Standard_D2s_v3 VMs\n- They run 24/7 for 30 days\n- The company is surprised by the bill because they expected fixed monthly pricing\n- They didn't understand that cloud pricing is based on resource consumption\n\nQuestion:\nWhich cloud concept explains why the bill is based on how long the VMs ran and their size?",
+    "choices": [
+      "Shared responsibility model",
+      "Pay-as-you-go / consumption-based pricing",
+      "Service Level Agreement (SLA)",
+      "Total Cost of Ownership (TCO)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The shared responsibility model defines security responsibilities between the customer and cloud provider. It has nothing to do with billing or pricing models.",
+      "This option is correct. Pay-as-you-go (consumption-based) pricing means you're billed based on what you consume — VM size × hours running = cost. Two D2s_v3 VMs running 24/7 for 30 days = 2 × 720 hours × per-hour rate. There's no flat monthly fee for IaaS resources; the bill directly reflects consumption. This is the fundamental cloud pricing model.",
+      "An SLA defines uptime guarantees and service credits for breaches. It doesn't explain how billing works.",
+      "TCO is a cost comparison methodology (on-premises vs cloud). It's an analysis tool, not a billing model."
+    ],
+    "tip": "Cloud pricing is consumption-based by default: you pay for what you use. VMs = per hour/minute. Storage = per GB stored + per transaction. Network = per GB egress. Understanding this model is critical for AZ-900. If the question asks 'why does my bill scale with usage?' — consumption-based pricing."
+  }
+]
