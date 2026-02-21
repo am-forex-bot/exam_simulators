@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AZ900-E05-011",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed a VM in Azure\n- The VM has a public IP address and is accessible from the internet\n- The security team wants to restrict access so only your company's office IP address (198.51.100.10) can connect via RDP (port 3389)\n- All other inbound traffic to port 3389 should be blocked\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Azure Firewall with a DNAT rule",
+      "A Network Security Group (NSG) inbound rule allowing port 3389 from 198.51.100.10 only",
+      "Azure DDoS Protection Standard",
+      "Azure Bastion"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Firewall with DNAT is a valid approach but more complex and expensive than an NSG for this simple IP-based filtering requirement. It's overkill for restricting RDP to a single IP.",
+      "This option is correct. An NSG inbound rule can allow TCP port 3389 (RDP) from source IP 198.51.100.10 and deny all other inbound RDP traffic. NSGs are the simplest, most cost-effective way to restrict traffic by IP address and port. Create a rule: Allow Inbound, Source: 198.51.100.10, Destination Port: 3389, Protocol: TCP. The default NSG rules already deny all other inbound internet traffic.",
+      "DDoS Protection defends against volumetric denial-of-service attacks. It doesn't restrict RDP access to specific IP addresses.",
+      "Azure Bastion provides secure RDP/SSH access to VMs without a public IP — a better security approach overall. However, the question asks specifically about restricting public IP access, and Bastion is a different architectural approach, not a simple firewall rule."
+    ],
+    "tip": "NSG = simple, cost-effective traffic filtering by IP/port/protocol. For 'allow specific IP to specific port' — NSG is the straightforward answer. Azure Bastion is a better long-term security strategy (no public IP needed), but for the exam question as asked — NSG."
+  },
+  {
+    "id": "AZ900-E05-012",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to securely connect to Azure VMs for management (RDP/SSH)\n- The security team does not want VMs to have public IP addresses\n- They want browser-based RDP/SSH access through the Azure portal\n- The solution must provide audit logging of all management sessions\n\nQuestion:\nWhich Azure service provides secure, browser-based VM management without public IPs?",
+    "choices": [
+      "Azure VPN Gateway (Point-to-Site)",
+      "Azure Bastion",
+      "Remote Desktop Connection via public IP",
+      "Azure AD Application Proxy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Point-to-Site VPN provides network connectivity to Azure, but it requires installing a VPN client and the VM still needs an IP for RDP. It doesn't provide browser-based access through the Azure portal.",
+      "This option is correct. Azure Bastion is a PaaS service that provides secure, browser-based RDP and SSH access to VMs directly from the Azure portal over TLS. VMs don't need public IP addresses — Bastion connects through the VM's private IP within the VNet. All sessions are logged for audit purposes. No VPN client or special software is needed on the user's machine.",
+      "RDP via public IP exposes port 3389 to the internet — a major security risk. The security team explicitly doesn't want public IPs on VMs.",
+      "Application Proxy provides remote access to web applications, not RDP/SSH management sessions to VMs."
+    ],
+    "tip": "Azure Bastion = secure RDP/SSH through the browser (no public IP, no VPN client, audit logging). It's Microsoft's recommended approach for VM management. If 'no public IP' + 'browser-based RDP/SSH' + 'secure management' — Azure Bastion."
+  },
+  {
+    "id": "AZ900-E05-013",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to deploy the same set of Azure resources to 3 different environments: Development, Staging, Production\n- The resources include: App Service, SQL Database, Redis Cache, and a Storage Account\n- The only differences between environments are: resource names (prefixed with dev/staging/prod), SKU sizes, and some configuration values\n- The deployment must be automated and repeatable\n\nQuestion:\nWhat is the BEST approach for parameterising these deployments?",
+    "choices": [
+      "Create 3 completely separate ARM/Bicep templates, one for each environment",
+      "Create 1 ARM/Bicep template with parameters for environment name, SKUs, and configuration values",
+      "Manually deploy through the Azure portal for each environment",
+      "Use Azure CLI commands saved in a text file"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Three separate templates means maintaining 3 copies of essentially the same code. Changes to the resource structure require updating all 3 templates. This violates DRY (Don't Repeat Yourself) principles and increases maintenance burden.",
+      "This option is correct. A single parameterised ARM/Bicep template with environment-specific parameter files is the best approach. The template defines WHAT to deploy; parameter files define HOW to configure each environment (dev.parameters.json, staging.parameters.json, prod.parameters.json). This is Infrastructure as Code best practice: one template, multiple parameter files, repeatable and consistent deployments.",
+      "Manual portal deployment is not automated, not repeatable, error-prone, and not auditable. It's the opposite of what's needed.",
+      "CLI commands saved in a text file are imperative (not declarative), not idempotent, and lack the parameterisation and validation that ARM/Bicep templates provide."
+    ],
+    "tip": "ARM/Bicep best practice: one template + separate parameter files per environment. Parameters handle environment-specific values (names, SKUs, configuration). Template handles resource definitions. This ensures consistency across environments while allowing configuration differences."
+  },
+  {
+    "id": "AZ900-E05-014",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company has an application that processes sensitive financial data\n- The application runs on Azure VMs within a Virtual Network\n- The company uses Azure SQL Database for data storage\n- They want to ensure that traffic between the VMs and SQL Database NEVER traverses the public internet\n- The SQL Database should not have any public endpoint\n\nQuestion:\nWhich networking approach ensures fully private connectivity to Azure SQL Database?",
+    "choices": [
+      "VNet Service Endpoints for Azure SQL",
+      "Azure Private Endpoint for Azure SQL Database",
+      "IP firewall rules on Azure SQL Database",
+      "Azure SQL Database public endpoint with encryption"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Service Endpoints optimise routing from VNet to SQL Database over the Azure backbone (traffic stays on Microsoft's network), but the SQL Database still has a public endpoint. The question says the database should NOT have any public endpoint.",
+      "This option is correct. Azure Private Endpoint creates a network interface with a private IP address in your VNet that maps to the Azure SQL Database. All traffic between VMs and the database flows through this private IP — never touching the public internet. You can then disable the public endpoint entirely, ensuring the database is accessible ONLY through the private endpoint. This is the most secure approach for private PaaS connectivity.",
+      "IP firewall rules restrict which public IP addresses can connect to the database's public endpoint. The public endpoint still exists — the question requires no public endpoint at all.",
+      "Encryption (TLS) protects data in transit but doesn't address the routing path. Traffic could still traverse public networks even if encrypted. The requirement is for the traffic to NEVER leave the private network."
+    ],
+    "tip": "Private Endpoint = private IP in YOUR VNet for Azure PaaS services. Allows you to disable the public endpoint entirely. Service Endpoint = optimised routing but public endpoint still exists. For 'no public endpoint' + 'fully private' — Private Endpoint."
+  },
+  {
+    "id": "AZ900-E05-015",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has deployed a web application that serves customers in the UK\n- The application runs in the UK South Azure region\n- The company wants to expand to serve customers in Australia\n- Australian users currently experience 300ms+ latency accessing the UK-hosted application\n\nQuestion:\nWhat should the company do to reduce latency for Australian users?",
+    "choices": [
+      "Upgrade to a larger VM size in UK South",
+      "Deploy a second instance of the application in an Azure region in Australia (e.g., Australia East)",
+      "Enable Azure DDoS Protection",
+      "Add more RAM to the existing VMs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A larger VM in UK South processes requests faster on the server side, but it cannot reduce the 300ms network latency caused by the physical distance between the UK and Australia. Latency is a distance/physics problem, not a compute problem.",
+      "This option is correct. Deploying the application in an Australian Azure region (e.g., Australia East in Sydney) places the compute and data closer to Australian users, dramatically reducing network latency from 300ms+ to ~20-30ms. Combined with Azure Traffic Manager or Azure Front Door to route Australian users to the Australian deployment, this solves the latency problem.",
+      "DDoS Protection defends against denial-of-service attacks. It has nothing to do with reducing latency for geographically distant users.",
+      "Adding RAM doesn't reduce network latency. The 300ms is caused by the speed of light across 15,000+ km of fibre optic cable — no amount of server resources can fix that."
+    ],
+    "tip": "Latency from geographic distance → deploy closer to users. Azure has 60+ regions worldwide. Use Traffic Manager (DNS routing) or Front Door (HTTP routing) to direct users to the nearest deployment. More VM power doesn't fix network latency."
+  },
+  {
+    "id": "AZ900-E05-016",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure DevOps for CI/CD\n- The development team pushes code to a Git repository\n- They want automated testing to run on every pull request\n- If tests pass, the code should automatically deploy to a staging environment\n- Manual approval is required before deploying to production\n\nQuestion:\nWhich Azure DevOps feature implements this CI/CD workflow?",
+    "choices": [
+      "Azure Boards (work items)",
+      "Azure Pipelines (build and release)",
+      "Azure Repos (source control)",
+      "Azure Artifacts (package management)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Boards tracks work items, user stories, and tasks. It's project management, not CI/CD automation.",
+      "This option is correct. Azure Pipelines provides both CI (Continuous Integration: automated builds and tests on pull requests) and CD (Continuous Deployment: automated deployment to staging and production). You define pipeline stages: Build → Test → Deploy to Staging (automatic) → Approval Gate → Deploy to Production (manual approval). Pipelines support YAML definitions and the visual designer.",
+      "Azure Repos hosts the Git repository. It stores the code that triggers pipelines, but it doesn't execute builds, tests, or deployments.",
+      "Azure Artifacts manages package feeds (NuGet, npm, Maven). It stores build outputs, not CI/CD workflows."
+    ],
+    "tip": "Azure DevOps services: Repos = code. Pipelines = CI/CD. Boards = project management. Artifacts = packages. Test Plans = testing. If 'automated build + test + deploy' — Pipelines."
+  },
+  {
+    "id": "AZ900-E05-017",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company's Cloud Centre of Excellence (CCoE) team defines governance standards\n- They create a set of policies:\n  1. All resources must have a 'CostCenter' tag\n  2. Only specific VM sizes are allowed\n  3. Resources can only be deployed in UK South and UK West\n  4. Public IP addresses must not be created\n- These policies must apply uniformly across all Azure subscriptions\n\nQuestion:\nWhich approach ensures these policies are applied consistently to ALL current and future subscriptions?",
+    "choices": [
+      "Assign policies to each subscription individually",
+      "Assign policies at the root management group",
+      "Email the policies to all subscription owners",
+      "Create an Azure Automation runbook to check compliance weekly"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Assigning to each subscription individually requires remembering to apply policies to every new subscription. If someone creates a new subscription and forgets, it's ungoverned. This doesn't scale.",
+      "This option is correct. Policies assigned at the root management group automatically apply to ALL subscriptions in the tenant — current AND future. When a new subscription is created, it inherits the root management group's policies without any manual action. This is the only approach that guarantees consistent, comprehensive governance across the entire Azure estate.",
+      "Emailing policies relies on human compliance — there's no enforcement mechanism. People can ignore emails. Governance requires technical enforcement, not verbal agreements.",
+      "A weekly runbook check would detect non-compliance after the fact, not prevent it. By the time the runbook runs, non-compliant resources already exist. Azure Policy with Deny effects prevents non-compliance in real-time."
+    ],
+    "tip": "Root management group + Azure Policy = universal governance. Assign once at the root, covers everything forever. This is the cornerstone of Azure governance architecture. Always use management group-level policy for organisation-wide rules."
+  },
+  {
+    "id": "AZ900-E05-018",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to run a Windows desktop application in the cloud\n- The application requires a graphical user interface (GUI)\n- Multiple users need to access the application simultaneously\n- Each user should have their own session with isolated data\n- The company wants to minimise the number of VMs needed\n\nQuestion:\nWhich Azure solution allows multiple users to share VMs while each having their own isolated session?",
+    "choices": [
+      "Azure Virtual Machines (one VM per user)",
+      "Azure Virtual Desktop with Windows 10/11 Enterprise multi-session",
+      "Azure App Service",
+      "Azure Container Instances"
+    ],
+    "answer": [1],
+    "explanations": [
+      "One VM per user provides isolation but maximises the number of VMs needed — the exact opposite of the requirement. This is the most expensive approach.",
+      "This option is correct. Azure Virtual Desktop (AVD) with Windows 10/11 Enterprise multi-session is an Azure-exclusive capability that allows multiple users to run isolated sessions on a single VM. Each user gets their own desktop session with separate data and applications, but they share the underlying VM compute resources. This dramatically reduces the number of VMs needed compared to one-VM-per-user approaches.",
+      "App Service hosts web applications, not Windows desktop applications with GUIs. It doesn't provide a Windows desktop experience.",
+      "Container Instances run containers, not GUI-based Windows desktop applications. Containers are typically headless (no graphical interface)."
+    ],
+    "tip": "Windows 10/11 multi-session is EXCLUSIVE to Azure (Azure Virtual Desktop). It doesn't exist in on-premises Windows. Multiple users share one VM, each with an isolated session. This is a key AVD differentiator and a cost-saving feature the exam tests."
+  },
+  {
+    "id": "AZ900-E05-019",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Azure resources using the Azure portal\n- A colleague asks: 'I prefer using the command line. Can I do everything through the command line that I can do in the Azure portal?'\n\nQuestion:\nWhich statement about Azure management tools is correct?",
+    "choices": [
+      "The Azure portal can do things that CLI and PowerShell cannot",
+      "Azure CLI and PowerShell can do things that the Azure portal cannot",
+      "All Azure management tools (portal, CLI, PowerShell, REST API) interact with the same Azure Resource Manager (ARM) API and provide equivalent capabilities",
+      "Azure CLI is only for Linux; PowerShell is only for Windows"
+    ],
+    "answer": [2],
+    "explanations": [
+      "The portal is a graphical interface to ARM — it doesn't have unique capabilities. Everything the portal does, it does through ARM API calls that CLI and PowerShell can also make.",
+      "CLI and PowerShell can automate and script operations more efficiently, but they don't have unique capabilities beyond what the portal offers. Both interact with the same ARM API.",
+      "This option is correct. The Azure portal, Azure CLI, Azure PowerShell, REST API, and Azure SDKs ALL interact with Azure Resource Manager (ARM) as the common management layer. Any operation available in one tool is available in all others, because they all make the same ARM API calls under the hood. The tools differ in user experience (GUI vs CLI vs code) but provide equivalent management capabilities.",
+      "Azure CLI is cross-platform (Windows, macOS, Linux). PowerShell is also cross-platform (PowerShell 7+ runs on Windows, macOS, and Linux). Neither is limited to one operating system."
+    ],
+    "tip": "All Azure management tools → ARM → Azure resources. Same API, same capabilities, different interfaces. Portal = visual. CLI = command line. PowerShell = scripting. REST API = programmatic. SDK = application integration. Choose based on your workflow preference."
+  },
+  {
+    "id": "AZ900-E05-020",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription\n- An administrator accidentally assigns the Owner role to an intern at the subscription level\n- The intern, unaware of the implications, deletes a production resource group\n- Management wants to prevent this from happening again\n\nQuestion:\nWhich combination of measures would BEST prevent this scenario?",
+    "choices": [
+      "Use Azure Monitor to alert when resources are deleted",
+      "Implement Privileged Identity Management (PIM) for elevated roles + resource locks on critical resources",
+      "Disable the Azure portal for all non-admin users",
+      "Use Azure Backup to restore deleted resources"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Monitor alerts detect deletion AFTER it happens. They're reactive, not preventive. The production resource group is already gone by the time the alert fires.",
+      "This option is correct. PIM prevents permanent standing privileged access — the intern would need to explicitly activate the Owner role (with justification and approval) for a limited time, instead of having it always-on. Resource locks (CanNotDelete) on critical production resource groups prevent deletion even by Owners, requiring a deliberate lock removal step first. Together: PIM prevents accidental privileged access, locks prevent accidental deletion.",
+      "Disabling the portal doesn't solve the problem — the intern could use CLI, PowerShell, or the API. It also blocks legitimate work. The issue is excessive permissions, not the tool used.",
+      "Backup enables recovery after deletion but doesn't prevent the deletion. Prevention (PIM + locks) is better than recovery (backup). Backup should be a complement, not the primary strategy."
+    ],
+    "tip": "Defence in depth for Azure governance: PIM (just-in-time privileged access) + resource locks (prevent deletion) + RBAC at narrowest scope (least privilege). These layers work together. PIM prevents standing Owner access; locks prevent accidental deletion even when privileged access is active."
+  },
+  {
+    "id": "AZ900-E05-021",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to build a chatbot that answers HR questions for employees\n- The chatbot must understand natural language questions\n- It should use the company's HR knowledge base (FAQs, policies, procedures) to answer questions\n- No machine learning expertise is available in the team\n\nQuestion:\nWhich Azure AI service helps build a question-answering chatbot from existing knowledge content?",
+    "choices": [
+      "Azure Machine Learning",
+      "Azure AI Language — Custom Question Answering (formerly QnA Maker)",
+      "Azure AI Computer Vision",
+      "Azure AI Anomaly Detector"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Machine Learning requires ML expertise to build custom models. The team has no ML expertise, and building a QA system from scratch is unnecessary when a pre-built service exists.",
+      "This option is correct. Azure AI Language's Custom Question Answering feature (formerly QnA Maker) lets you create a question-answering knowledge base from existing content — FAQ pages, documents, manuals. You upload your HR documents, the service extracts question-answer pairs, and you deploy it as a chatbot endpoint. No ML expertise needed. Combine with Azure Bot Service for a full chatbot experience.",
+      "Computer Vision analyses images and video. It has nothing to do with building chatbots or question-answering from text knowledge bases.",
+      "Anomaly Detector identifies unusual patterns in time-series data. It's not a chatbot or question-answering service."
+    ],
+    "tip": "Custom Question Answering (in Azure AI Language) = build a QA bot from existing documents. Bot Service = host and manage the chatbot. Azure OpenAI = advanced conversational AI with GPT models. For 'FAQ-style chatbot from existing content' — Custom Question Answering."
+  },
+  {
+    "id": "AZ900-E05-022",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company signs an Azure SLA for a single virtual machine with Premium SSD managed disks\n- The SLA guarantees 99.9% uptime\n- The company asks: 'How much downtime does this allow per month?'\n\nQuestion:\nApproximately how much downtime does a 99.9% monthly SLA allow?",
+    "choices": [
+      "About 43 minutes per month",
+      "About 4 minutes per month",
+      "About 8 hours per month",
+      "Zero downtime per month"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. 99.9% uptime means 0.1% downtime. A month has approximately 43,200 minutes (30 days × 24 hours × 60 minutes). 0.1% of 43,200 = 43.2 minutes of allowed downtime per month. This is approximately 8.76 hours per year.",
+      "4 minutes per month would correspond to approximately 99.99% SLA (four nines). The question states 99.9% (three nines), which allows about 10x more downtime.",
+      "8 hours per month would mean approximately 98.9% uptime — well below the 99.9% guarantee. This is significantly more downtime than the SLA allows.",
+      "No SLA guarantees zero downtime. Even 99.999% (five nines) allows about 26 seconds per month. Zero downtime is physically unachievable."
+    ],
+    "tip": "SLA downtime per month: 99% = ~7.3 hours. 99.9% = ~43 minutes. 99.95% = ~21 minutes. 99.99% = ~4.3 minutes. 99.999% = ~26 seconds. Memorise these for the exam — they're frequently tested."
+  },
+  {
+    "id": "AZ900-E05-023",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company wants to use Azure AI to analyse the sentiment of customer support emails\n- They need to determine if each email expresses positive, negative, or neutral sentiment\n- The solution should be a simple API call — no model training required\n\nQuestion:\nWhich Azure AI service provides sentiment analysis?",
+    "choices": [
+      "Azure AI Vision",
+      "Azure AI Language (Text Analytics — Sentiment Analysis)",
+      "Azure AI Speech",
+      "Azure AI Personalizer"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AI Vision analyses images and video — it doesn't process text for sentiment. Wrong modality entirely.",
+      "This option is correct. Azure AI Language (formerly Text Analytics) provides pre-built sentiment analysis via API. Send text to the API endpoint, and it returns a sentiment score (positive, negative, neutral, mixed) with confidence scores. No model training required — it's a pre-built cognitive service. It also supports key phrase extraction, language detection, named entity recognition, and more.",
+      "AI Speech handles speech-to-text and text-to-speech. It processes audio, not text sentiment.",
+      "AI Personalizer (now deprecated) provided content personalisation recommendations. It didn't analyse sentiment."
+    ],
+    "tip": "Azure AI Language = text analytics (sentiment, key phrases, entities, language detection, PII detection, summarisation). It's the pre-built service for understanding text. If the question mentions 'sentiment analysis' or 'text analytics' — Azure AI Language."
+  },
+  {
+    "id": "AZ900-E05-024",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription used by the development team\n- The team frequently creates resources for testing and forgets to delete them\n- Over 6 months, accumulated unused resources cost £15,000\n- Management wants a solution to automatically identify and clean up unused resources\n\nQuestion:\nWhich approach combines identification of unused resources with the ability to act on them?",
+    "choices": [
+      "Azure Advisor cost recommendations + Azure Automation runbooks for cleanup",
+      "Azure Monitor metrics only",
+      "Azure Activity Log only",
+      "Azure Pricing Calculator"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Azure Advisor identifies underutilised and unused resources (idle VMs, unattached disks, unused public IPs) with estimated savings. Azure Automation runbooks can be scripted to automatically clean up these resources (deallocate idle VMs, delete orphaned disks) on a schedule. Together: Advisor identifies the waste, Automation cleans it up. You can also use Azure Policy to automatically tag creation dates and set up expiry-based cleanup.",
+      "Monitor Metrics shows resource-level performance data (CPU, memory) but doesn't automatically identify unused resources or calculate cost savings. You'd need to manually analyse each resource.",
+      "Activity Log shows who created resources and when, but doesn't identify whether they're currently being used or calculate their cost impact.",
+      "Pricing Calculator estimates future costs. It doesn't analyse existing resources for waste or provide cleanup capabilities."
+    ],
+    "tip": "Waste reduction combo: Advisor (identify waste) + Automation (clean it up) + Policy (prevent it). For dev/test environments, also consider: auto-shutdown schedules for VMs, Azure DevTest Labs (automatic expiry), and budget alerts."
+  },
+  {
+    "id": "AZ900-E05-025",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Storage and needs to understand redundancy options for disaster recovery\n- The requirement is: if the entire UK South region becomes unavailable, data must be accessible from a secondary region\n- The secondary region data should be readable at all times, even when the primary is healthy\n\nQuestion:\nWhich storage redundancy option provides read access to the secondary region at all times?",
+    "choices": [
+      "Locally Redundant Storage (LRS)",
+      "Zone-Redundant Storage (ZRS)",
+      "Geo-Redundant Storage (GRS)",
+      "Read-Access Geo-Redundant Storage (RA-GRS)"
+    ],
+    "answer": [3],
+    "explanations": [
+      "LRS stores 3 copies within a single data centre. If the entire region fails, data is inaccessible. No cross-region replication.",
+      "ZRS stores 3 copies across availability zones within ONE region. Still doesn't help if the entire region goes down — no secondary region.",
+      "GRS replicates data to a secondary region (6 total copies: 3 in primary, 3 in secondary). However, the secondary region data is NOT readable until Microsoft initiates a failover. You can't read from the secondary region during normal operations.",
+      "This option is correct. RA-GRS (Read-Access Geo-Redundant Storage) replicates data to a secondary region AND makes the secondary copy readable at all times — even when the primary region is healthy. Applications can read from the secondary endpoint (appending -secondary to the storage account name). This provides continuous read access regardless of the primary region's status."
+    ],
+    "tip": "GRS vs RA-GRS: both replicate to secondary region. GRS = secondary is read-only AFTER failover. RA-GRS = secondary is ALWAYS readable. If 'read access to secondary at all times' — RA-GRS. The 'RA' stands for 'Read Access.'"
+  }
+]

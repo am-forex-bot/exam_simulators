@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AZ900-E05-026",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Cloud Shell for administrative tasks\n- An administrator asks: 'What is Azure Cloud Shell, and do I need to install anything to use it?'\n\nQuestion:\nWhich statement about Azure Cloud Shell is correct?",
+    "choices": [
+      "Cloud Shell is a downloadable application for Windows and macOS",
+      "Cloud Shell is a browser-based shell environment built into the Azure portal — no installation needed",
+      "Cloud Shell can only run Azure CLI commands, not PowerShell",
+      "Cloud Shell requires a dedicated Azure VM to run"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud Shell is NOT a downloadable application. It runs in the browser. Azure CLI and Azure PowerShell are the downloadable tools; Cloud Shell is browser-based.",
+      "This option is correct. Azure Cloud Shell is a browser-based command-line environment accessible directly from the Azure portal (or shell.azure.com). It requires no local installation — just a web browser. It comes pre-configured with Azure CLI, Azure PowerShell, Terraform, kubectl, and other tools. It persists files in an Azure Storage account (cloud drive) and runs in a container on Azure infrastructure.",
+      "Cloud Shell supports BOTH Azure CLI (Bash) and Azure PowerShell environments. You can switch between them. It also includes Python, Node.js, .NET, and other runtimes.",
+      "Cloud Shell doesn't require a dedicated VM. It runs in a shared container environment managed by Microsoft. The only requirement is an Azure Storage account for file persistence (5 GB cloud drive)."
+    ],
+    "tip": "Cloud Shell = browser-based, no installation, pre-configured with CLI + PowerShell + more tools. Requires only a storage account for persistence. Accessible from: Azure portal, shell.azure.com, VS Code, Windows Terminal, Azure mobile app."
+  },
+  {
+    "id": "AZ900-E05-027",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company is building a microservices application\n- They need a container registry to store their Docker images\n- The registry must be private (not publicly accessible)\n- Images should be scanned for vulnerabilities before deployment\n- The registry should integrate with Azure Kubernetes Service for deployments\n\nQuestion:\nWhich Azure service provides a managed container registry?",
+    "choices": [
+      "Docker Hub",
+      "Azure Container Registry (ACR)",
+      "Azure Blob Storage",
+      "Azure Artifacts"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Docker Hub is a public container registry (not Azure-native). While it has private repositories, it doesn't integrate as seamlessly with AKS, Azure AD, and Azure security features as Azure Container Registry does.",
+      "This option is correct. Azure Container Registry (ACR) is a managed, private Docker registry service. It stores and manages container images, supports vulnerability scanning (via Microsoft Defender for Containers), integrates natively with AKS (automatic image pull without credentials using managed identity), and is secured with Azure AD authentication. It supports geo-replication for global deployments.",
+      "Blob Storage stores unstructured data, not Docker container images. While technically you could store image tarballs, Blob Storage doesn't understand the Docker registry protocol or provide image management capabilities.",
+      "Azure Artifacts manages package feeds (NuGet, npm, Maven, Python), not Docker container images. It's part of Azure DevOps for dependency management."
+    ],
+    "tip": "Azure Container Registry = private Docker registry (store images, vulnerability scanning, AKS integration, geo-replication). If 'container registry' or 'store Docker images in Azure' — ACR."
+  },
+  {
+    "id": "AZ900-E05-028",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company uses Azure Storage for their application data\n- The storage account is configured with Geo-Redundant Storage (GRS)\n- A flood destroys the primary Azure data centre in UK South\n\nQuestion:\nWhat happens to the data in the storage account?",
+    "choices": [
+      "All data is permanently lost",
+      "Data is available from the secondary region (UK West) after Microsoft initiates failover",
+      "Data is automatically available from the secondary region immediately",
+      "Data must be restored from the most recent backup"
+    ],
+    "answer": [1],
+    "explanations": [
+      "With GRS, data is replicated to a secondary region. Even if the primary data centre is destroyed, copies exist in the secondary region. Data is NOT lost.",
+      "This option is correct. GRS asynchronously replicates data to a paired secondary region (UK South → UK West). If a disaster destroys the primary region, Microsoft can initiate a failover to the secondary region. After failover, the storage account's endpoints point to the secondary region and data becomes accessible. Note: with standard GRS (not RA-GRS), the secondary data is NOT readable until Microsoft initiates the failover.",
+      "With standard GRS, the secondary region data is NOT automatically available. Microsoft must initiate a storage account failover first. Only RA-GRS provides read access to the secondary region at all times without waiting for failover.",
+      "GRS doesn't rely on backups — it uses continuous asynchronous replication. The secondary region has a near-complete copy of the data (some recent writes may be lost due to asynchronous replication)."
+    ],
+    "tip": "GRS = data exists in secondary region BUT requires Microsoft-initiated failover to become accessible. RA-GRS = data in secondary region AND always readable. After failover, some data loss is possible (RPO is typically minutes due to asynchronous replication). The exam tests the failover mechanism."
+  },
+  {
+    "id": "AZ900-E05-029",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure Cognitive Services for an AI-powered application\n- They want to use Azure OpenAI Service to integrate GPT models into their customer support chatbot\n- The chatbot must generate natural language responses to customer questions\n\nQuestion:\nWhat does Azure OpenAI Service provide?",
+    "choices": [
+      "Pre-built computer vision models for image recognition",
+      "Access to OpenAI language models (GPT, DALL-E, Codex) through Azure's enterprise infrastructure",
+      "A managed Kubernetes cluster for running AI workloads",
+      "Automated machine learning model training"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Computer vision models are part of Azure AI Vision, not Azure OpenAI Service. Different service, different capability.",
+      "This option is correct. Azure OpenAI Service provides access to OpenAI's powerful language models (GPT-4, GPT-4o, DALL-E for images, Whisper for speech) through Azure's enterprise infrastructure. This means: Azure's security, compliance certifications, regional availability, private networking, RBAC, and managed identity support — combined with OpenAI's model capabilities. It's the enterprise-grade way to use GPT models.",
+      "A managed Kubernetes cluster is Azure Kubernetes Service (AKS). Azure OpenAI is a model-hosting API service, not a container orchestration platform.",
+      "Automated ML model training is part of Azure Machine Learning. Azure OpenAI provides access to pre-trained models — you don't train them yourself."
+    ],
+    "tip": "Azure OpenAI = OpenAI models (GPT, DALL-E) hosted on Azure enterprise infrastructure (security, compliance, networking). Key benefit: enterprise governance + AI capability. If the question mentions GPT, generative AI, or natural language generation on Azure — Azure OpenAI Service."
+  },
+  {
+    "id": "AZ900-E05-030",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Azure resources and wants to follow the Well-Architected Framework\n- The framework has five pillars for evaluating workload quality\n- The team needs to assess their current workload against these pillars\n\nQuestion:\nWhat are the five pillars of the Azure Well-Architected Framework?",
+    "choices": [
+      "Compute, Storage, Networking, Security, Identity",
+      "Cost Optimisation, Reliability, Security, Operational Excellence, Performance Efficiency",
+      "Plan, Build, Test, Deploy, Monitor",
+      "Infrastructure, Platform, Software, Functions, Containers"
+    ],
+    "answer": [1],
+    "explanations": [
+      "These are Azure resource categories, not the Well-Architected Framework pillars.",
+      "This option is correct. The Azure Well-Architected Framework (WAF) has five pillars: Cost Optimisation (manage costs efficiently), Reliability (resilience and recovery), Security (protect against threats), Operational Excellence (operational processes and monitoring), Performance Efficiency (meet demand efficiently). Microsoft provides assessments, documentation, and tooling for each pillar to help teams evaluate and improve their Azure workloads.",
+      "These are software development lifecycle stages, not WAF pillars.",
+      "These are Azure service models/categories, not WAF pillars."
+    ],
+    "tip": "WAF pillars (memorise): CROPS — Cost optimisation, Reliability, Operational excellence, Performance efficiency, Security. Or: 'Can Really Old People Sing' — Cost, Reliability, Operational Excellence, Performance, Security. The exam tests your knowledge of all five pillars."
+  },
+  {
+    "id": "AZ900-E05-031",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A media company needs to transcode video files from one format to another\n- The transcoding process is CPU-intensive and takes 30-60 minutes per video\n- They receive batches of 500+ videos to process during off-peak hours\n- Between batches, no compute is needed\n- They want to minimise costs by using the cheapest available compute\n\nQuestion:\nWhich Azure compute option is MOST cost-effective for this workload?",
+    "choices": [
+      "Azure App Service (Premium plan)",
+      "Azure Functions (Consumption plan)",
+      "Azure Batch with low-priority VMs",
+      "Always-on Azure VMs (Standard D-series)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "App Service Premium plan runs continuously and is designed for web apps, not batch video processing. You'd pay 24/7 for a service designed for a different purpose.",
+      "Functions Consumption plan has a 10-minute execution timeout. A 30-60 minute transcoding job would timeout and fail. Functions isn't designed for long-running, CPU-intensive batch jobs.",
+      "This option is correct. Azure Batch is purpose-built for large-scale batch processing. It creates a pool of VMs to process the video batch, runs all 500+ jobs in parallel across the pool, and tears down the VMs when done. Low-priority VMs provide up to 80% discount on compute costs. For CPU-intensive, parallelisable batch jobs with flexible timing — Azure Batch with low-priority VMs is the most cost-effective option.",
+      "Always-on VMs would run 24/7 but the workload only runs during off-peak batch windows. You'd pay for idle time between batches, wasting money."
+    ],
+    "tip": "Azure Batch = massive parallel batch processing. Low-priority VMs = up to 80% cheaper (but evictable). For 'CPU-intensive batch jobs' + 'minimise cost' + 'can tolerate interruption' — Batch with low-priority VMs."
+  },
+  {
+    "id": "AZ900-E05-032",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed an Azure SQL Database\n- The database has automatic backups enabled (default behaviour)\n- A developer accidentally drops a critical table on Tuesday at 2 PM\n- The team discovers the mistake on Tuesday at 4 PM\n\nQuestion:\nHow can you recover the dropped table?",
+    "choices": [
+      "The table is permanently lost — Azure SQL doesn't support point-in-time recovery",
+      "Restore the database to a point-in-time before the table was dropped (e.g., 1:59 PM on Tuesday)",
+      "Contact Microsoft Support to recover the table from their internal backups",
+      "The table can only be recovered if you manually created a backup before it was dropped"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure SQL Database absolutely supports point-in-time restore. Automatic backups are enabled by default with no additional configuration needed.",
+      "This option is correct. Azure SQL Database performs automatic backups continuously. Point-in-time restore (PITR) lets you restore the database to any point within the retention period (7-35 days depending on tier). Restore to 1:59 PM Tuesday — one minute before the table was dropped — and the table will exist in the restored database. The restore creates a NEW database alongside the original, so you can extract the dropped table's data.",
+      "You don't need to contact Microsoft Support. Point-in-time restore is a self-service operation available through the Azure portal, CLI, or PowerShell.",
+      "Azure SQL Database creates automatic backups — you don't need to manually create them. Full backups occur weekly, differential backups every 12-24 hours, and transaction log backups every 5-10 minutes."
+    ],
+    "tip": "Azure SQL Database automatic backups: full (weekly), differential (12-24 hours), transaction log (5-10 minutes). Point-in-time restore to any second within the retention period. This is a key PaaS benefit — no manual backup configuration needed. Retention: Basic = 7 days, Standard/Premium = 35 days."
+  },
+  {
+    "id": "AZ900-E05-033",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has deployed Azure resources in the West Europe region\n- Azure experiences a region-wide outage in West Europe\n- The company's application is unavailable during the outage\n- The company had only deployed resources in a single region\n\nQuestion:\nWhat should the company have implemented to maintain availability during a region-wide outage?",
+    "choices": [
+      "Availability Zones within West Europe",
+      "Multi-region deployment with failover to a secondary region",
+      "A larger VM size in West Europe",
+      "Azure Premium Support"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Availability Zones protect against data centre failures WITHIN a region. If the entire region experiences an outage, all zones in that region may be affected. Zones are not sufficient protection against region-wide failures.",
+      "This option is correct. Multi-region deployment replicates the application and data to a secondary Azure region (e.g., North Europe). If West Europe experiences a region-wide outage, the application fails over to North Europe and continues serving users. This requires: deploying resources in both regions, configuring data replication (Azure Site Recovery, geo-redundant storage), and using Azure Traffic Manager or Front Door for automatic failover routing.",
+      "A larger VM doesn't help during a region-wide outage. The entire region is unavailable — no VM in that region can run regardless of size.",
+      "Premium Support provides faster response times from Microsoft's support team, but it doesn't prevent or mitigate outages. Support helps resolve issues; multi-region deployment prevents them from affecting your users."
+    ],
+    "tip": "Resilience hierarchy: Availability Sets (rack/update failure) → Availability Zones (data centre failure) → Multi-region (region failure). Each level protects against a broader scope of failure. For region-wide protection — multi-region deployment is required."
+  },
+  {
+    "id": "AZ900-E05-034",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses PowerShell to manage Azure resources\n- The IT team needs to automate the following tasks:\n  - Create a new resource group\n  - Deploy a VM into that resource group\n  - Configure a network security group\n  - All commands should use Azure PowerShell modules\n\nQuestion:\nWhich PowerShell module provides Azure management cmdlets?",
+    "choices": [
+      "Az module (e.g., Az.Compute, Az.Network, Az.Resources)",
+      "AzureRM module (legacy, deprecated)",
+      "Azure module (classic, deprecated)",
+      "System.Azure module"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. The Az PowerShell module is the current, supported module for managing Azure resources. It replaces the deprecated AzureRM module. It includes sub-modules like Az.Compute (VMs), Az.Network (networking), Az.Resources (resource groups), and Az.Storage (storage). Commands follow the pattern: New-AzResourceGroup, New-AzVM, New-AzNetworkSecurityGroup.",
+      "AzureRM was the previous-generation module that has been deprecated since December 2023. Microsoft recommends migrating all scripts to the Az module. While it still works, it no longer receives updates.",
+      "The Azure module is the classic (ASM/RDFE) module — even older than AzureRM. It only works with Azure classic deployments, not Azure Resource Manager. Completely outdated.",
+      "System.Azure is not a real PowerShell module. The correct module is Az."
+    ],
+    "tip": "Az module = current Azure PowerShell. AzureRM = deprecated (2023). Azure = classic/retired. All new development should use the Az module. Cmdlet pattern: Verb-Az[Service][Resource] (e.g., New-AzVM, Get-AzStorageAccount, Remove-AzResourceGroup)."
+  },
+  {
+    "id": "AZ900-E05-035",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- A company needs to store application configuration values and feature flags\n- Multiple microservices need to read the same configuration\n- When configuration changes, all services should pick up the change without redeployment\n- The solution should support labelling configurations for different environments (dev, staging, prod)\n\nQuestion:\nWhich Azure service provides centralised application configuration management?",
+    "choices": [
+      "Azure Key Vault",
+      "Azure App Configuration",
+      "Azure Blob Storage (config files)",
+      "Environment variables on each service"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Key Vault stores secrets, keys, and certificates — sensitive material that must be encrypted. Application configuration (feature flags, settings, connection strings that aren't secrets) doesn't need the security overhead of Key Vault. Key Vault complements App Configuration; it doesn't replace it.",
+      "This option is correct. Azure App Configuration is a managed service for centralising application settings and feature flags. Multiple services read from the same configuration store, changes propagate dynamically without redeployment (when using the App Configuration SDK with refresh), and labels allow environment-specific configurations (dev/staging/prod) within the same store. It integrates with App Service, Functions, Kubernetes, and any .NET/Java/Python/JavaScript application.",
+      "Storing config files in Blob Storage is a manual approach. Services would need custom code to read, parse, and poll for changes. No built-in support for feature flags, labels, or dynamic refresh. App Configuration is purpose-built for this.",
+      "Environment variables on each service are the simplest approach but don't provide centralisation. Changing a value requires updating every service individually and redeploying. Doesn't scale for multiple microservices."
+    ],
+    "tip": "App Configuration = centralised settings and feature flags (dynamic, labelled, integrated). Key Vault = secrets, keys, certificates (encrypted, sensitive). Use App Configuration for non-sensitive config; reference Key Vault from App Configuration for secrets."
+  },
+  {
+    "id": "AZ900-E05-036",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has deployed an application that consists of three components:\n  - Frontend web server\n  - Backend API server\n  - Database\n- Each component is deployed as a separate Azure service\n- The company wants to ensure that a failure in one component doesn't crash the entire application\n\nQuestion:\nWhich cloud architecture principle helps isolate failures between components?",
+    "choices": [
+      "Tight coupling",
+      "Loose coupling / decoupled architecture",
+      "Monolithic deployment",
+      "Synchronous communication only"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Tight coupling means components are heavily dependent on each other. If one fails, the others fail too. This is the OPPOSITE of failure isolation.",
+      "This option is correct. Loose coupling (decoupled architecture) means components communicate through well-defined interfaces (APIs, message queues) with minimal dependencies. If the backend API goes down, the frontend can show a friendly error message instead of crashing. If the database is slow, message queues buffer requests instead of cascading failures. Each component can fail, recover, and scale independently.",
+      "Monolithic deployment means all components are deployed as a single unit. A failure in one part can bring down the entire application. Opposite of isolation.",
+      "Synchronous communication only means every call must wait for a response. If one service is slow, all callers slow down (cascading). Asynchronous communication (queues, events) provides better failure isolation."
+    ],
+    "tip": "Loose coupling = failure isolation + independent scaling + independent deployment. Achieved through: APIs, message queues, event-driven architecture. This is a fundamental cloud design principle. If 'failure in one component shouldn't affect others' — loose coupling."
+  },
+  {
+    "id": "AZ900-E05-037",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to try Azure before committing to a paid subscription\n- They have no existing Azure account\n- The IT director wants to explore Azure services, run some test deployments, and evaluate costs\n\nQuestion:\nWhat options does Azure offer for trying the platform at no initial cost?",
+    "choices": [
+      "Azure requires a minimum 1-year paid commitment before any access",
+      "Azure free account: $200 credit for 30 days, 12 months of free services, and 55+ always-free services",
+      "Azure provides unlimited free access to all services",
+      "Azure offers a 7-day trial with no credits"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure does NOT require a paid commitment. Anyone can create a free account to explore the platform.",
+      "This option is correct. The Azure free account includes: (1) $200 credit to spend on any Azure service for the first 30 days, (2) 12 months of free access to popular services (B1s VMs, 5 GB Blob Storage, Azure SQL Database with 250 GB, etc.), and (3) 55+ services that are always free (Functions with 1M requests/month, Azure DevOps with 5 users, Azure Cosmos DB with 1000 RU/s, etc.). A credit card is required for identity verification but is not charged during the free period.",
+      "Azure does NOT provide unlimited free access. The $200 credit expires after 30 days, and the free-tier services have usage limits. Usage beyond free limits is charged.",
+      "The free trial is 30 days with $200 credit, plus 12 months of free services — significantly more generous than a 7-day trial."
+    ],
+    "tip": "Azure free account: $200 credit (30 days) + 12 months free services + 55+ always-free. After 30 days, you switch to pay-as-you-go but free services continue. Credit card required but not charged. This is a common AZ-900 question."
+  },
+  {
+    "id": "AZ900-E05-038",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to build a data pipeline that:\n  1. Ingests real-time clickstream data from a website (millions of events/hour)\n  2. Processes the data to identify user behaviour patterns\n  3. Stores results in a data warehouse for business analysis\n  4. Visualises insights in interactive dashboards\n\nQuestion:\nWhich combination of Azure services addresses ALL four requirements?",
+    "choices": [
+      "Azure Queue Storage → Azure Functions → Azure SQL Database → Excel",
+      "Azure Event Hubs → Azure Stream Analytics → Azure Synapse Analytics → Power BI",
+      "Azure Blob Storage → Azure Data Factory → Azure Cosmos DB → Azure Monitor",
+      "Azure Service Bus → Azure Logic Apps → Azure Table Storage → Azure Advisor"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Queue Storage isn't designed for millions of events per hour of clickstream data. Azure SQL Database isn't a data warehouse. Excel isn't an interactive cloud dashboard solution.",
+      "This option is correct. Event Hubs ingests millions of events per second (clickstream data). Stream Analytics processes the stream in real-time to identify patterns. Synapse Analytics stores processed results in a data warehouse for analysis. Power BI creates interactive dashboards for business users. This is a standard Azure real-time analytics pipeline.",
+      "Blob Storage is for file storage, not real-time event ingestion. Cosmos DB is a NoSQL database, not a data warehouse. Azure Monitor provides infrastructure monitoring, not business analytics dashboards.",
+      "Service Bus is for enterprise messaging (not high-throughput clickstream). Logic Apps is for workflow orchestration. Table Storage is NoSQL key-value. Advisor provides recommendations. None of these match the requirements."
+    ],
+    "tip": "Standard real-time analytics pipeline: Event Hubs (ingest) → Stream Analytics (process) → Synapse Analytics (warehouse) → Power BI (visualise). This pattern appears frequently on AZ-900. Memorise the data flow: Ingest → Process → Store → Visualise."
+  },
+  {
+    "id": "AZ900-E05-039",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Azure resources across multiple subscriptions\n- The IT team wants to deploy and manage resources using an interactive scripting environment\n- They prefer a command-line tool that uses Bash syntax\n- The tool must work on Windows, macOS, and Linux\n\nQuestion:\nWhich Azure management tool should the IT team use?",
+    "choices": [
+      "Azure PowerShell",
+      "Azure CLI",
+      "Azure Portal",
+      "Azure Resource Manager Templates"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure PowerShell uses PowerShell syntax (Verb-Noun cmdlets), not Bash syntax. While it's cross-platform, the team prefers Bash syntax.",
+      "This option is correct. Azure CLI uses Bash-style syntax (az group create, az vm list) and runs on Windows, macOS, and Linux. It's designed for users who prefer Bash/shell scripting over PowerShell cmdlets. Commands are structured as 'az [group] [command] [parameters]'. It can be used interactively or in scripts and interacts with Azure Resource Manager for all management operations.",
+      "The Azure Portal is a graphical web interface, not a command-line tool. It doesn't use Bash syntax or provide an interactive scripting environment.",
+      "ARM Templates are declarative JSON/Bicep files for defining infrastructure as code. They're not interactive command-line tools — they're template files that you deploy."
+    ],
+    "tip": "Azure CLI = Bash syntax, cross-platform, command-line (az commands). Azure PowerShell = PowerShell syntax, cross-platform, cmdlets (Verb-AzNoun). Both do the same things via ARM. Choose based on syntax preference. If the question says 'Bash' — Azure CLI."
+  },
+  {
+    "id": "AZ900-E05-040",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has implemented Azure AD Multi-Factor Authentication\n- The security team wants to understand the three categories of MFA factors\n- They need to ensure their MFA implementation uses at least two different factor categories\n\nQuestion:\nWhat are the three MFA factor categories?",
+    "choices": [
+      "Username, Password, Email",
+      "Something you know, Something you have, Something you are",
+      "Azure AD, Active Directory, LDAP",
+      "Encryption, Authentication, Authorisation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Username, password, and email are all examples of 'something you know' — they're the same factor category. True MFA requires factors from DIFFERENT categories.",
+      "This option is correct. The three MFA factor categories are: Something you know (password, PIN, security questions), Something you have (phone, hardware token, smart card, FIDO2 key), Something you are (fingerprint, facial recognition, iris scan — biometrics). MFA requires at least two factors from DIFFERENT categories. For example: password (know) + phone authenticator app (have) = true MFA.",
+      "These are identity protocols/services, not authentication factor categories.",
+      "These are security concepts, not MFA factor categories. Encryption protects data; authentication verifies identity; authorisation grants access."
+    ],
+    "tip": "MFA factors: Know (password, PIN) + Have (phone, token, key) + Are (biometrics). True MFA = factors from 2+ different categories. Password + security question = NOT MFA (both are 'know'). Password + fingerprint = MFA ('know' + 'are')."
+  }
+]

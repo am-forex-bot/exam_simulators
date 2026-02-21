@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E05-001",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A university research team runs intensive computational simulations\n- Each simulation requires 1,000 CPU cores for 2 hours\n- Simulations run 3 times per week\n- Between simulations, zero compute resources are needed\n- The university cannot afford to buy and maintain a 1,000-core cluster\n\nQuestion:\nWhich cloud computing benefit makes this research workload economically viable?",
+    "choices": [
+      "High availability",
+      "Pay-per-use pricing combined with on-demand provisioning",
+      "Data encryption at rest",
+      "Global reach"
+    ],
+    "answer": [1],
+    "explanations": [
+      "High availability ensures systems stay running during failures. The research team's challenge is cost and resource availability, not uptime during failures.",
+      "This option is correct. Pay-per-use means the university only pays for 1,000 cores × 2 hours × 3 times per week = 6,000 core-hours/week, instead of owning and maintaining a 1,000-core cluster 24/7 (168,000 core-hours/week). On-demand provisioning means they can spin up 1,000 cores in minutes when needed and release them immediately after. They pay for ~3.6% of what permanent ownership would cost.",
+      "Data encryption is a security feature. It doesn't address the cost or availability challenge of running periodic high-compute workloads.",
+      "Global reach (deploying across regions) isn't relevant to a research team running simulations from one location."
+    ],
+    "tip": "Cloud is transformative for burst compute workloads — scenarios where massive capacity is needed briefly and intermittently. The combination of on-demand provisioning + pay-per-use makes workloads viable that would be prohibitively expensive to own."
+  },
+  {
+    "id": "AZ900-E05-002",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company currently manages its own email server (Exchange Server on-premises)\n- The server requires: hardware replacements every 4 years, monthly security patches, annual software licence renewals, a dedicated IT admin for maintenance, and a UPS for power continuity\n- The company considers switching to Microsoft 365 Exchange Online\n\nQuestion:\nWhich of these responsibilities would be ELIMINATED for the company after moving to Exchange Online (SaaS)?",
+    "choices": [
+      "Managing user mailboxes and email policies",
+      "Hardware replacement, OS patching, and software licence renewals for the email server",
+      "Ensuring employees use strong passwords",
+      "Complying with data protection regulations for email content"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Even with SaaS, the company still manages user mailboxes (creating, configuring, decommissioning) and email policies (retention, transport rules). These are administrative tasks that don't go away with SaaS.",
+      "This option is correct. In SaaS, Microsoft handles ALL infrastructure: hardware, operating system patching, software updates, power/cooling, and licensing for the platform. The company no longer buys server hardware, patches Exchange Server, or manages UPS systems for the email infrastructure. These operational burdens are entirely Microsoft's responsibility.",
+      "User account security (strong passwords, MFA) remains the customer's responsibility in all cloud models. Microsoft provides the tools; the customer enforces the policies.",
+      "Data protection and regulatory compliance for email CONTENT is always the customer's responsibility. Moving to SaaS doesn't transfer your GDPR or HIPAA obligations to Microsoft."
+    ],
+    "tip": "SaaS eliminates: hardware, OS patching, software updates, power/cooling, physical security. SaaS retains for customer: user management, data governance, compliance, access policies. If the question asks what's eliminated by SaaS — infrastructure and platform management."
+  },
+  {
+    "id": "AZ900-E05-003",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to implement a hub-and-spoke network topology in Azure\n- The hub VNet contains shared services: Azure Firewall, VPN Gateway, and a DNS server\n- Three spoke VNets each contain different application workloads\n- All spoke VNets need to communicate through the hub for centralised security inspection\n\nQuestion:\nHow should you connect the spoke VNets to the hub VNet?",
+    "choices": [
+      "VNet Peering from each spoke to the hub VNet",
+      "Site-to-Site VPN between each spoke and the hub",
+      "ExpressRoute between each spoke and the hub",
+      "Public IP addresses on all resources"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. VNet Peering connects each spoke VNet to the hub VNet over Azure's backbone network with low latency and high bandwidth. The hub VNet's Azure Firewall inspects traffic between spokes and to/from the internet. UDRs (User-Defined Routes) in each spoke force traffic through the hub's firewall. This is the standard hub-and-spoke topology recommended by Microsoft.",
+      "Site-to-Site VPN between Azure VNets is unnecessary when VNet Peering is available. VPN adds encryption overhead and complexity within Azure, where peering already provides private, backbone-routed traffic.",
+      "ExpressRoute is for connecting on-premises networks to Azure, not for connecting Azure VNets to each other within the cloud. VNet Peering is the correct VNet-to-VNet mechanism.",
+      "Public IPs would route traffic over the internet — the opposite of a secure, private hub-and-spoke topology. This would bypass the centralised firewall entirely."
+    ],
+    "tip": "Hub-and-spoke topology: hub VNet (shared services) + spoke VNets (workloads) connected via VNet Peering. UDRs force spoke traffic through the hub's firewall. This is Azure's standard network architecture for centralised security and shared services."
+  },
+  {
+    "id": "AZ900-E05-004",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to deploy a Linux-based web server in Azure\n- The server must run a specific version of CentOS with custom kernel modules\n- The application requires root-level OS access for configuration\n- The team needs full control over firewall rules at the OS level (iptables)\n\nQuestion:\nWhich Azure compute service provides this level of OS control?",
+    "choices": [
+      "Azure App Service (Linux)",
+      "Azure Container Instances",
+      "Azure Virtual Machines",
+      "Azure Functions (Linux)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "App Service (Linux) provides a managed Linux environment for web apps, but you don't have root access, can't install custom kernel modules, and can't configure iptables. The OS is managed by Microsoft.",
+      "Container Instances run containers, not full OS instances. You can't install custom kernel modules or configure iptables within a container. Containers share the host kernel.",
+      "This option is correct. Azure Virtual Machines provide full control over the operating system — root access, custom kernel modules, iptables configuration, specific OS versions (including CentOS), and any other OS-level customisation. VMs are IaaS — you manage the entire OS stack. This is the only Azure compute option that meets all the stated requirements.",
+      "Azure Functions provides serverless code execution. You have zero OS access — no root, no kernel modules, no firewall configuration. It's the opposite of what's needed."
+    ],
+    "tip": "Need full OS control (root access, kernel modules, custom firewall rules, specific OS versions)? → Azure VM (IaaS). Need managed platform (just deploy code)? → App Service (PaaS). Need serverless (just run functions)? → Functions. The more control you need, the more you manage."
+  },
+  {
+    "id": "AZ900-E05-005",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has 5 IT staff who spend 60% of their time maintaining on-premises infrastructure\n- Tasks include: replacing failed hardware, patching operating systems, managing backups, monitoring server health, and renewing software licences\n- By moving to Azure PaaS and SaaS services, the company wants to free IT staff to work on business-enabling projects\n\nQuestion:\nWhich cloud benefit describes the reduction of IT operational burden?",
+    "choices": [
+      "Cost reduction",
+      "Operational efficiency / reduced management overhead",
+      "Scalability",
+      "High availability"
+    ],
+    "answer": [1],
+    "explanations": [
+      "While cloud may reduce costs, the scenario specifically describes freeing up staff time from infrastructure maintenance to work on business projects. The primary benefit here is operational efficiency, not raw cost reduction.",
+      "This option is correct. Moving to PaaS and SaaS transfers infrastructure management responsibilities (hardware, OS patching, backups, monitoring, licensing) to Microsoft. IT staff are freed from routine maintenance tasks and can focus on innovation, application development, and business-enabling projects. This operational efficiency gain is one of the most impactful cloud benefits for organisations with small IT teams.",
+      "Scalability is about handling growth in demand. The scenario describes reducing operational workload, not scaling resources.",
+      "High availability is about uptime and redundancy. While PaaS/SaaS provide built-in HA, the scenario focuses on staff time and operational burden."
+    ],
+    "tip": "Cloud's operational benefit: offload infrastructure management to the provider, free your team for innovation. This is especially valuable for small IT teams where staff time is the scarcest resource. PaaS and SaaS provide the biggest operational efficiency gains."
+  },
+  {
+    "id": "AZ900-E05-006",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Azure and needs to understand billing boundaries\n- They currently have one Azure subscription\n- The finance team wants to separate billing for Production and Development environments\n- They also want to set different spending limits for each environment\n\nQuestion:\nWhat is the recommended way to separate billing for Production and Development?",
+    "choices": [
+      "Use resource groups named 'Production' and 'Development' within one subscription",
+      "Create separate Azure subscriptions for Production and Development",
+      "Use Azure Tags for billing separation within one subscription",
+      "Create separate Azure AD tenants"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Resource groups provide logical organisation within a subscription, but they're not billing boundaries. You can't set separate spending limits or budgets at the resource group level as cleanly as at the subscription level. Tags can help with cost analysis but not true billing separation.",
+      "This option is correct. Azure subscriptions are billing boundaries. Each subscription has its own billing account, spending limits, and budget alerts. Creating separate subscriptions for Production and Development provides clean billing separation, independent spending limits, and the ability to apply different governance policies (stricter policies for Production, more permissive for Development). This is Microsoft's recommended approach for environment separation.",
+      "Tags can help with cost ANALYSIS (filtering costs by tag in Cost Management), but they don't provide true billing separation. You can't set separate spending limits based on tags alone. Tags supplement subscription-level billing separation.",
+      "Separate Azure AD tenants would create completely independent environments with no identity sharing. This is extreme overkill for billing separation — multiple subscriptions within one tenant provide billing separation with shared identity management."
+    ],
+    "tip": "Subscriptions = billing boundaries + access boundaries + policy boundaries. For environment separation (prod/dev/staging), use separate subscriptions. Organise them under management groups. This is a fundamental Azure organisational pattern tested on AZ-900."
+  },
+  {
+    "id": "AZ900-E05-007",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys virtual machines in Azure\n- The security team discovers that several VMs have outdated OS patches with known vulnerabilities\n- They want a centralised solution to:\n  - Assess which VMs are missing critical patches\n  - Schedule patch deployment during maintenance windows\n  - Report on patch compliance across all VMs\n\nQuestion:\nWhich Azure service provides centralised patch management for Azure VMs?",
+    "choices": [
+      "Azure Policy",
+      "Azure Update Manager (formerly Update Management)",
+      "Azure Advisor",
+      "Microsoft Defender for Cloud (recommendations only)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Policy can audit whether VMs have specific patches or configurations, but it doesn't deploy patches. It's a governance tool, not a patch management tool.",
+      "This option is correct. Azure Update Manager (formerly Azure Automation Update Management) provides centralised patch management: assess missing updates across all VMs (Windows and Linux), schedule update deployments during maintenance windows, and report on patch compliance. It supports Azure VMs, on-premises VMs (via Arc), and VMs in other clouds. It's the purpose-built tool for OS update management.",
+      "Advisor might recommend enabling update management or note that VMs are missing patches, but it doesn't deploy updates or manage patch schedules. It provides recommendations, not remediation.",
+      "Defender for Cloud identifies VMs with missing patches and creates security recommendations, but it doesn't deploy the patches itself. It might recommend using Update Manager, but it's not the patch deployment tool."
+    ],
+    "tip": "Azure Update Manager = assess, schedule, and deploy OS patches across VMs. Defender for Cloud = identifies missing patches (detection). Azure Policy = audits compliance. If 'patch management' + 'schedule updates' + 'compliance reporting' — Update Manager."
+  },
+  {
+    "id": "AZ900-E05-008",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Azure subscription\n- Three users need different levels of access:\n  - User A: Full access to everything, including assigning roles to others\n  - User B: Full access to create and manage resources, but CANNOT assign roles\n  - User C: Can only view resources, no modifications allowed\n\nQuestion:\nWhich built-in RBAC roles should you assign to each user?",
+    "choices": [
+      "User A: Contributor, User B: Reader, User C: Owner",
+      "User A: Owner, User B: Contributor, User C: Reader",
+      "User A: Administrator, User B: Editor, User C: Viewer",
+      "User A: Owner, User B: Owner, User C: Contributor"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This assigns roles backwards. Contributor can't assign roles (User A needs role assignment). Reader is view-only (User B needs to create resources). Owner has full access (but User C should only view).",
+      "This option is correct. Owner = full access + role assignment (User A's requirement). Contributor = full resource management, NO role assignment (User B's requirement — can create/manage everything except assigning roles to others). Reader = view-only (User C's requirement — can see everything but change nothing). These three built-in roles map perfectly to the three access levels described.",
+      "Administrator, Editor, and Viewer are not Azure RBAC built-in role names. Azure uses Owner, Contributor, and Reader.",
+      "Giving Users A and B both Owner and User C Contributor would be overly permissive. User B shouldn't be able to assign roles (Owner can), and User C shouldn't be able to modify resources (Contributor can)."
+    ],
+    "tip": "The three core RBAC roles: Owner (everything + role assignment), Contributor (everything EXCEPT role assignment), Reader (view only). If the exam describes three access levels with the role assignment distinction — Owner/Contributor/Reader. This is one of the most commonly tested RBAC concepts."
+  },
+  {
+    "id": "AZ900-E05-009",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an on-premises application that authenticates users against a local Active Directory\n- The application uses LDAP and Kerberos protocols for authentication\n- The company wants to migrate this application to Azure WITHOUT modifying the application's authentication code\n- They also don't want to run their own domain controllers in Azure\n\nQuestion:\nWhich Azure service provides managed LDAP and Kerberos authentication in the cloud?",
+    "choices": [
+      "Azure Active Directory (Entra ID)",
+      "Azure AD Domain Services (Entra Domain Services)",
+      "Azure AD Connect",
+      "Azure AD Application Proxy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD (Entra ID) is a modern identity platform using SAML, OIDC, and OAuth protocols. It does NOT support LDAP or Kerberos natively. Applications that rely on these legacy protocols can't authenticate directly against Azure AD.",
+      "This option is correct. Azure AD Domain Services provides managed domain services in Azure — including LDAP, Kerberos, NTLM, and Group Policy. It creates a managed domain that legacy applications can authenticate against without code changes. No domain controllers to manage — Microsoft handles the infrastructure. Identities are synchronised from Azure AD. It's the solution for lifting and shifting legacy applications that depend on traditional AD protocols.",
+      "Azure AD Connect synchronises on-premises AD identities to Azure AD. It doesn't provide LDAP/Kerberos services in the cloud — it syncs identity data.",
+      "Application Proxy provides remote access to on-premises web applications. It doesn't provide domain services or LDAP/Kerberos authentication in Azure."
+    ],
+    "tip": "Azure AD (Entra ID) = modern protocols (SAML, OIDC, OAuth). Azure AD DS (Entra DS) = legacy protocols (LDAP, Kerberos, NTLM, Group Policy) — managed domain controllers. If the application needs LDAP or Kerberos without running your own DCs — Azure AD Domain Services."
+  },
+  {
+    "id": "AZ900-E05-010",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company has 100 on-premises servers\n- Management wants to migrate to Azure but is unsure about the approach\n- The IT director identifies three categories:\n  1. 50 servers can move to Azure VMs with no changes\n  2. 30 servers run applications that could benefit from Azure PaaS services\n  3. 20 servers run applications that should be rebuilt as cloud-native\n\nQuestion:\nMatch the migration approach to each category.",
+    "choices": [
+      "Category 1: Rehost (lift and shift), Category 2: Refactor (replatform), Category 3: Rearchitect (rebuild)",
+      "Category 1: Rearchitect, Category 2: Rehost, Category 3: Refactor",
+      "Category 1: Replace, Category 2: Retain, Category 3: Retire",
+      "All categories should use the same approach: Rehost"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Rehost (lift and shift): move servers to Azure VMs with no changes — the 50 servers in Category 1. Refactor (replatform): modify applications to use PaaS services (e.g., move from SQL Server VM to Azure SQL Database) — the 30 servers in Category 2. Rearchitect (rebuild): redesign applications as cloud-native using microservices, containers, serverless — the 20 servers in Category 3. This is a common mixed-migration strategy.",
+      "This mapping is backwards. Moving VMs with no changes is rehost, not rearchitect. Using PaaS is refactor, not rehost.",
+      "Replace means adopting SaaS alternatives. Retain means keeping on-premises. Retire means decommissioning. None of these match the categories described.",
+      "Using rehost for everything would miss the PaaS and cloud-native opportunities for Categories 2 and 3. A mixed approach maximises the benefits of cloud."
+    ],
+    "tip": "6 Rs of migration: Rehost (lift and shift to VMs), Refactor (move to PaaS), Rearchitect (rebuild cloud-native), Replace (adopt SaaS), Retain (keep on-premises), Retire (decommission). Most migrations use a mix. The exam expects you to match the strategy to the scenario."
+  }
+]

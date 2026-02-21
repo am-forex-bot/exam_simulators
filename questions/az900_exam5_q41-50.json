@@ -1,0 +1,202 @@
+[
+  {
+    "id": "AZ900-E05-041",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A software company sells a project management application\n- Customers access the application via a web browser\n- The vendor manages the infrastructure, platform, and application code\n- Customers only manage their own data, user accounts, and configuration settings\n- Updates are rolled out to all customers simultaneously\n\nQuestion:\nWhich cloud service model does this application represent?",
+    "choices": [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)",
+      "Function as a Service (FaaS)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "IaaS provides virtualised infrastructure (VMs, networks, storage). The customer manages the OS, middleware, runtime, and application. In this scenario, the vendor manages EVERYTHING — the customer only manages data and users. This is far more managed than IaaS.",
+      "PaaS provides a platform for customers to deploy their OWN applications. The customer still writes and manages application code. In this scenario, the vendor manages the application code — customers don't deploy anything.",
+      "This option is correct. SaaS delivers a complete application over the internet. The vendor manages infrastructure, platform, and application — the customer only manages their data, user accounts, and configuration. Examples: Microsoft 365, Salesforce, Dropbox. Browser-based access with simultaneous updates to all customers is a hallmark of SaaS.",
+      "FaaS (serverless functions) is a subset of PaaS where customers deploy individual functions. The customer still writes code. This scenario describes a fully managed application, not a function execution platform."
+    ],
+    "tip": "SaaS = vendor manages everything, customer manages data and users. PaaS = vendor manages infrastructure + platform, customer manages applications and data. IaaS = vendor manages infrastructure, customer manages OS + apps + data. More management by vendor = higher up the stack."
+  },
+  {
+    "id": "AZ900-E05-042",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed Azure resources with the following tags:\n  - Department: Finance\n  - Department: Marketing\n  - Department: Engineering\n- The CFO wants a monthly cost report showing spending broken down by department\n- They want to allocate cloud costs back to each department's budget\n\nQuestion:\nWhich Azure feature enables this cost allocation by department?",
+    "choices": [
+      "Azure Resource Groups — one per department",
+      "Azure Tags combined with Cost Management filtering",
+      "Azure Management Groups — one per department",
+      "Azure Subscriptions — one per department"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Resource groups can organise resources, but resources may belong to shared resource groups that span departments. Resource group-based cost reporting is too rigid — a single resource group can't be split across departments if it contains shared resources.",
+      "This option is correct. Azure Tags (key-value pairs like Department:Finance) can be applied to any resource. Azure Cost Management can then filter and group costs by tag values, generating reports showing spending per department. This is the recommended approach for cost allocation — it's flexible, works across resource groups and subscriptions, and doesn't require restructuring your resource organisation.",
+      "Management Groups organise subscriptions for governance (policy, RBAC inheritance). They're not designed for cost allocation and don't appear as a cost dimension in Cost Management reports.",
+      "Separate subscriptions per department can enable cost tracking, but it's a heavy-handed approach that creates management overhead. Tags provide the same cost visibility without requiring subscription-per-department architecture."
+    ],
+    "tip": "Tags = the primary mechanism for cost allocation, resource organisation, and operational metadata. Cost Management can filter by any tag. Common tags: Department, Environment, CostCentre, Owner, Project. If the question asks about cost allocation or chargeback — Tags + Cost Management."
+  },
+  {
+    "id": "AZ900-E05-043",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to process millions of IoT sensor messages per second\n- Messages arrive continuously from 50,000 devices\n- The data must be ingested in real-time and made available for stream processing\n- The solution must handle massive throughput with low latency\n\nQuestion:\nWhich Azure service should you use for real-time message ingestion at this scale?",
+    "choices": [
+      "Azure Service Bus",
+      "Azure Event Hubs",
+      "Azure Queue Storage",
+      "Azure Notification Hubs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Service Bus is an enterprise message broker for application-to-application messaging with features like sessions, transactions, and dead-lettering. It's designed for transactional workloads, not high-throughput IoT telemetry ingestion at millions of messages per second.",
+      "This option is correct. Azure Event Hubs is a big data streaming platform and event ingestion service capable of receiving and processing millions of events per second with low latency. It's designed for massive-scale telemetry and IoT scenarios. It supports partitioned consumers, Apache Kafka protocol, and integrates with Stream Analytics and Azure Functions for real-time processing.",
+      "Azure Queue Storage provides simple message queuing but is not designed for millions of messages per second from IoT devices. It lacks the throughput, partitioning, and stream processing integration that Event Hubs provides.",
+      "Notification Hubs is a push notification engine for sending notifications to mobile devices (iOS, Android, Windows). It sends notifications TO devices — it doesn't ingest messages FROM devices."
+    ],
+    "tip": "Event Hubs = massive-scale event/telemetry ingestion (millions/sec, IoT, streaming). Service Bus = enterprise messaging (transactions, sessions, ordering). Queue Storage = simple async messaging. If the question mentions IoT, telemetry, millions of events, or streaming ingestion — Event Hubs."
+  },
+  {
+    "id": "AZ900-E05-044",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to ensure that all Azure VMs are deployed ONLY in the UK South and UK West regions\n- VMs deployed to any other region should be automatically blocked\n- This restriction must apply to all subscriptions in the organisation\n\nQuestion:\nHow should you implement this restriction?",
+    "choices": [
+      "Configure RBAC custom roles that only allow VM creation in UK regions",
+      "Apply an Azure Policy with a Deny effect that restricts allowed locations to UK South and UK West",
+      "Use Azure Blueprints to deploy VMs only in UK regions",
+      "Configure Network Security Groups to block traffic outside UK regions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "RBAC controls WHO can perform actions and WHAT actions they can perform, but it doesn't control WHERE resources are deployed. You cannot restrict deployment location through role definitions.",
+      "This option is correct. Azure Policy with the built-in 'Allowed locations' policy (Deny effect) restricts resource deployment to specified Azure regions. Set the allowed locations to UK South and UK West — any attempt to create a VM (or any resource) in another region is automatically denied. Assign this policy at the management group level to apply it across all subscriptions.",
+      "Azure Blueprints package policies, RBAC, ARM templates, and resource groups together for repeatable environment setup. While a Blueprint could include the location restriction policy, the question asks how to implement the restriction — the answer is the Policy itself, not the Blueprint.",
+      "NSGs filter network traffic based on IP addresses, ports, and protocols. They have nothing to do with restricting WHERE resources are deployed — they control traffic AFTER resources exist."
+    ],
+    "tip": "Azure Policy 'Allowed locations' = restrict WHERE resources can be deployed. This is one of the most commonly assigned policies and a frequent exam topic. Deny effect = block non-compliant deployments. Assign at management group level = apply to all subscriptions."
+  },
+  {
+    "id": "AZ900-E05-045",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company is evaluating cloud computing\n- The CIO asks: 'What does high availability mean in the context of Azure?'\n- They want to understand what Azure commits to in terms of uptime\n\nQuestion:\nWhich statement BEST describes high availability in Azure?",
+    "choices": [
+      "High availability means Azure guarantees zero downtime for all services",
+      "High availability means Azure designs systems to remain operational with maximum uptime, as defined by SLAs",
+      "High availability means Azure automatically backs up all your data to another region",
+      "High availability means Azure provides unlimited scaling for any workload"
+    ],
+    "answer": [1],
+    "explanations": [
+      "No cloud provider guarantees zero downtime. Even the highest Azure SLAs (99.999%) allow some downtime. 'Zero downtime' is a myth — high availability is about minimising downtime, not eliminating it entirely.",
+      "This option is correct. High availability in Azure means systems are designed to remain operational and accessible with maximum uptime. Azure commits to specific uptime percentages through Service Level Agreements (SLAs) — e.g., 99.9% for single VMs with Premium SSD, 99.99% for VMs in Availability Zones. HA is achieved through redundancy, load balancing, fault tolerance, and automated failover.",
+      "Automatic backup to another region describes geo-redundant storage or disaster recovery — not high availability. HA is about keeping services running, not about backup and restore.",
+      "Unlimited scaling describes scalability/elasticity, not high availability. HA focuses on uptime and fault tolerance, not on handling increased load."
+    ],
+    "tip": "High Availability = maximum uptime, minimise downtime, keep running during failures. Defined by SLAs (99.9%, 99.95%, 99.99%). Achieved through: redundancy, availability zones, load balancing, failover. HA ≠ zero downtime. HA ≠ DR. HA ≠ scalability."
+  },
+  {
+    "id": "AZ900-E05-046",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company wants to run containerised applications in Azure\n- They need a fully managed environment — no cluster management or infrastructure to maintain\n- The containers should start quickly, run a task, and stop\n- They don't need orchestration features like service discovery or auto-scaling across nodes\n\nQuestion:\nWhich Azure service is BEST suited for this requirement?",
+    "choices": [
+      "Azure Kubernetes Service (AKS)",
+      "Azure Container Instances (ACI)",
+      "Azure Container Apps",
+      "Azure App Service (Linux containers)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "AKS is a managed Kubernetes service that still requires you to manage node pools, networking configuration, and cluster upgrades. It provides full orchestration (service discovery, auto-scaling, rolling deployments) — which the question explicitly says is not needed. AKS is overkill for simple run-a-container tasks.",
+      "This option is correct. Azure Container Instances (ACI) is the fastest and simplest way to run a container in Azure. No infrastructure management, no orchestration overhead — just specify the container image and it runs. ACI is ideal for quick tasks, batch jobs, build agents, and simple containerised workloads. It starts in seconds and you pay per second of execution.",
+      "Container Apps is built on Kubernetes but provides a serverless container platform with features like auto-scaling, Dapr integration, and traffic splitting. While more managed than AKS, it's designed for microservices architectures — more than needed for simple run-and-stop container tasks.",
+      "App Service with Linux containers is designed for long-running web applications, not short-lived container tasks. It provides features like custom domains, SSL, deployment slots — none of which are needed for a quick container execution."
+    ],
+    "tip": "Container options by complexity: ACI (simplest, single containers, tasks) → Container Apps (serverless microservices, event-driven scaling) → AKS (full Kubernetes orchestration). If the question says 'simple container', 'no orchestration', 'quick task' — ACI. If 'microservices' or 'Kubernetes' — AKS."
+  },
+  {
+    "id": "AZ900-E05-047",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has an Enterprise Agreement (EA) with Microsoft\n- They have multiple departments: Finance, Engineering, and Marketing\n- Each department has its own Azure subscriptions\n- The billing administrator needs to review and manage invoices centrally\n\nQuestion:\nWhich Azure billing structure does this scenario describe?",
+    "choices": [
+      "A single subscription with resource groups per department",
+      "An Enterprise Agreement with an enrollment account, departments, and subscriptions hierarchy",
+      "Three separate Microsoft Customer Agreements (MCAs)",
+      "Azure Pay-As-You-Go subscriptions with shared billing"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A single subscription with resource groups provides logical organisation but doesn't support separate departmental billing with centralised invoice management. It would combine all costs into one subscription bill.",
+      "This option is correct. An Enterprise Agreement (EA) creates a billing hierarchy: Enrollment → Departments → Accounts → Subscriptions. Each department (Finance, Engineering, Marketing) is a billing entity under the enrollment. Each department has accounts that own subscriptions. The EA administrator can view and manage all billing centrally while departments see their own costs. This is the standard enterprise billing structure in Azure.",
+      "Three separate MCAs would mean three completely separate billing agreements — no centralised management. The scenario describes ONE agreement with departmental organisation underneath it.",
+      "Pay-As-You-Go subscriptions are individual, credit-card-based subscriptions. They don't support enterprise departmental hierarchy or centralised billing management."
+    ],
+    "tip": "Azure billing hierarchy for enterprises: Enterprise Agreement → Departments → Accounts → Subscriptions. EA gives centralised billing, volume discounts, and departmental cost allocation. Smaller organisations use Microsoft Customer Agreement (MCA) instead. Know the EA hierarchy for the exam."
+  },
+  {
+    "id": "AZ900-E05-048",
+    "domain": "Azure Architecture",
+    "type": "single",
+    "stem": "Scenario:\n- Your company runs a web application that stores sensitive customer data\n- The security team requires that data is encrypted both at rest and in transit\n- They want to use encryption keys managed by Microsoft for simplicity\n- They also need to ensure all HTTPS traffic uses TLS 1.2 or higher\n\nQuestion:\nWhich statement about Azure encryption is correct?",
+    "choices": [
+      "Azure encrypts data at rest by default, but you must manually enable encryption in transit",
+      "Azure encrypts data in transit by default, but you must manually enable encryption at rest",
+      "Azure provides encryption at rest by default for most services using Microsoft-managed keys, and supports TLS 1.2+ for data in transit",
+      "Azure does not provide any default encryption — all encryption must be configured manually"
+    ],
+    "answer": [2],
+    "explanations": [
+      "While some services require HTTPS to be explicitly enforced, Azure storage services encrypt data at rest by default AND support HTTPS by default. You don't need to manually enable either in most cases — but you should enforce minimum TLS versions.",
+      "This is backwards. Azure encrypts data at rest by default for most services (Azure Storage, SQL Database, Cosmos DB, Managed Disks). Encryption at rest is automatic with Microsoft-managed keys.",
+      "This option is correct. Azure encrypts data at rest by default for most services using Microsoft-managed keys (also called platform-managed keys). Azure Storage, SQL Database, Cosmos DB, and Managed Disks all encrypt at rest automatically. For data in transit, Azure supports TLS 1.2+ and most services enforce it by default. You can also choose customer-managed keys (CMK) in Azure Key Vault for more control over encryption keys.",
+      "Azure provides extensive default encryption. Almost all data storage services encrypt at rest by default with no configuration needed. This statement is completely incorrect."
+    ],
+    "tip": "Azure encryption defaults: At rest = automatic for most services (Storage, SQL, Cosmos DB, Managed Disks) with Microsoft-managed keys. In transit = TLS 1.2+ supported and enforced. You can upgrade to customer-managed keys (CMK) stored in Key Vault for more control. The exam expects you to know encryption at rest is ON by default."
+  },
+  {
+    "id": "AZ900-E05-049",
+    "domain": "Cloud Concepts",
+    "type": "single",
+    "stem": "Scenario:\n- A company runs identical production systems in two geographically separate Azure regions\n- If one region experiences a complete outage, the other region continues serving all traffic\n- The company accepts the cost of running duplicate infrastructure for this protection\n\nQuestion:\nWhich cloud concept does this architecture primarily demonstrate?",
+    "choices": [
+      "Elasticity",
+      "Agility",
+      "Fault tolerance",
+      "Cost optimisation"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Elasticity is the ability to dynamically scale resources based on demand. Running identical systems in two regions isn't about scaling — it's about surviving failures. The infrastructure size stays constant regardless of demand.",
+      "Agility refers to the ability to quickly deploy and configure cloud resources. While the cloud enables fast multi-region deployment, the scenario is about surviving regional failures, not speed of deployment.",
+      "This option is correct. Fault tolerance is the ability of a system to continue operating without interruption when one or more components fail. Running identical systems in two regions ensures that a complete regional outage doesn't cause downtime — traffic shifts to the surviving region. This is active-active (or active-passive) fault tolerance through geographic redundancy.",
+      "This architecture is the OPPOSITE of cost optimisation — the company explicitly accepts the cost of duplicate infrastructure. Fault tolerance through redundancy increases costs but ensures continuity."
+    ],
+    "tip": "Fault tolerance = continue operating despite failures (redundancy, replication, geographic distribution). High availability = maximise uptime (SLAs, availability zones). Disaster recovery = recover AFTER a catastrophic failure. The key distinction: fault tolerance prevents interruption, DR restores after interruption."
+  },
+  {
+    "id": "AZ900-E05-050",
+    "domain": "Azure Management and Governance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company needs to deploy a standard set of Azure resources for each new project\n- Every project needs: a resource group, a virtual network, a storage account, and specific Azure Policies\n- The deployment must be repeatable, consistent, and version-controlled\n- Manual portal deployments have led to configuration drift between projects\n\nQuestion:\nWhat is the BEST approach to ensure repeatable, consistent deployments?",
+    "choices": [
+      "Document the steps in a runbook and have administrators follow them manually",
+      "Use Infrastructure as Code (IaC) with ARM templates or Bicep to define all resources declaratively",
+      "Create screenshots of the portal configuration for each resource",
+      "Use Azure Advisor to recommend the correct configuration"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A runbook with manual steps is error-prone — humans skip steps, make typos, and introduce inconsistencies. This IS the current problem (manual portal deployments causing configuration drift). Documentation doesn't prevent drift.",
+      "This option is correct. Infrastructure as Code (IaC) using ARM templates or Bicep files defines all resources declaratively in code. The template is version-controlled in Git, reviewed through pull requests, and deployed consistently every time. ARM/Bicep templates are idempotent — deploying the same template produces the same result. This eliminates configuration drift and ensures every project gets identical infrastructure.",
+      "Screenshots are documentation, not automation. They don't prevent human error during manual deployment and can't be version-controlled, parameterised, or executed automatically.",
+      "Azure Advisor provides recommendations for existing resources. It doesn't deploy or configure new resources, and it doesn't solve the problem of repeatable, consistent deployments."
+    ],
+    "tip": "Infrastructure as Code (IaC) = repeatable, consistent, version-controlled deployments. Azure IaC options: ARM templates (JSON), Bicep (simplified ARM), Terraform (multi-cloud). Benefits: no configuration drift, idempotent, auditable, parameterised. If the question mentions 'repeatable', 'consistent', or 'configuration drift' — IaC."
+  }
+]
