@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E03-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Windows 365 Enterprise Cloud PCs\n- Several users report that their Cloud PC performance is degrading during peak hours\n- The IT team needs to monitor Cloud PC health and performance metrics\n- They want visibility into: connection quality, sign-in time, and resource utilisation\n\nQuestion:\nWhich tool provides Cloud PC health monitoring and performance analytics?",
+    "choices": [
+      "Azure Monitor for Virtual Machines",
+      "Endpoint Analytics in Intune with Windows 365 Cloud PC insights",
+      "Microsoft 365 admin centre service health dashboard",
+      "Windows Performance Monitor (PerfMon) on each Cloud PC"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Monitor for VMs monitors Azure IaaS virtual machines. Windows 365 Cloud PCs are a managed service with their own monitoring built into Intune's Endpoint Analytics.",
+      "This option is correct. Endpoint Analytics in Intune provides Windows 365-specific insights including: Cloud PC connection quality (latency, round-trip time), sign-in performance (time to sign in), resource utilisation, and user experience metrics. The Windows 365 overview page in Intune shows Cloud PC health status and allows admins to identify performance issues and take action (resize, reprovision).",
+      "The Microsoft 365 service health dashboard shows service-level outages and advisories, not individual Cloud PC performance metrics. It indicates whether the Windows 365 service is operational, not whether individual Cloud PCs are performing well.",
+      "PerfMon on each Cloud PC would require accessing each individual Cloud PC, which doesn't scale. It also provides real-time data only (not historical trends) and can't be aggregated across the fleet without additional infrastructure."
+    ],
+    "tip": "Windows 365 monitoring: Intune → Devices → Windows 365 → overview and connection quality. Endpoint Analytics → user experience metrics, startup performance. Cloud PC actions: resize (change vCPU/RAM), reprovision (fresh Cloud PC), restart. Connection quality metrics: round-trip time, UDP connection %, bandwidth. For Azure Virtual Desktop (AVD): use Azure Monitor with AVD insights workbook instead."
+  },
+  {
+    "id": "MS102-E03-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The legal team needs to manage an investigation that involves:\n  - Identifying custodians (people of interest)\n  - Placing legal holds on custodians' mailboxes and OneDrive accounts\n  - Collecting data from multiple sources into a review set\n  - Using AI-powered review to identify relevant documents\n  - Tagging and annotating documents for legal review\n\nQuestion:\nWhich Microsoft Purview eDiscovery tier provides all of these capabilities?",
+    "choices": [
+      "Content search",
+      "eDiscovery (Standard)",
+      "eDiscovery (Premium)",
+      "Audit (Standard)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Content search provides basic search and export. It doesn't support custodian management, review sets, AI-powered review, or document tagging.",
+      "eDiscovery (Standard) adds case management and holds to content search, but it doesn't include custodian management, review sets, AI-powered document review, or annotation capabilities.",
+      "This option is correct. eDiscovery (Premium) provides the full investigation toolkit: custodian management (identify and manage people of interest), custodian-based holds (preserve specific people's data), collection to review sets (gather data from multiple sources into a reviewable container), AI-powered relevance module (machine learning-based document prioritisation), near-duplicate detection, email threading, and document annotation/tagging for legal review.",
+      "Audit tracks user activities but doesn't provide content discovery, preservation, or review capabilities."
+    ],
+    "tip": "eDiscovery tier comparison: Content search → search + export. Standard → + cases, holds, access control. Premium → + custodians, review sets, AI review, analytics, conversation threading, near-duplicates, annotation. Premium unique features: custodian management → track people of interest and their data sources. Review sets → AI-powered document review and coding. Analytics → email threading, near-duplicate grouping, relevance scoring. Requires: Microsoft 365 E5 or E5 Compliance add-on."
+  },
+  {
+    "id": "MS102-E03-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to deploy Win32 applications to Windows devices\n- A new application ('ReportViewer') requires that '.NET Framework 4.8' is already installed before it can be installed\n- Both .NET Framework 4.8 and ReportViewer are deployed as Win32 apps in Intune\n\nQuestion:\nHow should you configure the installation order so .NET Framework installs before ReportViewer?",
+    "choices": [
+      "Assign both apps as Required and hope .NET Framework installs first",
+      "Configure .NET Framework 4.8 as a dependency of the ReportViewer app",
+      "Create a PowerShell script that installs both apps in sequence",
+      "Deploy .NET Framework to a separate device group that processes before the ReportViewer group"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Intune doesn't guarantee installation order for independently assigned Required apps. Without explicit dependency configuration, the apps may install in any order, and ReportViewer might fail if .NET isn't ready.",
+      "This option is correct. Win32 app dependencies in Intune define prerequisite relationships. When you configure .NET Framework 4.8 as a dependency of ReportViewer, Intune ensures .NET is installed (and its detection rule passes) before attempting to install ReportViewer. If .NET installation fails, ReportViewer installation is blocked. The dependency chain is automatically managed.",
+      "A PowerShell script bypasses Intune's app management features: no detection rules, no compliance reporting, no dependency management, no retry logic. Using the built-in dependency feature is the correct approach.",
+      "Azure AD group processing order is not guaranteed and cannot be used to control app installation sequence. Even if groups processed in order, the Intune sync cycle for each device is independent."
+    ],
+    "tip": "Win32 app dependencies: defined in the app properties → Dependencies tab. Each dependency specifies: dependent app + auto-install (yes/no). Dependency chain: App C depends on B, which depends on A → Intune installs A, then B, then C. Circular dependencies: not allowed. Maximum chain depth: limited to prevent infinite loops. Dependencies vs Supersedence: dependencies = install prerequisites. Supersedence = replace old version with new."
+  },
+  {
+    "id": "MS102-E03-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages iOS devices with Intune\n- The IT team needs to restrict managed iOS devices from:\n  - Using AirDrop to share files\n  - Taking screenshots of corporate apps\n  - Modifying Touch ID / Face ID fingerprints\n- The devices are supervised through Apple Business Manager\n\nQuestion:\nWhich Intune profile type should you use to apply these restrictions?",
+    "choices": [
+      "App protection policy",
+      "Device restriction profile for iOS/iPadOS",
+      "Compliance policy for iOS",
+      "App configuration policy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "App protection policies manage data protection within managed apps (cut/copy/paste, PIN, encryption). They cannot control device-level features like AirDrop, screenshots, or biometric settings.",
+      "This option is correct. Device restriction profiles for iOS/iPadOS allow you to control a wide range of device features. For supervised devices, additional restrictions are available including: disabling AirDrop, blocking screenshots, preventing modification of Touch ID/Face ID, disabling app installation, blocking camera, and many more. Supervised devices (enrolled via ABM/ADE) have significantly more restriction options than unsupervised devices.",
+      "Compliance policies evaluate device state (OS version, jailbreak detection, passcode) and report compliance. They don't actively restrict device features like AirDrop or screenshots.",
+      "App configuration policies push configuration settings to apps (key-value pairs). They don't control device-level features or restrictions."
+    ],
+    "tip": "iOS device restrictions (supervised vs unsupervised): Supervised-only restrictions: AirDrop, screenshot, Touch ID modification, app installation, configuration profile removal, erase content, pairing. Available for both: camera, iCloud backup, app store, Safari. Device restriction categories: General, Password, Locked Screen, App Store/Doc viewing, Built-in apps, Cloud, Connected devices, Keyboard, Kiosk, Wireless. Supervised status: required for most enterprise restrictions."
+  },
+  {
+    "id": "MS102-E03-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 E5\n- The security team needs to investigate a security incident that occurred 6 months ago\n- They need to search audit logs for specific admin actions during that period\n- Standard audit log retention is 90 days by default\n\nQuestion:\nHow can the security team access audit logs beyond the 90-day default retention?",
+    "choices": [
+      "It's not possible — audit logs older than 90 days are permanently deleted",
+      "Enable Audit (Premium) which provides 1-year (or longer) audit log retention",
+      "Export all audit logs to CSV every 90 days as a manual backup process",
+      "Use the Exchange admin centre to access extended mail logs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This is incorrect. While standard audit logs are retained for 90 days by default, Audit (Premium) extends retention significantly. Logs older than the retention period are deleted, but the retention period can be extended.",
+      "This option is correct. Audit (Premium) (previously called Advanced Audit, included in Microsoft 365 E5) extends audit log retention to 1 year by default (up to 10 years with an add-on retention policy). It also provides access to crucial forensic events like MailItemsAccessed (mailbox item access events). For the 6-month-old incident, Audit (Premium) would have retained the logs, allowing the security team to search them normally.",
+      "Manual CSV exports every 90 days is a workaround but not a sustainable or reliable solution. It requires consistent manual effort, the exports may not capture all log types, and querying exported CSVs is far less efficient than the native audit log search.",
+      "Exchange admin centre mail logs (message trace) are for tracking email flow, not auditing admin actions. Message trace has its own retention limits and doesn't cover non-Exchange admin activities."
+    ],
+    "tip": "Audit tiers: Audit (Standard) → 90-day retention, basic audit events. Audit (Premium) → 1-year default retention (up to 10 years), crucial forensic events. Key Premium events: MailItemsAccessed, Send, SearchQueryInitiated. Retention policy: create custom retention policies for specific log types with longer retention. Best practice: enable Audit (Premium) BEFORE you need it — you can't retroactively recover logs from before it was enabled."
+  },
+  {
+    "id": "MS102-E03-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune to manage Windows devices\n- A new Intune device configuration profile is created to configure Wi-Fi settings\n- The profile is assigned to a group containing 500 devices\n- 3 days later, only 300 devices show the profile as 'Succeeded'\n- 150 devices show 'Pending' and 50 devices show 'Error'\n\nQuestion:\nWhat should you do FIRST to investigate the 50 devices showing 'Error'?",
+    "choices": [
+      "Delete and recreate the configuration profile",
+      "Review the per-device error details in Intune to identify the specific error code and message",
+      "Remove all 500 devices from the group and re-add them",
+      "Contact Microsoft support immediately"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Deleting and recreating the profile without understanding the error is premature. The same error will likely recur. Diagnose the root cause first.",
+      "This option is correct. In Intune, navigate to the device configuration profile → Device status. Click on individual devices showing 'Error' to see the specific error code, error description, and which setting caused the failure. Common errors include: setting not supported on device OS version, conflict with another profile, or device in an unexpected state. The error details guide targeted troubleshooting.",
+      "Removing and re-adding devices to the group resets the assignment but doesn't fix the underlying error. The same devices will likely show the same error after re-assignment.",
+      "Contacting Microsoft support before basic troubleshooting is premature. Review the error details, check known issues, and attempt resolution before escalating."
+    ],
+    "tip": "Intune troubleshooting workflow: 1. Check profile → Device status → error details per device. 2. Identify common patterns (OS version, device model, error code). 3. Check for policy conflicts (multiple profiles with same settings). 4. Review Intune diagnostic logs on affected devices. 5. Test profile on a single device to reproduce. Common Wi-Fi profile errors: certificate deployment failure, unsupported security type, RADIUS server unreachable, conflicting Wi-Fi profile."
+  },
+  {
+    "id": "MS102-E03-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The IT department uses several Azure AD service principals (app registrations) for automation\n- One service principal has the 'User.ReadWrite.All' permission and runs automated scripts\n- The security team wants to monitor service principal sign-in activity for anomalies\n\nQuestion:\nWhere can you view service principal (workload identity) sign-in logs?",
+    "choices": [
+      "Service principal sign-ins are not logged in Azure AD",
+      "Azure AD admin centre → Sign-in logs → Service principal sign-ins tab",
+      "Microsoft 365 admin centre → Activity reports",
+      "Exchange Online admin centre → Mail flow reports"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This is incorrect. Azure AD does log service principal sign-in activity. Both interactive user sign-ins and non-interactive service principal sign-ins are captured.",
+      "This option is correct. Azure AD sign-in logs include a dedicated tab for service principal sign-ins. This shows: which service principal authenticated, when, from which IP address, the target resource, and the result (success/failure). Security teams can monitor for anomalies like sign-ins from unexpected IP addresses, unusual times, or excessive failed attempts. Service principal sign-in logs require Azure AD Premium.",
+      "Microsoft 365 admin centre activity reports show user-level activity (email usage, Teams activity) but don't provide service principal authentication logs.",
+      "Exchange Online admin centre tracks email-specific metrics. It doesn't log Azure AD service principal authentication events."
+    ],
+    "tip": "Azure AD sign-in log types: Interactive user sign-ins → user enters credentials. Non-interactive user sign-ins → token refresh, SSO. Service principal sign-ins → app/automation authentication. Managed identity sign-ins → Azure resource identity authentication. Workload identity protection (requires Workload Identities Premium): anomaly detection for service principals, Conditional Access for workload identities. Best practice: monitor service principal logs regularly for unexpected activity."
+  },
+  {
+    "id": "MS102-E03-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune to manage Windows devices\n- The IT team needs to prevent users from installing applications from unknown sources\n- Only apps from the Microsoft Store and apps deployed through Intune should be allowed\n- Users should not be able to sideload applications\n\nQuestion:\nWhich Windows setting should you configure through Intune to restrict app installation sources?",
+    "choices": [
+      "Windows Defender Application Control (WDAC) or AppLocker",
+      "App protection policy with app restriction",
+      "Windows Update policy blocking app installations",
+      "Compliance policy requiring Microsoft Store apps only"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Windows Defender Application Control (WDAC) or AppLocker can restrict which applications are allowed to run on Windows devices. WDAC is the newer, more robust solution that can whitelist applications based on publisher, file hash, or file path. AppLocker provides similar restrictions through Group Policy or Intune. You can configure rules that only allow: Microsoft Store apps, Intune-deployed apps (signed by trusted publishers), and Windows components. This prevents sideloading or installing from unknown sources.",
+      "App protection policies operate at the mobile app level (iOS/Android) for MAM scenarios. They don't control application installation on Windows desktop devices.",
+      "Windows Update policies manage operating system and driver updates. They don't control application installation from non-update sources.",
+      "Compliance policies evaluate device state but don't enforce application restrictions. A compliance policy can check IF certain apps are installed, but it can't prevent installation."
+    ],
+    "tip": "Application control options: WDAC (Windows Defender Application Control) → modern, file integrity, code signing-based. AppLocker → legacy, rule-based (publisher, path, file hash). SmartScreen → warns about unrecognised apps (user can override). Intune app restriction profile → basic restriction (Microsoft Store only vs anywhere). For enterprise: WDAC is Microsoft's recommended solution. Deploy via Intune: endpoint security → Application control or device configuration → custom profile."
+  },
+  {
+    "id": "MS102-E03-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Windows devices enrolled in Intune\n- The IT team receives reports that some devices are not receiving Intune policies\n- When checking the Intune portal, affected devices show 'Last check-in: 15 days ago'\n- The devices are powered on and connected to the internet\n\nQuestion:\nWhat should you check FIRST on the affected devices?",
+    "choices": [
+      "Check if the Intune Management Extension service is running and if the device can reach Intune service endpoints",
+      "Re-image the affected devices with a fresh Windows installation",
+      "Delete the device records from Intune and re-enrol them",
+      "Upgrade the devices to the latest Windows version"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Devices not checking in despite being online typically indicate: the Intune Management Extension (IME) service is stopped or crashed, network connectivity to Intune endpoints is blocked (firewall/proxy), or the device's MDM enrolment is corrupted. First steps: 1) Check the IntuneManagementExtension service status. 2) Verify the device can reach required Intune URLs (*.manage.microsoft.com). 3) Check for proxy/firewall blocking. 4) Review the IME logs for errors.",
+      "Re-imaging is the most disruptive option and should be a last resort. A check-in issue is typically resolved by fixing the communication problem, not by wiping the device.",
+      "Deleting and re-enrolling loses the device's management history and is disruptive. The check-in issue is usually a network or service problem that can be fixed without re-enrolment.",
+      "Windows version is unlikely to be the cause of check-in failures if the device was previously checking in successfully. OS version issues typically cause profile errors, not check-in failures."
+    ],
+    "tip": "Intune check-in troubleshooting: 1. Verify device network connectivity to *.manage.microsoft.com. 2. Check IME service status (services.msc → IntuneManagementExtension). 3. Review IME logs (C:\\ProgramData\\Microsoft\\IntuneManagementExtension\\Logs\\). 4. Check MDM enrollment status (dsregcmd /status). 5. Try manual sync from Company Portal. 6. Check proxy/firewall logs for blocked Intune URLs. Required URLs: *.manage.microsoft.com, *.microsoftonline.com, *.msauth.net."
+  },
+  {
+    "id": "MS102-E03-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team implements a comprehensive security strategy using multiple Microsoft security products\n- They need a unified view that correlates threats across:\n  - Email (Defender for Office 365)\n  - Endpoints (Defender for Endpoint)\n  - Identities (Defender for Identity)\n  - Cloud apps (Defender for Cloud Apps)\n\nQuestion:\nWhat is the unified portal that provides this cross-product threat visibility?",
+    "choices": [
+      "Azure Security Centre (now Defender for Cloud)",
+      "Microsoft 365 Defender portal (security.microsoft.com)",
+      "Azure Sentinel (now Microsoft Sentinel)",
+      "Microsoft 365 admin centre"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure Defender for Cloud (formerly Security Centre) monitors Azure infrastructure, multi-cloud environments, and hybrid workloads. It doesn't unify the Microsoft 365 Defender products (Office 365, Endpoint, Identity, Cloud Apps).",
+      "This option is correct. The Microsoft 365 Defender portal at security.microsoft.com is the unified security portal that brings together: Defender for Office 365 (email protection), Defender for Endpoint (device protection), Defender for Identity (identity threat detection), and Defender for Cloud Apps (cloud app security). It provides unified incidents, cross-product hunting, and correlated alerts across all four pillars.",
+      "Microsoft Sentinel is a SIEM/SOAR solution that can ingest data from Microsoft 365 Defender and many other sources. While it provides a broader view, the question asks about the unified portal for the four specific Defender products, which is the Microsoft 365 Defender portal.",
+      "The Microsoft 365 admin centre manages licences, users, and service configuration. It doesn't provide security threat detection or investigation capabilities."
+    ],
+    "tip": "Microsoft 365 Defender portal (security.microsoft.com): Unified incidents → correlated alerts from all Defender products. Advanced hunting → KQL queries across email, endpoint, identity, cloud app data. Threat analytics → emerging threat intelligence. Secure Score → security posture assessment. Products unified: Defender for Office 365, Endpoint, Identity, Cloud Apps. For broader SIEM: Microsoft Sentinel ingests M365 Defender data + third-party sources."
+  }
+]

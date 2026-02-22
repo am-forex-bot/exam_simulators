@@ -1,0 +1,302 @@
+[
+  {
+    "id": "MS102-E02-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 100 macOS devices that need to be managed by Microsoft Intune\n- The devices are new and have never been configured\n- You want a zero-touch deployment experience similar to Windows Autopilot\n- Devices should automatically enrol in Intune when users first power them on\n\nQuestion:\nWhich Apple service must you integrate with Intune to achieve zero-touch macOS enrolment?",
+    "choices": [
+      "Apple Push Notification service (APNs)",
+      "Apple Business Manager (ABM) with Automated Device Enrolment (ADE)",
+      "Apple Volume Purchase Program (VPP) only",
+      "Apple Configurator"
+    ],
+    "answer": [1],
+    "explanations": [
+      "APNs is required for ALL Apple device management through Intune — it's the communication channel. However, APNs alone doesn't provide zero-touch enrolment. It's a prerequisite but not the answer to zero-touch deployment.",
+      "This option is correct. Apple Business Manager (ABM) with Automated Device Enrolment (formerly DEP) provides zero-touch enrolment for macOS devices. When devices purchased through ABM are powered on, they automatically contact Apple's servers, which redirect them to your Intune MDM. The device enrols without any manual configuration. This is Apple's equivalent of Windows Autopilot.",
+      "VPP (now part of ABM as Apps and Books) handles app licence management — purchasing and distributing app licences in bulk. It doesn't handle device enrolment or zero-touch provisioning.",
+      "Apple Configurator is a macOS app that configures iOS/iPadOS devices via USB connection. It requires physical access to each device, which is the opposite of zero-touch deployment. It also doesn't support macOS devices."
+    ],
+    "tip": "Apple device enrolment in Intune: Automated Device Enrolment (ABM/ASM) → zero-touch, supervised, corporate. Device Enrolment → user-initiated, Company Portal. Direct Enrolment → IT sets up device, no user affinity. Prerequisites: APNs certificate (always), ABM/ASM account (for ADE). ADE = Apple's equivalent of Windows Autopilot."
+  },
+  {
+    "id": "MS102-E02-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The legal department requires that all emails sent by the CEO and CFO are automatically encrypted\n- External recipients should be able to read encrypted emails using a one-time passcode if they don't have an Office 365 account\n- The encryption must be applied automatically without the sender taking any action\n\nQuestion:\nWhich combination of features should you configure?",
+    "choices": [
+      "S/MIME certificates installed on CEO and CFO devices",
+      "Exchange Online mail flow rule that applies Microsoft Purview Message Encryption (OME) to emails from CEO and CFO",
+      "Sensitivity label with 'Do Not Forward' applied manually by CEO and CFO",
+      "DLP policy that blocks all external emails from CEO and CFO"
+    ],
+    "answer": [1],
+    "explanations": [
+      "S/MIME requires certificate management on both sender and recipient sides. External recipients would also need S/MIME certificates, which is impractical. S/MIME doesn't provide the one-time passcode experience for recipients without certificates.",
+      "This option is correct. A mail flow rule (transport rule) can automatically match emails sent by the CEO and CFO (by sender address) and apply Microsoft Purview Message Encryption. OME encrypts the email, and external recipients without Office 365 can authenticate using a one-time passcode (OTP) to read the message. This is fully automatic — no sender action required.",
+      "Sensitivity labels with 'Do Not Forward' can encrypt emails, but the requirement states encryption must be automatic without sender action. Manual label application depends on the user remembering to apply it every time, which is error-prone.",
+      "Blocking all external emails prevents the CEO and CFO from communicating externally, which is far too restrictive. The requirement is to encrypt external emails, not block them."
+    ],
+    "tip": "Automatic email encryption methods: Mail flow rules + OME → automatic based on sender, recipient, keywords. Sensitivity labels with auto-labeling → automatic based on content detection. DLP policy actions → encrypt when sensitive content detected. OME for external recipients: Office 365 users → open natively. Others → one-time passcode (OTP) via web portal."
+  },
+  {
+    "id": "MS102-E02-013",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 400 Android devices used by field service technicians\n- The devices are company-owned and dedicated to work tasks only\n- Technicians should only be able to access three specific apps: a work order app, a mapping app, and Microsoft Teams\n- No personal apps, Google Play Store access, or other device features should be available\n\nQuestion:\nWhich Android Enterprise enrolment mode should you use?",
+    "choices": [
+      "Android Enterprise personally-owned work profile",
+      "Android Enterprise corporate-owned, fully managed",
+      "Android Enterprise corporate-owned, dedicated device",
+      "Android device administrator"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Personally-owned work profile creates a separate work container on personal BYOD devices. Users retain full control of the personal side. This is for BYOD scenarios, not company-owned devices locked to specific apps.",
+      "Fully managed gives IT complete control over corporate-owned devices, but it provides a standard Android experience with a full home screen. While you can restrict some features, it's not specifically designed for locking devices to a small set of apps.",
+      "This option is correct. Dedicated device mode (formerly COSU — Corporate-Owned, Single-Use) is designed for corporate-owned devices locked to a specific set of apps. It creates a locked-down experience where only the allowed apps appear. No personal Google account, no Play Store browsing, no other device features. Perfect for kiosks, digital signage, field worker devices. You can configure multi-app kiosk mode with the three required apps.",
+      "Android device administrator is the legacy management mode that Google is deprecating. It provides limited management capabilities compared to Android Enterprise and doesn't support the granular app lockdown that dedicated device mode provides."
+    ],
+    "tip": "Android Enterprise modes: Personally-owned work profile → BYOD, work/personal separation. Corporate-owned work profile → company device, user also gets personal use. Fully managed → company device, full IT control, standard experience. Dedicated device → company device, locked to specific apps (kiosk/task worker). Device administrator → legacy, being deprecated."
+  },
+  {
+    "id": "MS102-E02-014",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 with Conditional Access\n- A new policy requires that users accessing SharePoint Online from unmanaged devices can only use the web browser\n- Users on unmanaged devices must NOT be able to download, print, or sync files from SharePoint\n- Users on managed (compliant) devices should have full access including desktop app sync\n\nQuestion:\nWhich Conditional Access grant/session control should you configure for unmanaged devices?",
+    "choices": [
+      "Require device to be marked as compliant",
+      "Use app-enforced restrictions (session control)",
+      "Block access completely for unmanaged devices",
+      "Require approved client app"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Requiring device compliance would block ALL access from unmanaged devices, since they can't meet compliance requirements. The requirement states that unmanaged devices should still have limited web access — not be blocked entirely.",
+      "This option is correct. App-enforced restrictions is a session control in Conditional Access that passes the device compliance/join state to SharePoint Online. SharePoint then applies limited access: browser-only with no download, print, or sync capabilities. Managed devices get full access. This is the 'limited web-only access' pattern for unmanaged devices accessing SharePoint and Exchange Online.",
+      "Blocking access completely prevents unmanaged device users from accessing SharePoint at all. The requirement allows limited browser access from unmanaged devices, not a total block.",
+      "Requiring an approved client app limits which apps can access the service but doesn't control whether users can download or print files. Approved client apps are typically Intune-managed mobile apps (Outlook, Teams, OneDrive) — not the scenario described."
+    ],
+    "tip": "App-enforced restrictions: Conditional Access session control → passes device state to SharePoint/Exchange. SharePoint limited access: browser only, no download/print/sync. Works with: SharePoint Online and Exchange Online. Two Conditional Access policies needed: 1) Managed devices → full access. 2) Unmanaged devices → app-enforced restrictions."
+  },
+  {
+    "id": "MS102-E02-015",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage Windows 10/11 devices\n- The IT team needs to deploy a custom Win32 application (.exe installer) to 500 devices\n- The app requires a silent installation command line\n- You need to define detection rules to determine if the app is already installed\n\nQuestion:\nWhat must you do to prepare the Win32 app for Intune deployment?",
+    "choices": [
+      "Upload the .exe file directly to Intune without any conversion",
+      "Convert the .exe to an .msi file using a third-party tool",
+      "Wrap the installer using the Microsoft Win32 Content Prep Tool to create an .intunewin file",
+      "Deploy the app using a PowerShell script instead of the native installer"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Intune does not accept raw .exe files for Win32 app deployment. The installer must be packaged in the .intunewin format that Intune can process and distribute through its content delivery network.",
+      "Converting to .msi is unnecessary and can introduce issues. The Win32 app management feature in Intune handles .exe installers natively — you just need to wrap them in the .intunewin format first.",
+      "This option is correct. The Microsoft Win32 Content Prep Tool (IntuneWinAppUtil.exe) packages the installer and any supporting files into a single .intunewin file. This encrypted, compressed package is what you upload to Intune. You then specify the install command (e.g., 'setup.exe /silent'), uninstall command, and detection rules (file exists, registry key, or MSI product code) in the Intune portal.",
+      "While PowerShell scripts can be used for simple installations, they bypass Intune's Win32 app management capabilities: detection rules, requirement rules, dependency/supersedence, return codes, installation status reporting. The proper approach is to use the Win32 Content Prep Tool."
+    ],
+    "tip": "Win32 app deployment workflow: 1. Package with Win32 Content Prep Tool → .intunewin file. 2. Upload to Intune. 3. Configure: install/uninstall commands, detection rules, requirements. 4. Assign to groups (Required/Available/Uninstall). Detection rules: File (path + version), Registry (key + value), MSI product code. Dependencies and supersedence can chain app installations."
+  },
+  {
+    "id": "MS102-E02-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has both Windows and Linux devices\n- The security team wants Microsoft Defender for Endpoint to protect all devices regardless of operating system\n- Linux servers run Ubuntu 20.04 and Red Hat Enterprise Linux 8\n- The security team needs endpoint detection and response (EDR) capabilities on Linux\n\nQuestion:\nWhich statement about Microsoft Defender for Endpoint on Linux is correct?",
+    "choices": [
+      "Defender for Endpoint is only available for Windows devices",
+      "Defender for Endpoint on Linux provides antivirus and EDR capabilities but is managed differently than Windows endpoints",
+      "Defender for Endpoint on Linux requires Windows Server as a proxy to function",
+      "Defender for Endpoint on Linux only provides antivirus scanning without EDR capabilities"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This is incorrect. Microsoft Defender for Endpoint supports Windows, macOS, Linux, iOS, and Android. Cross-platform support has been available for several years.",
+      "This option is correct. Defender for Endpoint on Linux provides both antivirus (real-time protection, scheduled scans) and EDR (threat detection, investigation, response) capabilities. However, it's deployed and managed differently: installation via package manager (apt/yum), configuration via JSON config files or Intune, and some features like attack surface reduction rules are not available on Linux. Alerts appear in the same Microsoft 365 Defender portal.",
+      "Defender for Endpoint on Linux runs natively on the Linux machine. It communicates directly with the Microsoft Defender for Endpoint cloud service. No Windows Server proxy is required.",
+      "Linux EDR capabilities have been available since the feature's expansion. Defender for Endpoint on Linux provides both antivirus and EDR, including threat detection, alerting, investigation, and automated response capabilities visible in the Defender portal."
+    ],
+    "tip": "Defender for Endpoint platforms: Windows → full feature set (ASR, EDR, AV, network protection). macOS → AV, EDR, network protection. Linux → AV, EDR (deployed via package manager). iOS → web protection, jailbreak detection. Android → web protection, malware scan. All platforms report to the same Microsoft 365 Defender portal."
+  },
+  {
+    "id": "MS102-E02-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview for data governance\n- The compliance team needs to automatically classify documents containing Australian Tax File Numbers (TFNs)\n- When a document containing a TFN is detected in SharePoint Online, a sensitivity label must be automatically applied\n- The label should apply encryption that only allows Finance department users to access the document\n\nQuestion:\nWhich Microsoft Purview feature automatically detects sensitive content and applies sensitivity labels?",
+    "choices": [
+      "Data Loss Prevention (DLP) policies",
+      "Auto-labeling policies (service-side)",
+      "Retention label policies",
+      "Content search"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP policies can detect sensitive information types and take actions like blocking sharing or notifying users, but DLP policies cannot apply sensitivity labels. DLP and sensitivity labeling are separate features that complement each other.",
+      "This option is correct. Auto-labeling policies (service-side) in Microsoft Purview automatically scan content in SharePoint, OneDrive, and Exchange for sensitive information types (like Australian TFNs). When matching content is found, the configured sensitivity label is automatically applied. The label can include encryption with specific access permissions (e.g., only Finance department). Service-side auto-labeling runs in the background without requiring the user's Office app to be open.",
+      "Retention labels manage content lifecycle (how long to keep, when to delete). They do not apply sensitivity classification or encryption. Retention and sensitivity labels are different label types with different purposes.",
+      "Content search finds content matching specific criteria for eDiscovery purposes. It's a discovery/investigation tool, not an automation tool for applying labels or protection."
+    ],
+    "tip": "Auto-labeling: Client-side (in Office apps) → label recommended or auto-applied as user works. Service-side (in M365 services) → runs in background, processes existing and new content. Service-side supports: SharePoint, OneDrive, Exchange. Conditions: sensitive info types, trainable classifiers, exact data match. Both require sensitivity labels configured with the auto-labeling conditions."
+  },
+  {
+    "id": "MS102-E02-018",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune to manage Windows devices\n- The IT team creates a new device configuration profile that configures Wi-Fi settings\n- The profile is assigned to a device group containing 500 devices\n- After 24 hours, 200 devices show 'Pending' status for the profile\n\nQuestion:\nWhat is the MOST likely reason that these 200 devices show 'Pending' status?",
+    "choices": [
+      "The devices have not checked in with Intune since the profile was assigned",
+      "The Wi-Fi settings conflict with an existing Group Policy",
+      "The devices are running an unsupported version of Windows",
+      "The Intune service is experiencing a global outage"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. 'Pending' status in Intune means the policy has been assigned but the device has not yet checked in to receive it. Intune devices check in periodically (default: every 8 hours for Windows). Devices that are powered off, disconnected from the internet, or in a location without connectivity will show 'Pending' until they connect and complete a sync. After 24 hours, 200 devices may simply not have been online.",
+      "Group Policy conflicts would typically result in an 'Error' or 'Conflict' status, not 'Pending'. If a GPO and Intune policy conflict, the device would report the conflict after processing both policies.",
+      "Unsupported Windows versions would result in a 'Not applicable' status, indicating the profile doesn't apply to that platform version. The device would need to check in first to report this status.",
+      "A global Intune outage would affect all 500 devices, not just 200. Also, 300 devices successfully received the profile, indicating the service is operational."
+    ],
+    "tip": "Intune profile status meanings: Succeeded → applied successfully. Pending → assigned but device hasn't checked in. Error → device checked in but profile failed to apply. Conflict → multiple profiles with conflicting settings. Not applicable → profile doesn't apply to device platform/version. Check-in intervals: Windows 8h, iOS/Android 8h, macOS 8h. Force sync: Company Portal → Sync, or Intune remote action."
+  },
+  {
+    "id": "MS102-E02-019",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Azure AD Privileged Identity Management (PIM)\n- The IT manager requires that Global Administrator role activations:\n  - Require approval from the security team\n  - Are limited to a maximum of 4 hours per activation\n  - Require a justification for each activation\n  - Trigger an alert when activated\n\nQuestion:\nWhere do you configure these PIM role settings?",
+    "choices": [
+      "Azure AD admin centre → Roles and administrators → Global Administrator → Properties",
+      "Azure AD PIM → Azure AD roles → Settings → Global Administrator role settings",
+      "Microsoft 365 admin centre → Roles → Role assignments",
+      "Azure AD Conditional Access → Grant controls"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The standard Roles and administrators page shows role assignments and members, but it doesn't provide PIM-specific settings like approval workflows, activation duration, justification requirements, or notification alerts. Those are PIM role settings.",
+      "This option is correct. In Azure AD PIM, each role has configurable settings: maximum activation duration (e.g., 4 hours), whether approval is required and who the approvers are, whether justification is required, whether MFA is required on activation, and notification settings (who receives email when the role is activated). These settings are configured per role in PIM → Azure AD roles → Settings.",
+      "The Microsoft 365 admin centre provides basic role assignment capabilities but does not include PIM functionality like activation workflows, approvals, time limits, or notifications.",
+      "Conditional Access can require MFA or block access based on conditions, but it doesn't manage PIM activation workflows like approval chains, time limits, justification requirements, or role-specific notifications."
+    ],
+    "tip": "PIM role settings per role: Activation → max duration (0.5-24 hours), require MFA, require justification, require approval (specify approvers). Assignment → require justification for assignment, allow permanent eligible/active, expire eligible/active after. Notification → email alerts for activation, assignment, approval requests. Configure each sensitive role separately with appropriate controls."
+  },
+  {
+    "id": "MS102-E02-020",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Intune to manage iOS devices\n- The IT team needs to deploy Microsoft Outlook to all managed iOS devices\n- Outlook should be installed automatically without user intervention\n- Users should not be able to uninstall Outlook from their managed devices\n\nQuestion:\nHow should you configure the Outlook app deployment in Intune?",
+    "choices": [
+      "Add Outlook as an Available app assignment so users can install it from Company Portal",
+      "Add Outlook as a Required app assignment from the iOS App Store (via Intune)",
+      "Ask users to download Outlook from the App Store manually",
+      "Deploy Outlook using Apple Configurator via USB"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Available assignment makes the app appear in the Company Portal for users to optionally install. It doesn't force installation and doesn't prevent uninstallation. This doesn't meet the 'automatic without user intervention' requirement.",
+      "This option is correct. A Required assignment automatically installs the app on all targeted devices without user action. When configured as Required through the iOS App Store integration in Intune, Outlook is silently installed. On supervised iOS devices, users cannot uninstall Required apps. Intune automatically reinstalls the app if a user removes it on unsupervised devices.",
+      "Manual App Store download provides no management, no automatic installation, and no prevention of uninstallation. This bypasses all Intune app management capabilities.",
+      "Apple Configurator requires USB connection to each device, which doesn't scale to an enterprise deployment and doesn't provide ongoing management or uninstall prevention."
+    ],
+    "tip": "Intune app assignment types: Required → auto-install, user can't avoid it. Available → appears in Company Portal, user chooses. Uninstall → removes the app if installed. For iOS Required apps: silent install on supervised devices. On unsupervised devices, user gets a notification to install. Supervised devices: IT has full control including preventing app removal."
+  },
+  {
+    "id": "MS102-E02-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is deploying Windows Autopilot for 300 new devices\n- Some devices are destined for standard users (user-driven deployment)\n- Other devices are destined for conference rooms and shared spaces (no specific user)\n- Conference room devices should deploy without any user signing in during OOBE\n\nQuestion:\nWhich Autopilot deployment mode should you use for the conference room devices?",
+    "choices": [
+      "User-driven mode with Azure AD join",
+      "Self-deploying mode",
+      "Pre-provisioning (white glove)",
+      "Autopilot Reset"
+    ],
+    "answer": [1],
+    "explanations": [
+      "User-driven mode requires a user to sign in with their Azure AD credentials during OOBE. Conference room devices have no specific user, so user-driven mode is not appropriate.",
+      "This option is correct. Self-deploying mode completes the Autopilot provisioning process without any user interaction. The device automatically joins Azure AD, enrols in Intune, and applies all assigned policies and apps. No user credentials are needed during OOBE. This is ideal for shared devices, kiosks, digital signage, and conference room equipment where there is no primary user.",
+      "Pre-provisioning (formerly white glove) is a two-phase process where IT pre-provisions the device before giving it to the user. The second phase still requires user sign-in. It speeds up the user experience but doesn't eliminate the user sign-in requirement.",
+      "Autopilot Reset re-provisions an existing Autopilot device to its original configuration. It's used to repurpose or reset a device that's already deployed, not for initial deployment of new devices."
+    ],
+    "tip": "Autopilot deployment modes: User-driven → user signs in, device gets user affinity. Self-deploying → no user needed, device-only (shared/kiosk). Pre-provisioning → IT pre-provisions, user completes. Self-deploying requires: TPM 2.0 attestation, Ethernet (Wi-Fi requires user interaction to select network). Self-deploying = no user affinity (device is not associated with a specific user)."
+  },
+  {
+    "id": "MS102-E02-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5 with Microsoft Defender for Office 365 Plan 2\n- A user reports receiving an email with a suspicious link\n- The email passed initial scanning and was delivered to the inbox\n- 30 minutes after delivery, Microsoft threat intelligence identifies the link as malicious\n\nQuestion:\nWhich Defender for Office 365 feature automatically removes the email from the user's inbox after delivery?",
+    "choices": [
+      "Safe Attachments",
+      "Zero-hour auto purge (ZAP)",
+      "Safe Links time-of-click protection",
+      "Anti-spam filtering"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Safe Attachments scans email attachments in a sandbox/detonation environment. It protects against malicious attachments, not URLs. While it can delay delivery for scanning, it doesn't remove already-delivered emails.",
+      "This option is correct. Zero-hour auto purge (ZAP) retroactively removes malicious emails from user mailboxes after delivery. When Microsoft's threat intelligence updates identify a previously delivered message as malicious (phishing, malware, spam), ZAP automatically moves the email to Junk or Deleted Items, or quarantines it. This closes the protection gap between initial delivery and threat identification.",
+      "Safe Links provides time-of-click URL scanning — when the user clicks a link, it's checked against the latest threat intelligence. But it doesn't remove the email from the inbox. If the user doesn't click the link, Safe Links doesn't act.",
+      "Anti-spam filtering evaluates emails at delivery time. Once an email passes the spam filter and is delivered, anti-spam doesn't retroactively remove it. That's ZAP's role."
+    ],
+    "tip": "Post-delivery protection timeline: 1. Initial scan (EOP + Defender) → email delivered or quarantined. 2. Safe Links → protects at click-time. 3. ZAP → retroactively removes if verdict changes. ZAP works for: phishing, malware, spam. ZAP does NOT work on: read messages in some cases, mail flow rule actions. ZAP requires Exchange Online mailboxes."
+  },
+  {
+    "id": "MS102-E02-023",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 50 Windows devices that are currently managed by a third-party MDM solution\n- You need to migrate these devices to Microsoft Intune management\n- The migration must minimize disruption to users\n- Devices must not have a period without MDM management\n\nQuestion:\nWhat is the recommended approach to migrate devices from a third-party MDM to Intune?",
+    "choices": [
+      "Unenrol devices from the third-party MDM first, then enrol them in Intune",
+      "Enrol devices in Intune while still enrolled in the third-party MDM (dual enrolment)",
+      "Perform a staged migration: configure Intune policies first, unenrol from third-party, immediately enrol in Intune per device",
+      "Factory reset all devices and use Autopilot for fresh Intune enrolment"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Unenrolling all devices first creates a gap where devices have no MDM management. During this gap, compliance policies, security configurations, and corporate resource access may be affected. This doesn't meet the 'no period without management' requirement.",
+      "Most MDM solutions do not support dual enrolment — a device can typically only be managed by one MDM at a time. Attempting dual enrolment often causes conflicts and is not a supported configuration.",
+      "This option is correct. A staged migration is the recommended approach: 1) Configure all Intune policies, profiles, and app deployments in advance. 2) For each device or small batch: unenrol from the third-party MDM. 3) Immediately enrol the device in Intune (via Company Portal or Azure AD join). The pre-configured Intune policies apply quickly, minimizing the management gap. This approach is controlled and reversible.",
+      "Factory resetting all 50 devices is highly disruptive. Users lose their data, installed applications, and settings. While Autopilot provides a clean enrolment experience, it's unnecessary when existing devices just need to change MDM providers."
+    ],
+    "tip": "MDM migration best practice: 1. Set up Intune fully (policies, profiles, apps, compliance). 2. Test with pilot group (5-10 devices). 3. Staged rollout in batches. 4. Per device: unenrol from old MDM → enrol in Intune immediately. 5. Verify policy application. Key: NO dual enrolment, YES staged migration, pre-configure everything before starting."
+  },
+  {
+    "id": "MS102-E02-024",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to investigate how an attacker moved laterally through the network after compromising a user account\n- They need to see a visual timeline showing: initial compromise, lateral movement to other accounts, accessed resources, and data exfiltration\n- The investigation should correlate signals from email, identity, endpoints, and cloud apps\n\nQuestion:\nWhich Microsoft 365 Defender feature provides this cross-domain attack investigation capability?",
+    "choices": [
+      "Secure Score",
+      "Advanced hunting with KQL queries",
+      "Incident and attack story view",
+      "Threat analytics reports"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Secure Score measures your security posture and provides improvement recommendations. It's a proactive security hygiene tool, not an investigation tool for active incidents.",
+      "Advanced hunting with KQL allows powerful custom queries across all Defender data tables. While it can find the individual events, it doesn't automatically provide the visual timeline/story view that connects all the dots. It's a manual investigation tool.",
+      "This option is correct. The incident view in Microsoft 365 Defender automatically correlates alerts from multiple sources (Defender for Office 365, Identity, Endpoint, and Cloud Apps) into unified incidents. The attack story view provides a visual timeline showing the complete attack chain: initial compromise (email phishing), credential theft (Identity), lateral movement (Endpoint), and data exfiltration (Cloud Apps). This is the investigation tool designed for cross-domain attack analysis.",
+      "Threat analytics provides reports on emerging threats (vulnerabilities, attack campaigns) and their potential impact on your organization. It's a threat intelligence briefing, not a tool for investigating specific incidents in your environment."
+    ],
+    "tip": "Microsoft 365 Defender investigation tools: Incidents → unified view of correlated alerts across all Defender products. Attack story → visual attack chain timeline. Advanced hunting → custom KQL queries for deep investigation. Automated investigation → AI-driven investigation and response. Threat analytics → intelligence on emerging threats. Start with Incidents for overview, then drill into Advanced hunting for details."
+  },
+  {
+    "id": "MS102-E02-025",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has deployed Microsoft 365 Apps to 1,000 Windows devices via Intune\n- The deployment uses the Semi-Annual Enterprise Channel\n- Management requests that all devices move to the Monthly Enterprise Channel for faster feature updates\n- The channel change should not require reinstalling Office\n\nQuestion:\nHow should you change the update channel for the existing Microsoft 365 Apps deployment?",
+    "choices": [
+      "Uninstall Microsoft 365 Apps and reinstall with the new channel selected",
+      "Modify the Microsoft 365 Apps configuration profile in Intune to specify Monthly Enterprise Channel",
+      "Ask users to change the update channel in their Office app settings",
+      "Create a Group Policy Object (GPO) to override the Intune-managed update channel"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Reinstalling Office is unnecessary and highly disruptive. Users would lose their Outlook profiles, cached data, and custom settings. The update channel can be changed without reinstallation.",
+      "This option is correct. In Intune, you can modify the existing Microsoft 365 Apps configuration profile to change the update channel from Semi-Annual Enterprise to Monthly Enterprise. When devices check in, they detect the channel change and automatically switch. The Office apps download the latest Monthly Enterprise Channel build and update in place. No reinstallation or user action required.",
+      "End users cannot change the update channel when it's managed by Intune. The channel setting is enforced by the management policy and is typically hidden or locked in the Office UI.",
+      "Applying a GPO alongside Intune management creates a conflict. Intune-managed settings should be changed in Intune. If both Intune and GPO try to manage the same setting, the behavior is unpredictable and could cause issues."
+    ],
+    "tip": "Microsoft 365 Apps update channels: Current Channel → latest features immediately. Monthly Enterprise → monthly updates, 2-day preview. Semi-Annual Enterprise → updates every 6 months (Jan/Jul). Channel changes via Intune: modify the M365 Apps configuration profile → update channel. No reinstall needed. For Intune-managed devices, always change Office settings in Intune, not GPO."
+  }
+]

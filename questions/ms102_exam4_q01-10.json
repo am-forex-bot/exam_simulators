@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E04-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 2,000 Windows 11 devices managed by Intune\n- The IT team needs to deploy a security baseline to all devices\n- The baseline should configure: Windows Defender Antivirus settings, firewall rules, BitLocker encryption, and attack surface reduction rules\n- The settings should follow Microsoft's recommended security configuration\n\nQuestion:\nWhich Intune feature provides pre-configured security settings based on Microsoft recommendations?",
+    "choices": [
+      "Device configuration profile with custom OMA-URI settings",
+      "Security baselines in Intune endpoint security",
+      "Compliance policy with custom settings",
+      "Windows Update ring with security settings"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Custom OMA-URI settings require manually configuring each individual setting. While flexible, this approach requires extensive knowledge of each setting's OMA-URI path and valid values. Security baselines provide the same settings pre-configured with Microsoft's recommended values.",
+      "This option is correct. Security baselines in Intune provide pre-configured groups of security settings recommended by Microsoft security teams. Available baselines include: Microsoft Defender for Endpoint baseline, Windows security baseline, Microsoft Edge baseline, and Microsoft 365 Apps baseline. Each baseline configures dozens of security settings (antivirus, firewall, BitLocker, ASR rules) with Microsoft's recommended values. You can customise individual settings if needed.",
+      "Compliance policies check device state but don't configure security settings. They evaluate whether settings are in place, not push the settings themselves.",
+      "Windows Update rings manage update delivery and restart behavior. They don't configure security settings like antivirus, firewall, or BitLocker."
+    ],
+    "tip": "Security baselines in Intune: Pre-configured with Microsoft's recommended settings. Available baselines: Windows security baseline, Defender for Endpoint, Microsoft Edge, M365 Apps, Windows 365 Cloud PC. Each version is a snapshot — update to newer baseline versions as they release. Customisation: override any individual setting. Baseline vs configuration profile: baselines = opinionated defaults, profiles = custom configuration. Best practice: start with baselines, customise only where business requires."
+  },
+  {
+    "id": "MS102-E04-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The CISO wants to understand the organization's security posture relative to industry peers\n- The security team needs to identify the TOP 5 actions that would most improve the organization's security\n- They also need to track security improvements month-over-month\n\nQuestion:\nWhich feature provides security posture scoring, prioritised improvement actions, and peer comparison?",
+    "choices": [
+      "Microsoft Defender for Endpoint exposure score",
+      "Microsoft Secure Score",
+      "Azure AD Identity Protection risk dashboard",
+      "Microsoft Purview Compliance Manager score"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Defender for Endpoint exposure score measures endpoint-specific vulnerability exposure. It doesn't cover email, identity, or cloud app security posture, and doesn't provide industry peer comparison.",
+      "This option is correct. Microsoft Secure Score at security.microsoft.com provides: a numerical score (percentage) of your security posture, prioritised improvement actions ranked by point value and impact, comparison with organizations of similar size and industry, and historical tracking showing score changes over time. It covers: Identity (Azure AD), Devices (Defender for Endpoint), Apps (Defender for Cloud Apps), and Data (Information Protection).",
+      "Identity Protection shows identity-specific risks (risky users, risky sign-ins) but doesn't provide a holistic security posture score across all Microsoft 365 services or peer comparison.",
+      "Compliance Manager score measures compliance posture against regulatory frameworks (NIST, ISO, GDPR), not security posture. It's complementary but focuses on compliance, not security."
+    ],
+    "tip": "Secure Score vs Compliance Score: Secure Score → security configuration posture (security.microsoft.com). Compliance Score → regulatory compliance posture (Compliance Manager). Both use a percentage-based scoring system. Secure Score improvement actions: each action has points, user impact level, and implementation complexity. Filter actions by: category, product, status. Peer comparison: based on organization size, industry, and licences. Track: weekly score snapshots for trend analysis."
+  },
+  {
+    "id": "MS102-E04-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune to manage iOS devices with app protection policies (MAM)\n- The policy requires:\n  - A PIN to access managed apps\n  - Biometric authentication (Face ID/Touch ID) allowed as alternative to PIN\n  - If the device is jailbroken, all corporate data must be wiped immediately\n  - Data must be encrypted at rest within managed apps\n\nQuestion:\nWhich app protection policy settings should you configure? (Choose the best answer)",
+    "choices": [
+      "Device compliance policy with jailbreak detection and conditional access",
+      "App protection policy with: PIN required, biometrics allowed, jailbreak action = wipe data, encryption = require",
+      "Device configuration profile with passcode and encryption settings",
+      "Sensitivity label with encryption on all documents"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device compliance policies require device enrolment (MDM). App protection policies (MAM) can work without device enrolment. The scenario describes MAM settings, and all the listed requirements are available in app protection policies.",
+      "This option is correct. App protection policies provide all the required settings: Access → require PIN for access (with biometrics as alternative). Conditional launch → jailbroken/rooted devices → action: wipe data. Data protection → encrypt org data. These settings apply at the app level and work on both enrolled and unenrolled devices. The jailbreak detection runs each time the app launches.",
+      "Device configuration profiles push device-level settings and require MDM enrolment. They can set device passcode requirements but don't provide app-level PIN, per-app jailbreak detection with wipe, or app-level encryption settings.",
+      "Sensitivity labels protect documents with encryption and access controls. They don't provide app-level PIN, jailbreak detection, or the app protection functionality described."
+    ],
+    "tip": "App protection policy sections: Data protection → encryption, cut/copy/paste, data transfer restrictions. Access requirements → PIN, biometrics, credentials. Conditional launch → conditions that trigger actions (jailbreak → wipe, min OS → block, max PIN attempts → reset). Conditional launch actions: Block access, Warn, Wipe data. Jailbreak detection: checked at app launch, also periodic re-check. PIN vs device passcode: app protection PIN is separate from device lock PIN."
+  },
+  {
+    "id": "MS102-E04-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages Windows devices with Intune\n- The IT team wants to use the Settings Catalog to create a comprehensive device configuration\n- The Settings Catalog allows configuring hundreds of individual settings in a single profile\n- The team needs to configure: browser settings, Windows Hello for Business, and power management in one profile\n\nQuestion:\nWhat is the advantage of using the Intune Settings Catalog over traditional device configuration profiles?",
+    "choices": [
+      "The Settings Catalog is faster to apply to devices",
+      "The Settings Catalog provides a flat list of all available settings, allowing granular selection without template restrictions",
+      "The Settings Catalog replaces the need for compliance policies",
+      "The Settings Catalog is only available for macOS devices"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Settings Catalog doesn't apply faster — the sync and application mechanism is the same. The advantage is in the configuration experience, not the deployment speed.",
+      "This option is correct. The Settings Catalog provides a flat, searchable list of ALL available configuration settings across categories. Unlike traditional templates (which group settings by category and may not include all options), the Settings Catalog lets you pick any combination of settings from any category into a single profile. You can mix browser, Windows Hello, and power settings in one profile. It also includes settings not available in traditional templates.",
+      "The Settings Catalog configures device settings. It doesn't evaluate device state or replace compliance policies, which serve a different purpose (evaluation vs configuration).",
+      "The Settings Catalog is available for both Windows and macOS (and expanding). It's not limited to a single platform."
+    ],
+    "tip": "Settings Catalog vs Templates: Templates → pre-grouped settings by category (Wi-Fi, VPN, email, restrictions). Settings Catalog → flat list, pick any settings, mix categories. Settings Catalog advantages: more settings available, granular control, easier search, single profile for mixed settings. Templates advantages: structured layout, familiar categories, some platform-specific features. Settings Catalog scope: Windows + macOS. Recommendation: prefer Settings Catalog for new profiles; templates for specific features (Wi-Fi, VPN, SCEP certs)."
+  },
+  {
+    "id": "MS102-E04-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Azure AD Conditional Access\n- The security team wants to implement token protection (token binding)\n- This feature ensures that access tokens can only be used from the device where the sign-in originally occurred\n- If an attacker steals a token and tries to replay it from a different device, access should be denied\n\nQuestion:\nWhich Conditional Access feature provides this token theft protection?",
+    "choices": [
+      "Require device to be marked as compliant",
+      "Token protection (session control for sign-in token binding)",
+      "Continuous access evaluation (CAE)",
+      "Require approved client app"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Requiring device compliance verifies the device meets Intune compliance policies, but it doesn't bind tokens to specific devices. A stolen token from a compliant device could still be replayed if the attacker's device is also compliant.",
+      "This option is correct. Token protection (sign-in token binding) in Conditional Access binds the access token to the specific device where authentication occurred. The token contains a cryptographic proof tied to the device's TPM. If an attacker extracts the token and attempts to use it from a different device, the proof fails and access is denied. This mitigates token theft and replay attacks.",
+      "Continuous access evaluation (CAE) enables near-real-time policy enforcement by allowing resource providers to reject tokens when conditions change (user disabled, location changes). While CAE helps, it doesn't bind tokens to specific devices — it revokes tokens based on events.",
+      "Requiring approved client apps limits which applications can access services but doesn't bind tokens to devices or prevent token replay from different devices."
+    ],
+    "tip": "Token protection evolution: Traditional tokens → bearer tokens (anyone with the token can use it). Token protection → tokens bound to device TPM (only usable from original device). Status: token protection is in preview/limited GA for specific scenarios. Related protections: CAE → near-real-time token revocation. Sign-in frequency → force re-authentication periodically. Compliant device requirement → verify device health. Layer all together for defense in depth."
+  },
+  {
+    "id": "MS102-E04-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 300 Android Enterprise corporate-owned fully managed devices\n- The IT team deploys a system update policy through Intune to manage Android OS updates\n- Updates should install automatically during a maintenance window (2:00 AM - 5:00 AM)\n- Users should not be able to defer or decline OS updates\n\nQuestion:\nWhich Android Enterprise update management setting in Intune controls this behavior?",
+    "choices": [
+      "Google Play auto-update policy setting",
+      "System update policy with 'Windowed' install type and specified maintenance window",
+      "Device compliance policy requiring minimum OS version",
+      "App protection policy with OS version requirement"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Google Play auto-update controls app updates from the Play Store, not Android operating system updates. App updates and OS updates are managed separately.",
+      "This option is correct. Android Enterprise system update policies in Intune allow you to control OS update behavior on corporate-owned devices. The 'Windowed' install type specifies a maintenance window during which updates automatically install. During this window, the device downloads and installs available OS updates without user intervention. Users cannot defer or decline updates on fully managed devices when a system update policy is applied.",
+      "A compliance policy checks whether the current OS version meets requirements but doesn't push or schedule OS updates. It evaluates state, not enforce updates.",
+      "App protection policies manage app-level data protection on mobile devices. They don't control Android OS system updates."
+    ],
+    "tip": "Android Enterprise system update types: Automatic → install as soon as available. Windowed → install during specified maintenance window. Postpone → defer updates for up to 30 days. Default → device default behavior. Windowed: specify start and end time (local device time). Best practice: use 'Windowed' with off-hours maintenance window to avoid disruption. Only available for: corporate-owned fully managed and dedicated devices."
+  },
+  {
+    "id": "MS102-E04-007",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to create a data classification taxonomy with the following hierarchy:\n  - Public (no protection)\n  - Internal (header/footer marking)\n  - Confidential (marking + encryption for internal users)\n  - Highly Confidential (marking + encryption for specific users only)\n- The labels should be available in Office apps on all platforms\n\nQuestion:\nHow should you implement this classification hierarchy in Microsoft Purview?",
+    "choices": [
+      "Create four separate DLP policies with different actions",
+      "Create four sensitivity labels with increasing priority, each with appropriate protection settings",
+      "Create four retention labels with different retention periods",
+      "Create four Azure AD groups with different access permissions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP policies detect and control data sharing but don't provide user-facing classification labels or apply encryption and visual markings to documents.",
+      "This option is correct. Create four sensitivity labels in Microsoft Purview Information Protection, ordered by priority (Public = lowest, Highly Confidential = highest). Each label is configured with appropriate protection: Public = no protection, Internal = content markings (headers/footers), Confidential = content markings + encryption (all internal users as recipients), Highly Confidential = content markings + encryption (specific users/groups only). Labels appear in Office apps (Word, Excel, PowerPoint, Outlook) across Windows, macOS, web, and mobile. Higher-priority labels can't be downgraded without justification.",
+      "Retention labels manage content lifecycle (how long to keep, when to delete). They're separate from sensitivity labels and don't apply encryption, content markings, or access protection.",
+      "Azure AD groups manage user/device membership for policy targeting. They don't provide document classification, visual markings, or encryption."
+    ],
+    "tip": "Sensitivity label hierarchy: labels ordered by priority (1 = lowest). Higher labels are more restrictive. Downgrade: requires justification (configurable). Label components: name, description, visual markings (header/footer/watermark), encryption (permissions + scope), auto-labeling conditions. Publishing: label policies define which labels users see and which is the default. Platform support: Office desktop, web, mobile; SharePoint, OneDrive, Teams, Power BI."
+  },
+  {
+    "id": "MS102-E04-008",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Intune to manage Windows devices\n- The IT team needs to deploy Microsoft Edge with specific enterprise configurations:\n  - Default homepage set to the company intranet\n  - Disable InPrivate browsing\n  - Configure a list of allowed browser extensions\n  - Force sync of bookmarks with the user's work account\n\nQuestion:\nHow should you deploy and configure Microsoft Edge with these enterprise settings?",
+    "choices": [
+      "Deploy Edge and create a separate Group Policy Object for browser settings",
+      "Deploy Edge using the built-in Intune Edge app type and configure settings via the Settings Catalog or Administrative Templates in Intune",
+      "Ask users to configure Edge settings manually after installation",
+      "Create a PowerShell script to set Edge registry keys"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Group Policy can configure Edge but creates a management split between Intune (device management) and GPO (browser configuration). For Intune-managed devices, keeping all management in Intune is the recommended approach.",
+      "This option is correct. Deploy Microsoft Edge using the built-in app type in Intune. Then configure Edge enterprise settings using either the Settings Catalog (search for Edge settings) or ADMX-backed Administrative Templates in Intune. Available settings include: homepage URL, InPrivate browsing (enable/disable), extension allow/block lists, sync settings, and hundreds of other Edge policies. All management stays within Intune.",
+      "Manual configuration provides no enforcement or consistency. Users may not configure settings correctly, and settings can be changed by users at any time.",
+      "PowerShell scripts for registry keys run once and aren't enforced continuously. The Settings Catalog provides persistent policy enforcement that reapplies if users change settings."
+    ],
+    "tip": "Microsoft Edge management in Intune: Deploy: built-in Microsoft Edge app type (auto-update included). Configure: Settings Catalog → search 'Microsoft Edge', or Administrative Templates (ADMX) → Microsoft Edge. Key settings: homepage, new tab page, extension management, sync, InPrivate, password manager, SmartScreen. Edge Update: auto-update channel selection (Stable, Beta, Dev, Canary). Extension management: allow list, block list, force-install list."
+  },
+  {
+    "id": "MS102-E04-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 500 Windows devices enrolled in Intune\n- The IT team needs to remotely collect diagnostic information from a specific device that is experiencing issues\n- The diagnostics should include: event logs, registry keys, Intune Management Extension logs, and OS configuration data\n- The data must be downloadable from the Intune portal\n\nQuestion:\nWhich Intune remote action collects this diagnostic data?",
+    "choices": [
+      "Remote Lock",
+      "Collect diagnostics",
+      "Restart",
+      "Sync"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Remote Lock locks the device screen, requiring the user to enter their passcode. It doesn't collect any diagnostic data.",
+      "This option is correct. The 'Collect diagnostics' remote action in Intune triggers the device to gather comprehensive diagnostic data including: Windows event logs, registry key exports, Intune Management Extension logs, MDM diagnostic logs, OS configuration data, installed app lists, and more. The collected data is uploaded to the Intune service and becomes available for download as a zip file from the device's Diagnostics page in the Intune portal.",
+      "Restart performs a remote device restart. It doesn't collect any diagnostic information.",
+      "Sync forces the device to check in with Intune and receive any pending policies. It doesn't collect diagnostic data."
+    ],
+    "tip": "Intune remote diagnostic actions: Collect diagnostics → comprehensive device data, downloadable as zip. Available data: event logs, registry exports, MDM logs, IME logs, OS info, networking, installed apps. Requirements: Windows 10 (version 1909+) / Windows 11, Intune enrolled. File size: can be large (100+ MB). Retention: diagnostics available for download for a limited time. Alternative: Intune diagnostic logs collected on-device at C:\\Users\\Public\\Documents\\MDMDiagnostics\\."
+  },
+  {
+    "id": "MS102-E04-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview Information Protection\n- Users in the legal department frequently need to share highly confidential documents with external law firms\n- The documents must remain encrypted and protected even when viewed by external recipients\n- External recipients should be able to view but NOT edit, print, or forward the documents\n- External recipients do not have Microsoft 365 licences\n\nQuestion:\nHow should you configure the sensitivity label to enable this controlled external sharing?",
+    "choices": [
+      "Remove encryption so external recipients can access the documents freely",
+      "Configure the sensitivity label with encryption, add external law firm domains as authorized viewers with View Only permissions",
+      "Create a DLP policy that blocks all external sharing",
+      "Share documents via an unprotected SharePoint link with view-only permissions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Removing encryption eliminates all protection. External recipients could copy, forward, edit, and print without restriction. This contradicts the requirement for controlled access.",
+      "This option is correct. Sensitivity labels with encryption can specify permissions for external users by domain (e.g., @lawfirm.com). Set permissions to 'Viewer' which allows only View access (no edit, print, copy, or forward). External recipients authenticate via one-time passcode (OTP) if they don't have a Microsoft 365 account. The encryption travels with the document, so protection persists regardless of where the document is stored or shared.",
+      "Blocking all external sharing prevents the legal team from collaborating with law firms, which is a core business requirement. The need is for controlled sharing, not blocked sharing.",
+      "An unprotected SharePoint link provides no persistent protection. Once downloaded, the document is unprotected and can be edited, printed, and forwarded without restriction."
+    ],
+    "tip": "Sensitivity label encryption for external sharing: Permissions: assign by email, domain, or 'any authenticated user'. Permission levels: Viewer (view only), Reviewer (view + edit), Co-Author (view + edit + save). External authentication: Microsoft 365 account → opens natively. Non-M365 user → one-time passcode (OTP) via Azure AD B2B. Protection persistence: encryption stays with the document after download. Label applies to: Word, Excel, PowerPoint, PDF (via Azure Information Protection)."
+  }
+]

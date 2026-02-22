@@ -1,0 +1,302 @@
+[
+  {
+    "id": "MS102-E03-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages devices with both Microsoft Endpoint Configuration Manager (MECM) and Intune via co-management\n- The compliance policies workload has been moved to Intune\n- The IT team notices that compliance evaluation results differ between MECM and Intune\n- The MECM compliance dashboard still shows some devices as compliant when Intune marks them as non-compliant\n\nQuestion:\nWhy do the compliance results differ between MECM and Intune for co-managed devices?",
+    "choices": [
+      "MECM and Intune use the same compliance engine — results should always match",
+      "When the compliance workload is moved to Intune, only Intune evaluates compliance; MECM's compliance data becomes stale",
+      "Intune compliance policies are less accurate than MECM",
+      "The devices need to be restarted for the workload switch to take effect"
+    ],
+    "answer": [1],
+    "explanations": [
+      "MECM and Intune use different compliance engines with different policy sets. They are separate management platforms with different evaluation capabilities.",
+      "This option is correct. When the compliance policies workload slider is moved to Intune in co-management settings, Intune becomes the authority for compliance evaluation. MECM's compliance data for those devices is no longer actively updated. The MECM console may still show old compliance data, but the authoritative compliance state is now in Intune. Conditional Access uses the Intune compliance state, not MECM's stale data.",
+      "This is incorrect. Intune compliance policies are fully capable and are the modern approach. The difference in results is due to the workload authority switch, not accuracy.",
+      "The workload switch takes effect when the device checks in to both services. A restart may trigger a check-in but is not required for the workload switch itself. The real issue is that MECM's compliance data is stale, not that the switch hasn't taken effect."
+    ],
+    "tip": "Co-management workload authority: when a workload moves to Intune, Intune becomes the source of truth. MECM data for that workload becomes stale. Workload sliders: Compliance policies, Device configuration, Windows Update, Resource access, Endpoint protection, Client apps, Office Click-to-Run. Verify authority: Intune admin centre shows which platform manages each workload per device."
+  },
+  {
+    "id": "MS102-E03-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Defender for Office 365\n- The security team wants to allow users to report suspicious emails directly from Outlook\n- When a user reports a suspicious email, it should be automatically analysed by Microsoft\n- The security team should also receive a copy for internal review\n\nQuestion:\nWhich feature enables user-reported email analysis?",
+    "choices": [
+      "Exchange Online mail flow rule that forwards suspicious emails to the security team",
+      "User reported settings in Microsoft Defender for Office 365 with the Report Message add-in",
+      "DLP incident report sent to the security team",
+      "Outlook junk email filter configuration"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A mail flow rule could forward emails but doesn't provide the structured reporting, Microsoft threat analysis, or user reporting workflow. Users would need to manually forward emails rather than using a report button.",
+      "This option is correct. The Report Message (or Report Phishing) add-in for Outlook provides users with a button to report suspicious emails. When configured in Microsoft Defender for Office 365 user reported settings, reported messages can be sent to: Microsoft for analysis (improves threat detection), a specified mailbox (security team), or both. The security team can review reported messages in the Submissions page in the Microsoft 365 Defender portal.",
+      "DLP incident reports are generated when DLP policies detect sensitive content. They're not related to user reporting of suspicious/phishing emails.",
+      "Outlook's junk email filter moves suspected junk to the Junk folder but doesn't provide a reporting mechanism to the security team or Microsoft. It's a client-side filter, not a reporting workflow."
+    ],
+    "tip": "User reported messages setup: 1. Deploy Report Message or Report Phishing add-in (via Intune or centralized deployment). 2. Configure user reported settings in Defender portal → Settings → Email & collaboration → User reported settings. 3. Choose destinations: Microsoft, custom mailbox, or both. Security team review: Defender portal → Email & collaboration → Submissions → User reported. Outcome: improve org protection + enable user security awareness."
+  },
+  {
+    "id": "MS102-E03-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages Windows devices with Intune\n- An application has been superseded by a newer version\n- The IT team needs to:\n  - Automatically uninstall the old application version\n  - Install the new application version in its place\n  - Handle the upgrade on all devices that have the old version\n\nQuestion:\nWhich Win32 app management feature in Intune handles this application replacement?",
+    "choices": [
+      "App dependency chain",
+      "App supersedence",
+      "App detection rules",
+      "App requirement rules"
+    ],
+    "answer": [1],
+    "explanations": [
+      "App dependency defines apps that must be installed BEFORE the primary app (prerequisites). For example, .NET Framework must be installed before a .NET app. Dependencies don't uninstall old versions — they install additional required components.",
+      "This option is correct. App supersedence in Intune Win32 app management defines a relationship where a new app version replaces (supersedes) an older version. When you configure supersedence, Intune automatically uninstalls the old version and installs the new one on devices that had the old version. You can choose to uninstall the superseded app or just update it. The supersedence chain ensures orderly application version management.",
+      "Detection rules determine whether an app is already installed on a device (checking file path, registry key, or MSI product code). They don't manage the replacement of one app version with another.",
+      "Requirement rules define prerequisites for installation (minimum OS version, disk space, processor architecture). They evaluate whether the device meets conditions for installation, not whether to replace an existing app."
+    ],
+    "tip": "Win32 app relationships: Supersedence → new version replaces old (uninstall old + install new). Dependency → prerequisite must be installed first (install prereq, then primary app). Supersedence chain: App v3 supersedes v2 which supersedes v1. Intune handles the entire chain. Configure in: Win32 app → Dependencies tab or Supersedence tab. Supersedence actions: Uninstall previous (clean replacement) or Update (install new alongside)."
+  },
+  {
+    "id": "MS102-E03-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Azure AD Premium P1 and Intune\n- The security team wants to grant the help desk team ability to:\n  - Reset passwords for standard users only\n  - Wipe/retire devices in Intune\n  - NOT be able to modify Conditional Access policies or manage admin accounts\n\nQuestion:\nWhich Azure AD and Intune roles should you assign to the help desk team?",
+    "choices": [
+      "Global Administrator — provides all necessary permissions",
+      "Helpdesk Administrator (Azure AD) + Intune Service Administrator",
+      "Helpdesk Administrator (Azure AD) + a custom Intune role with device management permissions",
+      "Password Administrator (Azure AD) only"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Global Administrator provides ALL permissions including modifying Conditional Access and managing admin accounts. This violates the least-privilege requirement and gives far more access than needed.",
+      "Intune Service Administrator (now Intune Administrator) has full control over Intune including policy creation, which may exceed the required scope. Additionally, it might allow modifying settings beyond device wipe/retire. A custom role provides more precise control.",
+      "This option is correct. Helpdesk Administrator in Azure AD allows resetting passwords for non-admin users, which meets the password reset requirement. A custom Intune role can be created with only the specific device actions needed (wipe, retire) without granting access to policy management, Conditional Access, or admin account management. This follows the least-privilege principle.",
+      "Password Administrator can reset passwords but has no Intune permissions. It cannot wipe or retire devices. Only the Azure AD role is covered, not the Intune device management requirement."
+    ],
+    "tip": "Role assignment best practice: least privilege principle. Azure AD built-in roles: Helpdesk Administrator → password reset for non-admins. Password Administrator → password reset for non-admins (similar scope). Intune custom roles: select specific permissions (device actions only). Role-Based Access Control (RBAC) in Intune: create custom roles with granular permissions → assign to scope groups. Avoid Intune Administrator (full Intune control) when only specific actions are needed."
+  },
+  {
+    "id": "MS102-E03-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 E5\n- The security team needs to create a rule that:\n  - Detects when a single user downloads more than 500 files from SharePoint within one hour\n  - Generates an alert for investigation\n  - Automatically suspends the user's account if the activity is confirmed as malicious\n\nQuestion:\nWhich Microsoft security tool should the security team use to create this custom detection and response rule?",
+    "choices": [
+      "Microsoft Purview DLP policy",
+      "Microsoft Defender for Cloud Apps activity policy",
+      "Microsoft Defender for Endpoint custom detection rule",
+      "Exchange Online transport rule"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP policies detect sensitive content (credit card numbers, SSNs) being shared and take actions to prevent data loss. They don't count file downloads or detect volume-based activity anomalies.",
+      "This option is correct. Microsoft Defender for Cloud Apps activity policies can monitor user activities across connected cloud apps (including SharePoint). You can create a policy that triggers when a user downloads more than a threshold number of files within a time window. The policy generates an alert and can automatically take governance actions including suspending the user account. This is exactly the use case for Cloud Apps activity-based detection.",
+      "Defender for Endpoint custom detection rules use KQL queries against endpoint data (processes, file events, network connections). They monitor device-level activity, not cloud app activity like SharePoint file downloads.",
+      "Exchange Online transport rules process emails based on conditions. They have no visibility into SharePoint file download activity."
+    ],
+    "tip": "Defender for Cloud Apps policy types: Activity policies → detect specific user activities (mass download, unusual access patterns). Anomaly detection → ML-based detection of unusual behavior (impossible travel, suspicious inbox forwarding). File policies → scan files for sensitive content or sharing violations. Session policies → real-time session controls. Governance actions: alert, suspend user, require sign-in again, notify user manager."
+  },
+  {
+    "id": "MS102-E03-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 200 Windows devices enrolled in Intune\n- The IT team needs to configure a VPN connection for all devices\n- The VPN must automatically connect when users launch specific applications (e.g., SAP and a custom ERP system)\n- The VPN should disconnect when those applications are closed\n\nQuestion:\nWhich VPN configuration feature in Intune enables this behavior?",
+    "choices": [
+      "Always-on VPN",
+      "Per-app VPN (app-triggered VPN)",
+      "Split tunnelling VPN",
+      "Device tunnel VPN"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Always-on VPN maintains a persistent VPN connection at all times, regardless of which apps are running. This routes all traffic through the VPN, which may not be desired and wastes VPN capacity when the target apps aren't in use.",
+      "This option is correct. Per-app VPN (also called app-triggered VPN) automatically establishes a VPN connection when specific designated applications are launched. When all triggering apps are closed, the VPN disconnects. This ensures VPN resources are only used when needed and that only traffic from the specified apps traverses the VPN tunnel. Configure in Intune by associating the VPN profile with specific app identifiers.",
+      "Split tunnelling determines which traffic goes through the VPN vs the direct internet connection based on destination network/IP ranges. It doesn't trigger the VPN connection based on which application is running.",
+      "Device tunnel VPN establishes a VPN connection before user sign-in, allowing the device to reach domain controllers for authentication. It's a system-level tunnel, not an app-triggered tunnel."
+    ],
+    "tip": "VPN modes in Intune: Per-app VPN → connects when specific apps launch. Always-on → persistent connection, always active. Split tunnel → route specific traffic through VPN, rest direct. Device tunnel → pre-logon VPN for device authentication. App-triggered VPN benefits: conserves VPN resources, reduces bandwidth, limits VPN scope to necessary apps. Supported VPN clients: Microsoft Tunnel, Cisco AnyConnect, Palo Alto GlobalProtect, etc."
+  },
+  {
+    "id": "MS102-E03-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team needs to implement data governance for Teams\n- Teams channel messages in the 'Finance' team must be retained for 10 years\n- Teams channel messages in all other teams should be retained for 2 years\n- After the retention periods, messages should be automatically deleted\n\nQuestion:\nHow should you configure retention to apply different periods to different Teams?",
+    "choices": [
+      "Create one retention policy for all Teams with a 10-year retention period",
+      "Create two retention policies: one scoped to the Finance team (10 years) and one for all Teams (2 years), relying on retention precedence rules",
+      "Configure retention settings directly in the Teams admin centre",
+      "Apply retention labels manually to each message in the Finance team"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A single 10-year retention policy for all Teams over-retains content for non-Finance teams, violating the 2-year requirement for other teams and increasing storage costs unnecessarily.",
+      "This option is correct. Create two retention policies: Policy 1 targets the Finance team's Microsoft 365 Group (which owns the Teams channel) with 10-year retention + delete. Policy 2 targets all Teams channel messages with 2-year retention + delete. When both policies apply to the Finance team, retention precedence rules ensure that the LONGER retention period wins — so Finance messages are retained for 10 years, while other teams' messages are retained for 2 years then deleted.",
+      "The Teams admin centre manages Teams service settings (messaging policies, meeting policies, voice) but doesn't configure retention policies. Retention is managed through Microsoft Purview compliance portal.",
+      "Manually applying retention labels to individual Teams messages is impractical at scale. Teams messages don't support manual retention label application in the same way as documents. Retention policies are the correct approach for Teams message retention."
+    ],
+    "tip": "Retention precedence (when multiple policies apply): 1. Retention wins over deletion. 2. Longest retention period wins. 3. Explicit inclusion wins over org-wide. So: Finance team with 10-year policy + org-wide 2-year policy → Finance retains for 10 years. Teams retention locations: Teams channel messages → stored in group mailbox. Teams chats → stored in user mailbox. Teams private channel → stored in user mailbox."
+  },
+  {
+    "id": "MS102-E03-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows and mobile devices\n- The IT team needs to purchase iOS and macOS app licences in bulk\n- App licences should be reclaimed and reassigned when an employee leaves the company\n- The licence management should be integrated with Intune\n\nQuestion:\nWhich Apple service and Intune integration handles bulk app licence management?",
+    "choices": [
+      "Apple App Store direct purchase per user",
+      "Apple Business Manager (ABM) Volume Purchase Program (VPP) integrated with Intune",
+      "Apple Developer Enterprise Program for custom app distribution",
+      "Apple Configurator for app installation via USB"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Direct App Store purchases are tied to individual Apple IDs and cannot be managed centrally. Licences purchased through personal Apple IDs cannot be reclaimed or reassigned by IT.",
+      "This option is correct. Apple Business Manager (ABM) includes volume purchasing (formerly VPP) that allows organisations to purchase app licences in bulk. When integrated with Intune via a VPP token, licences appear in Intune and can be assigned to users or devices. When an employee leaves, the licence is revoked and can be reassigned to another user. This provides centralised lifecycle management of Apple app licences.",
+      "The Apple Developer Enterprise Program allows organisations to develop and distribute custom internal apps. It doesn't handle purchasing licences for third-party App Store apps.",
+      "Apple Configurator installs apps via USB connection and doesn't manage licence purchasing, reclamation, or reassignment. It's a device setup tool, not a licence management platform."
+    ],
+    "tip": "Apple VPP with Intune: Purchase in ABM → sync to Intune via VPP token → assign licences to users/devices. Device-based licences: no Apple ID needed (app installs automatically). User-based licences: requires Managed Apple ID. Licence reclamation: revoke from departed user → reassign to new user. VPP token sync: automatic, periodic. Multiple VPP tokens supported for different locations/countries."
+  },
+  {
+    "id": "MS102-E03-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is implementing Microsoft Tunnel for Intune\n- Mobile devices (iOS and Android) need to securely access on-premises web applications\n- The applications are hosted on internal servers not accessible from the internet\n- The solution must work with Intune-managed devices using Microsoft Edge as the browser\n\nQuestion:\nWhat is Microsoft Tunnel and how does it enable mobile access to on-premises resources?",
+    "choices": [
+      "Microsoft Tunnel is a DNS resolution service for internal hostnames",
+      "Microsoft Tunnel is a VPN gateway solution that runs on a Linux server to provide VPN access from Intune-managed mobile devices to on-premises resources",
+      "Microsoft Tunnel is a cloud-only proxy that doesn't require any on-premises infrastructure",
+      "Microsoft Tunnel is a Windows Server role that provides Remote Desktop access"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Microsoft Tunnel is not a DNS service. DNS resolution may be part of the VPN experience, but Tunnel's primary function is providing a VPN tunnel from mobile devices to on-premises networks.",
+      "This option is correct. Microsoft Tunnel is a VPN gateway solution installed on a Linux server (Docker container) in your on-premises network or DMZ. It provides Intune-managed iOS and Android devices with VPN access to on-premises resources. It supports both full-device VPN and per-app VPN. Microsoft Tunnel integrates with Conditional Access to ensure only compliant devices can establish VPN connections. For web-based resources, the Tunnel can work with Microsoft Edge (MAM Tunnel) without requiring full VPN.",
+      "Microsoft Tunnel requires on-premises infrastructure (a Linux server running Docker). It's not a pure cloud service. The server acts as the VPN gateway that bridges mobile devices to internal resources.",
+      "Microsoft Tunnel runs on Linux (not Windows Server) and provides VPN access (not Remote Desktop). It's designed for mobile device access to on-premises resources, not for remote desktop sessions."
+    ],
+    "tip": "Microsoft Tunnel: Gateway: Linux server with Docker container. Protocols: supports full VPN and per-app VPN. Platforms: iOS and Android (not Windows — Windows uses always-on VPN). MAM Tunnel: VPN through Microsoft Edge without full device enrolment. Integration: Conditional Access (require compliant device for VPN). Deployment: Intune VPN profile references the Tunnel server. High availability: multiple Tunnel servers in a site."
+  },
+  {
+    "id": "MS102-E03-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team discovers that some users are accessing Microsoft 365 from countries where the company has no operations\n- These sign-ins appear to be from VPN services or anonymizing proxies\n- The team wants to restrict access to Microsoft 365 from specific countries while allowing access from countries where the company operates\n\nQuestion:\nWhich Conditional Access feature should you use to block access from unauthorized countries?",
+    "choices": [
+      "Named locations with country/region filter in Conditional Access",
+      "Azure AD IP address range restrictions",
+      "Exchange Online client access rules",
+      "Network Security Group (NSG) in Azure"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Named locations in Conditional Access allow you to define countries and regions where access is allowed or blocked. Create a named location with the countries where the company operates, then create a Conditional Access policy that blocks access from all locations EXCEPT the allowed countries. The location is determined by the IP address's geographic mapping. You can also mark specific countries as trusted.",
+      "While Azure AD can work with IP ranges, managing country-level restrictions by individual IP ranges is impractical as IP allocations change frequently. Named locations with country/region selection is the purpose-built feature for geographic restrictions.",
+      "Exchange Online client access rules (deprecated) only affected Exchange Online, not all Microsoft 365 services. They've been replaced by Conditional Access which provides unified access control across all cloud apps.",
+      "NSGs are Azure network-level controls that filter traffic to Azure virtual machines and subnets. They don't control access to SaaS services like Microsoft 365."
+    ],
+    "tip": "Location-based Conditional Access: Named locations → countries/regions OR IP address ranges. Country blocking: create CA policy → condition: include 'Any location', exclude allowed countries → grant: block access. Considerations: VPN users may appear to sign in from VPN exit country. Traveling employees: may be blocked from restricted countries. Combine with: Identity Protection (detects impossible travel), MFA for unfamiliar locations."
+  },
+  {
+    "id": "MS102-E03-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows devices\n- The security team wants to use Intune's proactive remediation scripts\n- The first script should detect whether the Windows Telemetry service is running\n- If the service is stopped, a remediation script should start it automatically\n\nQuestion:\nWhat is the Intune feature that runs paired detect/remediate scripts on managed devices?",
+    "choices": [
+      "Compliance policy custom scripts",
+      "Proactive remediations (Remediations in Endpoint Analytics)",
+      "Device configuration PowerShell scripts",
+      "Win32 app detection rules"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Compliance policy custom scripts check device state and report compliance but don't automatically remediate issues. They evaluate and report — they don't fix.",
+      "This option is correct. Proactive remediations (now called Remediations under Endpoint Analytics in Intune) run paired scripts: a detection script that checks for a condition (e.g., is the Telemetry service running?) and a remediation script that fixes the issue if detected (e.g., start the service). The detection script runs on a schedule, and if it returns a non-zero exit code (issue detected), the remediation script executes automatically. This provides self-healing device management.",
+      "Device configuration PowerShell scripts run a single script without the paired detect/remediate pattern. They execute once or on a schedule but don't have the conditional remediation logic.",
+      "Win32 app detection rules determine whether an app is installed. They don't run remediation actions or manage system services."
+    ],
+    "tip": "Proactive remediations (Remediations): Detection script → checks for issue (exit 0 = OK, exit 1 = issue found). Remediation script → fixes the issue (runs only if detection finds a problem). Schedule: hourly, daily, or custom. Requirements: Windows 10/11 Enterprise or Education, Intune licence. Use cases: fix misconfigurations, ensure services running, clear caches, update registry settings. Located: Intune → Reports → Endpoint analytics → Proactive remediations."
+  },
+  {
+    "id": "MS102-E03-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- A user's account shows 'High' user risk in Azure AD Identity Protection\n- The risk was triggered by leaked credentials detected on the dark web\n- The user risk policy is configured to require password change at High risk\n\nQuestion:\nWhat happens when the user with High risk signs in?",
+    "choices": [
+      "The user is completely blocked from signing in",
+      "The user is prompted to complete MFA and then forced to change their password",
+      "The user signs in normally with no additional prompts",
+      "The user's account is automatically deleted"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A user risk policy configured to 'Require password change' does not block access entirely. It allows the user to sign in but forces remediation through password change. If the policy were set to 'Block access', then the user would be blocked.",
+      "This option is correct. When a user with High risk signs in and the user risk policy requires password change: 1) The user authenticates normally. 2) The user is prompted for MFA (to verify their identity). 3) After MFA, the user is forced to change their password through Self-Service Password Reset (SSPR). 4) After the password change, the user risk is automatically remediated (reset to safe). This ensures the compromised credentials are no longer valid.",
+      "Signing in normally would leave the compromised credentials active, defeating the purpose of the risk policy. The whole point of Identity Protection is to require remediation actions.",
+      "Azure AD never automatically deletes accounts. Identity Protection remediates risk through password changes and MFA, not account deletion."
+    ],
+    "tip": "User risk remediation flow: Sign-in → MFA challenge → SSPR password change → risk automatically cleared. Requirements: user must be registered for both MFA and SSPR. If user is NOT registered for SSPR: admin must manually reset password. User risk vs Sign-in risk: User risk = account is compromised (leaked credentials, impossible travel). Sign-in risk = specific sign-in is suspicious. User risk remediation = password change. Sign-in risk remediation = MFA."
+  },
+  {
+    "id": "MS102-E03-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune app protection policies on iOS devices\n- The policy requires a 6-digit PIN to access managed apps\n- A user reports that they can no longer access Microsoft Outlook on their iPhone\n- The user sees the message: 'Your organization's data has been wiped'\n\nQuestion:\nWhat is the MOST likely cause of this selective wipe?",
+    "choices": [
+      "The user entered the wrong PIN too many times, exceeding the maximum PIN retry limit",
+      "The Intune service experienced an outage",
+      "The user's iPhone needs a software update",
+      "Microsoft Outlook needs to be reinstalled from the App Store"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. App protection policies include a 'Max PIN attempts' setting. When a user exceeds this limit (e.g., 5 or 10 attempts), the policy triggers a selective wipe of corporate data in all managed apps. The user sees the 'organization's data has been wiped' message. The user must re-authenticate and re-download corporate data. This is a security measure to prevent brute-force PIN attacks.",
+      "An Intune service outage would prevent policy evaluation but wouldn't trigger a selective wipe. Service outages typically result in 'unable to connect' errors, not data wipe messages.",
+      "An outdated iOS version might cause compliance issues but wouldn't directly trigger a selective wipe with the specific message about organization data being wiped. The message is specifically from the app protection policy.",
+      "Reinstalling Outlook doesn't address the root cause. The selective wipe was triggered by the PIN retry policy. After reinstalling, the user would need to reconfigure their account and set a new PIN."
+    ],
+    "tip": "App protection policy selective wipe triggers: Max PIN attempts exceeded → corporate data wiped. Offline grace period exceeded → corporate data wiped. Jailbreak/root detection → corporate data wiped. Minimum OS version not met (if configured to wipe) → corporate data wiped. After wipe: user can re-sign-in, re-set PIN, and re-download corporate data. Admin selective wipe: Intune → Users → select user → App protection status → Wipe."
+  },
+  {
+    "id": "MS102-E03-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Azure AD and Intune\n- The IT team creates device categories in Intune (e.g., 'Executive', 'Standard', 'Shared')\n- When a user enrols a device, they should be prompted to select a device category\n- Based on the selected category, the device should automatically be added to the appropriate Azure AD dynamic device group\n\nQuestion:\nWhat is the purpose of device categories in Intune?",
+    "choices": [
+      "Device categories automatically install different operating systems based on the category",
+      "Device categories allow devices to be automatically sorted into groups for targeted policy and app deployment",
+      "Device categories determine the device's compliance status",
+      "Device categories control which users can enrol devices"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device categories don't change or install operating systems. They're a logical classification mechanism, not an OS deployment tool.",
+      "This option is correct. Device categories in Intune provide a way to classify devices at enrolment time. The user (or admin) selects a category, and Azure AD dynamic device groups can use the deviceCategory attribute to automatically sort devices into groups. These groups then receive targeted policies, profiles, and app deployments. For example: 'Executive' devices get a premium app suite and VPN profile, 'Standard' devices get the basic suite, and 'Shared' devices get kiosk configuration.",
+      "Device categories have no impact on compliance evaluation. Compliance policies evaluate device health (OS version, encryption, jailbreak status), not the device category.",
+      "Device categories are applied AFTER enrolment. They don't control who can enrol or restrict enrolment. Enrolment restrictions are a separate Intune feature."
+    ],
+    "tip": "Device categories workflow: 1. Create categories in Intune (Executive, Standard, Shared, etc.). 2. User selects category during enrolment (or admin sets it later). 3. Azure AD dynamic device group rule: deviceCategory -eq 'Executive'. 4. Group receives targeted policies and apps. Benefits: simplified group management, consistent policy targeting, self-service classification. Categories can be changed later by admins in the Intune portal."
+  },
+  {
+    "id": "MS102-E03-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization is evaluating compliance against the NIST 800-53 framework\n- The compliance team needs to:\n  - See which Microsoft 365 configurations align with NIST controls\n  - Track the organization's compliance progress over time\n  - Identify improvement actions to increase compliance score\n\nQuestion:\nWhich Microsoft Purview feature provides this regulatory compliance assessment?",
+    "choices": [
+      "Audit log search",
+      "Compliance Manager",
+      "eDiscovery Premium",
+      "Data classification overview"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Audit logs record user and admin activities. They provide evidence for compliance investigations but don't assess compliance against regulatory frameworks or provide improvement recommendations.",
+      "This option is correct. Compliance Manager in Microsoft Purview provides pre-built assessments for regulatory frameworks (NIST 800-53, ISO 27001, GDPR, HIPAA, etc.). It maps Microsoft 365 configurations to framework controls, shows a compliance score, tracks progress over time, and provides prioritised improvement actions. Microsoft manages some actions automatically (Microsoft-managed controls), while others require customer action (customer-managed controls).",
+      "eDiscovery Premium is for legal content discovery and review. It doesn't assess regulatory compliance or provide framework-specific recommendations.",
+      "Data classification overview shows what types of sensitive data exist in your environment (sensitive info types, labels applied). It's a data visibility tool, not a regulatory compliance assessment tool."
+    ],
+    "tip": "Compliance Manager: Pre-built assessments: NIST, ISO, GDPR, HIPAA, SOC, and many more. Compliance score: weighted percentage based on completed improvement actions. Actions: Microsoft-managed (Microsoft handles) + customer-managed (you handle). Templates: free templates for common frameworks, premium templates for add-on cost. Improvement actions: step-by-step guidance with links to configuration pages. Evidence: attach documentation and test results to actions."
+  }
+]

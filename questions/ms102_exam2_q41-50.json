@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E02-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Intune-managed iOS devices\n- The security team requires that all iOS devices must have a minimum OS version of iOS 16.0\n- Devices running older iOS versions must be blocked from accessing corporate email\n- Users with non-compliant devices should receive a notification to update their OS\n\nQuestion:\nWhich Intune feature combination enforces this requirement?",
+    "choices": [
+      "Device configuration profile with iOS update restriction",
+      "Compliance policy (minimum OS version) + Conditional Access (require compliant device) + notification action",
+      "App protection policy with OS version requirement",
+      "Autopilot deployment profile with iOS version requirement"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device configuration profiles can push iOS update settings (like deferring updates) but cannot evaluate compliance or block access to corporate resources based on OS version.",
+      "This option is correct. A compliance policy sets the minimum iOS version (16.0) — devices running older versions are marked non-compliant. A Conditional Access policy requires device compliance for Exchange Online access — non-compliant devices are blocked. The compliance policy's non-compliance action sends a notification to users, informing them to update their OS. This three-part pattern is the standard enforcement mechanism.",
+      "App protection policies can require a minimum OS version for accessing protected apps, but they operate at the app level (MAM), not the device level. They don't send update notifications or provide the same compliance reporting.",
+      "Autopilot is a Windows deployment service. It doesn't apply to iOS devices and doesn't enforce OS version requirements."
+    ],
+    "tip": "Compliance enforcement pattern: 1. Compliance policy → evaluate (check OS version). 2. Conditional Access → enforce (block non-compliant). 3. Non-compliance actions → notify (email user, push notification). Timeline: Mark non-compliant immediately → send notification after 1 day → block access after 3 days (configurable). This grace period gives users time to update before losing access."
+  },
+  {
+    "id": "MS102-E02-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The CISO wants a single dashboard showing the organization's overall security posture\n- The dashboard should provide:\n  - A numerical score representing current security configuration\n  - Prioritised recommendations to improve security\n  - Comparison with similar organizations\n  - Tracking of security improvement over time\n\nQuestion:\nWhich Microsoft security feature provides this capability?",
+    "choices": [
+      "Microsoft 365 Defender incidents queue",
+      "Microsoft Secure Score",
+      "Azure AD Identity Protection dashboard",
+      "Microsoft Defender for Endpoint threat dashboard"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The incidents queue shows active security incidents and alerts. It's a reactive tool for investigating current threats, not a proactive posture measurement tool with scores and recommendations.",
+      "This option is correct. Microsoft Secure Score provides a numerical score (percentage) representing your organization's security posture based on configuration across Microsoft 365 services. It offers prioritised improvement actions, comparison with organizations of similar size and industry, and historical score tracking. Each improvement action shows point value, user impact, and implementation complexity.",
+      "Identity Protection shows risky users and risky sign-ins. It's focused on identity-related risks, not overall security posture across all Microsoft 365 services.",
+      "Defender for Endpoint's threat dashboard shows endpoint-specific threats, vulnerabilities, and device exposure. It's one component of security posture, not the unified cross-service dashboard described."
+    ],
+    "tip": "Secure Score: Access at security.microsoft.com → Secure Score. Covers: Identity (Azure AD), Devices (Defender for Endpoint), Apps (Defender for Cloud Apps), Data (Information Protection). Improvement actions: ranked by impact, with implementation steps. Not all actions should be implemented — evaluate business impact vs security benefit."
+  },
+  {
+    "id": "MS102-E02-043",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 50 Windows devices in a meeting room configuration\n- These devices run a digital signage application in full-screen mode\n- No user should be able to access the Windows desktop, Start menu, or any other application\n- The devices should automatically launch the signage app after booting\n\nQuestion:\nWhich Intune configuration should you deploy?",
+    "choices": [
+      "Device configuration profile — Kiosk (single-app) mode",
+      "App protection policy with PIN requirement",
+      "Device compliance policy with app restriction",
+      "Windows Autopilot self-deploying mode only"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Kiosk single-app mode in Intune restricts a Windows device to running only one application in full-screen mode. The Windows shell is replaced with the kiosk app — no Start menu, no taskbar, no desktop access. The specified app launches automatically at boot. This is designed for digital signage, information displays, and single-purpose devices.",
+      "App protection policies manage data protection in mobile apps (cut/copy/paste, PIN). They don't configure Windows devices as kiosks or restrict the desktop environment.",
+      "Compliance policies evaluate device health but don't restrict which apps can run or configure kiosk mode. They're evaluation tools, not configuration tools.",
+      "Autopilot self-deploying mode handles initial device provisioning without user sign-in, but it doesn't configure ongoing kiosk behavior. You need a kiosk device configuration profile that runs continuously after provisioning."
+    ],
+    "tip": "Kiosk modes in Intune: Single-app kiosk → one app, full screen, no desktop. Multi-app kiosk → limited set of apps, custom Start menu, restricted desktop. Kiosk configuration: specify the app (UWP app ID or Win32 path), auto-logon account, auto-launch at boot. For digital signage: single-app kiosk + auto-logon + Autopilot self-deploying for initial setup."
+  },
+  {
+    "id": "MS102-E02-044",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Defender for Cloud Apps\n- The security team discovers that employees are using over 200 unsanctioned cloud applications\n- The team needs to:\n  - Identify which cloud apps are being used\n  - Assess the risk level of each app\n  - Block access to high-risk applications\n  - Monitor ongoing cloud app usage\n\nQuestion:\nWhich Microsoft Defender for Cloud Apps feature provides cloud app discovery and risk assessment?",
+    "choices": [
+      "Session policies",
+      "Cloud Discovery (Shadow IT discovery)",
+      "File policies",
+      "Activity policies"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Session policies provide real-time session controls (monitor, block download, protect download) when users access specific cloud apps through Conditional Access App Control. They control how apps are used, not discovering which apps are in use.",
+      "This option is correct. Cloud Discovery (Shadow IT discovery) analyses traffic logs (from firewalls, proxies, or Defender for Endpoint) to identify all cloud applications being used across the organization. Each discovered app is assessed against a catalog of 31,000+ apps with risk scores based on security, compliance, and legal factors. You can then sanction (approve), unsanction (block), or monitor each app. Unsanctioned apps can be blocked through integration with network devices.",
+      "File policies scan files in connected cloud apps for sensitive content, sharing violations, or malware. They operate on files within sanctioned apps, not on discovering which apps are being used.",
+      "Activity policies trigger alerts based on user activities in connected cloud apps (mass download, admin action from unusual location). Like file policies, they work within sanctioned apps, not for discovering shadow IT."
+    ],
+    "tip": "Defender for Cloud Apps pillars: Cloud Discovery → find shadow IT apps, risk assessment. Information Protection → file policies, DLP for cloud apps. Threat Protection → activity policies, anomaly detection. Conditional Access App Control → real-time session monitoring and control. Cloud Discovery data sources: firewall/proxy logs (manual upload or auto), Defender for Endpoint (automatic). App risk scores: 1-10 scale based on 90+ risk factors."
+  },
+  {
+    "id": "MS102-E02-045",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps through Intune\n- The deployment includes Word, Excel, PowerPoint, Outlook, and Teams\n- The finance department requires Access and Publisher in addition to the standard apps\n- All other departments should NOT receive Access or Publisher\n\nQuestion:\nHow should you handle this differentiated Microsoft 365 Apps deployment?",
+    "choices": [
+      "Create one deployment with all apps and manually remove Access and Publisher from non-finance devices",
+      "Create two Microsoft 365 Apps configurations: one for general users (without Access/Publisher) and one for Finance (with Access/Publisher)",
+      "Deploy the standard apps to everyone, then ask Finance users to download Access and Publisher from the Microsoft Store",
+      "Deploy all apps including Access and Publisher to everyone to simplify management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Manually removing apps from devices is not scalable and doesn't prevent them from being reinstalled on the next sync cycle. Intune would re-apply the full deployment during each check-in.",
+      "This option is correct. Create two separate Microsoft 365 Apps configuration profiles in Intune. The general profile includes the standard apps (Word, Excel, PowerPoint, Outlook, Teams) and excludes Access and Publisher. The Finance profile includes all apps. Assign each profile to the appropriate Azure AD group. Intune applies the correct app set based on group membership.",
+      "The Microsoft Store versions of Access and Publisher may differ from the enterprise Microsoft 365 Apps installation. Mixing installation sources can cause issues. Additionally, this doesn't provide managed, automated deployment.",
+      "Deploying Access and Publisher to everyone wastes licence resources and disk space on devices that don't need them. It also increases the attack surface with unnecessary applications."
+    ],
+    "tip": "Microsoft 365 Apps in Intune: Configuration → select which apps to include/exclude. Each config is a separate profile assigned to groups. Apps available for exclusion: Access, Publisher, InfoPath, Skype for Business, OneDrive (Desktop), Lync. Best practice: base config for all users (core apps) + role-specific configs for departments needing additional apps."
+  },
+  {
+    "id": "MS102-E02-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages Windows devices with Intune\n- The IT team creates multiple device configuration profiles targeting the same devices\n- Profile A sets the lock screen timeout to 5 minutes\n- Profile B sets the lock screen timeout to 10 minutes\n- Both profiles are assigned to the same device group\n\nQuestion:\nWhat happens when two Intune profiles configure the same setting with different values on the same device?",
+    "choices": [
+      "The most recently created profile wins",
+      "The device applies the most restrictive (secure) value",
+      "A conflict is reported in Intune, and the setting may not apply correctly",
+      "Both values are applied alternately"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Intune does not use profile creation date to resolve conflicts. There is no 'most recent wins' logic for conflicting settings.",
+      "While some specific policy types use 'most restrictive wins' (like compliance policies), device configuration profile conflicts are NOT automatically resolved by choosing the most restrictive value. The conflict is reported as an error.",
+      "This option is correct. When two device configuration profiles set the same setting to different values, Intune reports a conflict on the device. The conflicting setting shows 'Conflict' or 'Error' status in the Intune portal. The actual value applied on the device may be unpredictable. The admin must resolve the conflict by removing one of the profiles, changing the conflicting setting, or using different targeting.",
+      "Intune doesn't alternate between values. A setting can only have one value at any time. Conflicting profiles result in an error state, not alternating values."
+    ],
+    "tip": "Intune policy conflicts: Device configuration profiles → conflict reported, setting may not apply. Compliance policies → most restrictive value wins (not a conflict). Settings catalog → same behavior as device config profiles (conflicts reported). To avoid conflicts: use Settings catalog (single profile, multiple settings), or ensure non-overlapping group assignments. Check for conflicts: Devices → device → Device configuration → per-setting status."
+  },
+  {
+    "id": "MS102-E02-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team needs to monitor employee communications for potential insider trading language\n- Specific keywords and patterns related to stock tips, material non-public information (MNPI), and trading recommendations must be detected\n- Flagged communications must be reviewed by a compliance officer before any action is taken\n\nQuestion:\nWhich Microsoft Purview feature should you configure?",
+    "choices": [
+      "Data Loss Prevention (DLP) policy for Teams",
+      "Communication compliance policy",
+      "Information barriers",
+      "Insider Risk Management"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP detects and blocks sensitive data types (credit card numbers, SSNs) being shared. While DLP can use custom keywords, it's designed for data leakage prevention, not for monitoring communication content for behavioral policy violations like insider trading language.",
+      "This option is correct. Communication compliance in Microsoft Purview scans messages in Exchange, Teams, and third-party sources for policy violations using keyword dictionaries, trainable classifiers, and custom patterns. For insider trading, you configure policies with financial compliance templates or custom keyword lists. Flagged messages go to a review queue where compliance officers examine the context and decide on remediation actions (notify, escalate, or dismiss).",
+      "Information barriers prevent communication between specific groups (e.g., investment banking and trading departments). While related to insider trading prevention, barriers prevent communication entirely rather than monitoring for specific language patterns. They don't review content — they block it.",
+      "Insider Risk Management detects behavioral indicators of risk (data theft, IP exfiltration, security violations) based on user activity signals. While it can identify potential insiders, it focuses on activity patterns (downloading files, accessing unusual data), not on monitoring communication content for specific language."
+    ],
+    "tip": "Communication compliance: Monitor content for → offensive language, sensitive information, regulatory compliance, insider trading. Works with: Exchange, Teams, Yammer, third-party connectors. Detection: keyword dictionaries, trainable classifiers, custom regex, built-in templates. Review workflow: flagged → review → remediate/dismiss. Differs from DLP: communication compliance is review-based (human reviews), DLP is action-based (automatic block/notify)."
+  },
+  {
+    "id": "MS102-E02-048",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is implementing Conditional Access\n- A new policy should require compliant devices for access to all Microsoft 365 cloud apps\n- Before enforcing the policy, you want to understand how many users and sign-ins would be affected\n- You do NOT want to block anyone during this evaluation period\n\nQuestion:\nWhich Conditional Access feature allows you to evaluate policy impact without enforcing it?",
+    "choices": [
+      "Create the policy in disabled state and review Azure AD sign-in logs",
+      "Enable the policy in report-only mode",
+      "Create the policy with 'Grant access' instead of 'Block access'",
+      "Assign the policy to a test group of one user"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A disabled policy is not evaluated at all — no data is collected about its potential impact. You would get zero insight into how many users would be affected.",
+      "This option is correct. Report-only mode evaluates the policy against all sign-ins and records the results in sign-in logs without actually enforcing the policy. Each sign-in log entry shows what the outcome WOULD have been (grant, block, require MFA) if the policy were active. This lets you assess the impact before enabling enforcement. You can filter sign-in logs by report-only results to see exact numbers.",
+      "A policy that grants access doesn't test the conditions — it always allows access regardless of compliance state. This gives no insight into how many devices are non-compliant or how many users would be blocked.",
+      "Testing with one user gives you a data point of one. It doesn't show the impact across your entire organization. You'd need to test with every user to understand the full impact, which defeats the purpose."
+    ],
+    "tip": "Conditional Access deployment stages: 1. Report-only mode → evaluate impact, check sign-in logs. 2. Pilot group enforcement → enable for a small test group. 3. Gradual rollout → expand to larger groups. 4. Full enforcement → all users. Report-only in sign-in logs: 'Report-only: Success' (would have passed), 'Report-only: Failure' (would have been blocked). Use Conditional Access insights workbook for visual analysis."
+  },
+  {
+    "id": "MS102-E02-049",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview Information Protection\n- The legal department creates highly confidential merger documents\n- These documents must be:\n  - Encrypted so only the legal team can open them\n  - Marked with 'Confidential - Legal' headers and footers\n  - Prevented from being forwarded, printed, or copied by anyone outside the legal team\n\nQuestion:\nWhich Microsoft Purview feature should you configure to apply these protections?",
+    "choices": [
+      "Retention label with immutable lock",
+      "Sensitivity label with encryption and content marking",
+      "DLP policy with endpoint restrictions",
+      "Azure AD Conditional Access with session controls"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Retention labels manage content lifecycle (how long to keep, when to delete, declare as records). An immutable lock prevents changes to the retention settings but doesn't encrypt files, add visual markings, or restrict forwarding/printing.",
+      "This option is correct. Sensitivity labels apply persistent protection to documents and emails: Encryption restricts who can open the document (only Legal team members), Content markings add headers, footers, and watermarks ('Confidential - Legal'), and Usage rights control what authorised users can do (prevent forward, print, copy for users outside the permission scope). The protection travels with the document, regardless of where it's stored or shared.",
+      "DLP policies can detect sensitive documents and block sharing, but they don't encrypt documents, add visual markings, or control usage rights. DLP prevents data from leaving a boundary; sensitivity labels protect the data itself.",
+      "Conditional Access session controls (app-enforced restrictions) limit what users can do in web sessions (no download, no print) but don't encrypt the document content or add persistent protection. Once a document is downloaded, session controls no longer apply."
+    ],
+    "tip": "Sensitivity label protection components: 1. Encryption → who can access (users/groups/domain). 2. Content marking → headers, footers, watermarks. 3. Usage rights → what they can do (view, edit, print, copy, forward). Protection is persistent → stays with the document everywhere. Labels can be manual, recommended, or auto-applied. Label priority: labels are ordered — higher priority label overrides lower."
+  },
+  {
+    "id": "MS102-E02-050",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is planning a Windows 11 feature update deployment\n- 5,000 Windows 10 devices need to be upgraded to Windows 11\n- The IT team wants to deploy in phases:\n  - Phase 1: IT department (100 devices) — immediate\n  - Phase 2: Sales department (500 devices) — 7 days after Phase 1\n  - Phase 3: All remaining devices — 14 days after Phase 1\n- If issues are found, the rollout should be paused\n\nQuestion:\nWhich Intune feature enables this phased Windows 11 feature update deployment?",
+    "choices": [
+      "Windows Update ring with different deferral periods per group",
+      "Feature update deployment profile with gradual rollout settings",
+      "PowerShell script to trigger Windows Update on each phase",
+      "MECM task sequence for Windows 11 upgrade"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Update rings manage quality update deferrals and update experience settings, but they don't target specific feature update versions. Update rings would set deferral days for ALL feature updates, not specifically deploy Windows 11. You can't use rings to create a phased rollout to a specific version.",
+      "This option is correct. Feature update deployment profiles in Intune let you specify a target Windows version (e.g., Windows 11 23H2) and deploy it to device groups with rollout settings. You create separate profiles per phase with different start dates or use the gradual rollout option. If issues arise, you can pause the deployment. Devices stay at the specified version until you change the policy.",
+      "PowerShell scripts don't provide the managed deployment, phasing, pause/resume, and compliance reporting that feature update profiles offer. They're also one-time executions without the ongoing management capability.",
+      "MECM task sequences are the ConfigMgr approach to OS deployment. If devices are Intune-managed (not co-managed with MECM), this option isn't available. Even with co-management, Intune feature update profiles are the modern approach."
+    ],
+    "tip": "Windows feature update management in Intune: Feature update profiles → target specific Windows version, phased rollout. Update rings → quality update deferrals, restart behavior, update experience. Expedite policies → emergency quality updates (bypass deferrals). Driver update profiles → manage driver updates. For phased rollouts: assign profiles to different groups with different deployment dates. Pause capability: built into feature update profiles."
+  }
+]

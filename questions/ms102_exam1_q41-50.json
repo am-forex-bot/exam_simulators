@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E01-041",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage 800 iOS devices\n- The security team requires that users can only copy data from Microsoft Outlook to Microsoft Teams and OneDrive\n- Users must NOT be able to paste corporate email content into personal apps like WhatsApp or Notes\n- The devices are personally owned (BYOD) and not enrolled in Intune MDM\n\nQuestion:\nWhich Intune feature should you configure to enforce these data transfer restrictions?",
+    "choices": [
+      "App configuration policy",
+      "App protection policy (MAM)",
+      "Device compliance policy",
+      "Device configuration profile"
+    ],
+    "answer": [1],
+    "explanations": [
+      "App configuration policies push settings to managed apps (like server URLs, default behaviors) but do NOT enforce data protection boundaries such as cut/copy/paste restrictions between apps.",
+      "This option is correct. App protection policies (MAM without enrolment) enforce data loss prevention at the app level. You can restrict 'Send org data to other apps' to 'Policy managed apps' so copy/paste and data sharing only works between apps protected by Intune MAM policies (e.g., Outlook → Teams, Outlook → OneDrive). This works on BYOD devices without requiring MDM enrolment.",
+      "Device compliance policies evaluate device health (OS version, encryption, jailbreak status) and report compliance state. They do not control inter-app data transfer.",
+      "Device configuration profiles push device-level settings (Wi-Fi, VPN, restrictions). They require MDM enrolment and operate at the device level, not the app level. Since these are unenrolled BYOD devices, device-level profiles cannot be applied."
+    ],
+    "tip": "BYOD + data protection = App protection policy (MAM without enrolment). Key MAM settings: 'Send org data to other apps' → Policy managed apps. 'Receive data from other apps' → Policy managed apps. 'Restrict cut, copy, paste' → Policy managed apps with paste in."
+  },
+  {
+    "id": "MS102-E01-042",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is deploying 200 new Windows 11 laptops using Windows Autopilot\n- The devices must be deployed directly to end users without IT physically touching them\n- During the out-of-box experience (OOBE), users should sign in with their Azure AD credentials\n- An Enrolment Status Page (ESP) must display until all required apps and policies are installed\n\nQuestion:\nWhat is the PRIMARY purpose of the Enrolment Status Page (ESP) during Autopilot deployment?",
+    "choices": [
+      "To allow users to select which applications to install",
+      "To prevent users from using the device until required apps and policies are applied",
+      "To display the device serial number and warranty information",
+      "To prompt users to join the device to on-premises Active Directory"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The ESP does not give users a choice of applications. App assignments are determined by Intune policies assigned to the user or device group. The ESP simply tracks installation progress.",
+      "This option is correct. The Enrolment Status Page blocks the user from accessing the desktop until all required applications, device configuration profiles, and compliance policies are installed and applied. This ensures the device is fully configured and secured before the user starts working. Without ESP, users could access an incompletely configured device.",
+      "The ESP does not display hardware inventory information. Serial numbers and warranty details are available through Intune device properties or the hardware manufacturer's portal.",
+      "Autopilot with Azure AD join does not involve on-premises AD. The ESP is specifically about tracking Intune policy and app deployment progress, not domain joining."
+    ],
+    "tip": "ESP = gate that blocks user access until device is ready. Key ESP settings: 'Block device use until all apps and profiles are installed', 'Show error when installation exceeds time limit', 'Allow users to reset device if installation error occurs'. ESP can be scoped to specific groups."
+  },
+  {
+    "id": "MS102-E01-043",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5 licensing\n- The CISO wants to automatically remediate compromised user accounts\n- When Azure AD Identity Protection detects a high-risk sign-in, the user must be forced to change their password\n- Multi-factor authentication must be required for medium-risk sign-ins\n\nQuestion:\nWhich TWO policies should you configure in Azure AD Identity Protection to meet these requirements? (Choose the single best answer)",
+    "choices": [
+      "Sign-in risk policy set to High → Block access, and User risk policy set to Medium → Require MFA",
+      "User risk policy set to High → Require password change, and Sign-in risk policy set to Medium → Require MFA",
+      "Conditional Access policy with device compliance, and DLP policy with endpoint restrictions",
+      "User risk policy set to High → Block access, and Sign-in risk policy set to Low → Require password change"
+    ],
+    "answer": [1],
+    "explanations": [
+      "This reverses the policies. Blocking access for high-risk sign-ins prevents access entirely but doesn't remediate the compromised account (no password change). Setting user risk to Medium with MFA doesn't address the requirement to force password changes for compromised accounts.",
+      "This option is correct. User risk policy at High → Require password change forces users with detected compromised credentials to reset their password, remediating the compromise. Sign-in risk policy at Medium → Require MFA adds an extra verification step when suspicious sign-in behaviour is detected. This is the standard Identity Protection configuration pattern.",
+      "Conditional Access device compliance and DLP are unrelated to identity risk remediation. Device compliance evaluates device health, and DLP prevents data loss — neither addresses compromised user accounts.",
+      "Blocking at High user risk prevents access but doesn't remediate. Requiring password change at Low sign-in risk is overly aggressive and applies password changes to normal sign-ins, which is not what was requested."
+    ],
+    "tip": "Identity Protection has TWO risk policies: User risk (compromised credentials) → Require password change. Sign-in risk (suspicious sign-in) → Require MFA. Remember: User risk = who you ARE is compromised. Sign-in risk = what you're DOING looks suspicious."
+  },
+  {
+    "id": "MS102-E01-044",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages 300 Android Enterprise devices through Intune\n- The IT department needs to deploy a custom line-of-business (LOB) Android app that is not available in the Google Play Store\n- The app is packaged as an APK file\n- The app should be automatically installed on all managed Android devices without user intervention\n\nQuestion:\nHow should you deploy this LOB app through Intune?",
+    "choices": [
+      "Upload the APK as a line-of-business app in Intune and assign it as Required",
+      "Publish the app to the public Google Play Store and add it as a Managed Google Play app",
+      "Email the APK file to users and ask them to sideload it",
+      "Create an app configuration policy that references the APK download URL"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. For Android LOB apps not in Google Play, you upload the APK file directly to Intune as a line-of-business app type. Setting the assignment to 'Required' triggers automatic silent installation on targeted devices without user intervention. Intune handles the distribution and installation.",
+      "Publishing to the public Google Play Store makes the app publicly available to everyone, which is not appropriate for an internal LOB app. Additionally, Google Play publishing requires a developer account and app review process.",
+      "Email distribution bypasses Intune management entirely. Users would need to enable 'Install from unknown sources', which is a security risk, and IT would have no visibility into installation status or app version management.",
+      "App configuration policies send configuration data to already-installed apps (key-value pairs for app settings). They cannot install apps or distribute APK files."
+    ],
+    "tip": "Android app deployment in Intune: LOB app (APK upload) → for private/internal apps. Managed Google Play → for public store apps in enterprise context. Web link → for web apps. For automatic install, use 'Required' assignment. For user-choice install, use 'Available' assignment."
+  },
+  {
+    "id": "MS102-E01-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Microsoft 365 E5 licensing\n- The compliance team receives a legal hold request for a departing employee\n- All email, Teams messages, and OneDrive files for this user must be preserved exactly as they are\n- No content should be modified or deleted, even after the user account is disabled\n\nQuestion:\nWhich Microsoft Purview feature should you apply to preserve this user's content?",
+    "choices": [
+      "Retention label with 'Delete after 7 years' action",
+      "eDiscovery hold (litigation hold or case hold)",
+      "Data Loss Prevention (DLP) policy",
+      "Sensitivity label with encryption"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A retention label with a delete action would eventually delete the content after the retention period. Even a retention label that retains content doesn't provide the legal hold functionality — it applies lifecycle management, not litigation preservation. Legal holds specifically preserve content in-place and prevent deletion.",
+      "This option is correct. An eDiscovery hold (either litigation hold on the mailbox or a case hold in eDiscovery) preserves all content in-place. Exchange mailbox items, Teams chat messages, and OneDrive files are all held immutably — users and admins cannot delete or modify preserved content. The hold persists even after the user account is disabled or deleted (mailbox becomes inactive). This is the standard response to legal hold requests.",
+      "DLP policies prevent sensitive data from being shared outside the organization. They scan for sensitive information types and apply restrictions. DLP does not preserve or hold content for legal purposes.",
+      "Sensitivity labels with encryption protect content from unauthorized access. They apply persistent protection (encryption, access controls) but do not prevent content deletion or provide legal preservation."
+    ],
+    "tip": "Legal hold/litigation preservation → eDiscovery hold. Content lifecycle (keep/delete) → Retention policies/labels. Prevent data sharing → DLP. Protect/encrypt content → Sensitivity labels. For departing employees: apply hold BEFORE disabling/deleting the account."
+  },
+  {
+    "id": "MS102-E01-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages Windows devices with Microsoft Intune\n- A new security vulnerability is discovered in Windows, and Microsoft releases an out-of-band security patch\n- The security team requires this patch to be deployed to all managed devices within 24 hours\n- Normal Windows Update for Business rings have a 7-day deferral for quality updates\n\nQuestion:\nWhich Intune feature allows you to expedite this critical security update?",
+    "choices": [
+      "Feature update deployment profile",
+      "Windows Update for Business expedite policy",
+      "Device configuration profile with custom OMA-URI",
+      "PowerShell script deployment through Intune"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Feature update profiles control Windows version upgrades (e.g., moving from Windows 10 to Windows 11 or from 21H2 to 22H2). They do not handle quality/security patches and are not designed for emergency patch deployment.",
+      "This option is correct. Windows Update for Business expedite policies allow you to bypass configured deferral periods and immediately deploy a specific quality update. The expedited update overrides the normal 7-day deferral ring and pushes the update as quickly as possible. Devices will download and install the update at the next check-in cycle, typically within 24 hours.",
+      "Custom OMA-URI settings can configure many Windows settings, but managing individual Windows updates through custom OMA-URI is not the intended approach and does not provide the expedite functionality that bypasses deferral rings.",
+      "While PowerShell scripts could theoretically trigger Windows Update, this approach lacks the reporting, compliance tracking, and orchestration that the built-in expedite feature provides. It's also not the Microsoft-recommended approach for urgent patch deployment."
+    ],
+    "tip": "Windows updates in Intune: Update rings → set deferral periods for quality/feature updates. Feature update profiles → pin a specific Windows version. Expedite policies → bypass deferrals for urgent quality updates. Driver update profiles → manage driver updates separately."
+  },
+  {
+    "id": "MS102-E01-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 with Exchange Online\n- Users report receiving emails from external senders that appear to come from your company's domain\n- The IT team suspects domain spoofing attacks\n- You need to configure email authentication to prevent external parties from spoofing your domain\n\nQuestion:\nWhich THREE email authentication standards should you implement together for comprehensive anti-spoofing protection? (Choose the best single answer)",
+    "choices": [
+      "SPF, DKIM, and DMARC",
+      "TLS, S/MIME, and BitLocker",
+      "DLP, sensitivity labels, and retention policies",
+      "Safe Attachments, Safe Links, and anti-phishing policies"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. SPF (Sender Policy Framework) specifies which mail servers can send email on behalf of your domain. DKIM (DomainKeys Identified Mail) adds a digital signature to outgoing emails to verify they haven't been tampered with. DMARC (Domain-based Message Authentication, Reporting, and Conformance) builds on SPF and DKIM, telling receiving servers what to do when authentication fails (quarantine, reject). Together, these three standards prevent domain spoofing.",
+      "TLS encrypts email in transit, S/MIME encrypts and signs individual messages, and BitLocker encrypts device disks. None of these prevent domain spoofing — they are all encryption technologies, not authentication standards.",
+      "DLP prevents sensitive data sharing, sensitivity labels classify and protect content, and retention policies manage content lifecycle. These are information protection features, not email authentication standards.",
+      "Safe Attachments, Safe Links, and anti-phishing policies are Microsoft Defender for Office 365 features that protect against threats in inbound email. While anti-phishing includes some spoof detection, these don't prevent external parties from spoofing your domain to OTHER recipients — only SPF/DKIM/DMARC do that."
+    ],
+    "tip": "Anti-spoofing trio: SPF → who can send. DKIM → message integrity signature. DMARC → policy enforcement (what to do on failure). Implementation order: SPF first, then DKIM, then DMARC. DMARC requires both SPF and DKIM to be effective."
+  },
+  {
+    "id": "MS102-E01-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps using Intune\n- The Office deployment is configured to use the Monthly Enterprise Channel\n- After the latest update, multiple users report that an Excel add-in critical to finance operations is crashing\n- You need to quickly roll back to the previous version while the add-in vendor investigates\n\nQuestion:\nWhich approach should you use to roll back the Microsoft 365 Apps update?",
+    "choices": [
+      "Uninstall and reinstall Microsoft 365 Apps from scratch using a different channel",
+      "Use the Office Deployment Tool (ODT) or Intune configuration to set TargetVersion to the previous build",
+      "Ask users to use System Restore to revert their entire Windows installation",
+      "Disable automatic updates and wait for the next Monthly Enterprise Channel release"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Completely uninstalling and reinstalling Office is disruptive and unnecessary. It would lose user customizations, cached credentials, and Outlook profiles. A targeted version rollback is far more efficient.",
+      "This option is correct. Setting the TargetVersion attribute to the previous build number forces Microsoft 365 Apps to roll back to that specific version. You can do this through the Office Deployment Tool configuration XML or through Intune's Microsoft 365 Apps configuration profile. Once set, clients will revert to the specified version at the next update cycle. This is the Microsoft-recommended rollback approach.",
+      "System Restore reverts the entire Windows system state, which could undo other important changes and updates. It's a blunt instrument that affects far more than just Office and is not an enterprise management approach.",
+      "Disabling updates and waiting means users are stuck with the broken version for an entire month until the next release. This doesn't solve the immediate problem and leaves users unable to use the critical Excel add-in."
+    ],
+    "tip": "Microsoft 365 Apps version control: TargetVersion → pin or rollback to a specific build. Update channel → controls update frequency (Monthly Enterprise, Semi-Annual, Current). Deadline → force updates by a specific date. For rollback: set TargetVersion to the previous known-good build number."
+  },
+  {
+    "id": "MS102-E01-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has a Microsoft 365 E3 subscription\n- The IT team manages both Windows and macOS devices through Intune\n- A new compliance requirement states that all devices must have disk encryption enabled\n- Non-compliant devices must be blocked from accessing corporate resources\n\nQuestion:\nHow should you enforce disk encryption and block non-compliant devices?",
+    "choices": [
+      "Create a device compliance policy requiring encryption and integrate it with Conditional Access to block non-compliant devices",
+      "Create a device configuration profile that enables BitLocker and FileVault, with no additional policies",
+      "Send an email to all users asking them to enable encryption manually",
+      "Create an Azure AD security group that only includes encrypted devices"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. A device compliance policy checks whether disk encryption is enabled (BitLocker for Windows, FileVault for macOS) and marks devices as compliant or non-compliant. When integrated with a Conditional Access policy that requires device compliance, non-compliant devices are blocked from accessing corporate resources like Exchange Online, SharePoint, and Teams. This is the standard compliance enforcement pattern in Intune.",
+      "A device configuration profile CAN enable BitLocker and FileVault, but it only pushes the encryption settings — it doesn't evaluate compliance or block access for devices where encryption fails. Without a compliance policy and Conditional Access, unencrypted devices can still access corporate resources.",
+      "Email communication is not a technical control. Users may ignore the email, not know how to enable encryption, or not have the required permissions. This provides no enforcement or verification mechanism.",
+      "You cannot create an Azure AD group that dynamically filters by encryption status. Device attributes in Azure AD don't include real-time encryption state. Even if you could, a group alone doesn't block access — you need Conditional Access for enforcement."
+    ],
+    "tip": "The compliance enforcement pattern: Step 1: Compliance policy (check device state). Step 2: Conditional Access (enforce access control based on compliance). Configuration profiles PUSH settings; compliance policies CHECK settings. You need both, plus Conditional Access for enforcement."
+  },
+  {
+    "id": "MS102-E01-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5 licensing\n- The security team wants to create automated responses to common security incidents\n- When a user is confirmed as compromised by Identity Protection, the system should automatically:\n  1. Disable the user's sign-in\n  2. Revoke all active sessions\n  3. Create a ServiceNow ticket\n  4. Notify the security team via Teams\n\nQuestion:\nWhich Microsoft security feature enables this multi-step automated incident response?",
+    "choices": [
+      "Microsoft Defender for Endpoint automated investigation",
+      "Azure Logic Apps triggered by Azure AD Identity Protection",
+      "Microsoft Sentinel playbooks (SOAR)",
+      "Exchange Online mail flow rules"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Defender for Endpoint automated investigation handles endpoint-level threats (malware remediation, file quarantine, device isolation). It doesn't handle identity-based incidents or integrate with ServiceNow and Teams notifications as described.",
+      "Azure Logic Apps could theoretically be triggered by Identity Protection events, but this is not the standard enterprise approach for security incident orchestration. Logic Apps is a general workflow automation tool, not a security-focused SOAR solution. It lacks the security incident context and case management that Sentinel provides.",
+      "This option is correct. Microsoft Sentinel playbooks are built on Azure Logic Apps but operate within the security context of Sentinel (SOAR — Security Orchestration, Automation, and Response). Sentinel ingests Identity Protection alerts, and playbooks can automatically execute multi-step responses: disable users via Graph API, revoke sessions, create ServiceNow tickets via connector, and send Teams notifications. This is the Microsoft-recommended approach for automated security incident response.",
+      "Mail flow rules (transport rules) process email in transit. They can add disclaimers, redirect messages, or apply encryption based on conditions. They have no capability to disable user accounts, revoke sessions, or create tickets."
+    ],
+    "tip": "Automated security response: Sentinel playbooks (SOAR) → multi-step automated incident response with external integrations. Defender for Endpoint AIR → automated endpoint threat remediation. Identity Protection → risk detection and basic remediation (password change, MFA). For complex multi-step workflows with external systems → Sentinel playbooks."
+  }
+]

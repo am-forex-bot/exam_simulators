@@ -1,0 +1,302 @@
+[
+  {
+    "id": "MS102-E03-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages Windows, macOS, iOS, and Android devices through Intune\n- The IT team wants to create a single report showing compliance status across ALL device platforms\n- The report must show: compliant vs non-compliant counts, which policies are failing, and trends over time\n\nQuestion:\nWhere can the IT team access this cross-platform compliance reporting?",
+    "choices": [
+      "Azure AD admin centre → Devices",
+      "Intune admin centre → Reports → Device compliance",
+      "Microsoft 365 admin centre → Health → Service health",
+      "Defender for Endpoint → Device inventory"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD shows device registration and join status but doesn't provide detailed compliance policy evaluation results or compliance trends over time.",
+      "This option is correct. The Intune admin centre provides comprehensive compliance reporting under Reports → Device compliance. This includes: compliance status across all platforms (Windows, macOS, iOS, Android), per-policy compliance results showing which specific checks are failing, trend data showing compliance improvement or degradation over time, and drill-down capability to individual devices and specific non-compliant settings.",
+      "Service health in the Microsoft 365 admin centre shows Microsoft service availability and incidents. It doesn't report on device compliance.",
+      "Defender for Endpoint's device inventory shows security-related device information (exposure level, risk level, OS) but doesn't report Intune compliance policy results."
+    ],
+    "tip": "Intune reporting locations: Reports → Device compliance → overall compliance trends. Reports → Policy compliance → per-policy results. Devices → Monitor → compliance, configuration status. Operational reports: real-time data. Organizational reports: aggregated trends. Export: reports can be exported to CSV for further analysis. Log Analytics: Intune can send diagnostic data to Azure Log Analytics for custom reporting."
+  },
+  {
+    "id": "MS102-E03-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview\n- The records management team needs to ensure that specific financial documents are declared as regulatory records\n- Once declared, the documents must be completely immutable — no one (including admins) can modify, delete, or relabel them\n- The record declaration must happen automatically when documents are uploaded to a specific SharePoint library\n\nQuestion:\nWhich Microsoft Purview feature should you configure?",
+    "choices": [
+      "Sensitivity label with 'Do Not Forward' rights",
+      "Retention label configured as a regulatory record with auto-apply policy",
+      "DLP policy with block action",
+      "eDiscovery hold on the SharePoint site"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Sensitivity labels with 'Do Not Forward' restrict email forwarding and document access. They don't declare content as immutable records or prevent deletion.",
+      "This option is correct. A retention label configured as a 'regulatory record' makes content completely immutable. Once applied, the document cannot be modified, deleted, relabeled, or have its retention label removed — even by global admins. An auto-apply retention label policy can automatically apply this label to documents uploaded to specific SharePoint libraries based on conditions (location, content type, keywords). Regulatory records provide the highest level of immutability in Microsoft 365.",
+      "DLP policies prevent sharing of sensitive content but don't make documents immutable or declare them as records. DLP is about controlling data flow, not records management.",
+      "An eDiscovery hold preserves content from deletion but doesn't make it immutable in the records management sense. Held content can still be modified by users (modifications are versioned). Records prevent any modification."
+    ],
+    "tip": "Records management in Microsoft Purview: Retention label → retain/delete content on schedule. Record label → retain + lock (no modification or deletion, but label can be removed by record admin). Regulatory record label → strictest lock (no modification, no deletion, label CANNOT be removed, even by admins). Auto-apply: by keywords, sensitive info types, trainable classifiers, or SharePoint properties. Regulatory records require specific admin consent to enable."
+  },
+  {
+    "id": "MS102-E03-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages iOS devices with Intune\n- Apple releases a new iOS version (e.g., iOS 17.3)\n- The IT team needs to prevent managed devices from updating to the new iOS version until it has been tested with corporate apps\n- After testing is complete (approximately 30 days), devices should be allowed to update\n\nQuestion:\nHow should you control iOS update timing through Intune?",
+    "choices": [
+      "Create an app protection policy that blocks iOS updates",
+      "Configure an iOS/iPadOS update policy with a deferral period in Intune",
+      "Send an email to users asking them not to update their devices",
+      "Remove the managed Wi-Fi profile to prevent over-the-air updates"
+    ],
+    "answer": [1],
+    "explanations": [
+      "App protection policies manage data protection within apps. They have no capability to control operating system updates.",
+      "This option is correct. Intune iOS/iPadOS update policies let you defer software updates on supervised devices. You configure a deferral period (up to 90 days) that prevents the device from showing or installing the new iOS version. After the deferral period expires, the update becomes available. You can also schedule specific update installation windows to control when updates install. This gives IT time to test new iOS versions with corporate apps.",
+      "Email communication provides no technical enforcement. Users may update anyway, and there's no accountability or tracking.",
+      "Removing Wi-Fi prevents over-the-air updates but also prevents the device from connecting to corporate resources, receiving policies, and functioning normally. This is destructive to productivity and doesn't block updates if the device connects to other Wi-Fi networks or uses cellular data."
+    ],
+    "tip": "iOS update management in Intune: Requires supervised devices (enrolled via ABM/ADE). Update policy: defer updates for up to 90 days, schedule installation windows. Enforce specific version: target a specific iOS version (prevent upgrades beyond that version). Unsupervised devices: limited update control (users can update freely). Key requirement: devices MUST be supervised for iOS update management."
+  },
+  {
+    "id": "MS102-E03-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization is planning an Autopilot deployment for new devices\n- The provisioning team wants to pre-provision devices before shipping them to users\n- During pre-provisioning, the technician sets up the device with all apps and policies in a staging area\n- When the user receives the device, they simply sign in to complete the setup\n\nQuestion:\nWhich Autopilot deployment mode enables this two-phase provisioning?",
+    "choices": [
+      "User-driven mode with Azure AD join",
+      "Self-deploying mode",
+      "Pre-provisioning (formerly white glove)",
+      "Autopilot Reset"
+    ],
+    "answer": [2],
+    "explanations": [
+      "User-driven mode is a single-phase process where the user completes the entire OOBE including sign-in, Intune enrolment, app installation, and policy application. There's no separate technician phase.",
+      "Self-deploying mode provisions without any user interaction and creates device-only scenarios (no user affinity). It's a single phase designed for shared devices, not a two-phase model with technician and user phases.",
+      "This option is correct. Pre-provisioning (formerly white glove) splits Autopilot into two phases. Phase 1 (Technician phase): IT staff powers on the device, presses Windows key 5 times to enter provisioning mode, and the device installs device-targeted apps and policies. The device is then sealed and shipped. Phase 2 (User phase): The user powers on, signs in, and only user-targeted apps and policies are applied. This dramatically reduces the user's wait time on first sign-in.",
+      "Autopilot Reset re-provisions an existing Autopilot device. It removes user data and re-applies policies but is for device repurposing, not initial two-phase provisioning."
+    ],
+    "tip": "Pre-provisioning phases: Technician phase → device-targeted apps/policies installed (in staging area). User phase → user signs in, user-targeted apps/policies applied (fast experience). Trigger: press Windows key 5 times during OOBE → enter pre-provisioning mode. Benefits: reduced user wait time, consistent device preparation, IT can verify before shipping. Requirements: Autopilot registered device, TPM 2.0, connected to internet during both phases."
+  },
+  {
+    "id": "MS102-E03-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 with Exchange Online\n- The compliance team requires that when a user deletes an email from their Sent Items folder, a copy must be preserved for 5 years\n- Users should not be aware that deleted items are being preserved\n- The preservation must work automatically without any user action\n\nQuestion:\nWhich Microsoft Purview feature ensures deleted emails are preserved transparently?",
+    "choices": [
+      "In-place archive mailbox",
+      "Retention policy with 'retain for 5 years' applied to Exchange",
+      "Journal rule to an external archiving service",
+      "Mailbox audit log"
+    ],
+    "answer": [1],
+    "explanations": [
+      "In-place archive provides an additional mailbox for storing old emails, but users control what goes there. It doesn't automatically preserve deleted items or enforce retention. Users can delete items from the archive as well.",
+      "This option is correct. A retention policy with 'retain for 5 years' applied to Exchange Online preserves all email content, including items deleted by users. When a user deletes an email, the retention policy preserves a copy in a hidden folder (Recoverable Items → SubstrateHolds) that users cannot access. The email appears deleted to the user but is silently retained for the full 5-year period. This is completely transparent to users.",
+      "Journaling copies emails to a separate journal mailbox at the time of send/receive. While this provides preservation, it requires additional infrastructure (journal mailbox or third-party archive), creates duplicate storage, and is a separate system from native Microsoft 365 retention. Retention policies are the modern, integrated approach.",
+      "Mailbox audit logs record actions taken on mailbox items (who accessed, deleted, moved items) but don't preserve the actual email content. Audit logs tell you WHAT happened, not preserve WHAT was deleted."
+    ],
+    "tip": "Retention in Exchange Online: Retention policy → automatically preserve content in hidden folders. Users delete → copy preserved in Recoverable Items\\SubstrateHolds. Retention flow: delete email → soft delete (Deleted Items) → hard delete (Recoverable Items) → retention holds copy for policy period. Retention locations: Exchange mailboxes, public folders, Microsoft 365 Groups. The 'retain' action is invisible to users."
+  },
+  {
+    "id": "MS102-E03-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 200 Android devices managed by Intune using Android Enterprise work profile (personally-owned)\n- The IT team needs to configure VPN settings for the work profile\n- The VPN should only tunnel work profile traffic (corporate apps)\n- Personal apps should use the regular internet connection directly\n\nQuestion:\nHow should you configure the VPN for the work profile?",
+    "choices": [
+      "Configure a device-wide VPN that tunnels all traffic",
+      "Configure a per-app VPN in the work profile that targets corporate apps",
+      "Ask users to manually configure a VPN in their personal settings",
+      "Deploy a Wi-Fi profile that routes traffic through a proxy server"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A device-wide VPN tunnels ALL traffic (personal and work) through the corporate VPN. This affects the user's personal browsing and app usage, which is inappropriate for BYOD devices with work profiles. The requirement specifically states only work profile traffic should use the VPN.",
+      "This option is correct. Per-app VPN in the Android Enterprise work profile allows you to specify that only apps within the work profile use the VPN tunnel. Personal apps outside the work profile continue to use the direct internet connection. This maintains the privacy boundary between work and personal use that the work profile is designed to provide.",
+      "Users cannot and should not configure work profile VPN settings manually. The work profile is managed by IT through Intune. Additionally, a manually configured VPN would apply to all traffic, not just work profile apps.",
+      "A Wi-Fi profile with proxy settings affects all Wi-Fi traffic on the device. It doesn't selectively route only work profile traffic through the proxy while leaving personal traffic unaffected."
+    ],
+    "tip": "Android Enterprise VPN options: Work profile per-app VPN → VPN only for specified work apps. Work profile always-on VPN → VPN for all work profile traffic (but not personal). Device-wide VPN → all traffic (work + personal) through VPN. For BYOD work profile: per-app VPN respects the work/personal boundary. VPN apps for Android: Microsoft Tunnel, Cisco AnyConnect, Palo Alto GlobalProtect (must be in work profile)."
+  },
+  {
+    "id": "MS102-E03-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to prevent users from granting OAuth consent to third-party apps that request high-privilege permissions\n- Specifically, apps requesting 'Mail.ReadWrite', 'Files.ReadWrite.All', or 'Directory.ReadWrite.All' should require admin approval\n- Users should still be able to consent to apps with low-risk permissions\n\nQuestion:\nWhat should you configure in Azure AD?",
+    "choices": [
+      "Disable all user consent to applications",
+      "Configure the admin consent workflow with a permission classification policy",
+      "Create a Conditional Access policy blocking third-party apps",
+      "Enable Defender for Cloud Apps to block all OAuth apps"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Disabling all user consent prevents users from consenting to ANY app, even those with low-risk permissions. This creates excessive admin overhead as every app consent request requires admin approval, including benign integrations.",
+      "This option is correct. Azure AD allows you to classify permissions into categories (e.g., 'low' risk) and configure user consent settings to 'Allow user consent for apps from verified publishers for selected permissions.' Low-risk permissions (like basic profile read) are classified as allowed for user consent. High-risk permissions (Mail.ReadWrite, Files.ReadWrite.All, Directory.ReadWrite.All) are NOT classified as low risk, so they require admin approval through the admin consent workflow. Users can request admin consent, and admins review and approve/deny.",
+      "A Conditional Access policy can control access to specific apps but doesn't manage the OAuth consent process. Blocking all third-party apps prevents legitimate integrations that the organization may need.",
+      "Defender for Cloud Apps can monitor and alert on OAuth app permissions but managing consent at the source (Azure AD) is more effective than monitoring after consent is granted."
+    ],
+    "tip": "Azure AD consent settings: Allow all user consent (least secure). Allow user consent for verified publishers + selected permissions (balanced). Require admin consent for all (most restrictive). Permission classifications: create 'low' risk classification for safe permissions. Admin consent workflow: users request consent → admins review → approve/deny. Best practice: classify low-risk permissions + enable admin consent workflow for everything else."
+  },
+  {
+    "id": "MS102-E03-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows devices\n- The IT team deploys a Win32 application to a group of devices\n- After deployment, the app appears as 'Installed' in Intune for most devices\n- However, on 50 devices, the app shows as 'Install pending' indefinitely\n- The devices are online and can reach the Intune service\n\nQuestion:\nWhat is the FIRST troubleshooting step to investigate the installation failure?",
+    "choices": [
+      "Recreate the Intune app deployment from scratch",
+      "Check the Intune Management Extension (IME) log on an affected device",
+      "Restart the Intune service in the Microsoft 365 admin centre",
+      "Unassign and reassign the app to the device group"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Recreating the deployment is premature without understanding the root cause. The problem may be with the devices, not the deployment configuration. Always diagnose before rebuilding.",
+      "This option is correct. The Intune Management Extension (IME) log on the device provides detailed information about the app deployment process: download status, content extraction, installation command execution, return codes, and detection rule evaluation. Checking this log FIRST reveals the specific failure point. The log is at C:\\ProgramData\\Microsoft\\IntuneManagementExtension\\Logs\\IntuneManagementExtension.log.",
+      "You cannot restart the Intune service — it's a cloud service managed by Microsoft. If it were a service outage, all devices would be affected, not just 50.",
+      "Unassigning and reassigning might trigger a re-evaluation, but without understanding WHY it's failing, the same issue will likely recur. Diagnose first, then take corrective action."
+    ],
+    "tip": "Win32 app troubleshooting order: 1. Check IME log on device (C:\\ProgramData\\Microsoft\\IntuneManagementExtension\\Logs\\). 2. Check Intune portal per-device installation status. 3. Verify detection rules are correct. 4. Test install command manually on affected device. 5. Check requirements rules (disk space, OS version). Common issues: detection rule mismatch, insufficient disk space, installer requires reboot, dependency not installed."
+  },
+  {
+    "id": "MS102-E03-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune to manage Windows devices\n- The IT team needs to configure BitLocker drive encryption on all managed Windows devices\n- Requirements:\n  - 256-bit AES encryption for the OS drive\n  - Recovery keys must be stored in Azure AD\n  - Users should NOT be prompted to enable BitLocker — it must be silent\n\nQuestion:\nWhat Intune profile type should you use to configure BitLocker with these requirements?",
+    "choices": [
+      "Device compliance policy with encryption requirement",
+      "Endpoint security → Disk encryption profile",
+      "Device configuration → Custom OMA-URI profile",
+      "PowerShell script to enable BitLocker"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A compliance policy checks WHETHER encryption is enabled but doesn't configure or enable encryption. If devices aren't already encrypted, the compliance policy simply marks them as non-compliant without taking action to encrypt them.",
+      "This option is correct. Endpoint security → Disk encryption profiles in Intune configure BitLocker settings: encryption algorithm (256-bit AES), encryption method (XTS-AES for OS drive), silent enablement (no user prompt), and recovery key backup to Azure AD. This is the purpose-built profile for managing BitLocker through Intune. The profile automatically enables BitLocker with the specified settings when the device meets prerequisites (TPM 2.0, UEFI).",
+      "Custom OMA-URI could configure BitLocker settings, but Intune provides a purpose-built interface for BitLocker through endpoint security profiles. Using OMA-URI is unnecessarily complex when a dedicated profile type exists.",
+      "PowerShell scripts run once and don't provide ongoing management, recovery key rotation, or compliance reporting. The endpoint security profile provides continuous management and integration with Intune's reporting."
+    ],
+    "tip": "BitLocker management in Intune: Configure: Endpoint security → Disk encryption → BitLocker profile. Key settings: encryption algorithm (XTS-AES 128/256), silent enablement, recovery key backup to Azure AD. Monitor: recovery keys visible in Azure AD device properties. Prerequisites: TPM 2.0, UEFI, Secure Boot (for silent enablement). Alternative location: Device configuration → Endpoint protection → Windows Encryption (same settings, different nav path)."
+  },
+  {
+    "id": "MS102-E03-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Conditional Access\n- The security team wants to implement a policy that:\n  - Requires MFA for ALL cloud apps\n  - Applies to ALL users\n  - Excludes the two break-glass accounts\n  - Is enabled immediately\n\nQuestion:\nBefore enabling this policy in production, what critical step should you take?",
+    "choices": [
+      "Verify that all users have registered for MFA, or they will be locked out",
+      "Disable all existing Conditional Access policies first",
+      "Create a new Azure AD tenant for testing",
+      "Enable the policy in report-only mode and analyze the impact in sign-in logs for at least 7 days"
+    ],
+    "answer": [3],
+    "explanations": [
+      "While verifying MFA registration is important, simply checking registration status doesn't reveal all the potential impacts of the policy. Service accounts, legacy authentication clients, and automated processes may also be affected. Report-only mode captures all of these scenarios.",
+      "Disabling existing policies would remove current security protections during the transition period. New policies should be tested alongside existing ones, not instead of them.",
+      "A separate tenant doesn't reflect your production environment's users, devices, applications, and sign-in patterns. Testing must occur against real production traffic to be meaningful.",
+      "This option is correct. Enabling the policy in report-only mode first allows you to see exactly which sign-ins would be affected without blocking anyone. The sign-in logs show 'Report-only: Success' (would pass) or 'Report-only: Failure' (would be blocked) for each sign-in. After 7+ days of analysis, you can identify unregistered users, service accounts, legacy apps, and other edge cases before enforcement. This prevents accidental lockouts."
+    ],
+    "tip": "Conditional Access deployment best practice: 1. Report-only mode (7-14 days) → identify impact. 2. Fix issues (register users for MFA, exclude service accounts, update legacy apps). 3. Pilot group enforcement → small group first. 4. Gradual rollout → expand groups. 5. Full enforcement. NEVER skip report-only mode for policies affecting all users. Always exclude break-glass accounts from all CA policies."
+  },
+  {
+    "id": "MS102-E03-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization is hybrid (on-premises AD + Azure AD via Azure AD Connect)\n- 500 existing domain-joined Windows devices need to be enrolled in Intune\n- The devices must maintain their on-premises AD membership\n- Azure AD Connect is already configured with device synchronisation\n\nQuestion:\nWhat is the required step to enable Intune enrolment for these hybrid Azure AD joined devices?",
+    "choices": [
+      "Unjoin devices from on-premises AD and join them directly to Azure AD",
+      "Configure a Group Policy Object (GPO) to enable automatic MDM enrolment for hybrid Azure AD joined devices",
+      "Install the Intune Company Portal on each device manually",
+      "Create Azure AD Conditional Access policy requiring device enrolment"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Unjoining from on-premises AD breaks the hybrid Azure AD join and removes access to on-premises resources. The requirement explicitly states devices must maintain their on-premises AD membership.",
+      "This option is correct. For hybrid Azure AD joined devices, automatic Intune (MDM) enrolment is triggered by a Group Policy Object. You configure the GPO 'Enable automatic MDM enrolment using default Azure AD credentials' which targets the device computer objects. When the GPO applies, the device automatically enrols in Intune using its Azure AD device identity. This is the standard approach for enrolling existing hybrid Azure AD joined devices in Intune.",
+      "Company Portal installation is not required for automatic MDM enrolment on hybrid Azure AD joined devices. The enrolment is triggered by the GPO and uses the built-in MDM client in Windows. Company Portal can be deployed later for app management.",
+      "Conditional Access can require device compliance (which requires enrolment) but it doesn't directly trigger the Intune enrolment process for hybrid Azure AD joined devices. The GPO is the mechanism that initiates enrolment."
+    ],
+    "tip": "Hybrid Azure AD join + Intune enrolment: 1. Azure AD Connect configured with device sync. 2. Devices are hybrid Azure AD joined (verify in Azure AD). 3. GPO: 'Enable automatic MDM enrolment using default Azure AD credentials'. 4. Devices auto-enrol in Intune at next policy refresh. For NEW devices: use Autopilot with hybrid Azure AD join profile. For EXISTING domain-joined: GPO-based auto-enrolment."
+  },
+  {
+    "id": "MS102-E03-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team discovers that an attacker has been using compromised credentials to access SharePoint files\n- The attacker's sign-in patterns show: access from an unfamiliar country, using a legacy authentication client, at unusual hours\n- The team wants to automatically block similar sign-in patterns in the future\n\nQuestion:\nWhich combination of features detects these sign-in anomalies and automatically blocks risky access?",
+    "choices": [
+      "DLP policy with geographic restrictions",
+      "Azure AD Identity Protection sign-in risk policy + Conditional Access blocking legacy authentication",
+      "Microsoft Defender for Cloud Apps activity policy only",
+      "Exchange Online connection filtering by IP address"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP policies control data sharing based on content (sensitive information types), not sign-in patterns. DLP doesn't evaluate sign-in locations, authentication methods, or timing.",
+      "This option is correct. Azure AD Identity Protection evaluates sign-in risk based on multiple signals: unfamiliar locations, atypical travel, suspicious IP addresses, unusual sign-in times, and more. A sign-in risk policy can automatically require MFA or block high-risk sign-ins. Additionally, a Conditional Access policy can block legacy authentication (which doesn't support MFA), removing the attacker's ability to use legacy protocols. Together, these address all three attack patterns described.",
+      "Defender for Cloud Apps activity policies can detect anomalous activities and alert, but they work after the sign-in has occurred. Identity Protection evaluates risk at sign-in time and can block the sign-in before access is granted. Cloud Apps is complementary but not the primary detection/blocking mechanism.",
+      "Connection filtering by IP blocks specific IPs but doesn't address the broader pattern (unfamiliar countries, legacy auth, unusual hours). Attackers can change IP addresses, making IP-based blocking a game of whack-a-mole."
+    ],
+    "tip": "Defense layers for sign-in protection: Identity Protection → risk-based detection (unfamiliar location, atypical travel, anonymous IP, leaked credentials). Conditional Access → block legacy authentication (protocols that can't do MFA). Named locations → block/allow specific countries. Combined strategy: block legacy auth + require MFA for risky sign-ins + block high-risk sign-ins. Legacy auth protocols to block: IMAP, POP3, SMTP AUTH, EWS, EAS (older versions)."
+  },
+  {
+    "id": "MS102-E03-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Intune to manage devices\n- The IT team needs to deploy a web application (intranet portal) to all iOS and Android devices\n- The web app should appear as an icon on the user's home screen\n- Tapping the icon should open the intranet URL in the managed browser\n\nQuestion:\nWhich Intune app type should you use?",
+    "choices": [
+      "iOS/Android store app",
+      "Web link (web clip) app",
+      "Line-of-business (LOB) app",
+      "Microsoft 365 Apps"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A store app is a native application from the App Store or Google Play. An intranet web portal is not a native app — it's a website accessed through a browser.",
+      "This option is correct. A web link (also called web clip on iOS) creates a shortcut on the device's home screen that opens a specified URL. When the user taps the icon, it opens the intranet URL in the device's browser (or managed browser if configured). This is the standard way to deploy web-based applications as home screen shortcuts through Intune.",
+      "LOB apps are native application packages (.ipa for iOS, .apk for Android) uploaded to Intune. A web URL is not a native app package.",
+      "Microsoft 365 Apps (Office suite) are specific productivity applications. They're not used for deploying web URL shortcuts."
+    ],
+    "tip": "Web app deployment in Intune: Web link/clip → shortcut icon on home screen, opens URL in browser. Available for: iOS (web clip), Android (web link), Windows (web link). Configuration: URL, icon image, optional managed browser. iOS web clips on supervised devices: can be made undeletable. For managed browser: configure app protection policy on Edge/managed browser to handle web clip URLs."
+  },
+  {
+    "id": "MS102-E03-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 100 Windows devices enrolled in Intune\n- The IT team creates a PowerShell script that collects custom inventory data and writes it to a log file\n- The script needs to run on all managed devices once every day\n- The script requires administrative privileges to execute\n\nQuestion:\nHow should you deploy this PowerShell script through Intune?",
+    "choices": [
+      "Create an app protection policy that runs the script",
+      "Add the script under Devices → Scripts in Intune with system context and daily schedule",
+      "Email the script to users and ask them to run it manually",
+      "Deploy the script as a Win32 app"
+    ],
+    "answer": [1],
+    "explanations": [
+      "App protection policies manage data protection in mobile apps. They cannot execute PowerShell scripts on Windows devices.",
+      "This option is correct. Intune's Devices → Scripts (or Devices → Platform scripts → Windows) allows you to upload PowerShell scripts for execution on managed Windows devices. You configure: run in system context (for admin privileges), run frequency (scripts can be set to run once or repeatedly), and target device groups. The Intune Management Extension executes the script on targeted devices according to the schedule.",
+      "Email distribution relies on users to run the script, provides no enforcement or scheduling, and users may not have admin privileges. This is not an enterprise management approach.",
+      "Deploying as a Win32 app is possible but overly complex for a script. Win32 apps require .intunewin packaging, detection rules, and install/uninstall commands. The PowerShell script feature is specifically designed for this use case and is much simpler."
+    ],
+    "tip": "Intune PowerShell scripts: Location: Devices → Scripts → Windows. Execution context: User context or System context (for admin privileges). Frequency: once or recurring (with Intune Management Extension). Output: scripts can write to local files for logging. Limitations: 200 scripts max, script timeout (default 30 min). For complex automation: consider Proactive Remediations (detect + remediate pattern) instead of basic scripts."
+  },
+  {
+    "id": "MS102-E03-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- A security incident reveals that several admin accounts were compromised because admins used their privileged accounts for daily tasks like reading email and browsing the web\n- The security team wants to implement a best practice that separates admin duties from daily activities\n\nQuestion:\nWhich identity security best practice addresses this scenario?",
+    "choices": [
+      "Enable self-service password reset for all admin accounts",
+      "Implement dedicated admin accounts separate from daily-use accounts (admin account isolation)",
+      "Increase the password complexity requirements for admin accounts",
+      "Assign Global Administrator to all IT staff for convenience"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Self-service password reset makes it easier for admins to reset their own passwords but doesn't address the core problem: using privileged accounts for daily activities exposes those accounts to phishing, malware, and web-based attacks.",
+      "This option is correct. Admin account isolation means administrators have separate accounts: a daily-use account (for email, browsing, regular work) and a dedicated admin account (used ONLY for administrative tasks). The admin account should have no mailbox, no internet access, and be subject to stricter security controls (MFA, PIM, Conditional Access). This limits the exposure of privileged credentials to attack vectors present in daily activities.",
+      "Stronger passwords don't prevent the exposure that comes from using admin accounts for email and web browsing. If the admin clicks a phishing link in email, no password complexity will prevent credential theft from that session.",
+      "Assigning Global Administrator to all IT staff is the opposite of best practice. It violates least-privilege principle and dramatically increases the attack surface."
+    ],
+    "tip": "Admin account best practices: Separate admin accounts (no email, no internet). Least privilege (minimum role needed, not Global Admin for everything). PIM for JIT activation. MFA on all admin sign-ins. Conditional Access: admin accounts only from secure admin workstations. Break-glass accounts excluded from all CA policies. Monitor: alert on any admin sign-in from unusual location or device."
+  }
+]

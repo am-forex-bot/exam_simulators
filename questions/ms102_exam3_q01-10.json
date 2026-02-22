@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-E03-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 1,200 Windows devices managed by Intune\n- A critical security vulnerability (CVE) is discovered that affects a specific third-party application installed on most devices\n- The IT team needs to quickly identify which devices have the vulnerable application version installed\n- Remediation must be prioritised for devices with the highest exposure\n\nQuestion:\nWhich Microsoft Defender for Endpoint feature helps identify devices with the vulnerable application?",
+    "choices": [
+      "Automated investigation and response (AIR)",
+      "Threat and vulnerability management (TVM)",
+      "Attack surface reduction (ASR) rules",
+      "Endpoint detection and response (EDR)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Automated investigation handles active alerts and incidents automatically. It doesn't inventory software versions or identify vulnerability exposure across the fleet.",
+      "This option is correct. Threat and vulnerability management (TVM) in Defender for Endpoint continuously assesses the software inventory across all onboarded devices. It identifies installed software versions, maps them against known CVEs, and provides an exposure score. You can quickly find all devices with the vulnerable application version, prioritise remediation based on exposure score, and create remediation tickets. TVM provides a software inventory, vulnerability assessments, and security recommendations.",
+      "ASR rules harden endpoints by blocking risky behaviors (Office macro execution, script obfuscation). They don't identify which devices have vulnerable software installed.",
+      "EDR detects and investigates active threats and suspicious behavior on endpoints. While EDR might detect exploitation of the vulnerability, it doesn't provide a software inventory or vulnerability assessment before exploitation occurs."
+    ],
+    "tip": "TVM capabilities: Software inventory → what's installed on every device. Vulnerability assessment → map software to CVEs. Security recommendations → prioritised remediation actions. Exposure score → per-device and organization-wide risk level. Remediation → create tickets, track patching progress. TVM is proactive (find vulnerabilities before exploitation); EDR is reactive (detect active threats)."
+  },
+  {
+    "id": "MS102-E03-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The HR department reports concerns about an employee potentially exfiltrating intellectual property before leaving the company\n- The employee has been accessing large amounts of data from SharePoint and downloading files to USB drives\n- The security team needs a solution that correlates these behavioral signals to identify insider threats\n\nQuestion:\nWhich Microsoft Purview feature is specifically designed to detect and investigate insider risk?",
+    "choices": [
+      "Communication compliance",
+      "Data Loss Prevention (DLP)",
+      "Insider Risk Management",
+      "eDiscovery (Premium)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Communication compliance monitors message content for policy violations (offensive language, insider trading language). It doesn't correlate behavioral signals like file downloads, USB usage, and data access patterns.",
+      "DLP detects and prevents sensitive data from being shared inappropriately. While DLP can block USB transfers of sensitive content, it doesn't provide the behavioral analytics and risk correlation needed to identify insider threats holistically.",
+      "This option is correct. Insider Risk Management correlates signals from multiple sources — SharePoint access patterns, USB file transfers, email volume, print activity, resignation signals from HR connectors — to identify potential insider threats. It uses machine learning to establish behavioral baselines and detect anomalies. Alerts are generated when risk indicators align with policy templates (data theft by departing users, IP theft, security violations). The security team can investigate cases with a timeline view of risky activities.",
+      "eDiscovery is for searching, preserving, and exporting content for legal investigations. While it can find specific documents, it doesn't proactively detect behavioral risk patterns or correlate activity signals."
+    ],
+    "tip": "Insider Risk Management: Policy templates → data theft by departing users, data leaks, security policy violations, IP theft. Signal sources: Office 365 activity, Defender for Endpoint, HR connector (resignation/termination dates), DLP alerts, physical badging. Investigation: case timeline, content explorer, user activity reports. Integration: alerts can trigger eDiscovery cases for formal investigation."
+  },
+  {
+    "id": "MS102-E03-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune to manage both Windows and macOS devices\n- The IT team needs to deploy Microsoft Edge browser to all macOS devices\n- Edge must be automatically installed and kept updated\n- The deployment should use Intune's built-in capability for macOS app deployment\n\nQuestion:\nWhat is the recommended app type for deploying Microsoft Edge to macOS through Intune?",
+    "choices": [
+      "Upload Edge PKG installer as a macOS line-of-business (LOB) app",
+      "Use the built-in Microsoft Edge (macOS) app type in Intune",
+      "Deploy Edge using a macOS shell script",
+      "Direct users to download Edge from the Microsoft website"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Uploading Edge as a LOB app works but requires manually downloading the PKG, uploading it, and updating it each time a new version releases. This is more effort than necessary when Intune has a built-in option.",
+      "This option is correct. Intune provides a built-in Microsoft Edge app type for macOS, similar to the built-in Microsoft 365 Apps type for Windows. You select 'macOS' → 'Microsoft Edge' in the app creation wizard, configure the channel (Stable, Beta, Dev), and assign it. Intune handles downloading, installing, and updating Edge automatically. This is the simplest and recommended approach.",
+      "Shell scripts can install applications but lack the app management features: installation status reporting, automatic updates, detection rules, and assignment management. Using a script for a task that has a built-in solution is unnecessarily complex.",
+      "Manual download provides no management, no automatic deployment, no compliance reporting, and relies on users to take action. This is not an enterprise deployment approach."
+    ],
+    "tip": "Built-in app types in Intune: Windows → Microsoft 365 Apps, Microsoft Edge, Microsoft Defender. macOS → Microsoft Edge, Microsoft 365 Apps (Office for Mac). iOS/Android → managed store apps (link to App Store/Play Store). Built-in types auto-update and require minimal configuration. Always prefer built-in types over manual LOB uploads when available."
+  },
+  {
+    "id": "MS102-E03-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Windows devices enrolled in Intune\n- The IT team needs to remotely restart a specific group of devices to apply a pending Windows update\n- The restart must happen after business hours (10 PM) to avoid disruption\n- Users should receive a notification before the restart\n\nQuestion:\nWhich Intune feature allows scheduling device restarts with user notification?",
+    "choices": [
+      "Intune remote action: Restart (immediate restart, no scheduling)",
+      "Windows Update ring settings with active hours and restart notifications",
+      "PowerShell script that schedules a restart at 10 PM",
+      "Device configuration profile with custom OMA-URI for restart"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The Restart remote action triggers an immediate device restart. It doesn't support scheduling or user notifications. Using this during business hours would disrupt users.",
+      "This option is correct. Windows Update rings in Intune include restart settings: Active hours define when the device should NOT restart (e.g., 8 AM–6 PM). Deadline settings force restarts after a grace period. Restart notifications warn users before automatic restarts, giving them time to save work. Engaged restart sends additional reminders as the deadline approaches. This is the managed, user-friendly approach to update restarts.",
+      "A PowerShell script could schedule a restart, but it lacks the user notification capability, the active hours awareness, and the integration with Windows Update status. It's a one-time action without ongoing management.",
+      "Custom OMA-URI settings could configure some restart behaviors, but Windows Update ring settings provide a purpose-built interface for managing update restarts with all the required capabilities (scheduling, notifications, active hours)."
+    ],
+    "tip": "Windows Update ring restart settings: Active hours → device won't auto-restart during these hours. Deadline → days before forcing restart after update install. Notification → minutes before restart to warn user. Engaged restart → multi-day reminder sequence before forced restart. Grace period → additional time for automatic restart after deadline. Best practice: set active hours to cover business hours, allow 2-3 day deadline for non-critical updates."
+  },
+  {
+    "id": "MS102-E03-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Azure AD with Conditional Access\n- A new requirement states that all users must register for MFA within 14 days of their account creation\n- Users who have not registered for MFA should not be blocked from accessing Microsoft 365 during the 14-day registration period\n- After 14 days, unregistered users must be blocked until they complete MFA registration\n\nQuestion:\nHow should you configure this MFA registration requirement?",
+    "choices": [
+      "Create a Conditional Access policy requiring MFA and exclude new users for 14 days",
+      "Use Azure AD Identity Protection MFA registration policy with a 14-day grace period",
+      "Send an email to new users asking them to register for MFA within 14 days",
+      "Enable per-user MFA for all users from day one"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Manually excluding new users and then re-including them after 14 days requires ongoing administrative effort and is error-prone. Conditional Access doesn't have a built-in grace period mechanism for MFA registration.",
+      "This option is correct. Azure AD Identity Protection includes an MFA registration policy that requires users to register for MFA. The policy interrupts sign-in to prompt registration but allows users to skip/postpone initially. Combined with a Conditional Access policy that enforces MFA after a specific period, this provides the registration window. The registration policy nudges users to register, and after 14 days, a CA policy requiring MFA forces compliance.",
+      "Email reminders provide no enforcement mechanism. Users may ignore the emails, and there's no automatic blocking after 14 days without a technical control.",
+      "Per-user MFA from day one blocks users who haven't registered for MFA from accessing anything. This doesn't provide the 14-day grace period. Additionally, per-user MFA is the legacy approach — Conditional Access is the modern, recommended method."
+    ],
+    "tip": "MFA registration options: Identity Protection MFA registration policy → prompt users to register (interrupts sign-in). Conditional Access → require MFA (blocks if not registered). Combined approach: registration policy prompts, CA policy enforces. For new users: use Azure AD dynamic groups (creation date) to target registration and enforcement policies with different timing."
+  },
+  {
+    "id": "MS102-E03-006",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Intune with app protection policies for mobile devices\n- An employee's personal Android phone has corporate data in Microsoft Outlook and OneDrive\n- The employee reports their phone was stolen\n- You need to immediately remove all corporate data from the stolen device\n- Personal data on the device must NOT be affected\n\nQuestion:\nWhich Intune action should you take?",
+    "choices": [
+      "Wipe the device (factory reset)",
+      "Selective wipe (remove corporate data only via app protection policy)",
+      "Disable the user's Azure AD account",
+      "Change the user's password"
+    ],
+    "answer": [1],
+    "explanations": [
+      "A full device wipe removes ALL data including personal photos, messages, and apps. For a personally-owned (BYOD) device, wiping personal data is not appropriate and may have legal implications. The requirement specifies personal data must not be affected.",
+      "This option is correct. A selective wipe removes only corporate data managed by Intune app protection policies. Outlook data (emails, calendar), OneDrive files, and other managed app data are removed. Personal apps, photos, and other personal data remain untouched. For MAM-managed devices (app protection without device enrolment), selective wipe is the standard response to a lost/stolen personal device.",
+      "Disabling the Azure AD account prevents new sign-ins but doesn't remove data already cached on the device. Outlook and OneDrive may still have offline access to corporate data. Disabling should be done IN ADDITION to selective wipe, not instead of it.",
+      "Changing the password prevents future sign-ins but doesn't address data already on the stolen device. Like disabling the account, this should complement a selective wipe, not replace it."
+    ],
+    "tip": "Stolen device response for BYOD: 1. Selective wipe (remove corporate data). 2. Disable user account (prevent new sign-ins). 3. Reset user password. 4. Revoke refresh tokens. For company-owned devices: full wipe is appropriate. MAM selective wipe removes: managed app data, app protection policy settings, managed app configurations. MAM selective wipe preserves: personal apps, personal data, device settings."
+  },
+  {
+    "id": "MS102-E03-007",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 300 Windows 11 Pro devices enrolled in Intune\n- The IT team wants to upgrade all devices to Windows 11 Enterprise for advanced security features\n- Windows 11 Enterprise features like Credential Guard and AppLocker are required\n- The upgrade must not require reinstalling Windows or losing user data\n\nQuestion:\nHow should you upgrade these devices from Windows 11 Pro to Enterprise?",
+    "choices": [
+      "Reimage all devices with a Windows 11 Enterprise image using a task sequence",
+      "Assign Windows 11 Enterprise licences and use Windows 10/11 subscription activation",
+      "Purchase new devices with Windows 11 Enterprise pre-installed",
+      "Manually enter Windows 11 Enterprise product keys on each device"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Reimaging removes all user data and applications, requiring reconfiguration of every device. This is disruptive and unnecessary for an in-place edition upgrade.",
+      "This option is correct. Windows subscription activation allows seamless edition upgrade from Pro to Enterprise when users with Windows Enterprise licences (E3/E5) sign in. No reimage, no data loss, no reboot required in most cases. Intune can deploy a Windows edition upgrade profile that automatically activates the Enterprise licence. The device switches from Pro to Enterprise while maintaining all data, apps, and settings.",
+      "Purchasing new devices is extremely expensive and wasteful when the existing hardware is adequate. An edition upgrade doesn't require new hardware.",
+      "Manually entering product keys on 300 devices is not scalable and doesn't provide centralised management. Subscription activation through Intune automates this process."
+    ],
+    "tip": "Windows edition upgrade paths: Pro → Enterprise: subscription activation (M365 E3/E5 licence). Pro → Education: subscription activation (M365 A3/A5 licence). Configure in Intune: Device configuration → Edition upgrade and mode switch. Requirements: device must be running Windows 10/11 Pro, Azure AD joined or hybrid joined, user must have qualifying licence. No data loss, no reboot (usually), automatic via Intune policy."
+  },
+  {
+    "id": "MS102-E03-008",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Exchange Online as part of Microsoft 365 E3\n- Users receive hundreds of spam emails daily despite Exchange Online Protection (EOP)\n- The security team wants advanced protection including:\n  - Safe Attachments (sandbox detonation)\n  - Safe Links (time-of-click URL scanning)\n  - Advanced anti-phishing with mailbox intelligence\n\nQuestion:\nWhat additional licence or feature is required for these advanced email security capabilities?",
+    "choices": [
+      "Exchange Online Protection (EOP) — already included in E3",
+      "Microsoft Defender for Office 365 Plan 1 or Plan 2",
+      "Microsoft Defender for Endpoint",
+      "Azure AD Premium P2"
+    ],
+    "answer": [1],
+    "explanations": [
+      "EOP is included with all Exchange Online plans and provides basic anti-spam, anti-malware, and connection filtering. However, EOP does NOT include Safe Attachments, Safe Links, or advanced anti-phishing with mailbox intelligence. These are Defender for Office 365 features.",
+      "This option is correct. Microsoft Defender for Office 365 (Plan 1 or Plan 2) adds advanced threat protection on top of EOP. Plan 1 includes: Safe Attachments, Safe Links, anti-phishing with mailbox intelligence. Plan 2 adds: Attack simulation training, Threat Explorer, automated investigation and response, Threat Trackers. Plan 1 is included in M365 E5; can be added to E3 as an add-on.",
+      "Defender for Endpoint protects endpoints (desktops, servers, mobile devices) from threats. It doesn't provide email protection features like Safe Attachments or Safe Links.",
+      "Azure AD Premium P2 adds Privileged Identity Management and Identity Protection. It has no email security capabilities."
+    ],
+    "tip": "Email protection layers: EOP (included in all Exchange Online) → basic anti-spam, anti-malware, SPF/DKIM/DMARC. Defender for Office 365 Plan 1 → + Safe Attachments, Safe Links, anti-phishing with impersonation protection. Defender for Office 365 Plan 2 → + Attack simulation, Threat Explorer, AIR, Threat Trackers. Included in: M365 E5 (Plan 2), M365 E3 (EOP only, add Plan 1/2 separately)."
+  },
+  {
+    "id": "MS102-E03-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has 50 Windows devices in a retail store environment\n- Store associates use shared Windows tablets to check inventory and process transactions\n- Each associate signs in with their own Azure AD account\n- When an associate signs out, their profile data should be automatically deleted to free up disk space\n- The devices have limited storage (64 GB)\n\nQuestion:\nWhich Intune configuration ensures user profiles are cleaned up after sign-out on shared devices?",
+    "choices": [
+      "Device restriction profile that disables user profile caching",
+      "Shared device configuration profile with account management settings (delete profiles at sign-out)",
+      "Compliance policy requiring minimum free disk space",
+      "PowerShell script that runs daily to delete user profiles"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device restriction profiles manage feature restrictions (camera, Bluetooth, app store) but don't provide shared device profile management like automatic profile cleanup on sign-out.",
+      "This option is correct. Intune's shared multi-user device configuration includes account management settings. You can configure: delete user profiles at sign-out (cleans up the user profile after they sign out), delete accounts after a specified number of days of inactivity, and set a storage threshold that triggers profile cleanup. This keeps devices clean and manages the limited 64 GB storage effectively.",
+      "A compliance policy can check free disk space but doesn't take action to free space. It can mark a device as non-compliant but won't delete user profiles.",
+      "A PowerShell script could delete profiles but only runs at scheduled intervals, not at sign-out. Between runs, profiles accumulate and consume limited storage. The built-in shared device profile management is more efficient and real-time."
+    ],
+    "tip": "Shared device account management in Intune: Delete accounts at sign-out → immediate profile cleanup. Delete inactive accounts after X days → clean up stale profiles. Storage threshold → trigger cleanup when disk space is low. Guest account → configure a guest account for quick access. Configure via: Device configuration → Shared multi-user device. Combined with: kiosk mode (optional), Enterprise State Roaming (settings follow user)."
+  },
+  {
+    "id": "MS102-E03-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team needs to classify documents based on content patterns they define\n- They want to train a classifier that can identify 'Employee Performance Reviews' by learning from sample documents\n- The classifier should automatically improve accuracy based on feedback\n\nQuestion:\nWhich Microsoft Purview feature enables this custom content classification?",
+    "choices": [
+      "Sensitive information types with keyword dictionaries",
+      "Trainable classifiers",
+      "Exact Data Match (EDM) classification",
+      "Content search with saved queries"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Sensitive information types use pattern matching (regex, keywords, checksums) to identify structured data like credit card numbers or SSNs. They're not designed for understanding document types or content patterns like 'performance reviews' which have varied, unstructured content.",
+      "This option is correct. Trainable classifiers use machine learning to identify content categories based on sample documents. You provide positive examples (actual performance reviews) and negative examples (other documents). The classifier learns the patterns and characteristics that distinguish performance reviews. After training and testing, the classifier can be used in DLP policies, retention policies, and sensitivity labels. Microsoft also provides pre-built classifiers for common document types.",
+      "Exact Data Match (EDM) compares content against a specific dataset of actual values (like a database of employee IDs or customer numbers). It's for identifying exact matches of known data, not for learning document patterns.",
+      "Content search with saved queries finds content matching specific criteria but doesn't classify documents or learn patterns. It's a search tool, not a classification tool."
+    ],
+    "tip": "Classification methods comparison: Sensitive info types → pattern matching (regex, keywords, checksums) for structured data (SSN, credit cards). Trainable classifiers → ML-based classification for document types and unstructured content. EDM → exact value matching against a database. Pre-built trainable classifiers: resumes, source code, harassment, threats, profanity, financial statements, etc. Custom trainable classifiers: you provide 50+ positive samples to train."
+  }
+]

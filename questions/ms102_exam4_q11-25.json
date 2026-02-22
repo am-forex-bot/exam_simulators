@@ -1,0 +1,302 @@
+[
+  {
+    "id": "MS102-E04-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Windows devices enrolled in Intune\n- The security team requires that all devices have Windows Hello for Business configured\n- Users should authenticate using PIN, fingerprint, or facial recognition instead of passwords\n- Windows Hello must be enforced through Intune policy\n\nQuestion:\nWhere do you configure Windows Hello for Business settings in Intune?",
+    "choices": [
+      "Device compliance policy → Passcode settings",
+      "Identity protection profile or tenant-wide Windows Hello for Business policy in Intune",
+      "Azure AD Conditional Access → Authentication methods",
+      "Microsoft 365 admin centre → Security settings"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device compliance policies check whether a device meets password/passcode requirements but don't configure Windows Hello for Business. They evaluate, not configure.",
+      "This option is correct. Windows Hello for Business can be configured in Intune at two levels: 1) Tenant-wide: Intune → Devices → Enrolment → Windows Hello for Business (applies to all devices at enrolment). 2) Per-group: Identity protection profile in device configuration (targets specific groups with granular settings). Settings include: enable/disable WHfB, minimum PIN length, require TPM, biometric authentication options, and PIN complexity requirements.",
+      "Azure AD Conditional Access can require specific authentication strengths (including Windows Hello) but doesn't configure the Windows Hello for Business settings themselves. CA enforces the use of WHfB; Intune configures how WHfB works.",
+      "The Microsoft 365 admin centre doesn't provide Windows Hello for Business configuration. This is managed through Intune."
+    ],
+    "tip": "Windows Hello for Business in Intune: Tenant-wide: Devices → Windows → Enrolment → Windows Hello for Business. Per-group: Device configuration → Identity protection profile. Key settings: enable WHfB, min/max PIN length, PIN complexity (uppercase, lowercase, special chars), biometric (fingerprint, face), TPM required, PIN recovery. WHfB replaces passwords with: PIN (device-bound, never transmitted), fingerprint, or facial recognition. PIN is NOT the same as password — it's cryptographically bound to the device."
+  },
+  {
+    "id": "MS102-E04-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft Sentinel deployed as the SIEM solution\n- The security team wants to ingest Microsoft 365 Defender alerts and raw data into Sentinel\n- They need to create custom detection rules that correlate data from both Microsoft 365 and third-party sources (firewall logs, on-premises AD)\n- Automated playbooks should trigger remediation when specific patterns are detected\n\nQuestion:\nWhat must you configure to connect Microsoft 365 Defender data to Microsoft Sentinel?",
+    "choices": [
+      "Export Microsoft 365 Defender alerts via email to the security team",
+      "Enable the Microsoft 365 Defender data connector in Microsoft Sentinel",
+      "Create a Logic App that queries the Defender API on a schedule",
+      "Configure Defender to send syslog to a Sentinel agent"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Email export is a manual, unstructured approach that doesn't provide data ingestion into Sentinel for automated analysis, correlation, or playbook triggering.",
+      "This option is correct. Microsoft Sentinel provides a built-in Microsoft 365 Defender data connector that streams alerts, incidents, and raw hunting data (advanced hunting tables) into Sentinel. Once connected, Sentinel can correlate M365 Defender data with data from other sources (firewall logs, on-premises AD via Azure AD Connect/Defender for Identity). Sentinel analytics rules can trigger automated playbooks for remediation.",
+      "A Logic App polling the Defender API would work but is unnecessarily complex when a native data connector exists. The built-in connector is optimized for performance, provides bi-directional incident sync, and includes raw hunting data.",
+      "Microsoft 365 Defender doesn't send syslog. The native cloud-to-cloud connector is the proper integration method for Microsoft services."
+    ],
+    "tip": "Microsoft Sentinel data connectors: Microsoft 365 Defender → alerts + raw hunting data (email, endpoint, identity, cloud apps). Azure AD → sign-in logs, audit logs, Identity Protection. Microsoft Purview → DLP alerts, sensitivity label events. Third-party → syslog, CEF, REST API, custom connectors. Bi-directional sync: M365 Defender incidents sync with Sentinel incidents. Advanced hunting tables: available in Sentinel for cross-source KQL queries."
+  },
+  {
+    "id": "MS102-E04-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows and macOS devices\n- The IT team needs to deploy a custom macOS application packaged as a .dmg file\n- The app must be silently installed without user interaction\n- The IT team needs to monitor installation status and verify the app is installed\n\nQuestion:\nHow should you deploy this custom macOS application through Intune?",
+    "choices": [
+      "Upload the .dmg file as a macOS line-of-business (LOB) app in Intune",
+      "Email the .dmg file to users and ask them to install it",
+      "Use Apple Configurator to install via USB",
+      "Deploy using a macOS shell script only"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Intune supports uploading macOS .dmg files as line-of-business (LOB) apps. You upload the .dmg, configure the app metadata, and assign it to device groups. Intune handles the silent installation (using the macOS installer command), provides installation status reporting, and monitors whether the app is detected on devices. This is the standard approach for custom macOS app deployment.",
+      "Email distribution provides no management, no silent installation, and no installation monitoring. Users may not install the app or may install it incorrectly.",
+      "Apple Configurator requires USB connection to each device and doesn't support macOS devices for app installation. It's primarily for iOS/iPadOS device setup.",
+      "Shell scripts can install applications but don't provide the app management features: installation status tracking, retry logic, detection, and uninstall management. For a proper app deployment, LOB app type is preferred over raw scripts."
+    ],
+    "tip": "macOS app types in Intune: .dmg LOB → custom/internal macOS apps (most common). .pkg LOB → alternative installer format. Microsoft Edge (built-in) → auto-managed Edge deployment. macOS App Store → requires ABM VPP integration. Shell scripts → for automation/configuration (not ideal for app deployment). .dmg deployment: Intune converts internally, handles installation, monitors status. Detection: based on app bundle info in /Applications/."
+  },
+  {
+    "id": "MS102-E04-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has devices enrolled in Intune across multiple countries\n- The IT team needs to delegate device management responsibilities to regional IT teams\n- The US IT team should only manage US devices\n- The UK IT team should only manage UK devices\n- Neither team should see or manage the other's devices\n\nQuestion:\nWhich Intune feature enables this regional delegation of device management?",
+    "choices": [
+      "Azure AD Administrative Units",
+      "Intune Role-Based Access Control (RBAC) with scope tags",
+      "Multiple Intune tenants (one per country)",
+      "Device categories assigned per country"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Administrative Units in Azure AD scope admin permissions for user/group management but don't provide granular Intune device management delegation. They're more focused on identity administration than device management.",
+      "This option is correct. Intune RBAC with scope tags enables regional delegation. Create scope tags (e.g., 'US', 'UK') and assign them to devices, profiles, and apps. Then create role assignments for each regional IT team, scoped to their tag. The US IT team with 'US' scope tag only sees and manages US-tagged devices, profiles, and apps. UK team with 'UK' scope tag only manages UK resources. This provides complete management isolation within a single tenant.",
+      "Multiple tenants are expensive, complex, and create administrative overhead. A single tenant with scope tags provides the same isolation much more efficiently.",
+      "Device categories help classify devices for group targeting but don't restrict admin visibility or management access. All admins can see all device categories."
+    ],
+    "tip": "Intune RBAC components: Roles → define permissions (what actions are allowed). Scope groups → define targets (which users/devices are manageable). Scope tags → filter visibility (which objects are visible). Regional delegation: create scope tags per region → assign to devices/profiles → create role assignments with matching scope tags. Built-in roles: Intune Administrator, Help Desk Operator, Read Only Operator, etc. Custom roles: select specific permissions for granular control."
+  },
+  {
+    "id": "MS102-E04-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to detect lateral movement attacks within the on-premises Active Directory environment\n- They need to identify: pass-the-hash attacks, pass-the-ticket attacks, and reconnaissance activities\n- The solution must monitor domain controller traffic\n\nQuestion:\nWhich Microsoft security product detects on-premises Active Directory identity threats?",
+    "choices": [
+      "Microsoft Defender for Endpoint",
+      "Microsoft Defender for Identity",
+      "Microsoft Defender for Office 365",
+      "Microsoft Defender for Cloud Apps"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Defender for Endpoint protects endpoints (desktops, servers) from malware, ransomware, and other device-level threats. While it can detect some lateral movement at the endpoint level, it doesn't monitor domain controller traffic or detect AD-specific identity attacks.",
+      "This option is correct. Microsoft Defender for Identity (formerly Azure ATP) monitors domain controller traffic by deploying sensors on domain controllers. It detects: pass-the-hash, pass-the-ticket, golden ticket, kerberoasting, reconnaissance (DNS, LDAP, SAMR enumeration), and other AD-specific attacks. Alerts feed into the Microsoft 365 Defender portal for unified investigation.",
+      "Defender for Office 365 protects email and collaboration tools (Exchange, Teams, SharePoint) from phishing, malware, and business email compromise. It doesn't monitor on-premises AD traffic.",
+      "Defender for Cloud Apps is a CASB that monitors cloud app usage, detects shadow IT, and controls cloud app sessions. It doesn't monitor on-premises domain controller traffic."
+    ],
+    "tip": "Microsoft Defender for Identity: Deployment: sensors on domain controllers (read DC traffic). Detects: pass-the-hash, pass-the-ticket, golden ticket, overpass-the-hash, kerberoasting, DCSync, SID-History injection, reconnaissance. Sensors: lightweight agents on DCs, no port mirroring needed. Integration: feeds alerts to Microsoft 365 Defender portal. Also detects: suspicious AD modifications, compromised credentials, privilege escalation. Key requirement: sensor must be on EVERY domain controller for full coverage."
+  },
+  {
+    "id": "MS102-E04-016",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps through Intune\n- The IT team receives reports that OneDrive sync is consuming excessive bandwidth during initial setup\n- 500 new devices are being provisioned, and each user has 20+ GB of OneDrive data\n- The initial sync is saturating the corporate network\n\nQuestion:\nWhich OneDrive feature should you configure to reduce bandwidth consumption during initial sync?",
+    "choices": [
+      "Disable OneDrive sync entirely and use web-only access",
+      "Configure OneDrive Files On-Demand (cloud-only mode) so files are not downloaded until accessed",
+      "Increase the corporate network bandwidth",
+      "Ask users to manually select which folders to sync"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Disabling sync removes the offline access capability that many users need. This is too restrictive and eliminates a key productivity feature.",
+      "This option is correct. OneDrive Files On-Demand allows files to appear in File Explorer without being physically downloaded. Files show a cloud icon and are downloaded only when a user opens them. This dramatically reduces initial sync bandwidth because only the file metadata (names, sizes, dates) is synced initially — not the actual file content. Configure via Intune: OneDrive ADMX template → 'Use OneDrive Files On-Demand'. Additional bandwidth controls: set maximum upload/download bandwidth limits.",
+      "Increasing bandwidth is expensive infrastructure change that doesn't address the root cause. With 500 devices syncing 20+ GB each, even upgraded bandwidth may be insufficient.",
+      "Manual folder selection helps but depends on user action and still requires downloading the selected folders in full. Files On-Demand is a better solution because it requires zero user action and works automatically."
+    ],
+    "tip": "OneDrive bandwidth management: Files On-Demand → download on access only (metadata-only initial sync). Bandwidth limits → cap upload/download speed (Intune ADMX setting). Known Folder Move → redirect Desktop, Documents, Pictures to OneDrive. Silent account configuration → auto-configure OneDrive sync with AAD credentials. Configure all via Intune: Administrative templates → OneDrive. Files On-Demand modes: cloud only (download on access), always keep on device, free up space."
+  },
+  {
+    "id": "MS102-E04-017",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization is planning a large-scale Autopilot deployment\n- 1,000 devices need to be registered with Autopilot\n- The devices are being purchased from an authorized Microsoft OEM partner\n- The IT team wants to minimize manual effort for Autopilot registration\n\nQuestion:\nWhat is the EASIEST method to register 1,000 devices for Autopilot?",
+    "choices": [
+      "Power on each device and run a PowerShell script to extract the hardware hash, then import the CSV into Intune",
+      "Have the OEM partner register the devices in Autopilot at the time of purchase",
+      "Manually type each device's serial number into the Intune portal",
+      "Use Apple Business Manager to register the Windows devices"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Running PowerShell on each of 1,000 devices requires powering on and connecting each device, which is extremely time-consuming. This is viable for small numbers of existing devices but not for a 1,000-device purchase.",
+      "This option is correct. Microsoft authorized OEM partners can register devices in the Autopilot service at the time of manufacture/purchase. The partner uploads the hardware hashes directly to your Intune tenant before shipping. When devices arrive, they're already registered for Autopilot — zero IT effort required. This is the recommended method for new device purchases at scale.",
+      "Manually typing serial numbers for 1,000 devices is extremely error-prone and time-consuming. Additionally, Autopilot registration requires hardware hashes, not just serial numbers.",
+      "Apple Business Manager is for Apple devices only (macOS, iOS, iPadOS). It cannot register Windows devices for Autopilot."
+    ],
+    "tip": "Autopilot registration methods (easiest to hardest): 1. OEM partner registration at purchase (zero effort, recommended for new devices). 2. Reseller/CSP partner registration (partner uploads hashes). 3. CSV import from hardware hash extraction (for existing devices). 4. PowerShell on each device (Get-WindowsAutopilotInfo script). For 1,000+ devices: always use OEM registration. For existing devices: use the PowerShell extraction script → CSV → import to Intune."
+  },
+  {
+    "id": "MS102-E04-018",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview\n- The data governance team needs to discover and catalogue ALL data assets across:\n  - Azure SQL databases\n  - Azure Blob Storage\n  - On-premises SQL Server\n  - Amazon S3 buckets\n- They need to automatically classify data and create a searchable data catalog\n\nQuestion:\nWhich Microsoft Purview capability provides this multi-cloud data discovery and cataloguing?",
+    "choices": [
+      "Microsoft Purview Information Protection (sensitivity labels)",
+      "Microsoft Purview Data Map and Data Catalog",
+      "Microsoft Purview Data Loss Prevention",
+      "Microsoft Purview eDiscovery"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Information Protection with sensitivity labels classifies and protects documents and emails within Microsoft 365. It doesn't provide cross-cloud data source discovery and cataloguing for databases and storage accounts.",
+      "This option is correct. Microsoft Purview Data Map scans and discovers data across Azure, on-premises, and multi-cloud sources (including AWS S3). It automatically classifies data based on sensitive information types and creates a unified, searchable Data Catalog. The catalog provides lineage tracking, glossary terms, and a searchable inventory of all organizational data assets. This is the data governance component of Microsoft Purview.",
+      "DLP prevents sensitive data from being shared inappropriately. It doesn't discover and catalogue data assets across multiple cloud platforms.",
+      "eDiscovery searches for content within Microsoft 365 (Exchange, SharePoint, Teams) for legal purposes. It doesn't scan Azure databases, blob storage, or third-party cloud services."
+    ],
+    "tip": "Microsoft Purview data governance: Data Map → scan data sources, create asset inventory. Data Catalog → searchable catalog of all discovered assets. Data Estate Insights → analytics on data estate. Supported sources: Azure (SQL, Blob, ADLS, Synapse), on-premises (SQL Server, Oracle, SAP), multi-cloud (AWS S3, Glue, RDS), SaaS (Power BI, M365). Classification: automatic sensitive info type detection during scanning. Lineage: visual data flow from source to destination."
+  },
+  {
+    "id": "MS102-E04-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Windows 365 Cloud PCs and physical Windows devices\n- Some users have both a Cloud PC and a physical laptop\n- The IT team wants the same Intune policies, apps, and configurations to apply to both the Cloud PC and the physical device\n- Users should have a consistent experience regardless of which device they use\n\nQuestion:\nHow does Intune manage Windows 365 Cloud PCs compared to physical devices?",
+    "choices": [
+      "Cloud PCs require a separate Intune tenant and separate policies",
+      "Cloud PCs are managed the same way as physical devices in Intune — same policies, profiles, and apps can target both",
+      "Cloud PCs cannot be managed by Intune — they use a separate management tool",
+      "Cloud PCs only support a subset of Intune policies and cannot receive app deployments"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Cloud PCs and physical devices are managed in the same Intune tenant. There's no need for a separate tenant or separate policies.",
+      "This option is correct. Windows 365 Cloud PCs appear in Intune as regular Windows devices. They can receive the same device configuration profiles, compliance policies, security baselines, app deployments, and endpoint security settings as physical devices. You can target the same device groups with the same policies, ensuring a consistent management experience. Cloud PCs also support Windows Update management, BitLocker, and Defender for Endpoint.",
+      "Cloud PCs are fully managed through Intune. They automatically enrol in Intune during provisioning and appear alongside physical devices in the device inventory.",
+      "Cloud PCs support the full range of Intune policies and app deployments. There's no limitation compared to physical devices for standard management scenarios."
+    ],
+    "tip": "Windows 365 + Intune: Cloud PCs auto-enrol in Intune during provisioning. Same policies as physical devices: configuration profiles, compliance, security baselines, apps. Cloud PC-specific features: resize (change specs), reprovision (fresh Cloud PC), point-in-time restore. Management parity: almost identical to physical Windows device management. Best practice: use the same Azure AD groups for both Cloud PCs and physical devices when policies should be consistent."
+  },
+  {
+    "id": "MS102-E04-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The legal team creates a sensitivity label called 'Legal Privileged'\n- This label applies AES-256 encryption, restricts access to the Legal department Azure AD group, and adds a 'Legal Privileged — Do Not Distribute' watermark\n- A user from the Marketing department receives a document with this label\n\nQuestion:\nWhat happens when the Marketing user tries to open the document?",
+    "choices": [
+      "The document opens normally without any restrictions",
+      "The Marketing user is blocked from opening the document because they are not in the Legal department group",
+      "The document opens but without the watermark",
+      "The sensitivity label is automatically removed and the document opens unprotected"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The label's encryption restricts access to the Legal department group only. Users outside this group cannot decrypt the document, so it will not open normally.",
+      "This option is correct. When a sensitivity label applies encryption with specific group permissions, only members of the authorized groups can open the document. The Marketing user is not in the Legal department Azure AD group, so the encryption prevents them from decrypting and opening the document. They will see a message indicating they don't have permission to access the file. The protection travels with the document — it doesn't matter where the file is stored or how it was shared.",
+      "Watermarks are embedded in the document along with the encryption. You can't have one without the other — if the document can't be opened, neither the content nor the watermark is visible.",
+      "Sensitivity labels with encryption persist. The label and protection cannot be removed by unauthorised users. Only users with the proper rights (typically the label administrator or content owner) can change or remove labels."
+    ],
+    "tip": "Sensitivity label encryption behavior: Authorized users → full access per assigned permissions (view, edit, print). Unauthorized users → cannot open/decrypt the document at all. Protection persistence: encryption stays regardless of file location (email, USB, cloud storage). Owner rights: document owner/creator typically retains full control. Super user: designated admins can access all encrypted content for compliance/legal purposes. Authentication: users authenticate via Azure AD to verify group membership before decryption."
+  },
+  {
+    "id": "MS102-E04-021",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Android Enterprise devices\n- The IT team needs to deploy apps to corporate-owned fully managed Android devices\n- The apps should be sourced from the Google Play Store but managed through Intune\n- Users should not have access to the full public Google Play Store — only approved apps should be visible\n\nQuestion:\nHow should you deploy managed apps to Android Enterprise fully managed devices?",
+    "choices": [
+      "Allow users full access to the public Google Play Store",
+      "Approve apps in Managed Google Play and deploy through Intune as Required or Available",
+      "Sideload APK files manually on each device",
+      "Deploy apps through a third-party app store"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Full Google Play Store access on corporate devices allows users to install any app, including potentially insecure or distracting apps. Corporate-owned devices should restrict app availability to IT-approved apps.",
+      "This option is correct. Managed Google Play is the enterprise version of Google Play integrated with Intune. The IT admin approves specific apps in Managed Google Play, and only approved apps are visible to users on their managed devices. Apps are assigned through Intune as Required (auto-install) or Available (user-initiated from managed Play Store). This provides a curated app catalogue for corporate devices.",
+      "Manual APK sideloading bypasses app management, doesn't provide update management, and requires physical access or complex deployment scripts. It's not the enterprise approach.",
+      "Third-party app stores are not supported in Android Enterprise management. Managed Google Play is the integrated solution for Android Enterprise devices."
+    ],
+    "tip": "Managed Google Play: Approve apps → admin selects which apps are available. Deploy via Intune: Required (auto-install), Available (user installs from Managed Play). Web apps: create web app links in Managed Google Play. Private apps: upload private APKs to Managed Google Play for internal distribution. User experience: Managed Play Store shows only approved apps. Auto-update: managed apps auto-update from Managed Play. No personal Google account needed on fully managed/dedicated devices."
+  },
+  {
+    "id": "MS102-E04-022",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 100 devices enrolled in Intune\n- A critical compliance policy requires all devices to have antivirus real-time protection enabled\n- The compliance policy marks devices as non-compliant if real-time protection is disabled\n- A Conditional Access policy blocks non-compliant devices from accessing Microsoft 365\n- A user intentionally disables Windows Defender real-time protection\n\nQuestion:\nWhat sequence of events occurs after the user disables real-time protection?",
+    "choices": [
+      "The device is immediately blocked from Microsoft 365 within seconds",
+      "At the next Intune compliance check, the device is marked non-compliant; Conditional Access then blocks Microsoft 365 access on the next sign-in or token refresh",
+      "Nothing happens — Intune cannot detect antivirus settings",
+      "The user receives an email warning but access is never blocked"
+    ],
+    "answer": [1],
+    "explanations": [
+      "The block is not immediate. Compliance evaluation happens during scheduled check-ins (typically every 8 hours for Windows), not in real-time. There's a delay between the configuration change and the access block.",
+      "This option is correct. The sequence is: 1) User disables real-time protection. 2) At the next compliance evaluation (scheduled check-in, typically every 8 hours), Intune evaluates the compliance policy. 3) The device is marked non-compliant. 4) On the next sign-in or token refresh, Conditional Access evaluates the device's compliance state and blocks access to Microsoft 365. The delay between disabling protection and losing access depends on the check-in schedule and token lifetime.",
+      "Intune can detect Windows Defender antivirus settings including real-time protection status. This is a standard compliance policy setting.",
+      "If Conditional Access is configured to require device compliance, access IS blocked — it's not just a warning. Non-compliance actions can include email warnings as an additional action, but the CA policy enforces the block."
+    ],
+    "tip": "Compliance evaluation timeline: 1. Configuration change on device. 2. Next scheduled compliance check (every 8h for Windows). 3. Device marked non-compliant. 4. Conditional Access blocks on next token evaluation. Speed up: manual sync triggers immediate re-evaluation. Continuous access evaluation (CAE): can speed up enforcement for supported apps. Non-compliance actions timeline: immediately → mark non-compliant. After grace period → send notification. After deadline → block access, wipe device, etc."
+  },
+  {
+    "id": "MS102-E04-023",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft 365 with Conditional Access\n- The security team identifies that legacy authentication protocols (POP3, IMAP, SMTP AUTH) are being used by some users\n- These protocols do not support MFA and are commonly exploited in password spray attacks\n- The team wants to block all legacy authentication while allowing modern authentication\n\nQuestion:\nHow should you block legacy authentication?",
+    "choices": [
+      "Disable POP3 and IMAP in Exchange Online for each mailbox individually",
+      "Create a Conditional Access policy that blocks access when the client app condition is 'Other clients' (legacy authentication)",
+      "Remove all user passwords and require certificate-based authentication",
+      "Block port 110 (POP3) and port 143 (IMAP) on the corporate firewall"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Disabling protocols per mailbox is time-consuming for large organizations and doesn't cover SMTP AUTH or Exchange ActiveSync (older versions). A Conditional Access policy provides a centralized, scalable solution.",
+      "This option is correct. Conditional Access has a 'Client apps' condition that includes 'Other clients' (legacy authentication protocols). Create a policy: All users (exclude break-glass accounts) → All cloud apps → Client apps = Other clients (legacy authentication) → Block access. This blocks POP3, IMAP, SMTP AUTH, and older Exchange ActiveSync from authenticating, while modern authentication (OAuth 2.0) continues to work normally.",
+      "Removing passwords and requiring certificates is extremely disruptive and may not be feasible for many organizations. Certificate-based authentication requires PKI infrastructure and is a major implementation effort.",
+      "Blocking ports at the firewall only affects traffic from the corporate network. Users connecting from home, public Wi-Fi, or mobile networks bypass the corporate firewall entirely. Conditional Access blocks at the identity layer regardless of network path."
+    ],
+    "tip": "Legacy authentication blocking: Conditional Access → Client apps → 'Other clients' → Block. Legacy protocols blocked: POP3, IMAP, SMTP AUTH, older EAS, MAPI, EWS (basic auth), Remote PowerShell (basic auth). Modern auth not affected: OAuth 2.0, ADAL, MSAL. Deployment: 1. Report-only mode first. 2. Check sign-in logs for legacy auth usage. 3. Migrate users/apps to modern auth. 4. Enable enforcement. Important: some line-of-business apps may still use legacy auth — identify them before blocking."
+  },
+  {
+    "id": "MS102-E04-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company is migrating from Group Policy (GPO) to Intune for device management\n- The IT team has hundreds of existing GPO settings that need to be replicated in Intune\n- They need a tool to analyze existing GPOs and determine which settings can be configured in Intune\n\nQuestion:\nWhich Microsoft tool helps analyze existing GPOs for Intune migration?",
+    "choices": [
+      "Azure AD Connect",
+      "Group Policy analytics in Intune",
+      "Microsoft Assessment and Planning Toolkit",
+      "System Centre Configuration Manager"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD Connect synchronizes on-premises AD identities to Azure AD. It doesn't analyze Group Policy settings or assist with GPO-to-Intune migration.",
+      "This option is correct. Group Policy analytics in Intune allows you to import existing GPO backups (XML) and analyze them. For each GPO setting, it shows: whether the setting is supported in Intune (via MDM, Settings Catalog, or ADMX templates), whether there's a matching Intune setting, and which settings have no Intune equivalent. This helps IT teams plan their migration and identify gaps before starting the transition.",
+      "The Assessment and Planning Toolkit evaluates infrastructure readiness for migrations (like cloud migration readiness) but doesn't specifically analyze GPO settings for Intune compatibility.",
+      "SCCM (MECM) is a device management platform that works alongside GPO. It doesn't analyze GPO settings for Intune migration."
+    ],
+    "tip": "GPO to Intune migration: 1. Export GPO backups (PowerShell: Backup-GPO). 2. Import to Intune → Devices → Group Policy analytics. 3. Review analysis: MDM support status per setting. 4. Create Intune profiles for supported settings. Setting support levels: MDM Supported (full equivalent in Intune), ADMX Supported (use ADMX templates), Not Supported (no Intune equivalent). For unsupported settings: consider custom OMA-URI, PowerShell scripts, or accepting the gap."
+  },
+  {
+    "id": "MS102-E04-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview\n- The HR department uploads employee performance reviews to a SharePoint document library\n- Each review contains the employee's full name, employee ID, and performance rating\n- The compliance team wants to automatically detect and protect documents containing employee performance data\n\nQuestion:\nWhich approach should you use to detect employee performance review documents?",
+    "choices": [
+      "Create a custom sensitive information type that matches the document pattern (employee ID format + performance-related keywords)",
+      "Manually review every document uploaded to the SharePoint library",
+      "Block all uploads to the SharePoint library",
+      "Encrypt the entire SharePoint site with a sensitivity label"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Create a custom sensitive information type in Microsoft Purview that uses a combination of: a regex pattern matching your employee ID format (e.g., 'EMP-\\d{6}'), keywords related to performance reviews ('performance rating', 'annual review', 'objective assessment'), and optionally corroborative evidence (employee names from a keyword dictionary). This SIT can then be used in DLP policies to detect and protect performance review documents, and in auto-labeling policies to automatically apply sensitivity labels.",
+      "Manual review doesn't scale and is prone to human error. With hundreds or thousands of documents, automated detection is the only practical approach.",
+      "Blocking all uploads prevents the HR department from using SharePoint for its intended purpose. The requirement is to detect and protect specific content, not block all content.",
+      "Encrypting the entire site with a sensitivity label protects all documents equally, even non-sensitive ones. It doesn't provide targeted detection of performance review documents and may over-restrict access to non-sensitive content."
+    ],
+    "tip": "Custom sensitive information types: Pattern elements: regex (custom format matching), keyword lists (contextual terms), keyword dictionaries (large lists), functions (Luhn checksum, date validation). Confidence levels: low (regex match), medium (+ keywords), high (+ corroborative evidence). Use in: DLP policies, auto-labeling, retention policies, eDiscovery. Test: use the 'Test' function in Purview to validate against sample documents before deployment. Alternative: trainable classifiers for document types that are hard to define by pattern."
+  }
+]
