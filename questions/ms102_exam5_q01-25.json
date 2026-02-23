@@ -1,0 +1,502 @@
+[
+  {
+    "id": "MS102-E05-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization is deploying 300 new Windows 11 laptops\n- The devices will be Azure AD joined and managed by Intune\n- Users need seamless single sign-on to Microsoft 365 and on-premises web applications\n- On-premises web apps use Kerberos authentication\n\nQuestion:\nWhich feature enables SSO to on-premises Kerberos-based applications from Azure AD joined devices?",
+    "choices": [
+      "Azure AD Application Proxy",
+      "Azure AD Kerberos authentication (cloud Kerberos trust)",
+      "VPN connection to corporate network",
+      "Hybrid Azure AD join"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD Application Proxy publishes on-premises web apps externally without VPN, but the question asks about SSO using Kerberos from Azure AD joined devices, which is specifically handled by cloud Kerberos trust.",
+      "This option is correct. Azure AD Kerberos (cloud Kerberos trust) allows Azure AD joined devices to obtain Kerberos tickets for on-premises resources without needing line-of-sight to a domain controller. Azure AD acts as the Kerberos Key Distribution Centre for cloud-joined devices, enabling seamless SSO to on-premises Kerberos-authenticated web apps, file shares, and other resources.",
+      "A VPN provides network connectivity but doesn't solve the SSO/Kerberos authentication challenge. VPN + traditional Kerberos requires hybrid Azure AD join, not just a network path.",
+      "Hybrid Azure AD join would solve the Kerberos SSO problem but requires on-premises AD domain membership. The scenario specifies Azure AD joined (cloud-only) devices. Cloud Kerberos trust enables Kerberos SSO without on-premises domain membership."
+    ],
+    "tip": "SSO to on-premises from Azure AD joined devices: Cloud Kerberos trust → Kerberos tickets from Azure AD (no domain controller needed). Azure AD Application Proxy → publish on-premises apps externally (pre-authentication via Azure AD). Windows Hello for Business with cloud Kerberos trust → passwordless SSO to on-premises. Requirements: Azure AD Connect syncing, Azure AD Kerberos server object configured."
+  },
+  {
+    "id": "MS102-E05-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to create custom detection rules using KQL (Kusto Query Language)\n- The detections should query across email, endpoint, identity, and cloud app data\n- When a detection triggers, it should automatically create an alert and optionally take response actions\n\nQuestion:\nWhich Microsoft 365 Defender feature enables custom KQL-based threat detections?",
+    "choices": [
+      "Alert policies in the Microsoft 365 compliance centre",
+      "Custom detection rules in Advanced hunting",
+      "Microsoft Sentinel analytics rules",
+      "Exchange Online mail flow rules"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Alert policies in the compliance centre create alerts based on predefined activity types (admin actions, user activities). They don't support custom KQL queries across Defender data tables.",
+      "This option is correct. Custom detection rules in Microsoft 365 Defender's Advanced hunting allow you to write KQL queries that run on a schedule (every 1, 3, 12, or 24 hours). When the query returns results, it creates alerts and optionally takes automated actions (isolate device, disable user, quarantine email). The queries can span all Defender data tables: email events, endpoint events, identity events, and cloud app events.",
+      "Microsoft Sentinel analytics rules also use KQL but operate in the Sentinel SIEM environment. The question asks about Microsoft 365 Defender specifically. Sentinel is a separate platform (though they can integrate).",
+      "Mail flow rules process email based on conditions but don't support KQL queries or cross-domain threat detection."
+    ],
+    "tip": "Custom detection rules: Write KQL in Advanced hunting → save as custom detection. Schedule: 1h, 3h, 12h, 24h. Actions: create alert, isolate device, disable user, quarantine email, run investigation. Data tables: DeviceProcessEvents, EmailEvents, IdentityLogonEvents, CloudAppEvents, etc. Use cases: detect specific attack patterns, hunt for IoCs, monitor suspicious activity. Best practice: test query in Advanced hunting first, then convert to custom detection."
+  },
+  {
+    "id": "MS102-E05-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows devices\n- The IT team needs to ensure that the Company Portal app is installed on all managed Windows devices\n- Company Portal provides users with a self-service app catalog and device management actions\n- The app should install automatically without user intervention\n\nQuestion:\nHow should you deploy the Company Portal app to managed Windows devices?",
+    "choices": [
+      "Tell users to download Company Portal from the Microsoft Store manually",
+      "Deploy Company Portal as a Required app from the Microsoft Store (new) or offline package via Intune",
+      "Company Portal is automatically installed during Intune enrolment on all platforms",
+      "Deploy Company Portal as a Win32 app by wrapping the installer"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Manual download depends on user action and doesn't ensure Company Portal is on all devices. Users may not install it, leaving them without the self-service catalog.",
+      "This option is correct. Deploy Company Portal as a Required app in Intune. You can use the Microsoft Store app (new) type which pulls directly from the Microsoft Store, or deploy the offline-licensed Company Portal package. Assigning as Required ensures automatic installation on all targeted devices without user action. Company Portal is NOT automatically installed on Windows during Intune enrolment (unlike iOS/Android where it's part of the enrolment flow).",
+      "Company Portal is automatically installed on iOS and Android during enrolment, but NOT on Windows. On Windows, Company Portal must be explicitly deployed as an app through Intune.",
+      "Wrapping Company Portal as a Win32 app is unnecessary when the Microsoft Store (new) app type is available. The Store app type handles installation and updates automatically."
+    ],
+    "tip": "Company Portal deployment by platform: Windows → must be explicitly deployed (Microsoft Store app or offline package). iOS → installed during enrolment. Android → installed during enrolment (work profile or fully managed). macOS → must be explicitly deployed. Company Portal functions: self-service app catalog, device sync, compliance status, remote actions (rename, reset). Offline Company Portal: needed for Autopilot ESP and environments without Microsoft Store access."
+  },
+  {
+    "id": "MS102-E05-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages Windows devices with Intune\n- The IT team receives reports that several devices show 'Not evaluated' for compliance status\n- These devices have been enrolled in Intune for over a week\n- The IT team has created compliance policies but the devices don't seem to be evaluating them\n\nQuestion:\nWhat is the most likely cause of 'Not evaluated' compliance status?",
+    "choices": [
+      "The compliance policies are not assigned to the correct device or user groups",
+      "The devices don't have internet connectivity",
+      "The devices are running an unsupported Windows version",
+      "Intune service is experiencing an outage"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. 'Not evaluated' typically means no compliance policy is targeting the device. If compliance policies exist but aren't assigned to the group containing these devices, the devices have nothing to evaluate against. Check: is the compliance policy assigned to the correct Azure AD group? Is the device a member of that group? Also check: is the 'Mark devices with no compliance policy assigned as' setting configured to 'Not compliant' or 'Compliant'?",
+      "Devices without internet would show 'Pending' or stale data, not 'Not evaluated'. If they enrolled over a week ago, they had connectivity at some point.",
+      "Unsupported Windows versions would typically show the policy as 'Not applicable' rather than 'Not evaluated'. The compliance engine would still attempt evaluation.",
+      "A service outage would affect all devices, not just several. Other devices are presumably evaluating correctly."
+    ],
+    "tip": "Compliance status meanings: Compliant → passes all assigned policies. Not compliant → fails one or more policy checks. Not evaluated → no policy assigned to device. Pending → policy assigned but device hasn't checked in. In grace period → non-compliant but within grace period. Error → policy evaluation failed. Key setting: Compliance policies → Settings → 'Mark devices with no compliance policy as' → set to 'Not compliant' (recommended) to ensure unmanaged devices can't access resources."
+  },
+  {
+    "id": "MS102-E05-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team needs to respond to a GDPR Data Subject Access Request (DSAR)\n- An employee requests a copy of all personal data the organization holds about them\n- The data spans Exchange mailbox, OneDrive files, SharePoint sites, and Teams messages\n\nQuestion:\nWhich Microsoft Purview tool helps fulfil this Data Subject Access Request?",
+    "choices": [
+      "Data Loss Prevention report",
+      "Data Subject Request (DSR) case in Microsoft Purview",
+      "Retention policy export",
+      "Audit log search"
+    ],
+    "answer": [1],
+    "explanations": [
+      "DLP reports show policy matches for sensitive content. They don't collect all personal data about a specific person for a DSAR response.",
+      "This option is correct. Microsoft Purview provides a Data Subject Request (DSR) case workflow specifically for GDPR and privacy compliance. It uses Content search to find all data related to a specific person across Exchange, OneDrive, SharePoint, and Teams. The results can be reviewed, exported, and provided to the data subject. The DSR case manages the entire workflow: search, review, export, and close.",
+      "Retention policies manage content lifecycle but don't provide targeted search and export for a specific person's data.",
+      "Audit logs show user activities but don't search for all content containing a person's personal data across Microsoft 365 services."
+    ],
+    "tip": "Data Subject Request workflow: 1. Create DSR case in Microsoft Purview. 2. Search across all M365 locations for the data subject's information. 3. Review results for relevance. 4. Export data for the data subject. 5. Remediate (delete, rectify) if requested. 6. Close the case. GDPR rights covered: access, rectification, erasure, portability, restriction. DSR tools in Purview: Content search, eDiscovery, Azure AD (for identity data export)."
+  },
+  {
+    "id": "MS102-E05-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 500 Windows devices managed by Intune\n- The security team requires that all devices have Secure Boot enabled\n- Devices without Secure Boot should be marked as non-compliant\n- Non-compliant devices must be blocked from accessing corporate resources\n\nQuestion:\nWhich Intune feature checks for Secure Boot status on managed devices?",
+    "choices": [
+      "Device configuration profile with UEFI settings",
+      "Device compliance policy with device health attestation (Secure Boot required)",
+      "Endpoint security antivirus profile",
+      "Windows Update ring policy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device configuration profiles push settings to devices but don't evaluate compliance state. Secure Boot is a firmware-level setting that can't be enabled through an Intune configuration profile — it must be enabled in the device BIOS/UEFI.",
+      "This option is correct. Device compliance policies in Intune include device health attestation checks, including Secure Boot. The Windows Health Attestation Service validates that Secure Boot is enabled on the device. If Secure Boot is not enabled, the compliance policy marks the device as non-compliant. Combined with Conditional Access requiring device compliance, non-compliant devices are blocked from corporate resources.",
+      "Endpoint security antivirus profiles manage Windows Defender Antivirus settings. They don't check Secure Boot firmware status.",
+      "Windows Update rings manage update delivery and restart settings. They have no relation to Secure Boot or firmware configuration."
+    ],
+    "tip": "Device health attestation checks in compliance policy: Secure Boot → verify Secure Boot enabled. BitLocker → verify drive encryption. Code integrity → verify code integrity checks enabled. Require TPM → verify TPM chip present. How it works: Windows Health Attestation Service (cloud-based) validates device boot integrity using TPM measurements. The compliance policy checks the attestation result. Requirements: TPM 2.0, UEFI firmware, Health Attestation Service connectivity."
+  },
+  {
+    "id": "MS102-E05-007",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company uses Microsoft Intune\n- The IT team deploys a line-of-business (LOB) iOS app (.ipa file) to managed devices\n- The app was built with an enterprise distribution certificate\n- After several months, users report the app crashes immediately on launch\n- Investigation reveals the enterprise distribution certificate has expired\n\nQuestion:\nWhat must be done to resolve this issue?",
+    "choices": [
+      "Ask users to reinstall the app from the App Store",
+      "Renew the enterprise distribution certificate, re-sign the app with the new certificate, and redeploy through Intune",
+      "Reset the devices to factory settings",
+      "Change the app deployment from Required to Available"
+    ],
+    "answer": [1],
+    "explanations": [
+      "LOB apps are not available in the public App Store. They're internally distributed through Intune using enterprise certificates. The App Store has no record of the app.",
+      "This option is correct. When an enterprise distribution certificate expires, all apps signed with that certificate stop working (crash on launch). To fix: 1) Renew the certificate in the Apple Developer Enterprise portal. 2) Re-sign the .ipa with the new certificate. 3) Upload the re-signed .ipa to Intune. 4) Intune pushes the updated app to all devices. The app will work again once the re-signed version is installed.",
+      "Factory reset is extremely disruptive and doesn't address the root cause (expired certificate). The app would still fail after re-enrolment until the certificate is renewed.",
+      "Changing assignment type from Required to Available doesn't fix the expired certificate. The app would still crash regardless of how it's assigned."
+    ],
+    "tip": "iOS enterprise certificate management: Enterprise certificates expire every 3 years. Expired cert → all apps signed with it stop working. Remediation: renew cert → re-sign app → redeploy. Prevention: track certificate expiry dates, renew before expiration. Apple push notification certificate (APNs): expires annually — if this expires, ALL iOS management stops. Critical dates to track: APNs cert (annual), enterprise distribution cert (3 years), VPP token (annual)."
+  },
+  {
+    "id": "MS102-E05-008",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has hybrid Azure AD joined Windows devices\n- Azure AD Connect is synchronising device objects from on-premises AD to Azure AD\n- The IT team notices that some devices appear as 'Pending' in Azure AD device registration\n- These devices have been domain-joined for months but haven't completed hybrid Azure AD join\n\nQuestion:\nWhat is the most common cause of devices stuck in 'Pending' hybrid Azure AD join?",
+    "choices": [
+      "The devices don't have internet connectivity to reach Azure AD endpoints",
+      "Azure AD Connect is not configured to sync device objects",
+      "The devices are running Windows 7 which is not supported",
+      "The Service Connection Point (SCP) is not configured in on-premises AD or the device can't reach Azure AD device registration endpoints"
+    ],
+    "answer": [3],
+    "explanations": [
+      "While internet connectivity is needed, devices stuck in 'Pending' for months typically have a configuration issue rather than a temporary connectivity problem.",
+      "If Azure AD Connect wasn't syncing device objects, the devices wouldn't appear in Azure AD at all — not even as 'Pending'. The fact that they show as 'Pending' means the device object has been synced but registration hasn't completed.",
+      "Windows 7 is no longer supported for hybrid Azure AD join in current configurations, but the scenario doesn't specify Windows 7. This is less common than SCP issues.",
+      "This option is correct. The most common cause of 'Pending' hybrid Azure AD join is: the Service Connection Point (SCP) is not configured in on-premises AD (the device can't discover the Azure AD tenant), OR the device can't reach Azure AD device registration endpoints (https://enterpriseregistration.windows.net). The SCP tells the device which Azure AD tenant to register with. Without it, the device can't complete the join process."
+    ],
+    "tip": "Hybrid Azure AD join troubleshooting: 1. Verify SCP: dsregcmd /status → check TenantName and TenantId. 2. Verify connectivity: device must reach enterpriseregistration.windows.net and login.microsoftonline.com. 3. Verify Azure AD Connect: device sync enabled in Connect options. 4. Check device: dsregcmd /status → AzureAdJoined should be YES. Common SCP issues: not configured, configured with wrong tenant, not accessible by device. Tools: dsregcmd /status (device-side), Azure AD Connect sync status (server-side)."
+  },
+  {
+    "id": "MS102-E05-009",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to protect against credential theft on Windows devices\n- Specifically, they want to prevent attackers from extracting password hashes from the LSASS process\n- The solution should work on Azure AD joined devices managed by Intune\n\nQuestion:\nWhich Windows security feature protects credentials in the LSASS process?",
+    "choices": [
+      "BitLocker drive encryption",
+      "Credential Guard (Windows Defender Credential Guard)",
+      "Windows Defender Firewall",
+      "Controlled folder access"
+    ],
+    "answer": [1],
+    "explanations": [
+      "BitLocker encrypts the disk at rest, protecting data if the device is stolen while powered off. It doesn't protect the LSASS process from credential extraction while the system is running.",
+      "This option is correct. Windows Defender Credential Guard uses virtualisation-based security (VBS) to isolate the LSASS process in a protected container. Even if an attacker gains admin access to the device, they cannot extract password hashes, Kerberos tickets, or NTLM hashes from the isolated LSASS. This prevents pass-the-hash and pass-the-ticket attacks from the device. Configure via Intune device configuration profile.",
+      "Windows Firewall controls network traffic. It doesn't protect in-memory credentials from extraction by malware running locally.",
+      "Controlled folder access protects designated folders from unauthorized modification (anti-ransomware). It doesn't protect the LSASS credential process."
+    ],
+    "tip": "Credential Guard: Protects: NTLM hashes, Kerberos TGTs, credentials stored by applications. Uses: virtualisation-based security (VBS) + Hyper-V. Requirements: Windows 10/11 Enterprise, UEFI, Secure Boot, TPM (recommended), 64-bit CPU with virtualisation extensions. Configure via Intune: device configuration → Endpoint protection → Credential Guard. Cannot protect: local account passwords, credentials for services. Complementary: ASR rules can also protect LSASS (block credential stealing from lsass.exe)."
+  },
+  {
+    "id": "MS102-E05-010",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Android devices\n- Users need to access a corporate web application on their Android devices\n- The web app should appear as an icon on the device home screen alongside other managed apps\n- The web app URL is https://portal.company.com\n\nQuestion:\nHow should you deploy this web app to managed Android Enterprise devices?",
+    "choices": [
+      "Create a managed Google Play web app in the Managed Google Play iframe within Intune",
+      "Send users a link via email and ask them to bookmark it",
+      "Deploy a custom Android APK that opens the URL",
+      "Configure the URL in a device configuration profile"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. In Intune, you can create web apps through the Managed Google Play iframe. Navigate to Apps → Android → Add → Managed Google Play app → click the web app icon. Enter the URL, title, and icon. The web app is published to Managed Google Play and can be assigned like any other managed app. It appears as an icon on the device home screen and opens the URL in the default browser.",
+      "Email links provide no management, no home screen icon, and rely on users to take action. This is not an enterprise deployment approach.",
+      "Building a custom APK just to open a URL is unnecessary engineering when Managed Google Play natively supports web apps.",
+      "Device configuration profiles manage device settings, not app deployment. There's no web app URL setting in device configuration profiles."
+    ],
+    "tip": "Web apps on Android Enterprise: Create in Managed Google Play iframe → add title, URL, icon. Assign as Required (auto-install) or Available (user installs). The web app appears as a home screen icon. Opens in: default browser or managed browser (if configured). Alternative: web link app type in Intune (simpler but less integrated with Managed Google Play). iOS equivalent: web clip (same concept, different platform terminology)."
+  },
+  {
+    "id": "MS102-E05-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization wants to implement a Zero Trust security model\n- The IT team needs to verify device health before granting access to resources\n- Verification should check: OS version, antivirus status, encryption, and firewall status\n- Devices failing any check should be denied access until remediated\n\nQuestion:\nWhich Intune and Azure AD features implement this Zero Trust device verification?",
+    "choices": [
+      "Azure AD B2B guest access policies",
+      "Intune compliance policies + Conditional Access requiring device compliance",
+      "Microsoft Defender for Endpoint threat score only",
+      "Azure AD password protection policies"
+    ],
+    "answer": [1],
+    "explanations": [
+      "B2B guest access controls external user access. It doesn't verify device health for internal users' devices.",
+      "This option is correct. Zero Trust device verification: 1) Intune compliance policies check device health (OS version, antivirus active, BitLocker enabled, firewall on). 2) Devices passing all checks are marked 'Compliant'. 3) Conditional Access policy requires device compliance for resource access. 4) Non-compliant devices are blocked until remediated. This implements the Zero Trust principle: 'never trust, always verify' — every device access request is validated against health requirements.",
+      "Defender for Endpoint risk score provides threat-level assessment but is just one signal. The question asks about comprehensive device health verification (OS, AV, encryption, firewall), which requires compliance policies. Defender risk score can be included IN a compliance policy as one of many checks.",
+      "Password protection policies manage password content (banned words). They don't verify device health or implement Zero Trust device verification."
+    ],
+    "tip": "Zero Trust device pillars: 1. Compliance policy → verify device health (OS, encryption, antivirus, firewall, jailbreak). 2. Conditional Access → enforce access based on compliance. 3. Defender for Endpoint risk score → include threat level in compliance. 4. Continuous evaluation → re-check at each access and periodic sync. Zero Trust principle: assume breach, verify explicitly, least privilege access. Device trust is ONE pillar — also need identity verification, app protection, network controls."
+  },
+  {
+    "id": "MS102-E05-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Defender for Endpoint\n- The security team wants to reduce the attack surface on managed Windows devices\n- They want to block:\n  - Office applications from creating child processes\n  - JavaScript and VBScript from launching downloaded content\n  - Credential stealing from the LSASS process\n\nQuestion:\nWhich Defender for Endpoint feature blocks these specific attack techniques?",
+    "choices": [
+      "Endpoint detection and response (EDR)",
+      "Attack surface reduction (ASR) rules",
+      "Automated investigation and response (AIR)",
+      "Web content filtering"
+    ],
+    "answer": [1],
+    "explanations": [
+      "EDR detects and investigates threats after they occur. It doesn't proactively block specific attack techniques before they execute.",
+      "This option is correct. Attack surface reduction (ASR) rules block specific behaviors commonly used by malware: 'Block Office applications from creating child processes' prevents macro-based malware spawning PowerShell. 'Block JavaScript or VBScript from launching downloaded executable content' prevents script-based attacks. 'Block credential stealing from LSASS' prevents tools like Mimikatz from extracting credentials. Each rule can be set to: Block, Audit, Warn, or Disabled.",
+      "Automated investigation handles alerts by automatically investigating and remediating threats. It doesn't proactively block attack techniques.",
+      "Web content filtering blocks access to websites by category. It doesn't control application behavior on the endpoint."
+    ],
+    "tip": "Key ASR rules: Block Office from creating child processes. Block Office from creating executable content. Block JavaScript/VBScript launching downloaded content. Block credential stealing from LSASS. Block executable content from email. Block untrusted/unsigned processes from USB. Block persistence through WMI event subscription. Deployment: Audit mode first (monitor without blocking) → Block mode after testing. Configure via Intune: Endpoint security → Attack surface reduction."
+  },
+  {
+    "id": "MS102-E05-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune with app protection policies\n- The IT team configures an app protection policy for Microsoft Outlook on iOS\n- The policy settings include:\n  - Require PIN: Yes (6-digit)\n  - Allow fingerprint: Yes\n  - Offline grace period: 720 minutes (12 hours)\n  - Minimum app version: 4.2\n\nQuestion:\nWhat happens if a user's Outlook app version is 4.1 (below the minimum)?",
+    "choices": [
+      "Outlook works normally with no restrictions",
+      "The user receives a warning but can continue using Outlook",
+      "The user is blocked from accessing Outlook until they update to version 4.2 or later",
+      "The app protection policy is automatically disabled"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Below-minimum app version triggers the conditional launch action. The app does NOT work normally.",
+      "By default, the minimum app version condition blocks access (not just warns). Warn is a separate configurable action.",
+      "This option is correct. When the app version is below the configured minimum, the conditional launch setting blocks the user from accessing the app. The user sees a message indicating they need to update the app. After updating to version 4.2 or later from the App Store, the app protection policy allows access. This ensures users are running a version with known security fixes.",
+      "The policy remains active. It's the policy that's enforcing the version check. The policy doesn't disable itself based on app version."
+    ],
+    "tip": "App protection policy conditional launch conditions: Min app version → block or warn if app is outdated. Min OS version → block or warn if OS is outdated. Max PIN attempts → wipe data after too many wrong PINs. Offline grace period → wipe or block after offline too long. Jailbroken/rooted device → block or wipe. Actions per condition: Block access, Warn (notify but allow), Wipe data. Best practice: set minimum app version to ensure security patches are applied."
+  },
+  {
+    "id": "MS102-E05-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Windows devices that are Azure AD joined and Intune managed\n- Users frequently work from home and need to access on-premises file shares\n- The IT team doesn't want to set up a traditional VPN\n- The file shares should be accessible from anywhere with internet connectivity\n\nQuestion:\nWhich Microsoft solution provides access to on-premises file shares without VPN?",
+    "choices": [
+      "Azure File Sync with Azure Files cloud tiering",
+      "OneDrive Known Folder Move",
+      "SharePoint document libraries",
+      "Mapped network drives via Group Policy"
+    ],
+    "answer": [0],
+    "explanations": [
+      "This option is correct. Azure File Sync synchronises on-premises file server shares with Azure Files in the cloud. Users can access files via SMB from anywhere (using Azure AD authentication), while the on-premises file server maintains a complete copy. Cloud tiering keeps frequently accessed files local and tiers cold files to Azure. This provides VPN-free access to traditional file shares.",
+      "OneDrive Known Folder Move redirects user profile folders (Desktop, Documents, Pictures) to OneDrive. It doesn't provide access to shared departmental file servers.",
+      "SharePoint libraries are a different paradigm — they require migrating content from file shares to SharePoint. The scenario asks about accessing EXISTING on-premises file shares.",
+      "Mapped network drives via GPO require network connectivity to the file server (typically VPN from home). This is the traditional approach that the scenario wants to avoid."
+    ],
+    "tip": "File access without VPN options: Azure File Sync → sync on-prem file shares to Azure Files (SMB access anywhere). Azure AD Application Proxy → publish on-prem web-based file access. Microsoft Tunnel → mobile VPN for iOS/Android (but this IS a VPN). SharePoint migration → move file shares to SharePoint Online (requires migration effort). OneDrive → user personal files (not shared departmental data). Azure File Sync best for: existing file share infrastructure, gradual cloud migration, branch office scenarios."
+  },
+  {
+    "id": "MS102-E05-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The compliance team implements a DLP policy for Microsoft Teams\n- The policy detects when users share credit card numbers in Teams chat messages\n- When detected, the message should be blocked and the user should see a policy tip\n\nQuestion:\nWhat happens when a user sends a Teams message containing a credit card number?",
+    "choices": [
+      "The message is sent normally and no action is taken",
+      "The message is blocked from being sent, and the sender sees a DLP policy tip explaining why",
+      "The message is sent but the credit card number is automatically redacted",
+      "The entire Teams conversation is deleted"
+    ],
+    "answer": [1],
+    "explanations": [
+      "With a DLP policy configured to block, the message is NOT sent normally. The DLP engine evaluates the message before delivery.",
+      "This option is correct. DLP for Teams intercepts messages in near real-time. When a message containing a credit card number is detected and the policy action is 'block', the message is prevented from being sent. The sender sees a DLP policy tip explaining that the message was blocked because it contains sensitive information. The sender can edit the message to remove the sensitive content and resend.",
+      "DLP in Teams blocks the message, not redacts content. Content redaction is not a standard DLP action for Teams messages.",
+      "DLP doesn't delete conversations. It blocks the specific message containing the sensitive content. All previous messages in the conversation are unaffected."
+    ],
+    "tip": "DLP in Teams: Applies to: chat messages and channel messages. Actions: block message, notify user (policy tip), notify admin, generate incident report. Policy tip: user sees inline notification explaining why message was blocked. User options: edit message and resend, override if allowed. Scope: internal messages, external/guest messages. Detection: sensitive info types, exact data match, trainable classifiers. Near real-time: messages evaluated as they're sent."
+  },
+  {
+    "id": "MS102-E05-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has 200 macOS devices managed by Intune\n- The IT team needs to deploy custom shell scripts to configure system preferences\n- The scripts need to run with root privileges\n- Script execution status must be monitored from the Intune portal\n\nQuestion:\nHow should you deploy shell scripts to managed macOS devices through Intune?",
+    "choices": [
+      "Email the scripts to users and ask them to run them in Terminal",
+      "Upload shell scripts in Intune under Devices → macOS → Shell scripts",
+      "Deploy scripts as macOS LOB apps",
+      "Use Apple Configurator to push scripts via USB"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Email distribution provides no management, relies on user action, and users may not have root privileges to execute the scripts.",
+      "This option is correct. Intune provides a dedicated shell script deployment feature for macOS: Devices → macOS → Shell scripts. Upload the .sh file, configure: run as root or user, retry behavior, script frequency. The Intune management agent executes the script on targeted devices. Execution status (success/failure/pending) is reported in the Intune portal for monitoring.",
+      "Shell scripts are not applications and shouldn't be deployed as LOB apps. LOB apps have different lifecycle management (detection rules, install/uninstall) that doesn't apply to scripts.",
+      "Apple Configurator requires USB connection and doesn't support macOS devices for script deployment. It's for iOS/iPadOS device setup."
+    ],
+    "tip": "macOS shell scripts in Intune: Location: Devices → macOS → Shell scripts. Settings: run as signed-in user or root, hide script notifications, max retries, retry delay. Execution: Intune management agent (Microsoft Intune Agent) runs the script. Monitoring: per-device status in Intune portal. Limitations: script output is logged but not returned to portal. Best practice: include error handling and logging in scripts. The Intune agent must be installed (deployed separately for macOS)."
+  },
+  {
+    "id": "MS102-E05-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- The security team wants to enable Continuous Access Evaluation (CAE)\n- CAE should ensure that when a user account is disabled, access to Exchange Online and SharePoint Online is revoked within minutes (not hours)\n\nQuestion:\nWhat does Continuous Access Evaluation (CAE) do differently from standard token-based access?",
+    "choices": [
+      "CAE eliminates the need for access tokens entirely",
+      "CAE enables resource providers to reject tokens in near real-time when critical events occur, rather than waiting for token expiry",
+      "CAE requires users to re-authenticate for every single request",
+      "CAE only works with on-premises applications"
+    ],
+    "answer": [1],
+    "explanations": [
+      "CAE still uses access tokens. It enhances the token lifecycle by enabling near real-time revocation, not by eliminating tokens.",
+      "This option is correct. Standard access tokens are valid for 60-90 minutes. If a user is disabled, their existing tokens continue working until expiry. CAE enables 'critical event evaluation' where resource providers (Exchange, SharePoint) subscribe to Azure AD events. When a critical event occurs (account disabled, password changed, high-risk detected, location changed), the resource provider rejects the existing token immediately, forcing re-authentication within minutes.",
+      "Requiring re-authentication for every request would destroy performance. CAE uses events-based evaluation — tokens are only challenged when specific events occur.",
+      "CAE works with Microsoft 365 cloud services (Exchange Online, SharePoint Online, Teams, Microsoft Graph). It's a cloud-native feature."
+    ],
+    "tip": "CAE critical events: User account disabled/deleted. Password changed. MFA enabled for user. Admin revokes refresh tokens. Azure AD Identity Protection detects high risk. CAE-aware clients: Outlook, Teams, OneDrive, SharePoint (web + desktop). CAE IP enforcement: if Conditional Access has location policies, CAE enforces IP changes in near real-time. Token lifetime with CAE: up to 28 hours (but revocable at any time). Without CAE: token valid until expiry (60-90 min)."
+  },
+  {
+    "id": "MS102-E05-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Intune to manage Windows devices\n- The IT team wants to deploy a set of fonts to all managed devices\n- The fonts are needed for corporate branding in Office documents\n- The fonts are packaged as .ttf files\n\nQuestion:\nWhat is the best way to deploy custom fonts to Intune-managed Windows devices?",
+    "choices": [
+      "Email the font files to users and ask them to install manually",
+      "Package the fonts as a Win32 app (.intunewin) with a PowerShell install script that copies fonts to C:\\Windows\\Fonts and updates the registry",
+      "Deploy fonts through a device configuration profile",
+      "Upload fonts to SharePoint and tell users to download them"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Manual installation via email is unreliable and doesn't scale. Users may not know how to install fonts properly.",
+      "This option is correct. Package the font files along with a PowerShell installation script into an .intunewin file using the Win32 Content Prep Tool. The script copies .ttf files to C:\\Windows\\Fonts and registers them in the registry (HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts). Include a detection rule (check for font file in Fonts folder). Deploy as a Required Win32 app. This provides automated, managed font deployment.",
+      "Device configuration profiles don't have a font deployment option. Fonts are files that need to be copied and registered, which is an app/script deployment task.",
+      "SharePoint download requires user action and doesn't provide centralized management or installation verification."
+    ],
+    "tip": "Custom font deployment via Intune: 1. Create PowerShell script: copy .ttf to C:\\Windows\\Fonts, add registry entries. 2. Package with Win32 Content Prep Tool → .intunewin. 3. Upload to Intune as Win32 app. 4. Install command: PowerShell.exe -ExecutionPolicy Bypass -File install_fonts.ps1. 5. Detection rule: file exists in C:\\Windows\\Fonts\\fontname.ttf. 6. Assign as Required. Alternative: Intune PowerShell script deployment (simpler but less management features)."
+  },
+  {
+    "id": "MS102-E05-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your company has Windows devices enrolled in Intune\n- The IT team needs to configure the Windows lock screen with:\n  - Company logo displayed on the lock screen\n  - A custom lock screen background image\n  - Status information showing calendar and email\n  - Lock screen timeout of 5 minutes\n\nQuestion:\nWhich Intune profile type configures these lock screen settings?",
+    "choices": [
+      "Compliance policy",
+      "Device restriction profile (or Settings Catalog) with lock screen settings",
+      "App protection policy",
+      "Windows Update ring"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Compliance policies evaluate device state. They don't configure lock screen appearance or behavior.",
+      "This option is correct. Device restriction profiles (or the Settings Catalog) allow configuring lock screen settings: lock screen image (custom background), company branding, status apps (calendar, email), and lock screen timeout. These settings are pushed to devices and enforce the corporate lock screen experience across all managed Windows devices.",
+      "App protection policies manage data protection within mobile apps. They don't configure Windows lock screen settings.",
+      "Windows Update rings manage update delivery and restart behavior. They have no lock screen configuration capabilities."
+    ],
+    "tip": "Lock screen configuration in Intune: Device restrictions → General → Lock screen: background image URL, timeout. Personalisation: Settings Catalog → search 'lock screen' or 'personalisation'. Company branding: Azure AD → Company branding (sign-in page + lock screen logo). Lock screen apps: configure status apps (calendar, email, notifications). Kiosk vs lock screen: kiosk replaces the shell, lock screen configures the idle/locked state. Image: must be hosted at an accessible URL (Azure Blob Storage works well)."
+  },
+  {
+    "id": "MS102-E05-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Microsoft 365 E5\n- A departing employee's manager suspects they may have copied confidential files before leaving\n- The security team needs to investigate:\n  - Files downloaded from SharePoint in the last 30 days\n  - USB file transfers detected by Defender for Endpoint\n  - Emails sent to personal accounts\n  - Print activities\n\nQuestion:\nWhich Microsoft Purview solution correlates these activity signals for departing employee investigation?",
+    "choices": [
+      "Content search",
+      "Insider Risk Management with 'Data theft by departing users' policy",
+      "DLP activity reports",
+      "Communication compliance"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Content search finds content by keywords/location but doesn't correlate user behavioral signals like download volumes, USB transfers, and print activities.",
+      "This option is correct. Insider Risk Management with the 'Data theft by departing users' policy template correlates multiple signals: SharePoint/OneDrive downloads, USB file transfers (from Defender for Endpoint), emails to personal accounts, printing activity, cloud storage uploads, and more. When integrated with an HR connector (providing departure/termination dates), it triggers enhanced monitoring 90 days before the departure date. Alerts show a risk timeline with all suspicious activities.",
+      "DLP reports show policy matches (sensitive content detected) but don't provide the holistic behavioral analysis of a departing employee's activities across multiple channels.",
+      "Communication compliance monitors message content for policy violations. It doesn't track file downloads, USB transfers, or print activities."
+    ],
+    "tip": "Insider Risk Management — departing employee scenario: HR connector: provides resignation/termination dates → triggers enhanced monitoring. Signals correlated: file downloads, USB transfers, email to personal addresses, cloud uploads, print volume, sequence detection. Timeline: 90 days before departure → departure date → 30 days after. Risk indicators: unusual download volume, first-time USB use, emailing to personal domains. Actions: generate alert → investigate case → escalate to eDiscovery if needed."
+  },
+  {
+    "id": "MS102-E05-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization has Intune-managed Windows devices\n- The IT team needs to run a complex remediation script that:\n  - Detects if the Windows Time service is configured correctly\n  - If not, reconfigures the NTP server and restarts the service\n  - Reports success or failure back to Intune\n- The script should run every 6 hours\n\nQuestion:\nWhich Intune feature is designed for this detect-and-fix pattern?",
+    "choices": [
+      "Device configuration profile",
+      "Proactive remediations (Remediations in Endpoint Analytics)",
+      "Compliance policy custom script",
+      "Win32 app with detection rule"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Device configuration profiles push settings but don't run custom scripts with detect/fix logic and scheduled execution.",
+      "This option is correct. Proactive remediations provide exactly this pattern: a detection script runs on schedule (configurable, including every 6 hours) to check a condition. If the detection script returns exit code 1 (issue found), the remediation script automatically runs to fix the issue. Both scripts report results back to Intune. The IT team can see: how many devices have the issue, how many were successfully remediated, and failure details.",
+      "Compliance policy custom scripts evaluate device state for compliance but don't remediate issues. They report compliance status, not fix problems.",
+      "Win32 apps are for application deployment, not for scheduled detect-and-fix operations. The lifecycle management (install/uninstall/detect) doesn't match the recurring remediation pattern."
+    ],
+    "tip": "Proactive remediations structure: Detection script: check condition → exit 0 (OK) or exit 1 (needs fix). Remediation script: fix the issue → exit 0 (success) or exit 1 (failed). Schedule: once, every 1h, 3h, 6h, 12h, 24h. Reporting: Intune shows detection rate, remediation rate, error rate. Script context: run as user or system (root). Use cases: fix misconfigured services, clear temp files, update registry, ensure required software is running. Requirements: Windows 10/11 Enterprise/Education, Intune licence."
+  },
+  {
+    "id": "MS102-E05-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Azure AD with multiple Conditional Access policies\n- Policy 1: Require MFA for all users to all cloud apps\n- Policy 2: Block access from outside allowed countries\n- Policy 3: Require compliant device for Exchange Online\n- A user signs in from an allowed country on a non-compliant device to Exchange Online\n\nQuestion:\nWhat is the result of these three policies for this sign-in?",
+    "choices": [
+      "Access is granted because the user is in an allowed country",
+      "Access is granted after completing MFA",
+      "Access is blocked because the device is not compliant (Policy 3), even though MFA is completed and location is allowed",
+      "Only Policy 1 applies because it was created first"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Being in an allowed country satisfies Policy 2 but doesn't satisfy Policy 3 (device compliance). All applicable policies must be satisfied.",
+      "Completing MFA satisfies Policy 1 but doesn't satisfy Policy 3 (device compliance). The user needs to meet ALL applicable policy requirements.",
+      "This option is correct. Conditional Access policies are additive — ALL applicable policies must be satisfied for access to be granted. Policy 1 requires MFA (user must complete MFA). Policy 2 allows the country (satisfied). Policy 3 requires a compliant device for Exchange Online (NOT satisfied — device is non-compliant). Since Policy 3's requirement is not met, access is BLOCKED even though Policies 1 and 2 are satisfied. The most restrictive outcome applies.",
+      "Conditional Access policies don't have priority based on creation order. All applicable policies are evaluated simultaneously, and ALL must be satisfied."
+    ],
+    "tip": "Conditional Access evaluation: ALL applicable policies are evaluated. ALL grant controls from ALL matching policies must be satisfied. If ANY policy blocks → access blocked. Policies are additive (AND logic across policies). Within a single policy: grant controls can be AND or OR. Example: Policy A requires MFA AND Policy B requires compliance → user must satisfy BOTH. Exception: Block policy always wins over Grant policy. Best practice: use report-only mode to test policy combinations before enforcement."
+  },
+  {
+    "id": "MS102-E05-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\n- Your company manages Windows devices with Intune\n- The IT team deploys Microsoft 365 Apps through Intune\n- Users report that macro-enabled Excel files from trusted business partners are being blocked\n- The macros are legitimate and required for business operations\n- The IT team needs to allow macros from specific trusted locations while keeping macros blocked from untrusted sources\n\nQuestion:\nHow should you configure macro settings through Intune?",
+    "choices": [
+      "Disable all macro security to allow all macros",
+      "Configure Office cloud policy or Intune ADMX templates to define trusted locations and set macro security to 'Disable all except digitally signed macros'",
+      "Ask users to click 'Enable Content' on every macro-enabled file",
+      "Uninstall Microsoft 365 Apps and use web-only Office"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Disabling all macro security allows ALL macros including malicious ones. This is a critical security risk and violates best practices.",
+      "This option is correct. Use Intune ADMX administrative templates or Office cloud policy to configure: Trusted locations (specific network paths or folders where macros are allowed), VBA macro notification settings ('Disable all except digitally signed macros' or 'Disable all with notification'), and macro security level. This allows legitimate macros from trusted partner files while blocking macros from untrusted/unknown sources.",
+      "Clicking 'Enable Content' on every file trains users to automatically click through security prompts, which is dangerous. It also doesn't provide centralized management or consistent policy enforcement.",
+      "Removing desktop Office eliminates macro support entirely, which breaks the business requirement for macro-enabled files."
+    ],
+    "tip": "Office macro security via Intune: ADMX templates: Microsoft Office → Security Settings → Trust Centre → Macro Settings. Trusted locations: define specific folders/paths where macros are allowed. Macro settings: Disable all without notification, Disable all with notification, Disable all except digitally signed, Enable all (NOT recommended). Best practice: trusted locations + digitally signed macros. Also consider: ASR rule 'Block Office apps from creating child processes' for additional protection against malicious macros."
+  },
+  {
+    "id": "MS102-E05-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization manages devices with Intune\n- The IT team wants to implement a device naming convention for Windows Autopilot devices\n- All devices should be named with the format: CORP-%SERIAL%\n- The name should be applied automatically during Autopilot provisioning\n\nQuestion:\nWhere do you configure the device name template for Autopilot?",
+    "choices": [
+      "Azure AD device settings",
+      "Windows Autopilot deployment profile → device name template",
+      "Intune device compliance policy",
+      "Windows Update ring settings"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Azure AD device settings include a maximum device limit and default settings, but they don't provide device naming templates for Autopilot.",
+      "This option is correct. The Windows Autopilot deployment profile includes a device name template setting. You define a template using variables like %SERIAL% (device serial number) and %RAND:x% (random digits). For example: 'CORP-%SERIAL%' names the device 'CORP-ABC123XYZ'. The name is applied during the Autopilot OOBE process, and the device is renamed and restarted to apply the new name.",
+      "Compliance policies evaluate device state. They don't set device names.",
+      "Update rings manage Windows update behavior. They have no device naming capability."
+    ],
+    "tip": "Autopilot device name template: Variables: %SERIAL% (serial number), %RAND:x% (x random digits). Character limit: 15 characters total (NetBIOS limit). Examples: CORP-%SERIAL%, LAP-%RAND:6%, NYC-%SERIAL%. Restrictions: letters, numbers, hyphens only. No spaces or special characters. The template is set per Autopilot deployment profile, so different profiles can have different naming conventions. Device is renamed and restarted during Autopilot provisioning."
+  },
+  {
+    "id": "MS102-E05-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\n- Your organization uses Microsoft Purview\n- The compliance team needs to implement a retention policy for SharePoint Online\n- Requirements:\n  - All documents in the Finance site must be retained for 10 years\n  - After 10 years, documents should be reviewed by the records manager before deletion\n  - Documents in all other sites should be retained for 3 years then automatically deleted\n\nQuestion:\nHow should you configure retention to include a review before deletion?",
+    "choices": [
+      "Create a retention policy with automatic deletion after 10 years",
+      "Create a retention label with 10-year retention and disposition review, auto-apply to the Finance site",
+      "Create an eDiscovery hold for 10 years",
+      "Configure SharePoint versioning to keep 10 years of versions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Automatic deletion after 10 years doesn't include a review step. The requirement explicitly states a records manager must review before deletion.",
+      "This option is correct. Retention labels support disposition review — when the retention period expires, instead of automatic deletion, reviewers are notified to review the content and approve or extend retention. Create a retention label with: 10-year retention, trigger disposition review at end of retention, assign reviewers (records manager). Auto-apply the label to the Finance site. A separate org-wide retention policy handles the 3-year auto-delete for other sites.",
+      "eDiscovery holds preserve content indefinitely until removed. They don't provide lifecycle management with timed retention and disposition review.",
+      "SharePoint versioning manages document versions but doesn't enforce retention periods or disposition review workflows."
+    ],
+    "tip": "Disposition review: Only available with retention labels (not retention policies). At end of retention: auto-delete OR trigger disposition review. Reviewers: specified users/groups receive notification to review items. Review actions: approve disposal (delete), extend retention, relabel, add reviewers. Disposition review is required for: regulatory records, high-value content, legal hold material. Records management: disposition review provides audit trail for compliance. Multi-stage disposition: items can go through multiple review stages."
+  }
+]
