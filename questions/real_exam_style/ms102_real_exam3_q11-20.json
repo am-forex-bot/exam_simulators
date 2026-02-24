@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R3-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft Intune for Contoso. The IT team deploys a device configuration profile to 500 Windows devices. The profile configures Wi-Fi settings for the corporate network. Two weeks later, you decide the profile is no longer needed and delete it from Intune.\n\nQuestion:\nWhat happens to the Wi-Fi settings on the 500 devices after the profile is deleted?",
+    "choices": [
+      "The Wi-Fi settings are immediately removed from all devices",
+      "The Wi-Fi settings remain on the devices — deleting a profile does not revert settings to pre-profile state on Windows",
+      "The Wi-Fi settings are removed after the next device sync",
+      "The devices become noncompliant until a new profile is assigned"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Deleting a device configuration profile does not necessarily remove the configured settings from Windows devices. The behavior varies by setting type and platform.",
+      "Correct. When you delete or unassign a device configuration profile in Intune, Windows devices retain the configured settings (in most cases). The settings are 'tattooed' — they remain at whatever value the profile set. This is true for many Windows CSP settings. The device simply stops reporting compliance for that profile. To revert settings, you would need to deploy a new profile with the original/default values.",
+      "Incorrect. The profile removal is processed at next sync, but for most Windows configuration settings, removing the profile does not remove the configured values.",
+      "Incorrect. Compliance is evaluated by compliance policies, not configuration profiles. Removing a configuration profile does not affect compliance status."
+    ],
+    "tip": "Profile removal behavior varies by platform: Windows = settings typically persist ('tattooed'). iOS/Android = settings are usually removed when the profile is unassigned. Always test profile removal behavior before relying on it."
+  },
+  {
+    "id": "MS102-R3-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Microsoft Defender for Endpoint for Tailwind Traders. The SOC team needs to create custom alert rules that trigger when a specific sequence of activities is detected:\n1. A user downloads a file from an external URL\n2. Within 5 minutes, a new scheduled task is created on the same device\n3. Within 10 minutes, outbound network connection to a known C2 IP range is observed\n\nQuestion:\nWhich feature should the SOC team use to create this multi-step detection?",
+    "choices": [
+      "Alert tuning rules in Endpoint > Configuration > Alert tuning",
+      "Custom detection rules using KQL (Kusto Query Language) in Advanced Hunting",
+      "Indicator of compromise (IoC) rules for the C2 IP addresses",
+      "Attack surface reduction rules with custom exclusions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Alert tuning rules modify existing alert severity or suppress alerts. They cannot create new multi-step detection logic.",
+      "Correct. Custom detection rules in Advanced Hunting allow you to write KQL queries that correlate multiple tables (DeviceFileEvents for file downloads, DeviceProcessEvents for scheduled task creation, DeviceNetworkEvents for outbound connections) with time-based conditions (within 5/10 minutes). The query can be scheduled to run periodically and generate custom alerts when the pattern is detected.",
+      "Incorrect. IoC rules for C2 IPs would generate alerts for network connections to those IPs, but they cannot correlate the multi-step sequence (file download → scheduled task → C2 connection) as a single detection.",
+      "Incorrect. ASR rules block specific attack surface behaviors (like Office creating child processes). They cannot create custom multi-step detection logic or correlate activities across different event types."
+    ],
+    "tip": "Multi-step detection in Defender: Custom detection rules + KQL. Join tables with time windows: DeviceFileEvents | join kind=inner DeviceProcessEvents on DeviceId | where Timestamp1 - Timestamp2 < 5m. Runs on schedule, generates alerts."
+  },
+  {
+    "id": "MS102-R3-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for Litware Inc. The company needs to deploy Microsoft Project and Microsoft Visio to a subset of 100 users who already have Microsoft 365 Apps installed. The existing M365 Apps installation must not be affected.\n\nQuestion:\nHow should you deploy Project and Visio?",
+    "choices": [
+      "Create a new Office Deployment Tool configuration.xml that includes Project and Visio, and run it on the 100 devices — this will add the apps to the existing installation",
+      "Uninstall Microsoft 365 Apps, then redeploy with a configuration.xml that includes M365 Apps + Project + Visio",
+      "In Intune, add Microsoft 365 Apps (Project and Visio only) as separate Win32 apps and deploy to the user group",
+      "In Intune, create a new Microsoft 365 Apps assignment that includes only Project and Visio, assigned to the 100-user group"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Running the ODT with a new configuration.xml that doesn't include the existing M365 Apps products may modify the existing installation (remove apps not listed in the XML). The ODT modifies the entire Office installation, not just adds new products.",
+      "Incorrect. Uninstalling and reinstalling Office is extremely disruptive. Users lose access to Office during the process, and customizations, add-ins, and cached data may be lost.",
+      "Incorrect. Project and Visio (Click-to-Run versions) should be deployed through the Microsoft 365 Apps deployment in Intune, not as standalone Win32 apps. They need to match the existing Office installation channel and bitness.",
+      "Correct. In Intune, create a new Microsoft 365 Apps for Windows assignment that includes ONLY Project and Visio (not the full M365 Apps suite). Assign it to the 100-user group. Intune adds Project and Visio to the existing Microsoft 365 Apps installation without modifying the base suite."
+    ],
+    "tip": "Adding Project/Visio to existing M365 Apps: Create a separate Intune M365 Apps assignment with only the additional products. Intune adds them to the existing Click-to-Run installation. No need to reinstall or use ODT."
+  },
+  {
+    "id": "MS102-R3-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 1,000 Android devices for Pratum Inc. using Intune. 500 are corporate-owned fully managed devices and 500 are personal devices with work profiles. The security team requires that all corporate-owned devices have a minimum 8-character alphanumeric password, while personal devices only need a 6-digit PIN for the work profile.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Create one compliance policy with different rules based on device ownership type",
+      "Create two separate device compliance policies: one for corporate-owned (8-char alphanumeric device password) assigned to the corporate device group, one for personal work profile (6-digit work profile PIN) assigned to the personal device group",
+      "Create one device configuration profile with password requirements and use assignment filters to differentiate",
+      "Set the password requirements in the enrollment profile for each enrollment type"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A single compliance policy cannot have different password rules based on ownership type within the same policy. Each compliance policy has one set of password requirements.",
+      "Correct. Create two separate policies: (1) A compliance policy for Android Enterprise fully managed devices requiring an 8-character alphanumeric device password, assigned to the corporate device group. (2) A compliance policy for Android Enterprise personally-owned work profile requiring a 6-digit numeric work profile PIN, assigned to the personal device group. These are different enrollment types with different password scope (device-level vs. work profile).",
+      "Incorrect. Assignment filters can target policies to specific devices, but you still need separate compliance policies for different password requirements. Also, work profile password vs. device password are fundamentally different settings.",
+      "Incorrect. Enrollment profiles define the enrollment experience, not ongoing compliance requirements. Password complexity enforcement happens through compliance and device configuration policies."
+    ],
+    "tip": "Android password scope: Fully managed = device-level password. Work profile = work profile password only (personal side has its own password). These require separate policies with different settings."
+  },
+  {
+    "id": "MS102-R3-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The compliance team creates a DLP policy for Exchange Online that blocks emails containing Social Security Numbers (SSNs) from being sent to external recipients. The policy is published and active.\n\nA user reports that they were able to send an email containing an SSN to an external Gmail address without being blocked.\n\nYou investigate and confirm the email contained a valid SSN format.\n\nQuestion:\nWhat is the most likely reason the DLP policy did not block the email?",
+    "choices": [
+      "The DLP policy is in test mode (simulation) and is only logging matches without blocking",
+      "The user's email was sent from Outlook mobile, which does not support DLP policy tips or blocking",
+      "The SSN was in an image attachment, and the DLP policy was not configured with OCR (Optical Character Recognition) to scan images",
+      "The DLP policy has a high instance count threshold (e.g., minimum 5 SSNs) and the email only contained one SSN"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. If the policy were in test mode, the compliance team would see it configured that way in the policy settings. Also, test mode is a common setting that would be the first thing checked during investigation.",
+      "Incorrect. Exchange Online DLP policies operate at the transport layer and scan all emails regardless of the client used (Outlook desktop, mobile, OWA, third-party). Policy tips may differ by client, but the blocking action is server-side.",
+      "Incorrect. While DLP can have challenges with image-based content, the standard SSN sensitive information type detects text patterns. If the SSN was in the email body as text, image scanning is not relevant.",
+      "Correct. DLP rules have a minimum instance count setting. If the rule is configured with a minimum of 5 instances and only 1 SSN is in the email, the rule does not trigger. This is a common misconfiguration—the default instance count in some templates is set higher than expected to reduce false positives."
+    ],
+    "tip": "DLP troubleshooting checklist: (1) Is the policy active (not test mode)? (2) Is the user in scope? (3) Check instance count thresholds (min/max). (4) Check confidence level setting. (5) Check for override with justification."
+  },
+  {
+    "id": "MS102-R3-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company has 200 Linux (Ubuntu 22.04) devices used by developers. The security team wants to:\n- Enroll Linux devices in Intune\n- Deploy compliance policies (encryption, password)\n- Use conditional access to block noncompliant Linux devices from accessing Microsoft 365\n\nQuestion:\nWhat is the enrollment method for Linux devices in Intune?",
+    "choices": [
+      "Install the Intune agent package and run the enrollment command from the terminal",
+      "Users open the Microsoft Edge browser, sign in to the Company Portal web app (portal.manage.microsoft.com), and register the device through the browser-based enrollment flow",
+      "Linux devices cannot be enrolled in Microsoft Intune — use Microsoft Defender for Endpoint for Linux instead",
+      "Install the Company Portal app from the Snap Store and enroll through the desktop app"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. There is no standalone Intune agent package for Linux. The enrollment process uses Microsoft Edge and the Intune Company Portal web experience.",
+      "Correct. Linux device enrollment in Intune uses Microsoft Edge. Users open Edge, navigate to the Company Portal (portal.manage.microsoft.com), sign in with their corporate credentials, and follow the browser-based enrollment flow. This registers the device with Intune, enabling compliance policy evaluation and conditional access integration.",
+      "Incorrect. Linux device enrollment is supported in Microsoft Intune. Support was added for Ubuntu and RHEL distributions.",
+      "Incorrect. There is no native Company Portal desktop app for Linux in the Snap Store. The enrollment is browser-based through Microsoft Edge."
+    ],
+    "tip": "Linux enrollment in Intune: Microsoft Edge → Company Portal web app → browser-based enrollment. Supports Ubuntu and RHEL. Provides compliance evaluation and conditional access integration."
+  },
+  {
+    "id": "MS102-R3-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nWoodgrove Bank uses Microsoft 365 E5 with Microsoft Defender for Office 365. The security team wants to understand the email threat landscape for the organization and identify trends over time. They need a dashboard showing:\n- Total malware and phishing detections per week\n- Top targeted users\n- Most common attack techniques\n- Email delivery verdicts (delivered, blocked, junked)\n\nQuestion:\nWhich Defender portal feature provides this overview?",
+    "choices": [
+      "Email & collaboration > Threat Explorer — real-time email threat data with filtering",
+      "Reports > Email & collaboration > Email security reports (Threat protection status, Mailflow status)",
+      "Hunting > Advanced hunting with KQL queries against EmailEvents table",
+      "Email & collaboration > Review > Quarantine"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Threat Explorer provides real-time investigation capabilities and detailed email analysis, but it's an investigation tool, not a trends/overview dashboard. It's for drilling into specific threats, not viewing weekly trends.",
+      "Correct. The Email & collaboration reports in the Defender portal provide dashboard views including: Threat protection status (malware, phishing detections over time), Mailflow status (delivery verdicts), Top targeted users, and detection technology breakdown. These reports are designed for trend analysis and management-level overview.",
+      "Incorrect. Advanced hunting provides powerful raw data querying but requires KQL expertise and doesn't provide pre-built trend dashboards. It's an investigation tool, not a reporting/dashboard tool.",
+      "Incorrect. Quarantine shows individual quarantined messages. It does not provide trend data, detection statistics, or a management dashboard."
+    ],
+    "tip": "Defender email overview: Reports (trends, dashboards, management view) vs. Explorer (investigation, drill-down) vs. Advanced Hunting (raw data, custom queries). Use Reports for 'what's happening', Explorer for 'investigate this specific threat'."
+  },
+  {
+    "id": "MS102-R3-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailspin Toys. The company deploys a Win32 app (CustomERP.exe) to 1,000 Windows devices. The app has the following return codes configured:\n- 0 = Success\n- 1707 = Success\n- 3010 = Soft reboot\n- 1641 = Hard reboot\n\nAfter deployment, 300 devices show the app status as 'Install Pending (Reboot)'. Users report that the app is working correctly, but Intune doesn't show it as installed.\n\nQuestion:\nWhat is happening and what should you do?",
+    "choices": [
+      "The app installer returned code 3010 (soft reboot required). Intune is waiting for the device to reboot before running the detection rule. Users need to restart their devices.",
+      "The detection rule is misconfigured and needs to be fixed",
+      "The app installer is failing silently and returning an unexpected code",
+      "The Intune management extension needs to be restarted on the affected devices"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Return code 3010 means the installation succeeded but requires a device reboot to complete. Intune marks the app as 'Install Pending (Reboot)' and waits for the reboot before evaluating the detection rule. Once users restart their devices, Intune runs the detection check and marks the app as Installed. The app may function before reboot, but Intune requires the restart to confirm installation.",
+      "Incorrect. The detection rule hasn't been evaluated yet because Intune is waiting for the reboot. The issue is the pending reboot, not the detection rule.",
+      "Incorrect. The app is working correctly per user reports. The 3010 return code is a standard MSI return code for 'success, reboot required', not a failure.",
+      "Incorrect. The Intune management extension is functioning correctly—it's properly tracking the pending reboot state. Restarting the extension won't change the fact that a device reboot is needed."
+    ],
+    "tip": "Win32 app return codes: 0/1707 = success, 3010 = soft reboot (optional, will reboot later), 1641 = hard reboot (immediate). 'Install Pending (Reboot)' = app installed but device needs restart for Intune to confirm."
+  },
+  {
+    "id": "MS102-R3-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft Intune for Adventure Works. The company has 300 Windows 11 Pro devices and 700 Windows 11 Enterprise devices. You need to deploy Attack Surface Reduction (ASR) rules to block the following:\n- Office apps from creating child processes\n- JavaScript and VBScript from launching downloaded executable content\n- Credential stealing from the Windows local security authority subsystem (lsass.exe)\n\nQuestion:\nTo which devices can you deploy these ASR rules?",
+    "choices": [
+      "All 1,000 devices — ASR rules are supported on Windows 10/11 Pro and Enterprise",
+      "Only the 700 Enterprise devices — ASR rules require Windows Enterprise edition",
+      "All 1,000 devices can have ASR rules, but the 300 Pro devices only support 'Block' mode, not 'Audit' mode",
+      "All 1,000 devices, but Pro devices require Microsoft Defender for Endpoint Plan 2 license for full ASR rule enforcement"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Attack Surface Reduction rules are supported on both Windows 10/11 Pro and Enterprise editions. All 1,000 devices can receive the ASR rules. However, some advanced reporting and management features may differ between Pro and Enterprise with Defender for Endpoint.",
+      "Incorrect. ASR rules are not limited to Enterprise edition. Windows Pro supports ASR rules including the specific rules mentioned (Office child process, script launch, LSASS credential theft).",
+      "Incorrect. Both Pro and Enterprise support Block and Audit modes for ASR rules.",
+      "Incorrect. ASR rules work with Microsoft Defender Antivirus, which is included in all Windows editions. Defender for Endpoint Plan 2 adds centralized reporting and management, but the rules themselves function without it."
+    ],
+    "tip": "ASR rule compatibility: Windows 10/11 Pro, Enterprise, and Education. Works with built-in Defender Antivirus. Defender for Endpoint adds centralized reporting/management but is not required for rule enforcement."
+  },
+  {
+    "id": "MS102-R3-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. The compliance team needs to identify the risk of specific users accessing, modifying, and exfiltrating sensitive data. They want to assign risk scores to users based on their activity patterns and monitor changes over time.\n\nQuestion:\nWhich Microsoft Purview feature provides user-level risk scoring?",
+    "choices": [
+      "Compliance Manager — user risk scores based on compliance actions",
+      "Insider risk management — user risk levels based on activity indicators and policy matches",
+      "Microsoft Defender for Cloud Apps — user risk score based on cloud app usage",
+      "Azure AD Identity Protection — user risk level based on compromised credential detection"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Compliance Manager provides an organizational compliance score based on regulatory assessments, not individual user risk scores based on data access patterns.",
+      "Correct. Insider risk management in Microsoft Purview assigns risk levels to users based on activity indicators (file downloads, USB copies, email forwards, cloud uploads, print activities) and matches against configured policies. It provides user-level risk scores that change over time based on behavior patterns.",
+      "Incorrect. Defender for Cloud Apps monitors user activity in cloud applications and can identify anomalous behavior, but it does not provide a consolidated user risk score for data exfiltration risk in the way Insider risk management does.",
+      "Incorrect. Azure AD Identity Protection assesses user risk based on compromised credentials (leaked passwords, impossible travel, anonymous IP). It focuses on identity security risk, not data exfiltration risk."
+    ],
+    "tip": "User risk contexts: Insider risk management = data exfiltration/misuse risk. Identity Protection = compromised identity risk. Defender for Cloud Apps = cloud app usage anomalies. Different types of risk for different scenarios."
+  }
+]
