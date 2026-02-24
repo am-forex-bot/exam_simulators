@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R2-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nTailwind Traders uses Microsoft Intune with 1,500 Windows 11 devices. You need to configure a VPN profile that:\n- Uses IKEv2 as the tunnel protocol\n- Automatically connects when users access internal resources (*.tailwindtraders.internal)\n- Requires a device certificate for authentication\n- Splits tunneling so that only traffic to 10.0.0.0/8 goes through the VPN\n\nQuestion:\nWhich Intune configuration profile settings must you configure? (Select the setting that enables automatic VPN connection)",
+    "choices": [
+      "Connection type: IKEv2; Always-on VPN: Enable",
+      "Connection type: IKEv2; DNS suffix rules: tailwindtraders.internal with DNS servers for internal resolution",
+      "Connection type: IKEv2; Per-app VPN: Select all internal apps",
+      "Connection type: IKEv2; VPN on-demand rules: Connect when DNS name matches *.tailwindtraders.internal"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Always-on VPN keeps the VPN connected at all times, which is not what's required. The scenario asks for automatic connection only when accessing internal resources, not a permanent connection.",
+      "Correct. DNS-based split tunneling with DNS suffix rules triggers the VPN connection when the device attempts to resolve names matching the specified DNS suffix (tailwindtraders.internal). Combined with split tunneling routes (10.0.0.0/8), this provides on-demand VPN connectivity only when accessing internal resources.",
+      "Incorrect. Per-app VPN routes traffic from specific applications through the VPN. The requirement is domain-based triggering (*.tailwindtraders.internal), not app-based.",
+      "Incorrect. VPN on-demand rules with DNS matching are an iOS/macOS feature. For Windows VPN profiles in Intune, automatic connection based on DNS resolution uses DNS suffix rules and Name Resolution Policy Table (NRPT) entries."
+    ],
+    "tip": "Windows VPN auto-trigger: DNS suffix rules + NRPT for domain-based triggering. Always-on = permanent connection. Per-app = app-based triggering. On-demand rules = iOS/macOS only."
+  },
+  {
+    "id": "MS102-R2-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Pratum Inc. The compliance team discovers that a former contractor's personal Gmail account was added as a forwarding address on an executive's mailbox, forwarding all incoming email externally. This went undetected for 3 months.\n\nThe team wants to prevent this from happening again.\n\nQuestion:\nWhat should you configure to detect and prevent unauthorized email forwarding to external addresses?",
+    "choices": [
+      "Create a mail flow rule (transport rule) that blocks external forwarding and logs matches to the compliance team",
+      "Configure an alert policy in Microsoft Purview to notify when forwarding rules are created, AND create a remote domains policy blocking auto-forwarding",
+      "Enable mailbox auditing and review the audit logs monthly",
+      "Block POP/IMAP access for all mailboxes to prevent external client forwarding"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A mail flow rule blocking external forwarding prevents the data leak but doesn't provide proactive alerting when someone attempts to create a forwarding rule. The combination of detection and prevention is needed.",
+      "Correct. Two controls are needed: (1) An alert policy (or mail flow rule) that notifies the compliance team when a forwarding rule to an external address is created—this is the detection control. (2) A remote domains policy (Set-RemoteDomain Default -AutoForwardEnabled $false) that blocks automatic forwarding to external domains at the transport level—this is the prevention control. Together, they detect attempts and block the actual forwarding.",
+      "Incorrect. Mailbox auditing records the creation of forwarding rules, but monthly log review is reactive and slow. The forwarding went undetected for 3 months in this scenario—periodic review is insufficient.",
+      "Incorrect. POP/IMAP controls external client access to mailboxes. Inbox forwarding rules operate server-side and are not affected by POP/IMAP settings."
+    ],
+    "tip": "Email forwarding defense: Prevention = remote domain auto-forward blocking (transport-level block). Detection = alert policies or mail flow rules that notify on forwarding rule creation. Use both together."
+  },
+  {
+    "id": "MS102-R2-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps deployment for Relecloud. The company uses OneDrive Known Folder Move (KFM) to sync Desktop, Documents, and Pictures folders to OneDrive. A user reports that after a fresh Windows installation and Microsoft 365 Apps setup, their OneDrive files are not available offline. The user needs to work on a flight without internet.\n\nQuestion:\nWhat should you configure to ensure critical files are available offline?",
+    "choices": [
+      "Disable Files On-Demand in the OneDrive sync client settings so all files are downloaded locally",
+      "Configure OneDrive Files On-Demand to remain enabled, and use the 'Always keep on this device' attribute for the specific folders the user needs offline",
+      "Increase the OneDrive storage quota for the user so all files can sync",
+      "Switch from OneDrive to a local backup solution for offline access"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Disabling Files On-Demand downloads ALL OneDrive files to the local device, which may be tens or hundreds of gigabytes. This wastes disk space and bandwidth and is not scalable.",
+      "Correct. Keep Files On-Demand enabled (saves disk space for most files) and pin critical folders/files as 'Always keep on this device'. This downloads those specific files for offline access while other files remain cloud-only until accessed. This can be configured by the user or via Intune/Group Policy for specific folders.",
+      "Incorrect. Storage quota affects how much the user can store in OneDrive, not which files are available offline. Files On-Demand controls local availability.",
+      "Incorrect. Abandoning OneDrive for a local backup solution removes all the benefits of cloud sync, collaboration, and Known Folder Move. The scenario has a simple configuration solution."
+    ],
+    "tip": "OneDrive offline access: Files On-Demand (default) = cloud-only until opened. Pin files/folders as 'Always keep on this device' for guaranteed offline access. Best practice: enable FoD + pin critical folders."
+  },
+  {
+    "id": "MS102-R2-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company is deploying 300 new Surface devices using Windows Autopilot. The Enrollment Status Page (ESP) is configured to:\n- Block device use until all required apps and policies are installed\n- Track installation progress for Win32 apps: CRM Suite, Adobe Creative Cloud, and Microsoft Project\n- Show a timeout error if installation takes longer than 60 minutes\n\nAfter deployment, users report that the ESP frequently times out because Adobe Creative Cloud (3.5 GB) takes too long to download.\n\nQuestion:\nHow should you resolve this without removing the app from the ESP tracking?",
+    "choices": [
+      "Increase the ESP timeout from 60 to 120 minutes",
+      "Pre-cache the app content using Delivery Optimization peer-to-peer with a Configuration Manager distribution point",
+      "Change the Adobe Creative Cloud app assignment from Required to Available, then re-add it as a required app after ESP completes",
+      "Convert the Adobe Creative Cloud deployment to use the Intune Win32 app download optimization by enabling Content delivery network (CDN) fallback"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The most straightforward fix is to increase the ESP timeout to accommodate the large app download. 60 minutes may be insufficient for a 3.5 GB download on slower network connections. Increasing to 90-120 minutes gives adequate time while still blocking device use until installation completes.",
+      "Incorrect. While Delivery Optimization can help with bandwidth in subsequent deployments, the first device in a location still needs to download from the Intune CDN. Also, ConfigMgr distribution points require co-management setup, which adds complexity.",
+      "Incorrect. Changing the assignment from Required to Available removes the app from ESP tracking entirely. The app would not be installed during the enrollment phase, and users would need to manually install it from Company Portal later.",
+      "Incorrect. Intune Win32 apps already use CDN-based delivery. There is no separate 'CDN fallback' toggle. The issue is download time for a large file, not the delivery mechanism."
+    ],
+    "tip": "ESP timeout: Default is 60 minutes. For environments with large required apps, increase to 90-120 minutes. Also consider: pre-provisioning (white glove) to pre-install apps before user gets the device."
+  },
+  {
+    "id": "MS102-R2-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nNorthwind Traders uses Microsoft 365 E5. The security team needs to identify all files in SharePoint Online and OneDrive that contain credit card numbers and are shared with external users. They need an ongoing view, not just a one-time report.\n\nQuestion:\nWhich Microsoft Purview feature provides this ongoing visibility?",
+    "choices": [
+      "Content search — search for credit card numbers across SharePoint and OneDrive",
+      "Content explorer — browse files matching the Credit Card Number sensitive information type",
+      "Activity explorer — view DLP policy matches for credit card detection rules",
+      "Data Loss Prevention — create a DLP policy with the Credit Card Number SIT and monitor matches in DLP alerts"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Content search provides point-in-time search results. It does not provide ongoing monitoring or identify external sharing status.",
+      "Incorrect. Content explorer shows files matching sensitive information types, but it does not filter by sharing status (externally shared or not). It shows content classification, not sharing context.",
+      "Incorrect. Activity explorer shows DLP policy match activities, but only if a DLP policy is already configured. On its own, it doesn't provide the initial identification of files.",
+      "Correct. Create a DLP policy targeting SharePoint and OneDrive with the Credit Card Number sensitive information type, with a rule condition of 'Content is shared with people outside my organization'. Configure the policy in test mode first or with alerting. DLP alerts provide ongoing monitoring of matches, and the Activity explorer shows real-time policy matches. This gives continuous visibility."
+    ],
+    "tip": "Ongoing monitoring of sensitive data + sharing = DLP policy. One-time search = Content search. Browse classified content = Content explorer. View policy activity = Activity explorer (requires DLP policy first)."
+  },
+  {
+    "id": "MS102-R2-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 500 Windows devices for Litware Inc. using Intune. The company has a Remote Desktop app (mstsc.exe) that IT staff use to connect to servers. The security team requires that only members of the IT Helpdesk group can use Remote Desktop on their managed devices. All other users must be blocked.\n\nQuestion:\nWhich Intune feature should you use?",
+    "choices": [
+      "App protection policy blocking mstsc.exe for non-IT users",
+      "Attack surface reduction rule: Block executable content from running unless they meet a prevalence, age, or trusted list criteria",
+      "Endpoint security > Application control using Windows Defender Application Control (WDAC) or AppLocker policy deployed via Intune",
+      "Device configuration profile with a blocked apps list including mstsc.exe for the non-IT group"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. App protection policies (MAM) manage mobile app data protection (cut/copy/paste, PIN, encryption). They do not control which Windows desktop applications can run.",
+      "Incorrect. This ASR rule blocks files based on prevalence and age heuristics across the Microsoft ecosystem. It is designed to block potentially malicious new executables, not to control access to legitimate built-in Windows tools like mstsc.exe.",
+      "Correct. Windows Defender Application Control (WDAC) or AppLocker policies deployed through Intune can control which applications users are allowed to run. Create a policy that allows mstsc.exe only for the IT Helpdesk group while blocking it for all other users. This provides granular application execution control.",
+      "Incorrect. There is no 'blocked apps list' in Windows device configuration profiles. Windows device restrictions in Intune do not include app blocking for desktop Win32 applications (this feature exists for mobile platforms like iOS/Android)."
+    ],
+    "tip": "Windows app execution control: WDAC (recommended, modern) or AppLocker (legacy but simpler). Both can be deployed via Intune. Device restriction 'blocked apps' only works on mobile platforms."
+  },
+  {
+    "id": "MS102-R2-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5 with Microsoft Defender for Endpoint. A security analyst discovers a suspicious PowerShell script running on multiple devices. The analyst wants to:\n1. Understand what the script does\n2. Find all devices where this script has executed\n3. Determine which user accounts ran the script\n\nQuestion:\nWhich feature in the Microsoft Defender portal should the analyst use?",
+    "choices": [
+      "Endpoint > Device inventory > select a device > Timeline > filter for PowerShell events",
+      "Hunting > Advanced hunting > query the DeviceProcessEvents table for the PowerShell script command line across all devices",
+      "Incidents > check if an automated incident exists for the suspicious script execution",
+      "Endpoint > Vulnerability management > check for PowerShell-related vulnerabilities"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The device Timeline shows events for a single device. The analyst needs to search across ALL devices to find where the script executed, which the Timeline cannot do.",
+      "Correct. Advanced hunting with KQL queries against the DeviceProcessEvents table allows searching across all onboarded devices. The analyst can query for the script filename, command-line parameters, or script content hash to find: all devices where it ran (DeviceName), which users ran it (AccountName), when it executed (Timestamp), and the full command line (ProcessCommandLine).",
+      "Incorrect. An automated incident may exist if Defender detected the script as malicious, but the analyst's specific requirements include understanding the script's behavior, finding all execution instances, and identifying user accounts—which requires direct data querying via Advanced hunting.",
+      "Incorrect. Vulnerability management tracks software vulnerabilities and missing patches. It does not track script execution or provide forensic investigation capabilities."
+    ],
+    "tip": "Advanced hunting tables: DeviceProcessEvents = process execution. DeviceNetworkEvents = network connections. DeviceFileEvents = file operations. DeviceLogonEvents = sign-ins. Use these for cross-device forensic analysis."
+  },
+  {
+    "id": "MS102-R2-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailspin Toys. The company has a BYOD policy allowing personal iOS and Android devices. Users install the Company Portal and enroll. The IT team deploys Outlook, Teams, and OneDrive as required apps with app protection policies.\n\nA user reports they cannot open PDF attachments in Outlook. When they tap a PDF, Outlook displays: 'No app available to open this file.'\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The PDF reader app is not installed on the device",
+      "The app protection policy 'Send org data to other apps' is set to 'Policy managed apps' and no managed PDF reader is installed",
+      "The PDF attachment exceeds the maximum file size limit configured in the Outlook app configuration policy",
+      "The device's operating system version is too old to support PDF rendering in Outlook"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. If a PDF reader was installed and the APP allowed opening in any app, the PDF would open. The error 'No app available' combined with APP suggests the policy is restricting which apps can receive the data.",
+      "Correct. When the app protection policy restricts 'Send org data to other apps' to 'Policy managed apps', Outlook can only open files in apps that also have an app protection policy applied. If no managed PDF reader (like Adobe Acrobat with APP, or Microsoft Edge with APP) is installed, Outlook has no eligible app to hand the PDF to, resulting in the 'No app available' error.",
+      "Incorrect. App protection policies do not have a maximum file size setting for attachments. File size limits are controlled by Exchange Online transport rules, not APP.",
+      "Incorrect. Outlook's built-in PDF viewing works on modern iOS and Android versions. An OS version issue would cause a different error, not an 'app availability' error."
+    ],
+    "tip": "APP 'Send org data to: Policy managed apps' = data can only go to apps with APP applied. Solution: deploy a managed PDF reader (Edge, Adobe Acrobat) with its own APP, or use 'Policy managed apps with OS sharing'."
+  },
+  {
+    "id": "MS102-R2-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Adventure Works. The company deploys a device restriction profile to 1,000 Windows 11 devices that blocks the Camera app. After deployment, several users report they cannot use their webcam in Microsoft Teams meetings even though only the Camera app was supposed to be blocked.\n\nQuestion:\nWhat happened?",
+    "choices": [
+      "The device restriction blocked the camera hardware entirely, not just the Camera app. Windows device restrictions disable the camera device, which affects ALL apps that use the camera.",
+      "Microsoft Teams uses the same API as the Camera app, so blocking one blocks the other",
+      "The Teams meeting policy in the Teams admin center also needs to allow camera use",
+      "The device restriction created a conflict with the Teams app protection policy"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Windows device restriction setting for 'Camera' disables the camera device at the hardware/driver level, not just the Windows Camera app. This blocks ALL applications from accessing the camera, including Teams, Zoom, and any other video app. To block only the Camera app while allowing camera hardware for other apps, use AppLocker or WDAC instead.",
+      "Incorrect. Teams and the Camera app use different application interfaces to access the camera hardware. However, the device restriction blocks at the hardware level, which is why both are affected.",
+      "Incorrect. Teams meeting policies control whether camera features are available in Teams meetings, but they don't override a device-level camera block. The issue is the Intune device restriction, not Teams policy.",
+      "Incorrect. App protection policies manage data protection within apps (cut/copy/paste, encryption). They do not interact with device hardware restrictions."
+    ],
+    "tip": "Device restriction 'Camera: Block' = disables camera HARDWARE (affects all apps). To block only the Camera app: use WDAC/AppLocker to block the Camera app executable while leaving the camera device enabled."
+  },
+  {
+    "id": "MS102-R2-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nWoodgrove Bank uses Microsoft 365 E5 with Microsoft Defender for Cloud Apps. The CISO wants to identify shadow IT usage—specifically, which unsanctioned cloud applications employees are using and how much data is being uploaded to them.\n\nQuestion:\nWhich Defender for Cloud Apps feature provides this visibility?",
+    "choices": [
+      "Cloud App Catalog — browse and risk-score all cloud applications",
+      "Cloud discovery — analyze traffic logs to identify cloud apps in use, data volume, and users",
+      "App governance — monitor OAuth app permissions and behavior",
+      "Connected apps — view API-connected cloud applications and their status"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but insufficient. The Cloud App Catalog rates cloud apps for risk, but it doesn't tell you which apps your users are actually using. It's a reference catalog, not a discovery tool.",
+      "Correct. Cloud discovery analyzes firewall and proxy traffic logs (or uses Defender for Endpoint network data) to identify which cloud applications employees are using, including upload/download volumes, number of users, and transaction counts. This is the purpose-built shadow IT discovery feature.",
+      "Incorrect. App governance monitors OAuth apps that have been granted permissions to access Microsoft 365 data. It focuses on app-to-API access patterns, not employee web traffic to cloud services.",
+      "Incorrect. Connected apps shows cloud applications that are integrated with Defender for Cloud Apps via API connectors (sanctioned apps like Box, Salesforce). It does not discover unsanctioned shadow IT usage."
+    ],
+    "tip": "Shadow IT discovery: Cloud discovery (traffic analysis → which apps are used). Cloud App Catalog (risk database → how risky are those apps). App governance (OAuth monitoring → what permissions do apps have)."
+  }
+]
