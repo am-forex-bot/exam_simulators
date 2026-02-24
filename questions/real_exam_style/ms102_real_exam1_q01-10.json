@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R1-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nContoso Ltd. has 3,000 Windows 11 devices enrolled in Microsoft Intune. The company recently acquired Fabrikam Inc., which has 500 Windows 10 devices joined to an on-premises Active Directory domain. Fabrikam devices are not registered in Azure AD. You need to manage Fabrikam devices using Intune with the least amount of infrastructure changes.\n\nQuestion:\nWhat should you do first?",
+    "choices": [
+      "Install the Azure AD Connect tool and configure hybrid Azure AD join",
+      "Create a bulk enrollment package using Windows Configuration Designer",
+      "Configure a Group Policy Object to enable automatic MDM enrollment",
+      "Deploy the Company Portal app via SCCM and instruct users to sign in"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Since Fabrikam devices are on-premises AD joined and not in Azure AD, you must first establish hybrid Azure AD join via Azure AD Connect. This registers the devices in Azure AD, which is a prerequisite for Intune enrollment.",
+      "Incorrect. Bulk enrollment is used for new devices or kiosk scenarios, not for migrating existing domain-joined devices to Intune management.",
+      "Incorrect. While GPO-based auto-enrollment works, it requires devices to already be hybrid Azure AD joined. Without Azure AD Connect configured first, the GPO has no effect.",
+      "Incorrect. Company Portal sign-in enables user-driven enrollment for BYOD or Azure AD registered devices, but does not address the requirement for domain-joined device management."
+    ],
+    "tip": "For on-premises AD-joined devices to be managed by Intune, the path is: Azure AD Connect → Hybrid Azure AD Join → GPO auto-enrollment → Intune management."
+  },
+  {
+    "id": "MS102-R1-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYour organization uses Microsoft 365 E5. The Chief Information Security Officer (CISO) reports that several user accounts have been compromised through phishing attacks in the past month. You need to implement a policy that requires users identified as high-risk by Azure AD Identity Protection to change their password immediately, without blocking their access entirely.\n\nQuestion:\nWhich policy should you configure in the Microsoft Entra admin center?",
+    "choices": [
+      "A sign-in risk policy set to High with a Grant control of Block access",
+      "A user risk policy set to High with a Grant control of Require password change",
+      "A conditional access policy with a session control of Sign-in frequency set to Every time",
+      "A sign-in risk policy set to High with a Grant control of Require multi-factor authentication"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A sign-in risk policy that blocks access prevents the user from signing in entirely, which violates the requirement to not block access.",
+      "Correct. A user risk policy targeting High risk with Grant control 'Require password change' forces compromised users to change their password at next sign-in without fully blocking them. This is the intended use case for Identity Protection user risk policies.",
+      "Incorrect. Sign-in frequency controls how often users must re-authenticate, but it does not remediate compromised credentials. The user would keep signing in with the same compromised password.",
+      "Incorrect. This addresses sign-in risk (real-time risk of a specific authentication attempt) rather than user risk (ongoing risk level of the account). Also, MFA alone does not remediate the compromised password."
+    ],
+    "tip": "User risk policy = account is compromised → require password change. Sign-in risk policy = this specific sign-in looks suspicious → require MFA."
+  },
+  {
+    "id": "MS102-R1-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for 2,000 users at Woodgrove Bank. The security team requires that all users run the same version of Microsoft 365 Apps and that updates are tested internally before deployment. Currently, users receive updates directly from the Office CDN on the Monthly Enterprise Channel.\n\nYou need to change the update source so that updates are distributed from an internal network share at \\\\FileServer01\\Office365Updates.\n\nQuestion:\nWhich tool should you use to create the configuration file that redirects the update source?",
+    "choices": [
+      "The Office Deployment Tool (ODT) with a configuration.xml file specifying the UpdatePath attribute",
+      "Microsoft Intune app configuration policy for Microsoft 365 Apps",
+      "Group Policy Administrative Templates (ADMX) for Office setting the Update Path policy",
+      "The Office Customization Tool (OCT) at config.office.com"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. The ODT with configuration.xml is used for initial deployment and installation, not for changing update settings on already-installed Office apps. The UpdatePath element in XML applies during setup, not post-deployment.",
+      "Incorrect. Intune app configuration policies for Microsoft 365 Apps control initial deployment settings. To change the update path on existing installations, Group Policy or registry modification is more appropriate.",
+      "Correct. Group Policy Administrative Templates (ADMX) for Microsoft 365 Apps include the 'Update Path' setting under Computer Configuration > Administrative Templates > Microsoft Office 2016 > Updates. This is the supported method to redirect already-installed Office apps to pull updates from an internal share.",
+      "Incorrect. The Office Customization Tool at config.office.com generates configuration XML files for use with the ODT during initial deployment. It does not manage update settings for already-deployed installations."
+    ],
+    "tip": "For post-deployment Office update management: Group Policy (ADMX) or registry. For initial deployment configuration: ODT + config.xml or config.office.com."
+  },
+  {
+    "id": "MS102-R1-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nTailspin Toys has 800 Android personally-owned devices used by warehouse workers. The company wants to manage only the work profile on these devices without wiping personal data. Workers install the Company Portal app and enroll using their corporate credentials.\n\nA new compliance policy requires that enrolled devices must have a minimum OS version of Android 12. You configure the compliance policy in the Microsoft Intune admin center.\n\nQuestion:\nWhat happens to a device running Android 11 after the compliance policy takes effect and the grace period expires?",
+    "choices": [
+      "The device is automatically wiped and all data is removed",
+      "The device is marked as not compliant and conditional access policies block access to corporate resources",
+      "The work profile is automatically removed from the device",
+      "The user receives a notification but can continue accessing corporate resources"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Compliance policies do not trigger automatic device wipes. A device wipe is a separate admin action or can be configured as an action for noncompliance, but the default behavior is to mark the device as noncompliant.",
+      "Correct. When a device fails a compliance policy check and the grace period expires, it is marked as 'Not compliant'. If conditional access policies are configured to require device compliance, the noncompliant device will be blocked from accessing corporate resources like Exchange Online and SharePoint.",
+      "Incorrect. The work profile is not automatically removed due to noncompliance. Work profile removal (retirement) must be explicitly configured as an action for noncompliance or performed manually by an admin.",
+      "Incorrect. While notifications are sent, after the grace period expires the device is marked noncompliant. If conditional access enforces compliance, access is blocked—not just warned."
+    ],
+    "tip": "Compliance policy noncompliance → device marked 'Not compliant' → conditional access enforces the block. The compliance policy alone does not wipe or retire devices unless you explicitly add those as noncompliance actions."
+  },
+  {
+    "id": "MS102-R1-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nAdatum Corporation uses Microsoft 365 E5. The compliance team needs to place a litigation hold on the mailbox of a former employee named Alex Wilber. Alex's account was deleted 20 days ago, and the mailbox is currently in a soft-deleted state.\n\nQuestion:\nWhat must you do before you can place the litigation hold?",
+    "choices": [
+      "Restore the soft-deleted mailbox by restoring Alex's Azure AD account from the Deleted users blade within 30 days of deletion",
+      "Create a new user account with the same UPN and the mailbox will automatically reconnect",
+      "Use the Exchange admin center to convert the soft-deleted mailbox to an inactive mailbox",
+      "Run the New-MailboxRestoreRequest cmdlet to recover the mailbox to a new user account"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. When an Azure AD account is deleted, the mailbox becomes soft-deleted. To place a litigation hold, you must first restore the Azure AD user account from the Deleted users blade (within the 30-day soft-delete retention). Once restored, the mailbox reconnects and you can apply the hold.",
+      "Incorrect. Creating a new account with the same UPN does not reconnect the soft-deleted mailbox. The original Azure AD object must be restored, not recreated.",
+      "Incorrect. You cannot directly convert a soft-deleted mailbox to inactive via the Exchange admin center. An inactive mailbox is created when a hold is placed on a mailbox before the account is deleted.",
+      "Incorrect. New-MailboxRestoreRequest copies content from a soft-deleted mailbox to an existing mailbox. This does not restore the original mailbox, and the litigation hold needs to be on the original mailbox."
+    ],
+    "tip": "To create an inactive mailbox: place hold first → then delete account. If account was already deleted without a hold, you must restore the account → place hold → then delete again."
+  },
+  {
+    "id": "MS102-R1-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Windows Autopilot for Contoso's new fleet of 200 laptops. The devices must be Azure AD joined and auto-enrolled in Intune. Users should see a simplified OOBE that skips the EULA, privacy settings, and Cortana setup pages. The devices should be ready for use within 60 minutes of the user signing in.\n\nYou create an Autopilot deployment profile in the Microsoft Intune admin center under Devices > Windows > Windows enrollment > Deployment Profiles.\n\nQuestion:\nWhich deployment mode should you select?",
+    "choices": [
+      "User-driven with Azure AD join",
+      "Self-deploying mode",
+      "User-driven with hybrid Azure AD join",
+      "White glove (pre-provisioning)"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. User-driven mode with Azure AD join meets all requirements: the user signs in during OOBE, the device joins Azure AD, enrolls in Intune, and the OOBE pages (EULA, privacy, Cortana) can be hidden in the profile. This is the standard Autopilot scenario for user-assigned devices.",
+      "Incorrect. Self-deploying mode is designed for shared devices or kiosks where no user affinity is needed. It does not establish a primary user, which is typically required for user-assigned laptops.",
+      "Incorrect. Hybrid Azure AD join requires on-premises AD infrastructure and a domain controller reachable during OOBE. The scenario specifies Azure AD joined, not hybrid.",
+      "Incorrect. White glove (pre-provisioning) is an add-on to user-driven mode that allows IT to pre-configure devices before handing them to users. It is not a separate deployment mode selection in the profile."
+    ],
+    "tip": "Autopilot deployment modes: User-driven (user signs in, gets assigned device) vs. Self-deploying (no user, kiosk/shared). Pre-provisioning is an enhancement to user-driven, not a separate mode."
+  },
+  {
+    "id": "MS102-R1-007",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nNorthwind Traders uses Microsoft Defender for Endpoint Plan 2. The security team has discovered that several devices have a vulnerable version of Adobe Acrobat Reader installed. They want to track which devices are affected and create a remediation request that generates a ticket in their ServiceNow instance.\n\nQuestion:\nWhich blade in the Microsoft Defender portal should the security team use to identify vulnerable devices and create the remediation activity?",
+    "choices": [
+      "Endpoints > Vulnerability management > Recommendations",
+      "Endpoints > Vulnerability management > Inventories > Software inventory",
+      "Endpoints > Device inventory > select device > Security recommendations",
+      "Endpoints > Vulnerability management > Dashboards"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Recommendations blade under Vulnerability management lists security recommendations including vulnerable software. From here you can view affected devices, and use 'Request remediation' to create a remediation activity with a due date, priority, and notes—which can integrate with ServiceNow via the ticketing integration.",
+      "Incorrect. The Software inventory shows installed software across devices and can identify the vulnerable version, but the remediation request workflow is initiated from the Recommendations blade, not directly from inventory.",
+      "Incorrect. Viewing a specific device's security recommendations is useful for individual device analysis, but you cannot create organization-wide remediation requests from a single device's recommendations.",
+      "Incorrect. The Dashboard provides an overview of exposure score and trends, but it does not allow you to create remediation activities directly."
+    ],
+    "tip": "Vulnerability management workflow: Dashboard (overview) → Recommendations (identify + remediate) → Remediation (track progress). Software inventory is for discovery, not remediation."
+  },
+  {
+    "id": "MS102-R1-008",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage application protection policies in Microsoft Intune for Fabrikam Inc. The company uses Microsoft Teams, Outlook, and OneDrive on iOS devices. The compliance team requires that:\n- Users cannot copy data from managed apps to unmanaged apps\n- Users can copy data between Teams, Outlook, and OneDrive\n- Screen captures must be blocked in managed apps\n- A PIN is required to open managed apps\n\nYou create an App Protection Policy for iOS.\n\nQuestion:\nFor the 'Send org data to other apps' setting, which value should you select?",
+    "choices": [
+      "All apps",
+      "None",
+      "Policy managed apps",
+      "Policy managed apps with OS sharing"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. 'All apps' allows data to be sent to any app, including unmanaged apps. This violates the requirement to prevent copying data to unmanaged apps.",
+      "Incorrect. 'None' blocks all data transfer to other apps, including managed apps. This would prevent users from sharing data between Teams, Outlook, and OneDrive, violating that requirement.",
+      "Correct. 'Policy managed apps' restricts data transfer to only apps that have an Intune App Protection Policy applied. Since Teams, Outlook, and OneDrive all have the policy, users can share between them while being blocked from sending data to unmanaged apps.",
+      "Incorrect. 'Policy managed apps with OS sharing' allows data to go to policy-managed apps AND uses the OS sharing mechanism for things like Open-in. This is broader than needed and can allow data leakage through OS sharing features in some scenarios."
+    ],
+    "tip": "App Protection Policy data transfer: 'Policy managed apps' = only apps with APP applied. 'Policy managed apps with OS sharing' = managed apps + OS share extensions (broader)."
+  },
+  {
+    "id": "MS102-R1-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nLitware Inc. has a Microsoft 365 E3 subscription and 1,500 Windows 11 devices enrolled in Microsoft Intune. You need to deploy a Wi-Fi profile that connects corporate devices to the internal wireless network using certificate-based authentication (EAP-TLS). The Wi-Fi profile must reference a trusted root certificate and a SCEP certificate profile for client authentication.\n\nYou navigate to the Microsoft Intune admin center > Devices > Configuration profiles > Create profile.\n\nQuestion:\nIn what order must you deploy the three profiles to ensure the Wi-Fi profile works correctly?",
+    "choices": [
+      "Wi-Fi profile → SCEP certificate profile → Trusted root certificate profile",
+      "Trusted root certificate profile → SCEP certificate profile → Wi-Fi profile",
+      "SCEP certificate profile → Trusted root certificate profile → Wi-Fi profile",
+      "All three profiles can be deployed simultaneously; Intune resolves dependencies automatically"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Wi-Fi profile references the SCEP certificate, which in turn references the trusted root certificate. Deploying the Wi-Fi profile first means the referenced certificates don't exist yet, causing failure.",
+      "Correct. The deployment order must follow the dependency chain: (1) Trusted root certificate profile first, because (2) the SCEP certificate profile references the trusted root, and (3) the Wi-Fi profile references the SCEP certificate. Each profile depends on the previous one being deployed.",
+      "Incorrect. The SCEP certificate profile requires the trusted root certificate to validate the CA. Deploying SCEP first without the trusted root will cause enrollment failure.",
+      "Incorrect. Intune does not automatically resolve deployment profile dependencies. If a SCEP profile is deployed before the trusted root it references, certificate enrollment will fail."
+    ],
+    "tip": "Certificate-based Wi-Fi deployment order: Trusted Root → SCEP/PKCS → Wi-Fi. Each layer depends on the one below it. Think of it as a foundation: root cert is the base."
+  },
+  {
+    "id": "MS102-R1-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are the Microsoft 365 administrator for Adventure Works Cycles. A manager reports that an employee may be exfiltrating confidential product designs. The legal team requests that you search the employee's mailbox, OneDrive, and Teams chats for any messages containing specific project code names.\n\nYou need to perform the search without alerting the employee.\n\nQuestion:\nWhich tool in the Microsoft Purview compliance portal should you use?",
+    "choices": [
+      "Data loss prevention > Activity explorer",
+      "eDiscovery > Content search",
+      "Information protection > Label activity explorer",
+      "Data classification > Content explorer"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Activity explorer in DLP shows policy matches and user activities related to DLP policies, but it cannot perform targeted keyword searches across a specific user's mailbox, OneDrive, and Teams content.",
+      "Correct. Content search in eDiscovery allows you to search across Exchange mailboxes, OneDrive accounts, and Teams conversations using keyword queries. The search is performed silently without notifying the target user, meeting the legal team's requirement.",
+      "Incorrect. Label activity explorer shows sensitivity label usage and activity, not the actual content of documents or messages. It cannot search for specific keywords.",
+      "Incorrect. Content explorer in Data classification shows content that matches sensitive information types or has labels applied, but it is not designed for targeted investigations of specific users with custom keyword searches."
+    ],
+    "tip": "eDiscovery Content search = targeted keyword search across M365 workloads (silent). DLP Activity explorer = DLP policy match history. Content explorer = browse classified content by type/label."
+  }
+]
