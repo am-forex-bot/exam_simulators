@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R2-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nTailwind Traders has 800 Windows devices enrolled in Microsoft Intune. The company requires that all devices must have Windows Defender Antivirus real-time protection enabled. Devices that disable real-time protection should be marked as noncompliant within 4 hours.\n\nYou create a compliance policy requiring Defender real-time protection.\n\nQuestion:\nWhat must you also configure to ensure noncompliance is detected within 4 hours?",
+    "choices": [
+      "Configure the compliance policy evaluation schedule (check-in frequency) to 4 hours",
+      "Set the compliance policy action for noncompliance 'Mark device noncompliant' to 'Immediately' — detection timing depends on the Intune device check-in schedule which is 8 hours by default; reduce it using a custom compliance check-in schedule",
+      "Configure Windows Defender real-time protection monitoring in Microsoft Defender for Endpoint with a 4-hour alert threshold",
+      "Create a Proactive remediation script that checks real-time protection status every 4 hours"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. There is no per-policy compliance evaluation schedule. Compliance policies are evaluated when the device checks in with Intune. The check-in frequency is configured at the device level, not the policy level.",
+      "Correct. Set the noncompliance action to 'Mark device noncompliant: Immediately' (0 days grace period). Then, to ensure detection within 4 hours, you need devices to check in with Intune frequently. By default, Windows devices check in every 8 hours. You can use the Sync action or configure device check-in schedules to reduce this interval. Note: the compliance check happens at device check-in time.",
+      "Incorrect. Defender for Endpoint monitors security posture but does not directly tie into Intune compliance policy evaluation timing. The compliance check runs during Intune sync, not based on Defender alerts.",
+      "Incorrect. Proactive remediations can detect and fix issues, but they are separate from the compliance framework. The compliance policy needs the device to check in with Intune for evaluation."
+    ],
+    "tip": "Compliance evaluation timing = device check-in frequency. Default: Windows 8hr, iOS/Android 8hr. To evaluate more frequently, trigger device sync via push notification or reduce check-in interval."
+  },
+  {
+    "id": "MS102-R2-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5 with Microsoft Defender for Office 365 Plan 2. A user in the Marketing department reports receiving a suspicious email with a PDF attachment. The user has not opened the attachment. The security team needs to determine if the PDF is malicious before taking action.\n\nQuestion:\nWhat is the fastest way to analyze the PDF attachment in the Defender portal?",
+    "choices": [
+      "Submit the PDF to the Microsoft Security Intelligence portal for manual analysis",
+      "Go to Email & collaboration > Explorer, find the email, and check the detection technology and detonation details in the email flyout",
+      "Download the PDF to an isolated VM and run it manually",
+      "Create a custom detection rule in Advanced Hunting to scan for the PDF hash"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Submitting to the Security Intelligence portal is for reporting new threats and takes time for analysis. It is not the fastest method for immediate analysis.",
+      "Correct. In Threat Explorer, locate the email and open the email details flyout. If Safe Attachments has already detonated the PDF, you'll see the verdict (malicious/clean/pending) and detonation details including behavior analysis. If not yet detonated, you can submit it for analysis. This gives you the fastest result using the built-in tools.",
+      "Incorrect. Manually analyzing in a VM requires significant time and expertise. The Defender portal already provides automated sandboxing through Safe Attachments.",
+      "Incorrect. Advanced Hunting queries historical data and requires you to already know the file hash. It doesn't provide real-time analysis of the attachment content."
+    ],
+    "tip": "Threat Explorer email flyout shows: delivery action, detection technology, threats detected, URL clicks, and Safe Attachments detonation verdict. Fastest built-in analysis for suspicious emails."
+  },
+  {
+    "id": "MS102-R2-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Windows 365 Cloud PCs for Pratum Inc. using Microsoft Intune. The company wants to deploy a custom LOB application to 200 Cloud PCs. The application installer is 4.5 GB in size, packaged as an MSI.\n\nQuestion:\nWhat is the best deployment method?",
+    "choices": [
+      "Deploy as a Windows app (Win32) after converting the MSI to .intunewin format using the Content Prep Tool",
+      "Deploy as a line-of-business (LOB) app by uploading the MSI directly",
+      "Deploy using a PowerShell script that downloads the MSI from Azure Blob Storage",
+      "Use Microsoft Configuration Manager to deploy the MSI to the Cloud PCs"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Win32 app deployment (using the Intune Content Prep Tool to create .intunewin format) supports files up to 8 GB and provides advanced features like detection rules, dependency management, requirement rules, and return codes. This is the recommended method for large applications.",
+      "Incorrect. LOB app deployment for MSI files in Intune has a file size limit of 8 GB but provides limited configuration options compared to Win32 apps. More importantly, Win32 deployment provides better download reliability, resume capability, and installation tracking for large files.",
+      "Incorrect. Using a PowerShell script to download from Blob Storage adds complexity, requires Azure Storage configuration, and bypasses Intune's built-in deployment tracking, reporting, and retry mechanisms.",
+      "Incorrect. Cloud PCs are managed by Intune, not Configuration Manager. While ConfigMgr can manage on-premises devices, it does not manage Windows 365 Cloud PCs."
+    ],
+    "tip": "Win32 (.intunewin) vs LOB (MSI): Win32 supports detection rules, dependencies, requirements, supersedence, and better install tracking. Always prefer Win32 format for production deployments."
+  },
+  {
+    "id": "MS102-R2-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam has 500 shared Android tablets used by retail employees. Each tablet is shared among 5-10 workers per shift. The company wants to:\n- Allow workers to sign in with their corporate credentials\n- Provide each worker with their own app data and settings\n- Automatically clean up user data after sign-out\n- Prevent personal app installations\n\nQuestion:\nWhich Android Enterprise enrollment mode should you use?",
+    "choices": [
+      "Personally-owned work profile",
+      "Corporate-owned, fully managed",
+      "Corporate-owned dedicated device (single-app or multi-app kiosk)",
+      "Corporate-owned with work profile (COPE)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Personally-owned work profile is for BYOD scenarios where the user owns the device. It doesn't support shared device scenarios or automatic cleanup between users.",
+      "Incorrect. Fully managed devices are designed for single-user corporate devices. They don't support multiple users signing in and out with automatic data cleanup.",
+      "Correct. Dedicated device mode with shared device configuration supports multi-user scenarios. When configured with Microsoft Entra shared device mode, workers can sign in with corporate credentials, get personalized app experiences, and have their data automatically cleaned up on sign-out. Kiosk mode can restrict which apps are available.",
+      "Incorrect. COPE (Corporate-Owned, Personal Enabled) is for single-user devices where the company owns the device but allows personal use. It doesn't support shared device scenarios."
+    ],
+    "tip": "Shared Android devices: Dedicated device mode + Microsoft Entra shared device mode. Supports sign-in/sign-out with automatic cleanup. Not the same as kiosk-only—shared device mode adds multi-user support."
+  },
+  {
+    "id": "MS102-R2-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 for Wingtip Toys. The company is subject to GDPR and needs to ensure that personal data stored in Microsoft 365 is properly classified. The DPO wants to automatically identify and label documents containing EU national identification numbers, passport numbers, and EU debit card numbers across SharePoint and OneDrive.\n\nQuestion:\nWhat should you configure in Microsoft Purview?",
+    "choices": [
+      "Create a DLP policy with sensitive information types for EU identifiers",
+      "Create auto-labeling policies using sensitivity labels with conditions matching EU personal data sensitive information types",
+      "Create a data classification content explorer scan for EU data",
+      "Configure Microsoft Defender for Cloud Apps file policy to scan for EU data patterns"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. DLP policies detect and protect sensitive data in transit (email, sharing), but they do not apply sensitivity labels to documents at rest. The requirement is to classify (label) existing documents.",
+      "Correct. Auto-labeling policies in Microsoft Purview allow you to automatically apply sensitivity labels to documents in SharePoint and OneDrive based on content matching. Configure conditions using built-in sensitive information types for EU national ID numbers, EU passport numbers, and EU debit card numbers. The policy scans existing and new documents and applies the specified label.",
+      "Incorrect. Content explorer is a read-only tool that lets you browse data that matches sensitive information types. It does not apply labels or take any action on the content.",
+      "Incorrect. Defender for Cloud Apps file policies can detect sensitive content and apply labels via the integration with Information Protection, but the native and recommended approach for labeling content in SharePoint/OneDrive is auto-labeling policies in Purview."
+    ],
+    "tip": "Classification (labeling) at rest: Auto-labeling policies in Purview. Protection in transit: DLP policies. Discovery/browsing: Content explorer. For SharePoint/OneDrive, auto-labeling is the primary tool."
+  },
+  {
+    "id": "MS102-R2-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Microsoft Intune for A.Datum Corporation. The company needs to deploy certificates to Windows devices for VPN authentication. The PKI team has set up a Microsoft NDES (Network Device Enrollment Service) server for SCEP certificate issuance.\n\nQuestion:\nWhich Intune component must be installed on-premises to facilitate SCEP certificate requests between Intune and the NDES server?",
+    "choices": [
+      "Microsoft Intune Certificate Connector installed on the NDES server or a separate Windows server",
+      "Azure AD Application Proxy connector installed on the NDES server",
+      "Microsoft Intune Exchange Connector installed on the NDES server",
+      "Azure AD Connect Sync agent with certificate writeback enabled"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Microsoft Intune Certificate Connector is an on-premises component that acts as a bridge between Intune (cloud) and the NDES server (on-premises). It receives certificate requests from Intune, forwards them to NDES/CA for issuance, and returns the issued certificates to Intune for deployment to devices.",
+      "Incorrect. Azure AD Application Proxy enables access to on-premises web apps from the internet. While it could theoretically proxy NDES, the Intune Certificate Connector is the purpose-built solution.",
+      "Incorrect. The Intune Exchange Connector is for integrating on-premises Exchange Server with Intune for conditional access on Exchange ActiveSync. It has nothing to do with certificate deployment.",
+      "Incorrect. Azure AD Connect Sync handles directory synchronization between on-premises AD and Azure AD. Certificate writeback is not a supported feature, and Azure AD Connect doesn't facilitate SCEP certificate enrollment."
+    ],
+    "tip": "SCEP certificate flow: Intune → Certificate Connector (on-prem) → NDES → Certificate Authority → Certificate issued → Certificate Connector → Intune → Device. The connector is the bridge."
+  },
+  {
+    "id": "MS102-R2-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nRelecloud uses Microsoft 365 E5. The CISO requires that when a user's Azure AD Identity Protection risk level changes to 'High', the following actions occur automatically:\n1. The user must change their password at next sign-in\n2. All existing sessions are revoked\n3. The user must re-enroll in MFA\n\nQuestion:\nWhich combination of policies achieves all three requirements?",
+    "choices": [
+      "User risk policy set to High → Require password change (handles requirement 1). Session revocation and MFA re-enrollment must be configured separately using a conditional access policy with session controls.",
+      "User risk policy set to High → Require password change. Configure 'Revoke session' as an additional remediation action in Identity Protection. MFA re-enrollment happens automatically with password change.",
+      "User risk policy set to High → Block access. Then manually reset password, revoke sessions via PowerShell (Revoke-AzureADUserAllRefreshToken), and delete MFA registration.",
+      "Create a conditional access policy: User risk = High → Grant: Require password change + Require MFA. Use the Revoke-MgUserSignInSession Graph API via a Logic App triggered by risk events."
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The user risk policy with 'Require password change' handles requirement 1. However, session revocation (requirement 2) and MFA re-enrollment (requirement 3) are not built into the user risk policy. You need: a conditional access policy that requires re-authentication (revokes active sessions for high-risk users), and for MFA re-enrollment, you must use the Authentication methods registration policy or manually require re-registration. No single policy handles all three natively.",
+      "Incorrect. 'Revoke session' is not a configurable remediation action in Identity Protection user risk policies. Session revocation must be handled through conditional access or manual action. MFA re-enrollment does not happen automatically with password change.",
+      "Incorrect. Blocking access prevents the user from signing in at all, which is more disruptive than required. The scenario wants the user to change their password, not be fully blocked.",
+      "Incorrect. Conditional access policies don't have 'Require MFA re-enrollment' as a grant control. While the Logic App approach could work for session revocation, it adds unnecessary complexity."
+    ],
+    "tip": "Identity Protection limitations: User risk policy can require password change OR block access. It cannot revoke sessions or require MFA re-enrollment. These need separate configurations (conditional access, Graph API, or manual admin action)."
+  },
+  {
+    "id": "MS102-R2-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Managed Google Play for Tailspin Toys' Android Enterprise devices in Microsoft Intune. The company wants to allow only specific apps to appear in the Managed Google Play store on corporate devices. Users should not be able to browse or install any app not explicitly approved by IT.\n\nQuestion:\nHow should you configure this in Intune?",
+    "choices": [
+      "Create an app protection policy that blocks installation of unapproved apps",
+      "In the Managed Google Play store, approve only the apps you want available. On fully managed devices, only approved apps appear in the managed store by default.",
+      "Create a device configuration profile blocking the Play Store app entirely",
+      "Use a device compliance policy requiring only approved apps be installed"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. App protection policies control data transfer and access requirements within apps. They do not control which apps users can install from the store.",
+      "Correct. With Android Enterprise fully managed devices, users only see apps in the Managed Google Play store that IT has approved. By approving only the specific apps you want (e.g., Outlook, Teams, a custom LOB app), users cannot browse or install unapproved apps. This is the built-in behavior of Android Enterprise Managed Google Play.",
+      "Incorrect. Blocking the Play Store entirely prevents users from installing any app, including approved ones. The requirement is to allow specific apps while blocking others.",
+      "Incorrect. Compliance policies evaluate device state but do not control app installation. A noncompliant device with unapproved apps would be flagged but the apps wouldn't be prevented from being installed."
+    ],
+    "tip": "Android Enterprise + Managed Google Play = curated app store. Only IT-approved apps appear. No sideloading on fully managed devices. This is the default behavior—no extra configuration needed beyond approving apps."
+  },
+  {
+    "id": "MS102-R2-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nAdatum Corporation uses Microsoft Intune and has 1,000 Windows 11 devices. The company wants to implement tenant attach with Microsoft Configuration Manager to view Configuration Manager-managed devices in the Intune admin center, without co-management.\n\nQuestion:\nWhat is required to enable tenant attach?",
+    "choices": [
+      "Install Azure AD Connect and enable hybrid Azure AD join for all devices first",
+      "In the Configuration Manager console, configure cloud attach by enabling 'Upload to Microsoft Endpoint Manager admin center' under Co-management properties",
+      "Enable co-management in Configuration Manager and move at least one workload to Intune",
+      "Install the Intune Certificate Connector on the Configuration Manager site server"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Hybrid Azure AD join is not a prerequisite for tenant attach. Tenant attach works with on-premises AD-joined devices that are not hybrid Azure AD joined.",
+      "Correct. Tenant attach is configured in the Configuration Manager console under Administration > Cloud Services > Cloud Attach (or Co-management). Enable 'Upload to Microsoft Endpoint Manager admin center' to sync device data to Intune. This allows viewing ConfigMgr-managed devices in the Intune portal without requiring co-management or moving any workloads.",
+      "Incorrect. Co-management is a separate feature from tenant attach. Tenant attach provides cloud visibility without co-management. You do NOT need to move workloads to Intune for tenant attach.",
+      "Incorrect. The Intune Certificate Connector is for SCEP/PKCS certificate deployment, not for tenant attach."
+    ],
+    "tip": "Tenant attach ≠ co-management. Tenant attach = upload device data to Intune portal (view only, some remote actions). Co-management = shared workload management between ConfigMgr and Intune. Tenant attach is simpler and requires fewer prerequisites."
+  },
+  {
+    "id": "MS102-R2-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nWoodgrove Bank is subject to financial industry regulations that require email archiving for 7 years. The compliance team needs to ensure that:\n- All mailbox items (including deleted items) are preserved\n- Users cannot permanently delete emails\n- After 7 years, emails are automatically deleted\n- Mailbox items modified or deleted by users are preserved in their original state\n\nQuestion:\nWhich feature combination should you implement?",
+    "choices": [
+      "Litigation hold on all mailboxes (indefinite) + retention policy to delete after 7 years",
+      "Microsoft Purview retention policy set to 'Retain for 7 years then delete' applied to Exchange",
+      "In-place archive mailboxes + retention tags with a 7-year delete policy",
+      "Litigation hold for 7 years + In-place archive + journaling rule"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Using litigation hold (indefinite) alongside a 7-year retention policy creates a conflict. Litigation hold prevents deletion indefinitely—it overrides the retention policy's delete action. Items would never be deleted after 7 years while the hold is active.",
+      "Correct. A Microsoft Purview retention policy configured to 'Retain items for 7 years' and 'Then delete' applied to Exchange meets all requirements: (1) All items are preserved for 7 years, (2) Users cannot permanently delete items during the retention period (deleted items are preserved in the Recoverable Items folder), (3) After 7 years, items are automatically deleted, (4) Modified/deleted items are preserved in their original state in the Preservation Hold Library.",
+      "Incorrect. In-place archive expands mailbox storage but doesn't prevent deletion. Retention tags (MRM) manage mailbox cleanup but don't provide the immutability required. Also, MRM is being deprecated in favor of Purview retention policies.",
+      "Incorrect. This combination is overly complex. Litigation hold prevents deletion but doesn't auto-delete after 7 years. Journaling creates copies but adds storage costs. The Purview retention policy alone handles all requirements."
+    ],
+    "tip": "Purview retention policy = retain + delete after period + immutable during retention. Litigation hold = retain indefinitely (no auto-delete). For regulatory archiving with auto-delete → Purview retention policy."
+  }
+]
