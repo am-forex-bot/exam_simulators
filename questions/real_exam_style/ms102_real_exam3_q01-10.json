@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R3-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company deploys Windows Hello for Business to all Azure AD joined Windows 11 devices. Users must use a PIN or biometric to sign in. The security policy requires:\n- Minimum PIN length of 6 digits\n- PIN must include at least one uppercase letter\n- PIN recovery must be enabled\n- Trusted Platform Module (TPM) is required\n\nQuestion:\nWhere should you configure these settings?",
+    "choices": [
+      "Endpoint security > Account protection > Windows Hello for Business profile",
+      "Device configuration > Identity protection > Windows Hello for Business",
+      "Azure AD > Devices > Windows Hello for Business > Tenant-wide policy",
+      "All three options can configure Windows Hello, but Endpoint security > Account protection is the recommended location in Intune"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. This is the recommended path, but not the only valid option.",
+      "Partially correct. Identity protection templates include Windows Hello settings but this is the older configuration path.",
+      "Partially correct. The Azure AD tenant-wide policy sets basic enable/disable and some settings, but provides fewer options than Intune profiles.",
+      "Correct. Windows Hello for Business can be configured in multiple places: (1) Endpoint security > Account protection (recommended), (2) Device configuration > Identity protection, (3) Azure AD tenant-wide settings. The Endpoint security path is recommended because it provides the most comprehensive settings including PIN complexity, TPM requirement, and recovery options."
+    ],
+    "tip": "Windows Hello for Business configuration hierarchy: Intune Endpoint security > Account protection (most control) > Device config > Identity protection (legacy path) > Azure AD tenant-wide (basic settings). If multiple are configured, Intune policy takes precedence."
+  },
+  {
+    "id": "MS102-R3-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nPratum Inc. uses Microsoft 365 E5. A departing employee is suspected of stealing proprietary source code by uploading files to a personal cloud storage account in the two weeks before their resignation. The insider risk management policy 'Data theft by departing users' flagged the activity.\n\nThe risk analyst needs to review the specific files that were uploaded and the destinations.\n\nQuestion:\nWhere should the analyst review this information?",
+    "choices": [
+      "Microsoft Purview > Insider risk management > Alerts > select the alert > Activity explorer tab showing the detailed timeline of file activities",
+      "Microsoft Defender for Endpoint > Device timeline > filter for file upload activities",
+      "Microsoft Purview > eDiscovery > Search the user's OneDrive for recently modified files",
+      "Microsoft Purview > Audit > Search for FileUploaded activities by the user"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The insider risk management Activity explorer provides a detailed timeline of all activities that triggered the risk alert, including file names, upload destinations (e.g., Dropbox, Google Drive), timestamps, and data volume. This is the purpose-built investigation view for insider risk alerts.",
+      "Incorrect. Defender for Endpoint device timeline shows endpoint activities but doesn't correlate them with insider risk policy triggers or departing employee context.",
+      "Incorrect. eDiscovery searches for content stored in Microsoft 365, not files uploaded to external cloud storage. The source code was uploaded externally, so eDiscovery wouldn't capture the destination.",
+      "Incorrect. Audit logs can show some file activities, but they don't provide the insider risk context (departing user, risk score, correlated activities) or external upload destination details."
+    ],
+    "tip": "Insider risk investigation workflow: Alerts → Activity explorer (detailed timeline) → User activity (all activities across a time range) → Content explorer (review actual file content). All within the Insider risk management console."
+  },
+  {
+    "id": "MS102-R3-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company deploys Microsoft Outlook on managed iOS devices. The IT team needs to configure Outlook with the following settings:\n- Pre-configure the user's corporate email account (Exchange Online) so users don't need to manually set it up\n- Set the default signature to 'Woodgrove Bank - Confidential'\n- Block users from adding personal email accounts to Outlook\n\nQuestion:\nWhich Intune feature should you use for these configurations?",
+    "choices": [
+      "App protection policy for Outlook",
+      "App configuration policy for managed devices targeting Microsoft Outlook",
+      "Device configuration profile > Email profile for iOS",
+      "Device restriction profile blocking personal accounts"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but limited. App protection policies control data protection (PIN, encryption, cut/copy restrictions) but do not pre-configure email accounts, default signatures, or block personal account additions.",
+      "Correct. App configuration policies for managed devices allow you to push configuration settings directly to Outlook. You can: pre-configure the Exchange Online account using the user's UPN/email, set a default email signature, and restrict account types (block personal accounts by setting 'Allowed account types' to organizational accounts only).",
+      "Incorrect. iOS email profiles configure the native iOS Mail app, not Microsoft Outlook. Outlook has its own configuration interface through app configuration policies.",
+      "Incorrect. Device restriction profiles control device-level features (camera, screenshots, etc.), not app-specific configurations like email account restrictions within Outlook."
+    ],
+    "tip": "Outlook mobile configuration: App configuration policy (pre-configure accounts, signatures, features). App protection policy (data protection: PIN, encryption, copy restrictions). These are complementary—use both together."
+  },
+  {
+    "id": "MS102-R3-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nTailspin Toys uses Intune with 1,000 Windows devices. The company needs to deploy a security baseline that configures:\n- Windows Firewall rules\n- BitLocker settings\n- Microsoft Defender Antivirus settings\n- Attack surface reduction rules\n- Windows Update settings\n\nUsing a single, consistent configuration based on Microsoft's security recommendations.\n\nQuestion:\nWhich Intune feature provides this?",
+    "choices": [
+      "Create individual device configuration profiles for each security setting category",
+      "Deploy the Microsoft Defender for Endpoint security baseline",
+      "Deploy the Windows security baseline from Endpoint security > Security baselines",
+      "Import a custom ADMX template with Microsoft's recommended security settings"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. While creating individual profiles works, it requires configuring each setting manually across multiple profiles. Security baselines provide pre-configured, Microsoft-recommended settings in a single deployment.",
+      "Incorrect. The Defender for Endpoint baseline covers Defender-specific settings (AV, ASR, EDR) but does not include Windows Firewall, BitLocker, or Windows Update settings. It's a subset of the full security baseline.",
+      "Correct. The Windows security baseline in Intune (Endpoint security > Security baselines) provides Microsoft's recommended security configurations including Firewall, BitLocker, Defender AV, ASR, and more. It's a pre-configured, tested set of settings that follows Microsoft's security best practices.",
+      "Incorrect. Custom ADMX templates require manual configuration of each setting. Security baselines provide Microsoft's recommended values out of the box, reducing configuration effort and ensuring best-practice alignment."
+    ],
+    "tip": "Security baselines in Intune: Windows baseline (broad, covers OS + security features) vs. Defender for Endpoint baseline (Defender-specific) vs. Edge baseline (browser-specific). Use Windows baseline for comprehensive OS security."
+  },
+  {
+    "id": "MS102-R3-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The legal team asks you to configure a retention policy that:\n- Retains all SharePoint documents for 5 years from the date the document was last modified\n- After 5 years, documents should be automatically deleted\n- The policy should apply to ALL SharePoint sites, including those created in the future\n\nQuestion:\nHow should you configure the retention policy?",
+    "choices": [
+      "Create a retention policy with location: All SharePoint sites, retention period: 5 years based on 'When items were created', action: Delete",
+      "Create a retention policy with location: All SharePoint sites, retention period: 5 years based on 'When items were last modified', action: Delete items automatically",
+      "Create a retention label with 5-year retention from last modified, then auto-apply it to all SharePoint content",
+      "Create a retention policy per site with 5-year retention — new sites must be added manually as they're created"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The retention trigger should be 'When items were last modified', not 'When items were created'. Using creation date would delete documents that were recently modified but created more than 5 years ago.",
+      "Correct. A retention policy targeting 'All SharePoint sites' with 5-year retention based on 'When items were last modified' and automatic deletion after the retention period. The 'All sites' scope automatically includes future sites.",
+      "Incorrect. While retention labels can be configured with 'last modified' as the trigger, they require per-item application (manual or auto-apply). Auto-applying labels adds complexity and processing time. For a blanket policy across all sites, a retention policy is simpler and more appropriate.",
+      "Incorrect. Creating per-site policies is not scalable and would miss new sites. The 'All SharePoint sites' location in a retention policy automatically covers existing and future sites."
+    ],
+    "tip": "Retention policy vs. retention label: Policy = blanket coverage across locations (simpler, automatic). Label = per-item control (more granular, supports disposition review). For org-wide retention: use policies."
+  },
+  {
+    "id": "MS102-R3-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Intune to manage 2,000 Windows 11 devices. The IT team deploys a device configuration profile that sets the desktop wallpaper to a corporate-branded image. After deployment, they receive complaints that the wallpaper only applies when users sign in for the first time but reverts to the default after a reboot.\n\nYou investigate and find the wallpaper setting is configured in a Device restriction profile under Personalization.\n\nQuestion:\nWhat is the likely cause of the wallpaper reverting?",
+    "choices": [
+      "The device restriction wallpaper setting applies only during initial provisioning and is not enforced continuously — use a CSP-based Settings Catalog policy instead for persistent enforcement",
+      "The Group Policy Wallpaper setting is overriding the Intune configuration at each reboot",
+      "The user has administrator rights and is changing the wallpaper manually",
+      "The wallpaper image URL is hosted on a server that becomes unreachable after the first sign-in"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Device restriction Personalization settings (desktop wallpaper image) in some configurations apply the wallpaper once but don't continuously enforce it. Using the Settings Catalog to configure the DesktopImageUrl and LockScreenImageUrl CSP settings provides more reliable persistent enforcement, as these settings are re-applied at each policy refresh.",
+      "Incorrect. If a Group Policy was overriding the setting, the wallpaper would either never apply from Intune or consistently show the GP version. The intermittent behavior (works on first login, reverts later) suggests the Intune setting is not being re-enforced.",
+      "Incorrect. Even with admin rights, if the Intune policy properly enforced the wallpaper, the user's changes would be overwritten at the next policy sync. The issue is that the setting isn't being re-enforced.",
+      "Incorrect. The wallpaper is downloaded and cached locally. URL availability after initial download wouldn't cause the wallpaper to revert."
+    ],
+    "tip": "Intune configuration profiles: Device restrictions template = basic settings that may not re-enforce on every sync. Settings Catalog = more granular control with CSP-backed settings that are persistently enforced. When in doubt, prefer Settings Catalog."
+  },
+  {
+    "id": "MS102-R3-007",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are the security administrator for Northwind Traders (Microsoft 365 E5). The CEO's executive assistant reports that they received an email from what appeared to be a trusted vendor, containing a link to download an invoice. The assistant clicked the link and was redirected to a phishing page.\n\nMicrosoft Defender for Office 365 Safe Links was enabled. You need to determine why Safe Links did not block the URL.\n\nQuestion:\nWhich is the most likely reason Safe Links did not protect the user?",
+    "choices": [
+      "The URL was on the tenant-level Safe Links allow list (Global settings > Do not rewrite URLs)",
+      "Safe Links only scans URLs at the time of email delivery; the URL was clean at delivery time but weaponized later (time-of-delivery vs. time-of-click)",
+      "The user was not covered by a Safe Links policy because the default policy was not configured",
+      "Safe Links does not protect against phishing pages, only malware downloads"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. If the phishing URL or its domain was added to the tenant-level allow list in Safe Links global settings ('Do not rewrite the following URLs'), Safe Links would not scan or block it. This is a common misconfiguration—allow lists bypass all Safe Links protection for the listed URLs.",
+      "Incorrect. Safe Links in Defender for Office 365 performs time-of-click URL checking, not just time-of-delivery. When the user clicks the link, Safe Links re-checks the URL in real time. A URL that was clean at delivery and later weaponized would still be caught at click time.",
+      "Incorrect. Microsoft 365 E5 includes a default Safe Links policy (Built-in protection) that covers all users. If no custom policy exists, the built-in protection still provides coverage.",
+      "Incorrect. Safe Links protects against both phishing pages and malware downloads. When a user clicks a link, Safe Links checks the URL against known phishing sites and detonates the target page if needed."
+    ],
+    "tip": "Safe Links time-of-click: Checks URL when user clicks, not when email arrives. If Safe Links 'didn't work', check: (1) Allow list entries, (2) Policy scope/assignment, (3) Safe Links rewrites being stripped by third-party tools."
+  },
+  {
+    "id": "MS102-R3-008",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company has 500 Windows devices and wants to ensure Microsoft Edge is the default browser for all managed devices. Users should not be able to change the default browser setting. Additionally, Microsoft Edge must open all .pdf files instead of Adobe Acrobat.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Deploy a PowerShell script that sets the default browser and file association registry keys",
+      "Create a device configuration profile using the Settings Catalog to configure default app associations using an XML file that maps HTTP/HTTPS protocols and .pdf extension to Edge",
+      "Use Microsoft Edge app configuration to set Edge as default in its own settings",
+      "Create a Group Policy preference to set Edge as the default browser"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Setting registry keys for default app associations via PowerShell is unreliable in Windows 10/11. Microsoft uses a hash-based validation system for default app settings that prevents direct registry modification by scripts.",
+      "Correct. Windows 10/11 requires a properly formatted DefaultAssociations.xml file to set default app associations. In Intune, use the Settings Catalog to configure 'Default Associations Configuration' which pushes the XML file that maps HTTP, HTTPS, .htm, .html protocols to Edge and .pdf extension to Edge. This is the Microsoft-supported method and cannot be overridden by users.",
+      "Incorrect. Edge's own settings allow users to request becoming the default browser, but this is a user-facing prompt, not an enforced policy. Users could change it back.",
+      "Incorrect. Group Policy preferences for default browser are not enforced on Azure AD-joined devices without on-premises infrastructure. Also, GPP for default associations has limited reliability in Windows 10/11."
+    ],
+    "tip": "Default app associations in Windows 10/11: Must use DefaultAssociations.xml deployed via Intune Settings Catalog or GPO. Direct registry editing doesn't work (hash validation). This is the only reliable method."
+  },
+  {
+    "id": "MS102-R3-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nA.Datum Corporation uses Microsoft Intune with 1,500 Windows devices. The company is planning to migrate from Windows 10 22H2 to Windows 11 23H2. Before deploying the feature update, the IT team wants to ensure all devices are compatible with Windows 11 (TPM 2.0, Secure Boot, compatible CPU).\n\nQuestion:\nWhich tool should the IT team use to assess device readiness?",
+    "choices": [
+      "Microsoft Intune > Reports > Windows updates > Windows feature update device readiness report",
+      "Download and run the PC Health Check app on each device",
+      "Use Advanced Hunting in Defender for Endpoint to query device hardware capabilities",
+      "Run a PowerShell script across all devices that checks TPM and CPU compatibility"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Windows feature update device readiness report in Intune identifies which devices are eligible for Windows 11 and which have compatibility issues (missing TPM 2.0, unsupported CPU, insufficient storage, etc.). This provides a centralized view across all 1,500 managed devices without any on-device action.",
+      "Incorrect. The PC Health Check app works on individual devices but is not scalable for 1,500 devices. It requires manual installation and running on each device.",
+      "Incorrect. While Advanced Hunting can query some device properties, it doesn't provide a dedicated readiness assessment for Windows 11 compatibility. The built-in readiness report is more comprehensive and purpose-built.",
+      "Incorrect. A PowerShell script could check TPM and CPU, but building a comprehensive compatibility check script is reinventing the wheel when Intune provides a built-in readiness report."
+    ],
+    "tip": "Windows 11 readiness assessment: Intune > Reports > Windows updates > Feature update device readiness. Built-in report covering TPM, Secure Boot, CPU, RAM, storage, DirectX. No scripts or on-device tools needed."
+  },
+  {
+    "id": "MS102-R3-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nWingtip Toys uses Microsoft 365 E5. The CISO wants to prevent users from granting consent to third-party applications that request high-privilege permissions (like read all email, access all files, or send mail on behalf of the user). Regular low-privilege app consent should still be allowed.\n\nQuestion:\nWhat should you configure in Microsoft Entra?",
+    "choices": [
+      "Disable user consent entirely — all app consents require admin approval",
+      "Configure the admin consent workflow and set user consent to 'Allow user consent for apps from verified publishers, for selected permissions' — only allow low-risk permissions",
+      "Create a conditional access policy blocking access to third-party apps",
+      "Configure a Defender for Cloud Apps policy to revoke high-privilege OAuth app consents"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Disabling all user consent creates excessive admin overhead. Every low-privilege app request (read user profile, sign in) would require admin approval, which is not necessary for basic permissions.",
+      "Correct. In Microsoft Entra > Enterprise applications > Consent and permissions > User consent settings, select 'Allow user consent for apps from verified publishers, for selected permissions'. Then configure the permission classification to define which permissions are 'Low risk' (e.g., User.Read, openid, profile) and allow user consent only for those. High-privilege permissions (Mail.ReadWrite, Files.ReadWrite.All) require admin consent workflow approval.",
+      "Incorrect. Conditional access controls access to apps, not the OAuth consent process. Users could still consent to apps; they just might be blocked from accessing them.",
+      "Incorrect. Defender for Cloud Apps can detect and revoke excessive OAuth app permissions, but this is reactive (after consent is granted). The requirement is to prevent the consent from happening in the first place."
+    ],
+    "tip": "OAuth consent strategy: Allow user consent for low-risk, verified publisher permissions only. Require admin consent workflow for high-privilege permissions. Configure permission classifications in Entra to define 'low risk'."
+  }
+]
