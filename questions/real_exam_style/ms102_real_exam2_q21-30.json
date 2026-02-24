@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R2-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Windows Autopilot for Contoso. A user receives a new laptop and begins the Autopilot enrollment process. During the Enrollment Status Page (ESP), the process hangs at 'Identifying' for over 30 minutes. The Autopilot profile is assigned and the device hardware hash was uploaded.\n\nQuestion:\nWhat is the most likely cause of the ESP hanging at 'Identifying'?",
+    "choices": [
+      "The device's hardware hash was not properly uploaded to the Autopilot service",
+      "The Autopilot deployment profile has not synced to the device due to Intune service latency — the profile assignment may take up to 48 hours for newly imported devices",
+      "The device does not have internet connectivity or cannot reach the required Microsoft endpoints (login.microsoftonline.com, *.manage.microsoft.com)",
+      "The ESP timeout is set too low in the Autopilot profile"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. If the hardware hash was not uploaded, the device would go through normal OOBE, not show the ESP at all. The fact that ESP is displayed means the device is recognized as an Autopilot device.",
+      "Incorrect. While profile sync can take time for newly imported devices, the 'Identifying' phase specifically indicates the device is trying to contact the Intune service. If the profile wasn't assigned, the device would show 'Something went wrong' after a timeout.",
+      "Correct. The 'Identifying' phase is when the device contacts the Autopilot service to identify itself and download its deployment profile. If the device cannot reach the required Microsoft endpoints (due to network issues, proxy, firewall, or DNS), it hangs at this phase. Common culprits: corporate firewall blocking required URLs, captive portal, no DHCP.",
+      "Incorrect. ESP timeout settings affect how long the ESP waits for apps and policies to install, not the initial identification phase. The 'Identifying' phase has its own built-in timeout."
+    ],
+    "tip": "Autopilot ESP phases: Identifying (contacting service) → Device setup (join Azure AD, enroll MDM, install device apps/policies) → Account setup (install user apps/policies). 'Identifying' hang = network connectivity issue."
+  },
+  {
+    "id": "MS102-R2-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft Purview for Litware Inc. The compliance team needs to implement information barriers to prevent the Investment Banking department from communicating with the Research department via Microsoft Teams and SharePoint. Other departments should be able to communicate freely with both.\n\nQuestion:\nWhat must you configure?",
+    "choices": [
+      "Create a Teams messaging policy that blocks messages between the two departments",
+      "Define organization segments for each department, then create an information barrier policy blocking communication between Investment Banking and Research",
+      "Create a conditional access policy blocking Teams access for users in both departments simultaneously",
+      "Configure a DLP policy that blocks messages between the two departments in Teams"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Teams messaging policies control which messaging features are available (edit, delete, read receipts, etc.), not which users can communicate with each other.",
+      "Correct. Information barriers in Microsoft Purview require: (1) Define segments based on Azure AD attributes (e.g., Department = 'Investment Banking', Department = 'Research'), (2) Create an information barrier policy that blocks communication between the two segments. This prevents Teams chat/call, SharePoint/OneDrive sharing, and meeting collaboration between the two departments while allowing both to communicate with other departments.",
+      "Incorrect. Conditional access controls access to applications, not communication between specific users. Blocking Teams for both departments would prevent them from using Teams entirely.",
+      "Incorrect. DLP policies monitor and protect sensitive data content. They cannot restrict communication based on sender/recipient department membership."
+    ],
+    "tip": "Information barriers: Segments (who) + Policies (block or allow between segments). Works across Teams, SharePoint, OneDrive. Use case: Chinese wall regulations (Investment Banking ↔ Research)."
+  },
+  {
+    "id": "MS102-R2-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for Fabrikam using Intune. Users report that after a recent update, the Outlook add-in for a critical CRM application (CRMConnect) stopped loading. The CRM vendor confirms the add-in is incompatible with the latest Office build. You need to allow the CRM vendor time to fix the add-in while keeping Office up to date for all other functionality.\n\nQuestion:\nWhat is the best approach?",
+    "choices": [
+      "Roll back the entire Office installation to the previous version for all affected users",
+      "Use Group Policy or Intune Settings Catalog to configure the 'Managed add-ins' list, blocking the CRMConnect add-in temporarily",
+      "Use the Intune Settings Catalog to set 'Resiliency: Add-in crash behavior' to load the add-in even after crashes, and use Cloud Policy to disable add-in update checks",
+      "Contact the CRM vendor and wait for a fix; no immediate action is needed"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Since the add-in is critical and broken by the latest Office build, the pragmatic approach is to set a Target Version in Intune (Settings Catalog) to roll back to the previous working build for affected users. This restores the add-in functionality while the vendor develops a fix. When the fix is ready, remove the Target Version to resume normal updates.",
+      "Incorrect. Blocking the add-in means users can't use the critical CRM functionality at all. The goal is to restore the add-in's functionality, not disable it.",
+      "Incorrect. The add-in isn't crashing—it's incompatible with the new Office build and won't load. Resiliency settings handle add-in crashes, not fundamental incompatibility. Disabling update checks doesn't fix the current version.",
+      "Incorrect. The CRM add-in is described as critical. Waiting without action means users cannot use the CRM integration, which impacts business operations."
+    ],
+    "tip": "Office add-in compatibility issues: Roll back Office to a known-working version using Target Version while the vendor fixes the add-in. This is faster than waiting for a vendor patch and less disruptive than disabling the add-in."
+  },
+  {
+    "id": "MS102-R2-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company has 500 macOS devices enrolled in Intune. The security team wants to deploy a custom shell script that configures the macOS firewall settings. The script must:\n- Run as root\n- Run only once per device\n- Be deployed to all macOS devices in the Sales group\n\nQuestion:\nHow should you deploy this script?",
+    "choices": [
+      "Devices > macOS > Shell scripts > Add script > Set 'Run script as signed-in user' to No, 'Max number of times to retry' to 0, assign to Sales group",
+      "Create a macOS device configuration profile with a custom payload containing the firewall commands",
+      "Package the script as a .pkg file and deploy it as a macOS LOB app",
+      "Use a macOS compliance policy custom script to enforce the firewall settings"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Intune supports deploying shell scripts to macOS devices via Devices > macOS > Shell scripts. Setting 'Run script as signed-in user' to No runs the script as root. Shell scripts run once by default (unless configured to run repeatedly). Assign the script to the Sales group for targeted deployment.",
+      "Incorrect. Custom configuration profiles use .mobileconfig payloads, not shell scripts. While you could create a firewall profile this way, the scenario specifically requires deploying a shell script.",
+      "Incorrect. Packaging a simple shell script as a .pkg is unnecessarily complex. Intune natively supports shell script deployment for macOS without requiring package conversion.",
+      "Incorrect. macOS compliance policies in Intune do not support custom scripts for enforcement. Compliance scripts evaluate compliance status; they don't configure settings."
+    ],
+    "tip": "macOS management in Intune: Shell scripts (Devices > macOS > Shell scripts) for one-time or recurring script execution. Configuration profiles for declarative settings. Shell scripts run as root by default when 'signed-in user' is set to No."
+  },
+  {
+    "id": "MS102-R2-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nAdventure Works Cycles uses Microsoft 365 E5. The security team wants to configure automatic attack disruption to automatically contain compromised user accounts during an active ransomware attack. When Defender XDR detects a human-operated ransomware attack pattern, it should automatically disable the compromised account.\n\nQuestion:\nWhat must be configured for automatic attack disruption to work?",
+    "choices": [
+      "Create a custom detection rule in Advanced Hunting with automated response actions",
+      "Automatic attack disruption is built into Microsoft Defender XDR and works automatically when Defender for Endpoint, Defender for Identity, and Defender for Office 365 are deployed — no additional configuration is required",
+      "Enable automated investigation and remediation (AIR) in Defender for Endpoint and set automation level to Full",
+      "Configure a Microsoft Sentinel playbook that triggers account disablement on ransomware detection"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Custom detection rules require manual KQL queries and are for known patterns. Automatic attack disruption uses built-in AI-driven detection across the entire Defender XDR stack for complex attack scenarios like ransomware.",
+      "Correct. Automatic attack disruption is a built-in capability of Microsoft Defender XDR that requires no additional configuration beyond having the Defender products deployed. It uses AI to correlate signals across Defender for Endpoint, Identity, and Office 365 to detect high-confidence attacks and automatically contain compromised accounts and devices.",
+      "Incorrect. AIR in Defender for Endpoint handles individual alert investigation and remediation. Automatic attack disruption operates at the incident level across all Defender products and is a separate, higher-level capability.",
+      "Incorrect. Microsoft Sentinel playbooks can automate responses, but automatic attack disruption is a native Defender XDR feature that works without Sentinel."
+    ],
+    "tip": "Automatic attack disruption = built-in Defender XDR AI feature. No configuration needed. Detects ransomware, BEC, and other advanced attacks. Automatically contains compromised assets (disable accounts, isolate devices)."
+  },
+  {
+    "id": "MS102-R2-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nContoso has 2,000 Windows 11 devices managed by Intune. You deploy a device configuration profile that configures Windows Firewall rules. After deployment, you notice that 300 devices show a status of 'Error' for the profile.\n\nYou need to troubleshoot the errors.\n\nQuestion:\nWhere should you look for detailed error information?",
+    "choices": [
+      "Devices > Configuration profiles > select the profile > Device status > select an errored device > Per-setting status to see which specific setting failed",
+      "Reports > Endpoint analytics > Proactive remediations",
+      "Tenant administration > Troubleshooting + support > Troubleshoot to search for a specific user's device issues",
+      "Both A and C provide useful troubleshooting information, but the per-setting status on the profile gives the most specific error details"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. The per-setting status shows exactly which firewall rule setting failed and the error code, but the Troubleshoot blade also provides useful aggregated information.",
+      "Incorrect. Proactive remediations run custom detection and remediation scripts. They do not provide troubleshooting information for configuration profile deployment errors.",
+      "Partially correct. The Troubleshoot blade provides an overview of profile deployment status for a specific user/device, but it may not show the per-setting error detail.",
+      "Correct. Both approaches are useful: The profile's per-setting status (A) shows exactly which setting caused the error and the specific error code. The Troubleshoot blade (C) provides a user/device-centric view of all assigned profiles and their status. For the most detailed error information about which specific firewall rule failed, the per-setting status (A) is most valuable."
+    ],
+    "tip": "Profile troubleshooting flow: Profile > Device status (which devices failed) > Per-setting status (which setting failed + error code). Also useful: Troubleshooting blade for user/device-centric view."
+  },
+  {
+    "id": "MS102-R2-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 for Trey Research. The company needs to ensure that external users (guests) invited to collaborate on SharePoint sites cannot download or print documents containing the sensitivity label 'Internal Only'. Guests should be able to view documents in the browser.\n\nQuestion:\nHow should you implement this?",
+    "choices": [
+      "Configure the 'Internal Only' sensitivity label to apply content marking only (headers/footers) and rely on SharePoint permissions",
+      "Create a conditional access session policy with Defender for Cloud Apps app control that blocks download/print for guest users accessing files labeled 'Internal Only'",
+      "Configure the 'Internal Only' sensitivity label encryption to grant guests View Only permissions (View, Open, Read) but not Copy, Print, or Download",
+      "Configure the SharePoint site sharing settings to block downloads for external users at the site level"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Content marking (headers/footers) is visual only and does not enforce access restrictions. Guests could still download and print documents.",
+      "Incorrect. While conditional access app control with Defender for Cloud Apps can control downloads, it applies session-level controls based on user type and conditions—it cannot directly filter by sensitivity label in session policies.",
+      "Correct. Configure the 'Internal Only' sensitivity label with encryption that grants guest/external users only View permissions (View Content, Open, Read). This prevents download of the original file, printing, and copying while allowing browser-based viewing. The encryption travels with the document regardless of where it's accessed.",
+      "Incorrect. SharePoint site-level download blocking applies to ALL users or ALL external users at the site level. It cannot be targeted based on sensitivity labels. Documents without the 'Internal Only' label should still be downloadable by guests."
+    ],
+    "tip": "Sensitivity label encryption permissions control what users can DO with a document (view, edit, copy, print, download). For view-only external access: grant only View/Open/Read permissions to external users in the label encryption settings."
+  },
+  {
+    "id": "MS102-R2-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 1,000 Windows 11 devices with Intune for Datum Corporation. The company wants to deploy Google Chrome as a managed browser and configure the following settings:\n- Homepage: https://portal.datum.com\n- Block incognito mode\n- Disable password manager\n- Force SafeSearch on Google\n\nQuestion:\nWhat is the most efficient way to deploy Chrome and manage these settings?",
+    "choices": [
+      "Deploy Chrome as a Win32 app, then create a device configuration profile using the Settings Catalog with Chrome ADMX-backed policies",
+      "Deploy Chrome as a Win32 app, then use a Chrome Enterprise ADMX template imported into Intune Administrative Templates",
+      "Deploy Chrome as a Windows app (Microsoft Store) and configure settings via Chrome's cloud management console",
+      "Deploy Chrome MSI via PowerShell script and configure settings via registry keys in a separate script"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Deploy Chrome as a Win32 app (.intunewin) for reliable installation with detection rules. Then use the Settings Catalog, which includes Chrome ADMX-backed policies natively (Google Chrome category). You can configure homepage, incognito mode, password manager, and SafeSearch directly without importing custom ADMX files.",
+      "Incorrect. While importing Chrome ADMX templates works, the Settings Catalog already includes Chrome policies natively. Importing custom ADMX is unnecessary additional work.",
+      "Incorrect. Chrome from the Microsoft Store has limitations and may not support all enterprise management features. Additionally, Chrome's cloud management console is a separate Google service, not integrated with Intune.",
+      "Incorrect. Using PowerShell scripts for both deployment and configuration is harder to manage, doesn't provide Intune reporting, and requires manual registry key management instead of using built-in policy settings."
+    ],
+    "tip": "Chrome management in Intune: Deploy as Win32 app + Settings Catalog (has built-in Chrome ADMX policies). No need to import ADMX files manually. Settings Catalog covers 200+ Chrome policies natively."
+  },
+  {
+    "id": "MS102-R2-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft Intune to manage 3,000 Windows devices. The company needs to implement a phased rollout of Windows 11 24H2 feature update:\n- Phase 1: IT department (100 devices) — immediate availability\n- Phase 2: Early adopters (400 devices) — available 14 days after Phase 1\n- Phase 3: All remaining devices (2,500 devices) — available 30 days after Phase 1\n\nIf critical issues are found during any phase, the rollout must be pausable.\n\nQuestion:\nWhich Intune feature should you use?",
+    "choices": [
+      "Update rings for Windows 10 and later with different deferral periods for each group",
+      "Feature updates for Windows 10 and later with gradual rollout settings for each phase group",
+      "Windows Autopatch with deployment rings",
+      "Quality updates for Windows 10 and later with expedited deployment"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Update rings control deferral periods for all updates (quality + feature), but they defer from the Microsoft release date, not from each other. You cannot configure 'Phase 2 starts 14 days after Phase 1' with update rings alone.",
+      "Correct. Feature update policies in Intune allow you to target a specific Windows version (24H2) to device groups with gradual rollout options. You can configure different start dates or phases and pause the rollout if issues arise. Create three policies targeting each group with staggered availability dates.",
+      "Incorrect. Windows Autopatch is a separate service that automates Windows update management. It requires additional setup and uses its own deployment ring system. While it could work, the question asks about Intune-native features.",
+      "Incorrect. Quality updates handle monthly cumulative updates, not feature updates. Expedited quality updates bypass deferral for critical security patches, which is unrelated to feature update phased rollout."
+    ],
+    "tip": "Feature update rollout control: Feature updates policy (specific version targeting + pause/resume + phased rollout). Update rings (ongoing deferral from release date). Different tools for different scenarios."
+  },
+  {
+    "id": "MS102-R2-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Microsoft Defender for Endpoint for Northwind Traders. The security team wants endpoint detection and response (EDR) telemetry from all Windows devices. Some devices are running Windows 10 Pro (not Enterprise/Education) and do not have the full Defender for Endpoint Plan 2 license.\n\nQuestion:\nWhich Defender for Endpoint capability is available on Windows 10/11 Pro devices with a Microsoft 365 Business Premium license?",
+    "choices": [
+      "Full EDR with advanced hunting, automated investigation, and threat analytics",
+      "Defender for Endpoint Plan 1 capabilities: next-generation protection, attack surface reduction, and device control, but NOT EDR",
+      "Defender for Endpoint Plan 2 is included in Business Premium and fully supports Windows Pro",
+      "EDR in block mode only, which provides post-breach protection but no full EDR telemetry"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Full EDR with advanced hunting and automated investigation requires Defender for Endpoint Plan 2, which is included in Microsoft 365 E5 or as a standalone add-on. It is not included in Business Premium.",
+      "Correct. Microsoft 365 Business Premium includes Defender for Endpoint Plan 1, which provides next-generation antivirus protection, attack surface reduction rules, device control, and web content filtering. However, it does NOT include EDR (endpoint detection and response), advanced hunting, or automated investigation capabilities.",
+      "Incorrect. Business Premium includes Plan 1, not Plan 2. Full Plan 2 capabilities require E5 or a Plan 2 add-on license.",
+      "Incorrect. EDR in block mode is a feature of Plan 2 that runs on devices using third-party antivirus. It is not the same as Plan 1 capabilities."
+    ],
+    "tip": "Defender for Endpoint licensing: Plan 1 (Business Premium, M365 E3 add-on) = prevention only (AV, ASR, device control). Plan 2 (M365 E5, standalone) = prevention + EDR + hunting + AIR + threat analytics."
+  }
+]
