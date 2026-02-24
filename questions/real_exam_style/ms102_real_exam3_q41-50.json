@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R3-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company has 1,000 Windows devices and wants to configure Windows Update for Business. The IT team needs to understand the difference between update rings and feature update policies.\n\nQuestion:\nWhich statement correctly describes the relationship between update rings and feature update policies?",
+    "choices": [
+      "Update rings and feature update policies are the same thing with different names",
+      "Update rings control when updates are installed (deferrals, maintenance windows, restart behavior). Feature update policies control which specific Windows version devices update to.",
+      "Feature update policies replace update rings and should be used exclusively",
+      "Update rings control feature updates. Feature update policies control quality updates."
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. They are different features with different purposes, though they work together.",
+      "Correct. Update rings define the timing and behavior of updates: deferral periods (how many days after release before installing), maintenance windows, automatic restart behavior, and pause capabilities. Feature update policies specify a target Windows version (e.g., Windows 11 24H2) that devices should upgrade to, regardless of the update ring timing.",
+      "Incorrect. Feature update policies complement update rings; they don't replace them. Update rings are still needed to control quality update behavior, restart settings, and other update management aspects.",
+      "Incorrect. This is backwards. Update rings control the timing of both quality and feature updates (via deferral periods). Feature update policies specifically target which Windows version to deploy."
+    ],
+    "tip": "Update rings = WHEN (deferral, schedule, restart behavior). Feature update policies = WHICH VERSION (target Windows 11 23H2/24H2). Quality update policies = EXPEDITE specific patches. Use all three together."
+  },
+  {
+    "id": "MS102-R3-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Litware Inc. The security team wants to implement network-based conditional access. They need to:\n- Define the corporate network IP ranges as trusted locations\n- Block sign-ins from specific countries known for attacks\n- Require MFA for all sign-ins from untrusted networks\n\nQuestion:\nWhere do you define named locations for use in conditional access policies?",
+    "choices": [
+      "Microsoft Defender portal > Settings > Named locations",
+      "Microsoft Entra admin center > Protection > Conditional access > Named locations",
+      "Microsoft Intune admin center > Tenant administration > Named locations",
+      "Microsoft Purview compliance portal > Data classification > Named locations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Defender portal handles security operations (alerts, incidents, hunting) but not conditional access configuration.",
+      "Correct. Named locations are configured in the Microsoft Entra admin center under Protection > Conditional access > Named locations. Here you define: IP-based locations (trusted corporate IP ranges) and Countries/regions. These named locations can then be referenced in conditional access policy conditions to require MFA, block access, or apply other controls based on the user's network location.",
+      "Incorrect. The Intune admin center manages device and app management. Named locations for conditional access are an Azure AD/Entra feature, not an Intune feature.",
+      "Incorrect. The Purview compliance portal handles data protection and compliance. Named locations are an identity/conditional access concept managed in Entra."
+    ],
+    "tip": "Named locations: Entra admin center > Conditional access > Named locations. Types: IP-based (corporate IPs, mark as trusted) and Countries/regions (block or require MFA for specific countries). Used in CA policy 'Conditions > Locations'."
+  },
+  {
+    "id": "MS102-R3-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Trey Research. The company wants to block users from installing apps from the Microsoft Store on managed Windows 11 devices. However, the IT team needs to continue deploying Store apps (like the Company Portal and Windows Terminal) through Intune.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Block the Microsoft Store app entirely using a device restriction profile",
+      "Configure the device restriction setting 'Private Store Only' in the Microsoft Store settings — users see only IT-approved apps, not the public store",
+      "Use AppLocker to block the Store executable for standard users",
+      "Remove the Microsoft Store app using a PowerShell script deployed via Intune"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Blocking the Microsoft Store app entirely would also prevent Intune from deploying Store-based apps. Intune uses the Store framework to deliver Microsoft Store apps.",
+      "Correct. The 'Require Private Store Only' (or 'Only display the private store within the Microsoft Store' ) setting allows users to access only apps that IT has published to the organization's private store. The public store is hidden. Intune can still deploy Store apps because it uses the Store backend, and IT-published apps remain accessible.",
+      "Incorrect. AppLocker could block the Store executable, but this would also prevent Intune's Store app deployments and might cause issues with system components that depend on the Store framework.",
+      "Incorrect. Removing the Store app can cause issues with system updates, framework dependencies, and Intune app deployments that rely on the Store infrastructure."
+    ],
+    "tip": "Microsoft Store control: 'Private Store Only' = users see only IT-approved apps. Store framework still works for Intune deployments. Don't block or remove the Store entirely—use private store mode."
+  },
+  {
+    "id": "MS102-R3-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. A user's Windows laptop is enrolled in Intune. The user leaves the company, and the IT team retires (remote wipe corporate data) the device from Intune. However, the user had personal photos and documents on the laptop.\n\nQuestion:\nWhat happens to the personal data on the device after the Retire action?",
+    "choices": [
+      "All data on the device is wiped, including personal data, because Retire performs a factory reset",
+      "Personal data remains intact. Retire removes only corporate data: managed apps, Intune configuration profiles, company email accounts, certificates, and VPN/Wi-Fi profiles deployed by Intune.",
+      "Personal data is encrypted and made inaccessible until a new enrollment occurs",
+      "Personal data is uploaded to the company's Azure storage before being removed from the device"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Retire does NOT perform a factory reset. That's the Wipe action. Retire selectively removes only corporate-managed data and configurations.",
+      "Correct. The Retire action selectively removes corporate data: Intune management profile, managed apps and their data, corporate email profiles, Wi-Fi and VPN profiles deployed by Intune, certificates deployed by Intune. Personal data (photos, personal apps, personal documents) is not affected.",
+      "Incorrect. Retire does not encrypt personal data. It simply removes corporate management and data.",
+      "Incorrect. There is no data upload process during Retire. Corporate data is removed from the device, and personal data is untouched."
+    ],
+    "tip": "Retire = selective wipe (corporate data only). Wipe = factory reset (everything). Delete = remove device record from Intune (no device action). Use Retire for departing employees who own the device."
+  },
+  {
+    "id": "MS102-R3-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The compliance team needs to ensure that when users delete emails from their mailbox, the deleted items are retained in a hidden folder for at least 14 days. Currently, users report that items deleted from the Deleted Items folder are gone immediately.\n\nQuestion:\nWhat setting needs to be configured?",
+    "choices": [
+      "Enable litigation hold on all mailboxes",
+      "Configure the deleted item retention period for mailboxes using Set-Mailbox -RetainDeletedItemsFor 14.00:00:00",
+      "Create a Microsoft Purview retention policy for Exchange with 14-day retention",
+      "Enable single item recovery on all mailboxes"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Litigation hold preserves everything indefinitely, which is more than needed. The requirement is specifically for 14-day retention of deleted items.",
+      "Incorrect. RetainDeletedItemsFor controls how long items stay in the Recoverable Items folder after being purged from Deleted Items. However, if single item recovery is not enabled, some deletion methods can bypass the Recoverable Items folder.",
+      "Incorrect. A Purview retention policy provides broader retention across the mailbox, but the specific requirement is about the standard deleted item recovery behavior, which is controlled by single item recovery and the retention period.",
+      "Correct. Single item recovery must be enabled on mailboxes. When enabled, items that users delete (even from Deleted Items or using Shift+Delete) are moved to the Recoverable Items > Deletions folder and retained for the configured deleted item retention period (default 14 days). Without single item recovery, permanently deleted items may not be recoverable. Enable via: Set-Mailbox -SingleItemRecoveryEnabled $true."
+    ],
+    "tip": "Deleted item recovery chain: User deletes → Deleted Items → user empties → Recoverable Items (if single item recovery enabled) → retained for 14 days (default). Single item recovery = the safety net for purged items."
+  },
+  {
+    "id": "MS102-R3-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company has 1,500 Windows devices. You need to create a dynamic Azure AD device group that contains only Windows Autopilot devices from a specific hardware vendor (Dell). The devices have the group tag 'Dell-Engineering' set during Autopilot registration.\n\nQuestion:\nWhich dynamic membership rule should you use?",
+    "choices": [
+      "(device.devicePhysicalIDs -any _ -startsWith \"[OrderID]:Dell-Engineering\")",
+      "(device.manufacturer -eq \"Dell Inc.\")",
+      "(device.deviceModel -startsWith \"Dell\")",
+      "(device.enrollmentProfileName -eq \"Dell-Engineering\")"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Autopilot group tag is stored in the device's physicalIds attribute with the prefix [OrderID]:. The dynamic membership rule (device.devicePhysicalIDs -any _ -startsWith \"[OrderID]:Dell-Engineering\") matches devices with the specific group tag 'Dell-Engineering'. This is the standard method for creating dynamic groups based on Autopilot group tags.",
+      "Incorrect. While device.manufacturer could filter Dell devices, it would include ALL Dell devices, not just those with the specific 'Dell-Engineering' group tag. There could be Dell devices from other departments.",
+      "Incorrect. device.deviceModel matches the model name (Latitude 5530, XPS 13, etc.), not the manufacturer. Also, this would not filter by the group tag.",
+      "Incorrect. enrollmentProfileName matches the Autopilot deployment profile name, not the group tag. A single deployment profile might be assigned to devices from multiple vendors."
+    ],
+    "tip": "Autopilot group tag → dynamic group: device.devicePhysicalIDs -any _ -startsWith \"[OrderID]:YourGroupTag\". The OrderID prefix is required. This is the primary mechanism for grouping Autopilot devices."
+  },
+  {
+    "id": "MS102-R3-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Woodgrove Bank. The compliance team has created multiple retention policies and retention labels with overlapping scopes. A document in SharePoint is subject to:\n- Policy A: Retain for 5 years, then delete\n- Policy B: Retain for 7 years, then do nothing\n- Label: Retain for 3 years, then delete\n\nQuestion:\nWhat happens to the document?",
+    "choices": [
+      "The shortest retention period wins — document is deleted after 3 years",
+      "The label takes precedence over policies — document is retained for 3 years then deleted",
+      "Retention wins over deletion. The document is retained for 7 years (longest retention). After 7 years, the document is not automatically deleted because Policy B says 'do nothing'.",
+      "The policies conflict and an error is generated — an admin must resolve manually"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Microsoft 365 retention uses the principle of 'retention wins over deletion' and 'longest retention period wins'. The shortest period does not take precedence.",
+      "Incorrect. While labels generally take precedence over policies for the same content, the overarching principle is that retention wins over deletion. The 7-year retention from Policy B still keeps the content longer than the label.",
+      "Correct. The principles of retention apply in order: (1) Retention wins over deletion — content is kept for the longest retention period. (2) Longest retention period wins — 7 years from Policy B is the longest. (3) After 7 years, since Policy B says 'do nothing', the deletion from Policy A (which would have triggered at 5 years) was deferred. After 7 years, the document may be deleted based on remaining applicable policies.",
+      "Incorrect. Overlapping retention policies do not generate errors. Microsoft 365 has well-defined precedence rules that automatically determine the outcome."
+    ],
+    "tip": "Retention conflict resolution: (1) Retention wins over deletion. (2) Longest retention wins. (3) Explicit deletion wins over implicit (do nothing). (4) Shortest deletion wins (after retention is satisfied). Think: keep longer, delete shorter."
+  },
+  {
+    "id": "MS102-R3-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. Users with personal Android devices (work profile enrollment) report they cannot share files from the corporate OneDrive app to their personal WhatsApp. This is by design (app protection policy blocks it). However, users need to share non-sensitive files with external partners via WhatsApp for business communication.\n\nQuestion:\nWhat is the best approach to allow controlled sharing while maintaining data protection?",
+    "choices": [
+      "Disable the app protection policy restriction for data transfer entirely",
+      "Set 'Send org data to other apps' to 'Policy managed apps with OS sharing', which allows using the OS share sheet to WhatsApp while maintaining data transfer logging",
+      "Add WhatsApp to the exempt apps list in the app protection policy, allowing data transfer specifically to WhatsApp",
+      "Instruct users to manually copy text rather than using the share function"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Disabling data transfer restrictions removes all protection, allowing data to flow to any unmanaged app. This is too permissive and violates the data protection requirement.",
+      "Incorrect. 'Policy managed apps with OS sharing' allows data transfer through the OS share sheet, but it allows sharing to ANY app through the OS share mechanism, not just WhatsApp. This is broader than needed.",
+      "Correct. App protection policies allow you to configure exempt apps — specific apps that are excluded from the 'Send org data to other apps' restriction. By adding WhatsApp's package ID to the exempt apps list, users can share data from OneDrive to WhatsApp while still blocking transfers to all other unmanaged apps. This provides the specific exception needed.",
+      "Incorrect. Manual copy may be blocked by the 'Restrict cut, copy, and paste' setting in the APP. Also, this is a poor user experience and doesn't provide any logging or control."
+    ],
+    "tip": "APP exempt apps: Whitelist specific unmanaged apps by bundle/package ID. Data can flow to exempt apps even when 'Policy managed apps' is set. Use for specific business-justified exceptions."
+  },
+  {
+    "id": "MS102-R3-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailspin Toys. The company buys 100 new laptops that are NOT pre-registered with Windows Autopilot. The IT team needs to register these devices for Autopilot without unboxing each one individually. The hardware vendor provided a CSV file with serial numbers but NOT hardware hashes.\n\nQuestion:\nWhat should you do?",
+    "choices": [
+      "Manually power on each device, run Get-WindowsAutoPilotInfo to capture the hardware hash, and upload to Intune",
+      "Ask the hardware vendor to provide the hardware hashes — serial numbers alone are NOT sufficient for Autopilot registration",
+      "Upload the CSV with serial numbers to Intune — serial numbers are sufficient for Windows Autopilot registration",
+      "Use Microsoft Configuration Manager to capture hardware hashes from the network"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While this works, the scenario asks for a method without unboxing each device individually. Running Get-WindowsAutoPilotInfo requires powering on each device, which defeats the purpose.",
+      "Correct. Windows Autopilot requires hardware hashes (a 4KB hardware identifier) for device registration. Serial numbers alone are NOT sufficient. The hardware hash includes information about the device's hardware configuration that uniquely identifies it. Contact the vendor to provide hardware hashes (most major vendors like Dell, HP, Lenovo can do this). Alternatively, if the vendor purchased through Microsoft, devices can be registered directly by the OEM.",
+      "Incorrect. Serial numbers are not sufficient for Windows Autopilot registration on standard Windows devices. The Autopilot service requires the hardware hash.",
+      "Incorrect. Configuration Manager can help capture hardware hashes from devices that are already deployed and running, but it cannot capture hashes from devices that haven't been set up yet."
+    ],
+    "tip": "Autopilot registration requires hardware hash, NOT just serial number. Get hardware hashes from: (1) OEM/vendor (Dell, HP, Lenovo can upload directly). (2) Get-WindowsAutoPilotInfo script on running devices. (3) ConfigMgr for already-deployed devices."
+  },
+  {
+    "id": "MS102-R3-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. A new regulation requires the company to demonstrate that privileged admin actions are performed only by authorized personnel and are logged for audit purposes. The auditors specifically want to see:\n- Who activated admin roles and when\n- What justification was provided for role activation\n- What actions were performed during the activation period\n\nQuestion:\nWhich two features together provide this audit trail?",
+    "choices": [
+      "Azure AD Privileged Identity Management (PIM) audit logs + Microsoft Entra sign-in logs",
+      "Azure AD Privileged Identity Management (PIM) audit logs + Microsoft Entra audit logs",
+      "Microsoft Purview audit (Premium) + Compliance Manager",
+      "Microsoft Defender portal Secure Score + Activity logs"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Sign-in logs show authentication events (when users signed in, from where, MFA status), but they don't track what actions were performed during the admin session. Entra audit logs provide the action-level detail.",
+      "Correct. (1) PIM audit logs show role activation events: who activated which role, when, what justification was provided, and approval details. (2) Entra audit logs record all administrative actions performed by users while their admin role was active (conditional access changes, user creation, group modifications, etc.). Together, they provide the complete audit trail: who activated → why → what they did.",
+      "Incorrect. Purview audit tracks user activities in M365 workloads (mail access, file operations) but doesn't capture PIM role activation details or justifications. Compliance Manager assesses regulatory posture, not audit trails.",
+      "Incorrect. Secure Score measures security configuration posture. It doesn't provide audit trails of admin actions or role activations."
+    ],
+    "tip": "Privileged access audit trail: PIM audit logs (role activation: who, when, why, approved by) + Entra audit logs (actions performed: what configuration changes during active session). Both together = complete accountability chain."
+  }
+]

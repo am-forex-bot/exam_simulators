@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R3-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company has 400 Windows devices in a branch office with limited internet bandwidth (10 Mbps shared). You need to deploy a 2 GB Win32 application to all 400 devices without saturating the WAN link.\n\nQuestion:\nWhich Intune feature helps minimize bandwidth consumption during deployment?",
+    "choices": [
+      "Configure Delivery Optimization to use peer-to-peer (P2P) content sharing so devices download from nearby peers instead of each device downloading from the internet",
+      "Schedule the deployment during off-hours using the app's delivery schedule setting",
+      "Reduce the app package size by compressing it before creating the .intunewin file",
+      "Deploy the app in small batches of 50 devices at a time"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Delivery Optimization (DO) enables peer-to-peer content sharing within the local network. When the first device downloads the app from the Intune CDN, subsequent devices on the same subnet can download from that peer instead of the internet. Configure DO group mode to 'LAN' or use boundary group-based optimization. This dramatically reduces WAN traffic for large deployments.",
+      "Incorrect. Win32 apps in Intune do not have a built-in delivery schedule setting. Apps are downloaded when the device checks in and the assignment is detected.",
+      "Incorrect. The Intune Content Prep Tool already compresses the content when creating the .intunewin file. Additional pre-compression would not significantly help.",
+      "Incorrect. Deploying in batches of 50 at a time is manual, time-consuming, and doesn't actually reduce total bandwidth—it just spreads it over time. Delivery Optimization achieves bandwidth savings automatically."
+    ],
+    "tip": "Delivery Optimization for Intune: Win32 apps support DO peer-to-peer caching. First device downloads from CDN, peers get from LAN. Configure via device configuration profile or Settings Catalog. Works for Win32 apps, Windows updates, and Microsoft Store apps."
+  },
+  {
+    "id": "MS102-R3-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Tailspin Toys. The company wants to implement privileged access management (PAM) to require just-in-time approval for tasks like creating mail flow rules, modifying Exchange Online settings, and changing SharePoint admin configurations.\n\nQuestion:\nWhich Microsoft feature should you implement?",
+    "choices": [
+      "Azure AD Privileged Identity Management (PIM) for role activation",
+      "Microsoft Purview Privileged Access Management for task-level approval of Exchange and SharePoint operations",
+      "Conditional access policy requiring approval for admin portal access",
+      "Microsoft Defender for Identity to monitor privileged account activity"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. PIM provides just-in-time role activation (elevate to admin for a time period), but it works at the role level, not the task level. Once activated, the admin can perform any task within that role without per-task approval.",
+      "Correct. Microsoft Purview Privileged Access Management provides task-level, just-in-time approval for specific high-privilege operations in Exchange Online and SharePoint. Admins must request and receive approval before performing specific tasks (like creating mail flow rules or modifying tenant settings), even if they already have the admin role.",
+      "Incorrect. Conditional access controls authentication requirements (MFA, device compliance) for portal access, not individual administrative task approval.",
+      "Incorrect. Defender for Identity monitors and detects suspicious activity by privileged accounts (lateral movement, credential theft), but it does not provide approval workflows for administrative tasks."
+    ],
+    "tip": "PIM = role-level just-in-time activation (elevate to admin). Purview PAM = task-level just-in-time approval (approve specific operations). Use both together for defense in depth: PIM for role activation + PAM for critical task approval."
+  },
+  {
+    "id": "MS102-R3-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Adventure Works. The company uses Microsoft Edge on managed iOS and Android devices. The security team wants to:\n- Allow users to access approved internal websites\n- Block access to social media sites (Facebook, Instagram, Twitter) during work hours\n- Allow social media during non-work hours (6 PM to 8 AM)\n\nQuestion:\nWhich feature should you configure?",
+    "choices": [
+      "Microsoft Edge app configuration policy with a managed bookmarks list for internal sites",
+      "Defender for Cloud Apps session policy with time-based conditions",
+      "Microsoft Defender for Endpoint web content filtering with URL category blocking",
+      "Intune device restriction profile blocking specific URLs"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Managed bookmarks provide shortcuts to internal sites but do not block access to social media sites. They are for convenience, not access control.",
+      "Incorrect. Defender for Cloud Apps session policies control access to cloud applications through a reverse proxy. They can enforce conditions on sanctioned apps, but time-based URL category blocking for browser-level web access is handled by web content filtering.",
+      "Correct. Microsoft Defender for Endpoint web content filtering allows you to block URL categories (Social Networking, Streaming Media, etc.) and can be combined with time-based schedules. This provides network-level protection that works across browsers on managed devices. Category blocking can be scheduled to apply only during work hours.",
+      "Incorrect. Intune device restriction profiles for iOS/Android do not include URL-based web filtering capabilities. Web content filtering is a Defender for Endpoint feature."
+    ],
+    "tip": "Web content filtering: Defender for Endpoint feature. Block URL categories (social media, adult, gambling, etc.) at the network level. Works on managed devices with Defender. Supports scheduling for time-based policies."
+  },
+  {
+    "id": "MS102-R3-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Datum Corporation. The company has both Azure AD joined and hybrid Azure AD joined Windows devices. The IT team creates an Intune device configuration profile and assigns it to a group containing both types of devices.\n\nThe profile works on Azure AD joined devices but fails on hybrid Azure AD joined devices.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "Hybrid Azure AD joined devices do not support Intune device configuration profiles",
+      "The hybrid Azure AD joined devices are co-managed with Configuration Manager, and the Device Configuration workload is set to Configuration Manager, not Intune",
+      "Hybrid Azure AD joined devices require a separate enrollment in Intune before profiles can be applied",
+      "The Group Policy on hybrid devices is conflicting with the Intune profile and overriding it"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Hybrid Azure AD joined devices fully support Intune device configuration profiles when Intune is the authority for the Device Configuration workload.",
+      "Correct. When co-management is enabled, workload authority determines which management plane (ConfigMgr or Intune) controls each workload. If the Device Configuration workload slider is set to Configuration Manager, Intune profiles are not applied to co-managed devices. Moving the slider to 'Pilot Intune' or 'Intune' allows Intune profiles to take effect.",
+      "Incorrect. Hybrid Azure AD joined devices enrolled in Intune (whether through co-management or directly) can receive profiles. The issue is not enrollment but workload authority.",
+      "Incorrect. While GPO conflicts can override some Intune settings, the profile would show as 'Conflict' rather than failing entirely. The most likely cause of complete failure is the co-management workload setting."
+    ],
+    "tip": "Co-management workload checklist when Intune profiles don't work: Check which management plane has authority. Device Configuration workload → ConfigMgr = Intune profiles ignored. Move slider to Intune to fix."
+  },
+  {
+    "id": "MS102-R3-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. A department head accidentally deletes a sensitivity label named 'Project Phoenix - Confidential' that was applied to 500 documents in SharePoint. The label had encryption that restricted access to the Project Phoenix team.\n\nQuestion:\nWhat happens to the 500 documents that had this label applied?",
+    "choices": [
+      "The documents lose their encryption and become accessible to anyone with SharePoint access",
+      "The documents retain their encryption and access restrictions. Users with prior access can still open them, but the label name no longer appears in the UI. The label can be restored within 30 days.",
+      "The documents are automatically deleted when the label is removed",
+      "The documents become permanently inaccessible because the encryption key is tied to the deleted label"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Deleting a sensitivity label does not remove encryption from documents that already have it applied. The Azure RMS encryption is independent of the label's existence in the admin center.",
+      "Correct. Documents that were encrypted by the deleted label retain their encryption. The Azure RMS protection persists because the encryption template still exists in Azure RMS even after the label is deleted from Purview. Users who had access can still open the documents. The label name disappears from the UI. Deleted labels can be restored from the Purview compliance portal within approximately 30 days.",
+      "Incorrect. Deleting a label does not trigger document deletion. Labels and document lifecycle are independent.",
+      "Incorrect. The encryption key is stored in Azure RMS, not in the label itself. The label references the encryption template, but deleting the label does not delete the encryption template."
+    ],
+    "tip": "Sensitivity label deletion: Label removed from UI, but Azure RMS encryption persists on already-protected documents. Users keep access. Label can be recovered within ~30 days. Never delete labels that protect active content."
+  },
+  {
+    "id": "MS102-R3-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company wants to implement a Zero Trust network access model. The IT team needs to replace the traditional VPN with a solution that:\n- Provides per-app access to internal resources\n- Verifies device compliance before granting access\n- Works without a full tunnel VPN connection\n- Integrates with Azure AD conditional access\n\nQuestion:\nWhich Microsoft solution meets these requirements?",
+    "choices": [
+      "Azure VPN Gateway with split tunneling",
+      "Microsoft Entra Private Access (part of Global Secure Access)",
+      "Windows Always-On VPN with device tunnel",
+      "Azure Application Proxy for web applications only"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Azure VPN Gateway provides a traditional VPN connection (either full tunnel or split tunnel). It does not provide per-app access control or conditional access integration at the application level.",
+      "Correct. Microsoft Entra Private Access (formerly Entra Global Secure Access Private Access) provides Zero Trust Network Access (ZTNA). It replaces traditional VPN with per-app access, conditional access integration, device compliance verification, and identity-aware access without requiring a full tunnel VPN. Users access specific internal resources rather than connecting to the entire corporate network.",
+      "Incorrect. Always-On VPN with device tunnel maintains a persistent VPN connection. While it can be combined with conditional access, it still provides network-level access rather than per-app access and requires a VPN infrastructure.",
+      "Incorrect. Azure Application Proxy provides remote access to web applications only. It does not support non-web protocols (RDP, SMB, SSH) and doesn't cover the full per-app access requirement."
+    ],
+    "tip": "VPN replacement evolution: Traditional VPN → Split tunnel VPN → Azure App Proxy (web only) → Entra Private Access (ZTNA: all protocols, per-app, conditional access, no VPN). Entra Private Access is Microsoft's ZTNA solution."
+  },
+  {
+    "id": "MS102-R3-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The security team discovers that a user account is compromised. The attacker has registered a new MFA method (a phone number) on the account and is using it to bypass password reset. The security team needs to remove the attacker's MFA registration while preserving the legitimate MFA methods.\n\nQuestion:\nWhat should you do?",
+    "choices": [
+      "Revoke all sessions and require MFA re-registration for all methods",
+      "In the Microsoft Entra admin center, navigate to the user's Authentication methods and delete the suspicious phone number registration specifically",
+      "Disable MFA for the account temporarily, then re-enable it",
+      "Delete and recreate the user account"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Requiring re-registration for ALL methods removes the user's legitimate MFA methods as well. This is more disruptive than necessary since only the attacker's phone number needs to be removed.",
+      "Correct. In Microsoft Entra admin center > Users > select user > Authentication methods, you can view all registered MFA methods (phones, authenticator app, FIDO2 keys). Delete only the suspicious phone number that the attacker registered while keeping the user's legitimate methods. Then revoke all sessions and reset the password.",
+      "Incorrect. Disabling MFA removes all protection and allows password-only sign-in. This makes the account MORE vulnerable during the compromise response.",
+      "Incorrect. Deleting and recreating the account is extremely disruptive—it loses all mailbox data, OneDrive files, Teams memberships, app assignments, and group memberships. This is unnecessary when you can simply remove the malicious MFA method."
+    ],
+    "tip": "Compromised account MFA remediation: Entra admin center > User > Authentication methods > delete suspicious registrations. Preserve legitimate methods. Then: revoke sessions + reset password + review sign-in logs."
+  },
+  {
+    "id": "MS102-R3-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company deploys Microsoft 365 Apps to 500 Windows devices using Intune. After deployment, users report that the Outlook desktop app is not connecting to Exchange Online. Other Office apps (Word, Excel, PowerPoint) work correctly. The Outlook app shows 'Need Password' and prompts for credentials repeatedly.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The Exchange Online license is not assigned to the affected users",
+      "Modern authentication is disabled for the Exchange Online tenant, and Outlook is failing to authenticate with basic authentication deprecated",
+      "The Outlook profile is corrupted and needs to be recreated",
+      "The Intune app configuration policy for Outlook has incorrect Exchange server settings"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. If the Exchange license were missing, users would receive a 'no mailbox' error, not a repeated password prompt. Other Office apps working correctly suggests the user is properly licensed.",
+      "Correct. If modern authentication (OAuth 2.0) is not enabled for Exchange Online, Outlook tries to use basic authentication. With basic auth being deprecated/disabled by Microsoft, the authentication loop occurs—Outlook repeatedly prompts for credentials that never work. The fix: ensure modern authentication is enabled in Exchange Online (Set-OrganizationConfig -OAuth2ClientProfileEnabled $true).",
+      "Incorrect. A corrupted Outlook profile would typically show a different error or fail to load. Repeated password prompts with 'Need Password' specifically indicate an authentication protocol issue.",
+      "Incorrect. Intune app configuration policies for the Outlook desktop app are not commonly used for Exchange connection settings. Outlook desktop auto-discovers the Exchange server via Autodiscover."
+    ],
+    "tip": "Outlook 'Need Password' loop: Usually means modern auth is disabled or blocked. Check: (1) Get-OrganizationConfig | FL OAuth2ClientProfileEnabled. (2) Conditional access blocking legacy auth. (3) Registry keys forcing legacy auth protocols."
+  },
+  {
+    "id": "MS102-R3-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company uses Windows Autopilot for device provisioning. A user reports that when they turn on their new laptop and connect to Wi-Fi, the Autopilot process does not start — they see the standard Windows OOBE instead.\n\nThe device was ordered from the hardware vendor with Autopilot registration requested.\n\nQuestion:\nWhat should you check first?",
+    "choices": [
+      "Verify the device appears in Devices > Windows > Windows enrollment > Devices in the Intune admin center with an Autopilot profile assigned",
+      "Check if the user has an Intune license assigned",
+      "Verify the Wi-Fi network has internet access and can reach login.microsoftonline.com",
+      "Ensure the device is running a supported version of Windows 11"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The first step is to verify the device's hardware hash was actually registered in the Autopilot service. Navigate to Devices > Windows > Windows enrollment > Devices and search for the device by serial number. If the device is not listed, the vendor did not successfully register it. If listed, verify an Autopilot deployment profile is assigned (directly or via group). Without registration + profile assignment, Autopilot doesn't activate.",
+      "Incorrect. While an Intune license is needed for full enrollment, the Autopilot OOBE experience (identification phase) doesn't require the user to have a license. The standard OOBE appearing suggests the device isn't recognized as an Autopilot device at all.",
+      "Incorrect. If there were no internet, the device would still show Autopilot-specific behavior (like the organization's sign-in page) if it's registered. Showing standard OOBE means the device isn't recognized as Autopilot.",
+      "Incorrect. Autopilot supports all modern Windows 10 and Windows 11 versions. A version issue would be very unlikely for a new device from a vendor."
+    ],
+    "tip": "Autopilot not starting? Check order: (1) Is device registered in Autopilot? (2) Is a profile assigned? (3) Does the profile have a group tag matching the device? (4) Has the profile synced? Most common issue: vendor didn't register the hardware hash."
+  },
+  {
+    "id": "MS102-R3-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The organization wants to implement adaptive access control using continuous access evaluation (CAE). With CAE, if a user's session token is revoked or a critical security event occurs (like network location change), access should be immediately terminated rather than waiting for the token to expire.\n\nQuestion:\nWhat must be true for CAE to work?",
+    "choices": [
+      "CAE must be manually enabled in the Azure AD admin center under Security > Continuous access evaluation",
+      "CAE is enabled by default for Exchange Online and SharePoint Online with supported clients — no configuration is needed beyond ensuring supported clients are in use",
+      "CAE requires Microsoft Sentinel to monitor sign-in events and trigger token revocation",
+      "CAE requires Defender for Identity to detect security events and propagate revocations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. CAE is enabled by default for supported workloads. While there is a CAE setting in conditional access (to disable or configure), the default state is enabled—no manual enablement is needed.",
+      "Correct. Continuous access evaluation (CAE) is enabled by default in Azure AD for Exchange Online and SharePoint Online. It works automatically with supported clients (Outlook, Teams, OneDrive sync, Office desktop apps, and Office for the web). When a critical event occurs (user disabled, password changed, MFA requirement added, location change), the resource provider (Exchange/SharePoint) is immediately notified and re-evaluates the user's access.",
+      "Incorrect. CAE is a native Azure AD + workload feature that operates without Microsoft Sentinel. Sentinel is a SIEM that could trigger additional responses, but CAE works independently.",
+      "Incorrect. While Defender for Identity detects on-premises identity threats, CAE is a cloud-native feature between Azure AD and Microsoft 365 workloads. It doesn't depend on Defender for Identity."
+    ],
+    "tip": "CAE: Enabled by default for Exchange Online + SharePoint Online. Critical events (password change, user disabled, MFA added, high-risk user, location change) trigger immediate token re-evaluation. No setup needed—just use supported clients."
+  }
+]
