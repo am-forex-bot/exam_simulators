@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R2-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are migrating device management from a third-party MDM solution to Microsoft Intune for Contoso. The company has 1,500 iOS devices currently managed by the third-party MDM. You need to migrate these devices to Intune without wiping them.\n\nQuestion:\nWhat is the correct migration approach?",
+    "choices": [
+      "Enroll the devices in Intune while they are still managed by the third-party MDM; both MDM solutions can co-manage iOS devices",
+      "Unenroll devices from the third-party MDM first, then enroll them in Intune — iOS supports only one MDM authority at a time",
+      "Use the Intune Migration Tool to transfer management profiles from the third-party MDM to Intune automatically",
+      "Reset the Apple Push Notification service (APNs) certificate and re-enroll all devices with the new MDM authority"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. iOS devices can only be managed by one MDM solution at a time. Attempting to enroll in a second MDM while still managed by the first will fail or cause the first MDM profile to be removed.",
+      "Correct. iOS supports only one MDM authority per device. The migration process is: (1) unenroll from the third-party MDM (removes the MDM profile but does not wipe the device), then (2) enroll in Intune (installs the Intune MDM profile). The device data is preserved throughout.",
+      "Incorrect. There is no 'Intune Migration Tool' that transfers management profiles between MDM solutions. Migration requires unenrolling from one and enrolling in the other.",
+      "Incorrect. Resetting the APNs certificate would break push notification capability for ALL managed iOS devices. The APNs certificate should be preserved and can be reused if the same Apple ID is used."
+    ],
+    "tip": "iOS MDM migration: Unenroll from old MDM → enroll in new MDM. One MDM at a time. Device is NOT wiped during unenrollment—only the MDM profile is removed."
+  },
+  {
+    "id": "MS102-R2-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nPratum Inc. uses Microsoft 365 E5 with Microsoft Defender for Endpoint. The SOC team discovers that an attacker is using a legitimate system tool (certutil.exe) to download malicious payloads onto compromised devices. They want to block certutil.exe from making network connections while still allowing it to be used for local certificate operations.\n\nQuestion:\nWhich feature should the SOC team configure?",
+    "choices": [
+      "Attack surface reduction (ASR) rule: Block process creations originating from PsExec and WMI commands",
+      "Microsoft Defender Firewall rule blocking certutil.exe outbound connections",
+      "Custom indicator in Defender for Endpoint: Block certutil.exe as a file indicator",
+      "Attack surface reduction (ASR) rule: Block executable content from email client and webmail"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. This ASR rule blocks processes created via PsExec and WMI, not network connections from certutil.exe. It targets lateral movement techniques, not LOLBin abuse.",
+      "Correct. A Microsoft Defender Firewall rule can specifically block outbound network connections for certutil.exe while allowing the executable to run locally for certificate management. This surgically addresses the threat without blocking the tool entirely.",
+      "Incorrect. Blocking certutil.exe as a file indicator would prevent the file from executing entirely, which breaks local certificate operations. The requirement is to allow local use while blocking network connections.",
+      "Incorrect. This ASR rule blocks executable content downloaded via email clients. It does not control network connections from certutil.exe."
+    ],
+    "tip": "LOLBin defense: Use Windows Firewall rules to block specific executables from making network connections. This allows local functionality while preventing download abuse. ASR rules target broader attack patterns."
+  },
+  {
+    "id": "MS102-R2-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft Intune for Woodgrove Bank. The security team requires that the Microsoft Outlook app on iOS and Android devices must:\n- Block cut, copy, and paste of corporate email content to non-managed apps\n- Allow paste from non-managed apps INTO Outlook\n- Require Face ID or fingerprint to open the app\n\nYou are configuring an App Protection Policy.\n\nQuestion:\nWhat value should you set for 'Restrict cut, copy, and paste between other apps'?",
+    "choices": [
+      "Blocked",
+      "Policy managed apps",
+      "Policy managed apps with paste in",
+      "Any app"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. 'Blocked' prevents all cut/copy/paste operations including pasting data FROM non-managed apps into Outlook. The requirement allows paste into Outlook from any app.",
+      "Incorrect. 'Policy managed apps' restricts paste operations to managed apps only. This would block pasting from non-managed apps into Outlook, violating the requirement to allow paste from any source.",
+      "Correct. 'Policy managed apps with paste in' allows: (1) Pasting from any app INTO the managed app (Outlook), (2) Only allows pasting FROM the managed app to other policy-managed apps. This meets both requirements: blocking copy-out to unmanaged apps while allowing paste-in from anywhere.",
+      "Incorrect. 'Any app' allows unrestricted cut/copy/paste to any app, which violates the requirement to block copying corporate email content to non-managed apps."
+    ],
+    "tip": "APP clipboard settings: 'Policy managed apps with paste in' = the goldilocks setting for most organizations. Blocks data OUT to unmanaged apps while allowing data IN from anywhere."
+  },
+  {
+    "id": "MS102-R2-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nA.Datum uses Microsoft Intune with 2,000 Windows devices. The company policy requires that USB storage devices are blocked on all devices EXCEPT for the Accounting department, which needs USB access for encrypted backup drives with a specific vendor ID (VID_1234).\n\nQuestion:\nHow should you implement this in Intune?",
+    "choices": [
+      "Create an endpoint security Attack Surface Reduction policy blocking USB storage for All Devices, then create an exception policy for Accounting allowing all USB storage",
+      "Create a device configuration profile using Administrative Templates to disable USB storage for All Devices, then use a Defender for Endpoint device control policy to allow specific vendor ID for the Accounting group",
+      "Create an endpoint security Disk encryption policy that blocks unencrypted USB storage for all users",
+      "Deploy a custom PowerShell script that modifies the registry to disable USB mass storage on all devices except those in the Accounting OU"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. An ASR exception policy allowing all USB storage for Accounting is too broad—it allows any USB device, not just the specific vendor's encrypted drives. The requirement specifies a specific vendor ID.",
+      "Correct. Use a combination: (1) Administrative Templates to disable USB storage class drivers for All Devices, (2) Defender for Endpoint device control policies to create an allow list for specific vendor IDs (VID_1234) targeted to the Accounting group. Device control allows granular USB control by vendor ID, product ID, and serial number.",
+      "Incorrect. Disk encryption policies manage BitLocker/FileVault, not USB access control. There is no option in disk encryption policies to block USB based on encryption status.",
+      "Incorrect. While a PowerShell script could modify registry keys to disable USB, it lacks the granularity to allow specific vendor IDs. Also, Intune groups are not OU-based, and custom scripts are harder to maintain and report on than native policies."
+    ],
+    "tip": "USB control in Intune: Block all USB via Administrative Templates or ASR → Allow specific devices via Defender for Endpoint Device Control (filter by VID, PID, serial number, device type)."
+  },
+  {
+    "id": "MS102-R2-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are the compliance administrator for Relecloud. The legal team receives notice of pending litigation and needs to preserve all email communications for 10 specific custodians. The preservation must:\n- Cover mailbox content, OneDrive files, and Teams chats\n- Prevent custodians from deleting relevant content\n- Allow the legal team to search and review the preserved content\n- Be managed as a single case\n\nQuestion:\nWhich tool should you use?",
+    "choices": [
+      "Microsoft Purview > eDiscovery > Standard > Create a case with a hold",
+      "Microsoft Purview > eDiscovery > Premium > Create a case with custodians and holds",
+      "Microsoft Purview > Data lifecycle management > Retention policies",
+      "Microsoft Purview > Information protection > Sensitivity labels with encryption"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. eDiscovery Standard supports case creation and holds, but it has limitations: holds are location-based (not custodian-based), it lacks custodian management, and it doesn't provide the advanced review set functionality needed for litigation review.",
+      "Correct. eDiscovery Premium (formerly Advanced eDiscovery) provides: (1) Custodian management—add the 10 custodians and automatically identify their mailboxes, OneDrive, and Teams data, (2) Custodian holds that preserve content across all custodian data sources, (3) Review sets for the legal team to search, review, and tag content, (4) Single case management for the entire matter.",
+      "Incorrect. Retention policies preserve content but are organization-wide or location-based, not designed for specific litigation custodians. They also don't provide search, review, or case management capabilities.",
+      "Incorrect. Sensitivity labels with encryption protect content from unauthorized access but do not preserve content for legal holds or provide eDiscovery case management."
+    ],
+    "tip": "eDiscovery Standard = basic search + hold + export. eDiscovery Premium = custodian management + custodian holds + review sets + analytics + advanced processing. For litigation with named custodians → Premium."
+  },
+  {
+    "id": "MS102-R2-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailspin Toys. The company has Windows 11 devices in three rings:\n- Ring 0 (IT testers): 50 devices, gets feature updates immediately\n- Ring 1 (Early adopters): 200 devices, gets feature updates 30 days after Ring 0\n- Ring 2 (Production): 2,000 devices, gets feature updates 60 days after Ring 0\n\nWindows 11 24H2 has been released. After Ring 0 testing, a critical issue is discovered. You need to pause the feature update rollout to Ring 1 and Ring 2.\n\nQuestion:\nWhat should you do?",
+    "choices": [
+      "Edit the feature update deployment policy and set the rollout state to Paused for Ring 1 and Ring 2 groups",
+      "Delete the update ring assignments for Ring 1 and Ring 2",
+      "Set the feature update deferral period to 365 days for Ring 1 and Ring 2 update rings",
+      "Create a safeguard hold by reporting the issue through the Windows Update for Business reports"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In Intune, feature update policies (Devices > Windows > Feature updates for Windows 10 and later) have a Pause/Resume capability. You can pause the rollout for specific groups (Ring 1 and Ring 2) to prevent those devices from receiving the update while you investigate the issue. When the issue is resolved, you resume the rollout.",
+      "Incorrect. Deleting the update ring assignments would remove all update management for those devices, not just pause feature updates. They might receive updates directly from Windows Update without any controls.",
+      "Incorrect. Setting a 365-day deferral is a workaround, but it's not the intended mechanism. It also changes the ongoing policy rather than temporarily pausing the specific update. When you want to resume, you'd need to change it back.",
+      "Incorrect. Safeguard holds are applied by Microsoft when they detect known compatibility issues. Administrators cannot create safeguard holds—they can only pause their own deployment policies."
+    ],
+    "tip": "Feature update deployment control: Pause = temporarily stop rollout (keeps policy intact, easy to resume). Deferral = delay updates by X days from release. Safeguard holds = Microsoft-initiated blocks for known issues."
+  },
+  {
+    "id": "MS102-R2-007",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nNorthwind Traders uses Microsoft Defender for Identity (formerly Azure ATP). The security team notices alerts indicating that an attacker is performing reconnaissance using LDAP queries against domain controllers to enumerate privileged accounts.\n\nQuestion:\nWhich Defender for Identity detection is triggering these alerts?",
+    "choices": [
+      "Suspected DCSync attack (replication of directory services)",
+      "Account enumeration reconnaissance",
+      "Security principal reconnaissance (LDAP)",
+      "Suspected Golden Ticket usage (encryption downgrade)"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. DCSync detection identifies replication-based attacks where an attacker impersonates a domain controller to replicate credentials. This is a credential theft technique, not reconnaissance via LDAP queries.",
+      "Incorrect. Account enumeration reconnaissance detects Kerberos-based account enumeration (trying to authenticate with a list of usernames to identify valid accounts). This uses Kerberos, not LDAP.",
+      "Correct. 'Security principal reconnaissance (LDAP)' detects when an attacker queries Active Directory using LDAP to enumerate users, groups, and privileged accounts. This is a common reconnaissance technique in the early stages of an attack to map out the target environment.",
+      "Incorrect. Golden Ticket detection identifies the use of forged Kerberos TGTs. This is a persistence/lateral movement technique, not LDAP-based reconnaissance."
+    ],
+    "tip": "Defender for Identity reconnaissance detections: LDAP queries → Security principal reconnaissance. Kerberos enumeration → Account enumeration. DNS queries → Network-mapping reconnaissance."
+  },
+  {
+    "id": "MS102-R2-008",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for 5,000 users at Fabrikam using servicing profiles in the Microsoft 365 Apps admin center. The Current Channel servicing profile is configured to automatically update devices. After a recent update, the Finance team reports that a critical Excel macro breaks. You need to exclude the Finance team's devices from the servicing profile and roll back their Office version.\n\nQuestion:\nWhat should you do?",
+    "choices": [
+      "Move Finance devices to a different Azure AD group and exclude that group from the servicing profile. Use the servicing profile's rollback feature to revert their version.",
+      "Create an Intune device configuration profile for Finance devices specifying a target version, and remove Finance devices from the servicing profile. The target version will trigger a rollback.",
+      "Delete the servicing profile and recreate it without the Finance team's devices",
+      "Ask Finance users to manually uninstall and reinstall the previous Office version from the Office portal"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Servicing profiles do not have a built-in rollback feature. Excluding the group from the profile stops future updates but does not revert the already-installed version.",
+      "Correct. First, exclude Finance devices from the servicing profile so they stop receiving automated updates. Then, create an Intune configuration profile (via Settings Catalog or Administrative Templates) that sets a specific Target Version for Microsoft 365 Apps. When the target version is set to an earlier build, Office automatically rolls back to that version on the next update cycle.",
+      "Incorrect. Deleting and recreating the entire servicing profile is disruptive to all 5,000 users. The fix should only affect the Finance team.",
+      "Incorrect. Manual uninstall/reinstall is not scalable, disrupts user productivity, and doesn't ensure the correct version is installed."
+    ],
+    "tip": "Office version rollback: Set 'Target Version' in Intune (Settings Catalog or Admin Templates) to a previous build number. Office automatically downgrades. Servicing profiles control updates but don't do rollbacks."
+  },
+  {
+    "id": "MS102-R2-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware. A user reports they cannot enroll their personal Android device. When they install Company Portal and try to sign in, they receive the error: 'This device cannot be enrolled. Contact your IT administrator.'\n\nYou verify the user has a valid Intune license and the device is running Android 13.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The user's password has expired and needs to be reset",
+      "The device enrollment restriction policy blocks personally owned Android devices",
+      "The Company Portal app is outdated and needs to be updated from the Play Store",
+      "The user needs to be assigned a Microsoft 365 E3 or E5 license instead of a standalone Intune license"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. An expired password would prevent sign-in with an authentication error, not an enrollment-specific error about the device not being allowed.",
+      "Correct. The error 'This device cannot be enrolled' typically indicates that a device enrollment restriction policy is blocking the enrollment. If the default or a higher-priority device type restriction blocks personally owned devices for Android, the user's BYOD enrollment will fail with this exact error.",
+      "Incorrect. An outdated Company Portal app might cause functionality issues, but the specific error about the device not being enrollable points to a policy restriction, not an app version issue.",
+      "Incorrect. A standalone Intune license is sufficient for device enrollment. There is no requirement for an E3 or E5 license specifically."
+    ],
+    "tip": "Common enrollment error causes: 'Device cannot be enrolled' = enrollment restriction policy. 'Device limit reached' = device limit restriction. 'Not authorized' = missing license. Check enrollment restrictions first."
+  },
+  {
+    "id": "MS102-R2-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nAdventure Works uses Microsoft 365 E5. The security team wants to create a unified view of all security alerts across:\n- Microsoft Defender for Endpoint (device alerts)\n- Microsoft Defender for Office 365 (email alerts)\n- Microsoft Defender for Identity (identity alerts)\n- Microsoft Defender for Cloud Apps (cloud app alerts)\n\nThey want alerts automatically correlated into incidents for efficient investigation.\n\nQuestion:\nWhich portal provides this unified experience?",
+    "choices": [
+      "Microsoft Sentinel workspace in Azure portal",
+      "Microsoft Defender portal (security.microsoft.com) with Microsoft Defender XDR",
+      "Microsoft Purview compliance portal",
+      "Azure AD Identity Protection portal"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Microsoft Sentinel is a SIEM/SOAR platform that can aggregate alerts from multiple sources, but it requires additional setup and licensing. The built-in unified experience across Microsoft Defender products is provided by Defender XDR.",
+      "Correct. Microsoft Defender XDR (formerly Microsoft 365 Defender) in the Defender portal at security.microsoft.com provides unified incident management across all four Defender products. It automatically correlates alerts from Endpoint, Office 365, Identity, and Cloud Apps into unified incidents, providing a single-pane-of-glass investigation experience.",
+      "Incorrect. The Purview compliance portal handles compliance-related features (DLP, eDiscovery, retention, insider risk). It does not provide security alert management or incident correlation.",
+      "Incorrect. Azure AD Identity Protection handles identity-risk alerts only. It does not aggregate alerts from Defender for Endpoint, Office 365, or Cloud Apps."
+    ],
+    "tip": "Microsoft Defender XDR = unified security operations across all Defender products. Microsoft Sentinel = SIEM for broader data sources (includes non-Microsoft). Defender XDR is built-in; Sentinel requires additional setup."
+  }
+]
