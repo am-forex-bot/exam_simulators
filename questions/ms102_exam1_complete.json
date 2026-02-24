@@ -5,8 +5,8 @@
     "type": "single",
     "stem": "Scenario:\n- Your company has 500 Windows 11 devices that are currently joined to on-premises Active Directory\n- The IT team wants to manage these devices using Microsoft Intune\n- The devices must retain their existing on-premises AD domain membership for legacy application access\n- Users should get single sign-on to both on-premises and cloud resources\n\nQuestion:\nWhich device identity configuration should you implement?",
     "choices": [
-      "Azure AD registered (Workplace joined)",
       "Azure AD joined (cloud-only)",
+      "Azure AD registered (Workplace joined)",
       "Hybrid Azure AD joined",
       "On-premises AD joined with no Azure AD integration"
     ],
@@ -14,8 +14,8 @@
       2
     ],
     "explanations": [
-      "Azure AD registered is for personal devices (BYOD). The device is registered with Azure AD but NOT joined to any domain. Users sign in with a local account and add their work account separately. This doesn't maintain on-premises AD membership and isn't suitable for corporate-owned devices requiring domain access.",
       "Azure AD joined means the device is joined ONLY to Azure AD (Entra ID) \u2014 no on-premises AD membership. The requirement explicitly states devices must retain their on-premises AD domain membership for legacy applications. Pure Azure AD join would break that.",
+      "Azure AD registered is for personal devices (BYOD). The device is registered with Azure AD but NOT joined to any domain. Users sign in with a local account and add their work account separately. This doesn't maintain on-premises AD membership and isn't suitable for corporate-owned devices requiring domain access.",
       "This option is correct. Hybrid Azure AD join means devices are joined to BOTH on-premises Active Directory AND Azure AD simultaneously. They maintain existing AD domain membership (for legacy apps, Group Policy, network resources) while also being registered in Azure AD (enabling Intune management, Conditional Access, SSO to cloud apps). Azure AD Connect synchronises the device objects. This is the standard migration path for existing domain-joined devices.",
       "Keeping devices on-premises only with no Azure AD integration means Intune cannot manage them. Intune requires Azure AD identity for device enrolment. This option fails the core requirement."
     ],
@@ -28,8 +28,8 @@
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage Windows 11 devices\n- The security team requires that all managed devices must:\n  - Have BitLocker encryption enabled\n  - Run a minimum OS version of Windows 11 22H2\n  - Have a password with at least 8 characters\n- Devices that don't meet these requirements should be marked as non-compliant\n- Non-compliant devices should be blocked from accessing Microsoft 365 services\n\nQuestion:\nWhat TWO things must you configure? (Choose the best single answer that covers both requirements.)",
     "choices": [
       "An Intune device compliance policy AND a Conditional Access policy requiring compliant devices",
-      "An Intune device configuration profile with BitLocker settings only",
       "A Group Policy Object (GPO) enforcing BitLocker and password requirements",
+      "An Intune device configuration profile with BitLocker settings only",
       "Microsoft Defender for Endpoint device risk policy only"
     ],
     "answer": [
@@ -37,8 +37,8 @@
     ],
     "explanations": [
       "This option is correct. This requires TWO components working together: (1) An Intune device compliance policy defines what 'compliant' means \u2014 BitLocker required, minimum OS version 22H2, minimum password length 8 characters. Intune evaluates each device and marks it compliant or non-compliant. (2) A Conditional Access policy in Azure AD uses the compliance state as a grant condition \u2014 'Require device to be marked as compliant.' Non-compliant devices are blocked from accessing Microsoft 365. Compliance policy defines the rules; Conditional Access enforces access decisions.",
-      "A device configuration profile can deploy BitLocker settings TO a device, but it doesn't evaluate compliance or mark devices as non-compliant. Configuration profiles CONFIGURE devices; compliance policies EVALUATE them. You need a compliance policy to assess the state and Conditional Access to enforce access.",
       "Group Policy Objects are for on-premises AD-managed devices. They can enforce settings but don't integrate with Intune compliance evaluation or Conditional Access. GPOs don't mark devices as compliant/non-compliant in Azure AD.",
+      "A device configuration profile can deploy BitLocker settings TO a device, but it doesn't evaluate compliance or mark devices as non-compliant. Configuration profiles CONFIGURE devices; compliance policies EVALUATE them. You need a compliance policy to assess the state and Conditional Access to enforce access.",
       "Defender for Endpoint provides device risk scores (low, medium, high) based on threats detected. While risk level can be used in compliance policies, it doesn't evaluate BitLocker, OS version, or password length. It's one input into compliance, not the complete solution."
     ],
     "tip": "The compliance + Conditional Access pattern: (1) Compliance policy = DEFINES rules (what must be true). (2) Conditional Access = ENFORCES access (block if non-compliant). They work together. Compliance policy alone = just marks devices. Conditional Access alone = doesn't know what 'compliant' means. You need BOTH."
@@ -51,8 +51,8 @@
     "choices": [
       "Create a Win32 app package with the Office Deployment Tool and upload to Intune",
       "Use the built-in Microsoft 365 Apps for Windows app type in Intune",
-      "Download the Office installer and deploy it as a line-of-business (LOB) app",
-      "Use Windows Autopilot to install Office during OOBE"
+      "Use Windows Autopilot to install Office during OOBE",
+      "Download the Office installer and deploy it as a line-of-business (LOB) app"
     ],
     "answer": [
       1
@@ -60,8 +60,8 @@
     "explanations": [
       "While you CAN package Office with ODT as a Win32 app, this is unnecessary complexity. Intune has a dedicated, built-in app type specifically for Microsoft 365 Apps that handles the configuration through a guided wizard \u2014 no manual packaging needed.",
       "This option is correct. Intune provides a built-in 'Microsoft 365 Apps for Windows' app type. You configure it through a wizard: select the apps to include (Word, Excel, etc.), choose the update channel (Current Channel), set architecture (64-bit), and enable 'Remove other versions of Office' to uninstall Office 2016/2019. Intune handles the download, installation, and removal of previous versions \u2014 all centrally managed. This is the Microsoft-recommended approach.",
-      "Uploading the Office installer as a LOB app doesn't support the guided configuration options (channel selection, previous version removal, app selection). LOB app type is for simple MSI/MSIX packages, not for complex Office deployments with specific configuration requirements.",
-      "Autopilot runs during the initial device setup (OOBE) for new or reset devices. It doesn't address deploying Office to 2,000 existing devices that are already in use. Autopilot is provisioning, not app deployment to existing devices."
+      "Autopilot runs during the initial device setup (OOBE) for new or reset devices. It doesn't address deploying Office to 2,000 existing devices that are already in use. Autopilot is provisioning, not app deployment to existing devices.",
+      "Uploading the Office installer as a LOB app doesn't support the guided configuration options (channel selection, previous version removal, app selection). LOB app type is for simple MSI/MSIX packages, not for complex Office deployments with specific configuration requirements."
     ],
     "tip": "Microsoft 365 Apps deployment via Intune: use the dedicated 'Microsoft 365 Apps for Windows' app type (not Win32, not LOB). It provides a configuration wizard for: app selection, update channel, architecture, language, and removal of previous Office versions. This is always the correct exam answer for 'deploy M365 Apps through Intune.'"
   },
@@ -71,19 +71,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company wants to automate the deployment of new Windows 11 devices\n- When a new employee receives a device, they should:\n  - Power on the device and connect to the internet\n  - Sign in with their Azure AD credentials\n  - Automatically receive company policies, apps, and configurations\n- No IT technician should need to touch the device for imaging or setup\n- The device should be ready for use within 30 minutes of first power-on\n\nQuestion:\nWhich Microsoft service enables this zero-touch provisioning experience?",
     "choices": [
-      "Microsoft Deployment Toolkit (MDT)",
       "Windows Autopilot",
-      "System Center Configuration Manager (SCCM/MECM) OSD",
-      "Azure VM Image Builder"
+      "Microsoft Deployment Toolkit (MDT)",
+      "Azure VM Image Builder",
+      "System Center Configuration Manager (SCCM/MECM) OSD"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "MDT is an on-premises deployment tool that requires creating and maintaining Windows images, PXE boot infrastructure, and IT technician involvement. It's the traditional imaging approach \u2014 the opposite of zero-touch, cloud-driven provisioning.",
       "This option is correct. Windows Autopilot is a cloud-based provisioning service. The device's hardware hash is pre-registered in Intune. When a user powers on a new device, it connects to the internet, downloads the Autopilot profile, presents a customised sign-in screen (company branding), and automatically joins Azure AD, enrols in Intune, and receives all assigned policies, apps, and configurations. Zero IT intervention required. The device is shipped directly from the manufacturer to the user.",
-      "SCCM/MECM Operating System Deployment requires on-premises infrastructure (distribution points, PXE servers, task sequences) and typically involves IT creating and deploying custom Windows images. It's not a zero-touch, cloud-driven solution.",
-      "Azure VM Image Builder creates custom images for Azure Virtual Machines in the cloud. It has nothing to do with provisioning physical Windows devices for end users."
+      "MDT is an on-premises deployment tool that requires creating and maintaining Windows images, PXE boot infrastructure, and IT technician involvement. It's the traditional imaging approach \u2014 the opposite of zero-touch, cloud-driven provisioning.",
+      "Azure VM Image Builder creates custom images for Azure Virtual Machines in the cloud. It has nothing to do with provisioning physical Windows devices for end users.",
+      "SCCM/MECM Operating System Deployment requires on-premises infrastructure (distribution points, PXE servers, task sequences) and typically involves IT creating and deploying custom Windows images. It's not a zero-touch, cloud-driven solution."
     ],
     "tip": "Windows Autopilot = zero-touch, cloud-driven device provisioning. User powers on \u2192 signs in \u2192 device auto-configures. Key concepts: hardware hash registration, Autopilot profile, self-deploying mode (kiosk), user-driven mode (standard), pre-provisioning (white glove). If the question describes 'zero-touch' or 'cloud provisioning' \u2014 Autopilot."
   },
@@ -93,19 +93,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company manages iOS devices with Microsoft Intune\n- The security team wants to ensure that:\n  - Company data in managed apps (Outlook, Teams, OneDrive) is protected\n  - Users cannot copy text from Outlook and paste it into personal apps\n  - Company data is wiped from the device if the user leaves the company\n  - Personal data on the device must NOT be affected by any IT actions\n\nQuestion:\nWhich Intune feature should you configure?",
     "choices": [
-      "Device compliance policy",
       "Device configuration profile",
       "App protection policy (MAM)",
-      "Device wipe command"
+      "Device wipe command",
+      "Device compliance policy"
     ],
     "answer": [
-      2
+      1
     ],
     "explanations": [
-      "Device compliance policies evaluate whether a device meets requirements (encryption, PIN, OS version). They don't control data flow between apps or provide selective wipe of company data from managed apps.",
       "Device configuration profiles push settings to devices (Wi-Fi, VPN, email accounts, restrictions). They don't control cut/copy/paste between managed and personal apps or provide app-level data protection.",
       "This option is correct. App protection policies (also called MAM \u2014 Mobile Application Management) protect company data at the app level WITHOUT requiring device enrolment. They control: data transfer between managed and unmanaged apps (block copy/paste to personal apps), require PIN to access managed apps, encrypt app data, and enable selective wipe (remove only company data from managed apps, leaving personal data untouched). This is the key feature for protecting corporate data on personal or BYOD devices.",
-      "A device wipe command erases the ENTIRE device \u2014 including personal photos, apps, and data. The question explicitly requires that personal data must NOT be affected. Device wipe is the nuclear option; app protection policies enable surgical (selective) wipe of company data only."
+      "A device wipe command erases the ENTIRE device \u2014 including personal photos, apps, and data. The question explicitly requires that personal data must NOT be affected. Device wipe is the nuclear option; app protection policies enable surgical (selective) wipe of company data only.",
+      "Device compliance policies evaluate whether a device meets requirements (encryption, PIN, OS version). They don't control data flow between apps or provide selective wipe of company data from managed apps."
     ],
     "tip": "App protection policy (MAM) = protect company data WITHOUT device enrolment. Controls: copy/paste, save-as, screenshots between managed/personal apps. Selective wipe = remove only company data. Works on BYOD and enrolled devices. If the question mentions 'protect company data', 'copy/paste restriction', or 'personal data unaffected' \u2014 App protection policy."
   },
@@ -115,19 +115,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Windows Autopilot to provision new devices\n- A batch of 200 new laptops arrives from the manufacturer\n- Before users can enrol these devices via Autopilot, you need to register them\n- The manufacturer has provided a CSV file containing the hardware hash for each device\n\nQuestion:\nHow do you register these devices for Windows Autopilot?",
     "choices": [
-      "Manually join each device to Azure AD through the Settings app",
       "Import the CSV file containing hardware hashes into Microsoft Intune (or Autopilot service)",
-      "Install the Intune Company Portal app on each device and sign in",
-      "Create an Azure AD dynamic device group based on serial numbers"
+      "Manually join each device to Azure AD through the Settings app",
+      "Create an Azure AD dynamic device group based on serial numbers",
+      "Install the Intune Company Portal app on each device and sign in"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Manually joining each device to Azure AD is Azure AD join, not Autopilot registration. Autopilot requires the device's hardware hash to be registered BEFORE the user turns on the device. Manual Azure AD join happens AFTER the device is running \u2014 it's not zero-touch.",
       "This option is correct. Import the manufacturer-provided CSV file containing hardware hashes (4K hash) into Microsoft Intune under Devices \u2192 Windows enrolment \u2192 Devices. Each hardware hash uniquely identifies a device. Once imported, assign an Autopilot deployment profile to these devices. When a user powers on the device and connects to the internet, the Autopilot service recognises the hardware hash and applies the assigned profile. OEMs like Dell, HP, and Lenovo can also register devices directly.",
-      "Company Portal is used for user-initiated enrolment of existing devices, not for Autopilot registration. Autopilot requires hardware hash pre-registration \u2014 the device needs to be known to the service BEFORE the user touches it.",
-      "Dynamic device groups can organise Autopilot devices AFTER registration (using the ZTDID or order ID attributes), but they don't register devices for Autopilot. Registration is done by importing hardware hashes."
+      "Manually joining each device to Azure AD is Azure AD join, not Autopilot registration. Autopilot requires the device's hardware hash to be registered BEFORE the user turns on the device. Manual Azure AD join happens AFTER the device is running \u2014 it's not zero-touch.",
+      "Dynamic device groups can organise Autopilot devices AFTER registration (using the ZTDID or order ID attributes), but they don't register devices for Autopilot. Registration is done by importing hardware hashes.",
+      "Company Portal is used for user-initiated enrolment of existing devices, not for Autopilot registration. Autopilot requires hardware hash pre-registration \u2014 the device needs to be known to the service BEFORE the user touches it."
     ],
     "tip": "Autopilot registration = import hardware hashes (CSV) into Intune. Sources: OEM direct registration, partner/reseller upload, manual CSV from Get-WindowsAutopilotInfo script, or manufacturer-provided CSV. The hardware hash (4K hash) uniquely identifies each device. Import FIRST, then assign profiles."
   },
@@ -137,19 +137,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company manages 1,000 Windows 11 devices with Microsoft Intune\n- The IT team wants to configure the following on all devices:\n  - Wi-Fi profile for the corporate wireless network\n  - VPN profile for remote access\n  - Email profile for Exchange Online\n  - Restrictions (disable camera, block USB storage)\n\nQuestion:\nWhich Intune feature should you use to push these settings to devices?",
     "choices": [
-      "Device compliance policies",
-      "Device configuration profiles",
+      "Endpoint security policies",
       "App protection policies",
-      "Endpoint security policies"
+      "Device compliance policies",
+      "Device configuration profiles"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
-      "Compliance policies EVALUATE whether devices meet requirements (password, encryption, OS version). They don't PUSH settings like Wi-Fi profiles, VPN configurations, or device restrictions. Compliance = assessment. Configuration = deployment of settings.",
-      "This option is correct. Device configuration profiles push settings and configurations to managed devices. Profile types include: Wi-Fi (SSID, authentication), VPN (connection settings), Email (Exchange server, authentication), Device restrictions (camera, USB, Bluetooth, screenshots), and many more (certificates, SCEP, PKCS, edition upgrade, custom OMA-URI). You create profiles, assign them to device or user groups, and Intune deploys them automatically.",
+      "Endpoint security policies focus on security-specific configurations: antivirus, disk encryption (BitLocker), firewall, endpoint detection and response (EDR). While there's overlap with device restrictions, the bulk of the requirements (Wi-Fi, VPN, email) are device configuration profile tasks, not endpoint security.",
       "App protection policies protect data within managed apps (copy/paste, save-as restrictions). They don't configure device-level settings like Wi-Fi, VPN, or hardware restrictions.",
-      "Endpoint security policies focus on security-specific configurations: antivirus, disk encryption (BitLocker), firewall, endpoint detection and response (EDR). While there's overlap with device restrictions, the bulk of the requirements (Wi-Fi, VPN, email) are device configuration profile tasks, not endpoint security."
+      "Compliance policies EVALUATE whether devices meet requirements (password, encryption, OS version). They don't PUSH settings like Wi-Fi profiles, VPN configurations, or device restrictions. Compliance = assessment. Configuration = deployment of settings.",
+      "This option is correct. Device configuration profiles push settings and configurations to managed devices. Profile types include: Wi-Fi (SSID, authentication), VPN (connection settings), Email (Exchange server, authentication), Device restrictions (camera, USB, Bluetooth, screenshots), and many more (certificates, SCEP, PKCS, edition upgrade, custom OMA-URI). You create profiles, assign them to device or user groups, and Intune deploys them automatically."
     ],
     "tip": "Intune policy types: Configuration profiles = PUSH settings (Wi-Fi, VPN, email, restrictions). Compliance policies = EVALUATE device state (is it compliant?). App protection = PROTECT data in apps. Endpoint security = SECURE devices (AV, firewall, BitLocker). For 'configure settings on devices' \u2014 Device configuration profiles."
   },
@@ -159,19 +159,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company has both Windows and macOS devices managed by Microsoft Intune\n- A critical Windows security update was released by Microsoft\n- The IT team wants to:\n  - Approve the update for deployment to all Windows devices\n  - Set a deadline so devices install the update within 5 days\n  - Pause updates for a group of test devices if issues are found\n\nQuestion:\nWhich Intune feature should you configure for Windows update management?",
     "choices": [
-      "Windows Update for Business policies (Update rings)",
       "Feature update policies",
       "Microsoft Store app updates",
-      "Win32 app deployment with the update as a package"
+      "Win32 app deployment with the update as a package",
+      "Windows Update for Business policies (Update rings)"
     ],
     "answer": [
-      0
+      3
     ],
     "explanations": [
-      "This option is correct. Windows Update for Business policies (Update rings) in Intune control how and when Windows quality (security) and feature updates are installed. You configure: deferral periods (delay updates by X days), deadline settings (force install within Y days), pause updates (temporarily stop updates for a ring), and maintenance windows. Create separate rings for test/pilot/production groups. Update rings are the primary mechanism for managing Windows security updates through Intune.",
       "Feature update policies target a specific Windows feature update version (e.g., Windows 11 23H2) and control which feature update version devices move to. They don't manage monthly security (quality) updates \u2014 that's what update rings do.",
       "Microsoft Store app updates manage updates for Store apps. They have nothing to do with Windows OS security updates.",
-      "Packaging a Windows security update as a Win32 app is technically possible but completely wrong. Windows updates should be managed through Windows Update for Business, not manually packaged and deployed as applications. This approach would bypass the update infrastructure and create management nightmares."
+      "Packaging a Windows security update as a Win32 app is technically possible but completely wrong. Windows updates should be managed through Windows Update for Business, not manually packaged and deployed as applications. This approach would bypass the update infrastructure and create management nightmares.",
+      "This option is correct. Windows Update for Business policies (Update rings) in Intune control how and when Windows quality (security) and feature updates are installed. You configure: deferral periods (delay updates by X days), deadline settings (force install within Y days), pause updates (temporarily stop updates for a ring), and maintenance windows. Create separate rings for test/pilot/production groups. Update rings are the primary mechanism for managing Windows security updates through Intune."
     ],
     "tip": "Windows update management in Intune: Update rings = quality (security) updates \u2014 deferral, deadline, pause. Feature update policies = target specific Windows version. Driver update policies = manage driver updates. Expedite updates = force critical updates immediately. For 'security update management' \u2014 Update rings."
   },
@@ -182,17 +182,17 @@
     "stem": "Scenario:\n- Your company provides virtual desktops to 300 remote workers using Azure Virtual Desktop (AVD)\n- Users connect from personal devices that are not managed by Intune\n- The IT team wants to optimise the Teams calling experience in AVD sessions\n- Users report poor audio and video quality during Teams meetings in their virtual desktops\n\nQuestion:\nWhich feature should be enabled to improve Teams performance in AVD?",
     "choices": [
       "Install Teams directly on each user's personal device instead",
-      "Enable Teams media optimisation (multimedia redirection) for AVD",
       "Increase the AVD session host VM size to handle more CPU load",
+      "Enable Teams media optimisation (multimedia redirection) for AVD",
       "Configure Azure ExpressRoute for all remote workers"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
       "Installing Teams on personal devices doesn't solve the problem \u2014 users need Teams within their AVD session for access to corporate data and integrated workflows. Personal device Teams would be a separate, unmanaged instance without corporate policies.",
-      "This option is correct. Teams media optimisation (also called multimedia redirection) offloads audio/video processing from the AVD session host to the user's local device. Instead of encoding/decoding media streams on the remote VM (consuming CPU and adding latency), the local Teams client handles media directly peer-to-peer. This dramatically improves call quality, reduces latency, and lowers session host resource consumption. It requires the Remote Desktop client (not browser) and the Teams WebSocket service.",
       "Increasing VM size adds CPU and memory but doesn't fix the fundamental architecture problem: encoding/decoding video on a remote VM and streaming it as RDP pixels is inherently inefficient. Media optimisation redirects the processing to the local device \u2014 a far more effective solution that also reduces VM costs.",
+      "This option is correct. Teams media optimisation (also called multimedia redirection) offloads audio/video processing from the AVD session host to the user's local device. Instead of encoding/decoding media streams on the remote VM (consuming CPU and adding latency), the local Teams client handles media directly peer-to-peer. This dramatically improves call quality, reduces latency, and lowers session host resource consumption. It requires the Remote Desktop client (not browser) and the Teams WebSocket service.",
       "ExpressRoute provides private connectivity to Azure, but remote workers connect from home internet. ExpressRoute doesn't extend to individual homes. Even with better network connectivity, the core issue is media processing location, not network path."
     ],
     "tip": "AVD Teams optimisation = media redirection to local device. Audio/video processed locally, not on session host. Requires: Remote Desktop client (not browser), WebRTC redirection. This reduces session host CPU and latency. Same concept applies to Citrix HDX and VMware Blast. If the question mentions 'Teams quality in AVD/VDI' \u2014 media optimisation."
@@ -203,19 +203,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company wants to provision cloud-based Windows desktops for contractors\n- Contractors need a consistent Windows 11 experience with Microsoft 365 Apps\n- The IT team wants a predictable per-user monthly cost\n- No infrastructure should be managed \u2014 no VM sizing, no session host management, no scaling decisions\n\nQuestion:\nWhich Microsoft service provides this fully managed cloud PC experience?",
     "choices": [
-      "Azure Virtual Desktop (AVD)",
       "Windows 365 Cloud PC",
-      "Microsoft Dev Box",
-      "Azure Virtual Machines with Windows 11"
+      "Azure Virtual Machines with Windows 11",
+      "Azure Virtual Desktop (AVD)",
+      "Microsoft Dev Box"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "AVD requires you to manage session host VMs, choose VM sizes, configure scaling plans, manage images, and plan capacity. It's IaaS/PaaS \u2014 you manage the infrastructure. The question explicitly says 'no infrastructure management.' AVD has variable costs based on consumption, not predictable per-user pricing.",
       "This option is correct. Windows 365 Cloud PC provides a fully managed, dedicated cloud PC per user. Microsoft handles all infrastructure: provisioning, sizing, patching, scaling, and maintenance. Each user gets their own persistent Windows 11 desktop with Microsoft 365 Apps. Pricing is a simple per-user per-month fee based on the chosen configuration (CPU, RAM, storage). It's a true SaaS Cloud PC \u2014 no infrastructure decisions needed.",
-      "Microsoft Dev Box provides cloud-based developer workstations with pre-configured development environments. It's designed for developers, not general contractor use. While similar in concept to Windows 365, it's targeted at dev scenarios with project-based configurations.",
-      "Azure VMs with Windows 11 require full IaaS management: VM sizing, networking, patching, monitoring, cost management. This is the most management-heavy option and provides variable (not predictable per-user) costs."
+      "Azure VMs with Windows 11 require full IaaS management: VM sizing, networking, patching, monitoring, cost management. This is the most management-heavy option and provides variable (not predictable per-user) costs.",
+      "AVD requires you to manage session host VMs, choose VM sizes, configure scaling plans, manage images, and plan capacity. It's IaaS/PaaS \u2014 you manage the infrastructure. The question explicitly says 'no infrastructure management.' AVD has variable costs based on consumption, not predictable per-user pricing.",
+      "Microsoft Dev Box provides cloud-based developer workstations with pre-configured development environments. It's designed for developers, not general contractor use. While similar in concept to Windows 365, it's targeted at dev scenarios with project-based configurations."
     ],
     "tip": "Windows 365 = SaaS Cloud PC (fully managed, per-user pricing, predictable cost). AVD = PaaS/IaaS virtual desktops (you manage session hosts, variable cost, multi-session). Key difference: Windows 365 = DEDICATED per-user PC, no infrastructure management. AVD = shared session hosts, more control but more management. If 'predictable per-user cost' + 'no infrastructure' \u2014 Windows 365."
   },
@@ -227,8 +227,8 @@
     "choices": [
       "Exchange Online mail flow rules (transport rules) to block credit card patterns",
       "Microsoft Purview Data Loss Prevention (DLP) policy with a rule targeting credit card number sensitive information type",
-      "Microsoft Defender for Office 365 Safe Attachments policy",
-      "Azure Information Protection sensitivity labels"
+      "Azure Information Protection sensitivity labels",
+      "Microsoft Defender for Office 365 Safe Attachments policy"
     ],
     "answer": [
       1
@@ -236,8 +236,8 @@
     "explanations": [
       "Mail flow rules can use regex to detect patterns, but they lack the sophisticated sensitive information type detection (Luhn algorithm validation for credit cards), user override with justification capability, and integrated DLP reporting/dashboard. Transport rules are a basic tool; DLP is the full-featured solution.",
       "This option is correct. Microsoft Purview DLP policies detect sensitive information types (like credit card numbers, using the Luhn algorithm for validation) across Exchange, SharePoint, OneDrive, Teams, and endpoints. Configure a DLP rule: condition = 'Content contains credit card number sensitive info type' sent to external recipients, action = block with notification and user override with justification. DLP provides a centralised Activity Explorer and DLP alerts dashboard for reporting. This is the purpose-built solution for this exact scenario.",
-      "Safe Attachments scans email attachments for malware by detonating them in a sandbox. It doesn't detect or block sensitive information like credit card numbers in email body text. It's a threat protection feature, not a data loss prevention feature.",
-      "Sensitivity labels classify and protect documents and emails (encryption, watermarks, headers). Labels don't detect sensitive content patterns like credit card numbers in emails. Labels are applied by users or auto-labelling rules \u2014 but the detection and blocking of sensitive data is DLP's job."
+      "Sensitivity labels classify and protect documents and emails (encryption, watermarks, headers). Labels don't detect sensitive content patterns like credit card numbers in emails. Labels are applied by users or auto-labelling rules \u2014 but the detection and blocking of sensitive data is DLP's job.",
+      "Safe Attachments scans email attachments for malware by detonating them in a sandbox. It doesn't detect or block sensitive information like credit card numbers in email body text. It's a threat protection feature, not a data loss prevention feature."
     ],
     "tip": "DLP = detect and protect sensitive data (credit cards, SSNs, health records). Works across: Exchange, SharePoint, OneDrive, Teams, Endpoints, Power BI. Key features: sensitive information types, user override with justification, incident reports, Activity Explorer. If the question mentions detecting and blocking sensitive data \u2014 DLP."
   },
@@ -247,18 +247,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company is subject to a legal investigation\n- The legal team requires that ALL emails and Teams messages for 10 specific employees must be preserved\n- No content should be modified or deleted, even if the retention policy would normally delete it\n- The preservation must remain in place until the legal team releases it\n\nQuestion:\nWhich Microsoft Purview feature should you use?",
     "choices": [
-      "Retention policy with a 'Retain forever' setting",
       "eDiscovery hold (litigation hold or eDiscovery case hold)",
       "Sensitivity labels with encryption",
+      "Retention policy with a 'Retain forever' setting",
       "Data lifecycle management auto-labelling"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "A retention policy with 'Retain forever' applies broadly to locations (all Exchange mailboxes, all SharePoint sites) and is designed for organisational data lifecycle management. It's not targeted to specific users under legal investigation, and it doesn't signal a legal hold that prevents deletion. Users could potentially still purge items from Recoverable Items.",
       "This option is correct. An eDiscovery hold (also called litigation hold) preserves ALL content in a user's mailbox and OneDrive indefinitely, regardless of other retention policies or user actions. Content in Recoverable Items cannot be purged. You can place holds on specific custodians (the 10 employees) through an eDiscovery case. The hold remains until explicitly released by the legal team. This is the legally defensible way to preserve data for investigations.",
       "Sensitivity labels classify and protect documents with encryption, watermarks, and access restrictions. They don't preserve content or prevent deletion. Encryption protects confidentiality, not data preservation.",
+      "A retention policy with 'Retain forever' applies broadly to locations (all Exchange mailboxes, all SharePoint sites) and is designed for organisational data lifecycle management. It's not targeted to specific users under legal investigation, and it doesn't signal a legal hold that prevents deletion. Users could potentially still purge items from Recoverable Items.",
       "Auto-labelling applies retention labels or sensitivity labels based on content. It's not a hold mechanism for legal investigations. Auto-labelling is a classification tool, not a preservation tool."
     ],
     "tip": "eDiscovery hold = legal preservation. Preserves ALL content for specific users, prevents deletion/modification. Types: litigation hold (Exchange) or eDiscovery case hold (Exchange, SharePoint, OneDrive, Teams). Retention policies = organisational lifecycle. If the question mentions 'legal', 'investigation', 'preserve', or 'litigation' \u2014 eDiscovery hold."
@@ -269,19 +269,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft 365 E5\n- The security team wants to protect users from:\n  - Phishing emails that contain malicious URLs\n  - Emails with weaponised attachments (zero-day malware)\n  - Business email compromise (BEC) impersonation attacks\n\nQuestion:\nWhich Microsoft 365 security service provides these email threat protection capabilities?",
     "choices": [
-      "Exchange Online Protection (EOP)",
       "Microsoft Defender for Office 365",
-      "Microsoft Defender for Endpoint",
-      "Microsoft Defender for Identity"
+      "Exchange Online Protection (EOP)",
+      "Microsoft Defender for Identity",
+      "Microsoft Defender for Endpoint"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "EOP is included with all Exchange Online plans and provides baseline protection: anti-spam, basic anti-malware (known signatures), and mail flow rules. However, EOP does NOT provide advanced threat protection like Safe Links (URL detonation), Safe Attachments (sandbox detonation), or anti-phishing impersonation detection. EOP catches known threats; Defender for Office 365 catches unknown/sophisticated threats.",
       "This option is correct. Microsoft Defender for Office 365 (Plan 1 and Plan 2) provides advanced email threat protection beyond EOP: Safe Links (real-time URL scanning and detonation \u2014 blocks malicious links at time-of-click), Safe Attachments (sandbox detonation of attachments to detect zero-day malware), Anti-phishing policies with impersonation protection (detects BEC attacks impersonating executives or domains), and Threat Explorer for investigation. Plan 2 adds Threat Trackers, Automated Investigation and Response (AIR), and Attack Simulation Training.",
-      "Defender for Endpoint protects device endpoints (Windows, macOS, Linux, mobile) against threats \u2014 not email. It handles endpoint detection and response (EDR), vulnerability management, and device security. Different protection domain from email.",
-      "Defender for Identity monitors on-premises Active Directory signals to detect identity-based attacks (pass-the-hash, pass-the-ticket, lateral movement). It doesn't protect against email phishing, malicious attachments, or BEC."
+      "EOP is included with all Exchange Online plans and provides baseline protection: anti-spam, basic anti-malware (known signatures), and mail flow rules. However, EOP does NOT provide advanced threat protection like Safe Links (URL detonation), Safe Attachments (sandbox detonation), or anti-phishing impersonation detection. EOP catches known threats; Defender for Office 365 catches unknown/sophisticated threats.",
+      "Defender for Identity monitors on-premises Active Directory signals to detect identity-based attacks (pass-the-hash, pass-the-ticket, lateral movement). It doesn't protect against email phishing, malicious attachments, or BEC.",
+      "Defender for Endpoint protects device endpoints (Windows, macOS, Linux, mobile) against threats \u2014 not email. It handles endpoint detection and response (EDR), vulnerability management, and device security. Different protection domain from email."
     ],
     "tip": "Microsoft 365 email protection stack: EOP (baseline, all plans) \u2192 Defender for Office 365 P1 (Safe Links, Safe Attachments, anti-phishing) \u2192 Defender for Office 365 P2 (Threat Explorer, AIR, Attack Simulation). If the question mentions phishing, malicious URLs, zero-day attachments, or impersonation \u2014 Defender for Office 365."
   },
@@ -291,18 +291,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company wants to ensure that documents in SharePoint Online are automatically classified and labelled\n- Documents containing medical record numbers should be labelled as 'Highly Confidential'\n- The label should apply encryption so only users within the organisation can open the document\n- External users who receive the document should be unable to open it\n\nQuestion:\nWhat should you configure?",
     "choices": [
-      "A DLP policy that blocks external sharing of medical records",
       "A sensitivity label with encryption AND an auto-labelling policy that detects medical record numbers",
       "A retention label that marks documents as records",
+      "A DLP policy that blocks external sharing of medical records",
       "SharePoint Information Rights Management (IRM) on the document library"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "A DLP policy can detect medical record numbers and block sharing, but it doesn't CLASSIFY documents with a label or apply persistent encryption. DLP prevents data loss; sensitivity labels classify and protect. The question asks for classification AND encryption.",
       "This option is correct. Configure a sensitivity label named 'Highly Confidential' with encryption settings (permissions = organisation members only, external users blocked). Then create an auto-labelling policy that detects the 'medical record number' sensitive information type in SharePoint documents and automatically applies the 'Highly Confidential' label. The label persists with the document \u2014 even if downloaded, the encryption follows it. Auto-labelling can work service-side (SharePoint, OneDrive, Exchange) or client-side (Office apps).",
       "Retention labels manage the lifecycle of content (retain for X years, then delete, or declare as a record). They don't classify based on sensitivity, don't apply encryption, and don't restrict access. Retention = lifecycle. Sensitivity = classification and protection.",
+      "A DLP policy can detect medical record numbers and block sharing, but it doesn't CLASSIFY documents with a label or apply persistent encryption. DLP prevents data loss; sensitivity labels classify and protect. The question asks for classification AND encryption.",
       "SharePoint IRM protects documents at the library level, but it's a legacy feature being replaced by sensitivity labels. IRM doesn't provide content-based auto-classification (detecting medical records). Sensitivity labels with auto-labelling provide the same protection with intelligent detection."
     ],
     "tip": "Sensitivity labels = classify + protect (encryption, watermarks, headers/footers). Auto-labelling = automatically apply labels based on sensitive info types. Retention labels = lifecycle management (retain/delete/record). DLP = detect and block sensitive data sharing. If the question asks for 'classify AND protect' \u2014 sensitivity labels."
@@ -313,19 +313,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Azure AD Conditional Access\n- The security team wants to block sign-ins from countries where the company has no business operations\n- Employees travelling to approved countries should be able to sign in normally\n- The policy should apply to all users except the break-glass emergency access account\n\nQuestion:\nWhich Conditional Access condition should you configure?",
     "choices": [
-      "Device platform condition filtering by operating system",
-      "Named locations condition with countries/regions",
       "Client app condition filtering by browser type",
-      "User risk condition from Identity Protection"
+      "Device platform condition filtering by operating system",
+      "User risk condition from Identity Protection",
+      "Named locations condition with countries/regions"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
-      "Device platform conditions filter by OS type (Windows, iOS, Android, macOS, Linux). They have nothing to do with geographic location of sign-in attempts. A Windows device can sign in from any country.",
-      "This option is correct. Named locations in Conditional Access allow you to define trusted and untrusted geographic locations. Create a named location listing the countries where your company operates (approved countries). Then create a Conditional Access policy: condition = 'Any location EXCEPT approved countries', grant = 'Block access', exclude = break-glass account. Sign-ins from non-business countries are blocked; sign-ins from approved countries and the break-glass account proceed normally. Azure AD determines location from the sign-in IP address geolocation.",
       "Client app conditions filter by how users authenticate (browser, mobile app, desktop client, legacy auth). They don't evaluate geographic location.",
-      "User risk evaluates the likelihood that a user account has been compromised (leaked credentials, impossible travel). While impossible travel considers location, user risk is a calculated score \u2014 not a configurable list of approved/blocked countries. Named locations provide explicit geographic control."
+      "Device platform conditions filter by OS type (Windows, iOS, Android, macOS, Linux). They have nothing to do with geographic location of sign-in attempts. A Windows device can sign in from any country.",
+      "User risk evaluates the likelihood that a user account has been compromised (leaked credentials, impossible travel). While impossible travel considers location, user risk is a calculated score \u2014 not a configurable list of approved/blocked countries. Named locations provide explicit geographic control.",
+      "This option is correct. Named locations in Conditional Access allow you to define trusted and untrusted geographic locations. Create a named location listing the countries where your company operates (approved countries). Then create a Conditional Access policy: condition = 'Any location EXCEPT approved countries', grant = 'Block access', exclude = break-glass account. Sign-ins from non-business countries are blocked; sign-ins from approved countries and the break-glass account proceed normally. Azure AD determines location from the sign-in IP address geolocation."
     ],
     "tip": "Conditional Access named locations = geographic access control. Define locations by: countries/regions (IP geolocation) or IP address ranges (trusted office IPs). Common patterns: block sign-ins from non-business countries, require MFA outside office network, trust compliant network locations. If the question mentions geographic restriction \u2014 named locations."
   },
@@ -335,19 +335,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company has 500 Android personal devices (BYOD) used by employees\n- The IT team wants to manage ONLY the work profile on these devices\n- Corporate apps and data should be in a separate container on the device\n- Personal apps and data must be completely untouched by IT\n\nQuestion:\nWhich Android enrolment method in Intune supports this requirement?",
     "choices": [
-      "Android Enterprise fully managed (device owner)",
       "Android Enterprise work profile (personally-owned)",
       "Android device administrator enrolment",
-      "Android Enterprise dedicated device"
+      "Android Enterprise dedicated device",
+      "Android Enterprise fully managed (device owner)"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Fully managed (device owner) gives IT complete control over the entire device \u2014 all apps, settings, and data. This is for corporate-owned devices where the company owns the device. It does NOT separate personal and work data because there IS no personal side \u2014 IT manages everything.",
       "This option is correct. Android Enterprise work profile (personally-owned) creates a separate, encrypted container on the device for work apps and data. IT manages ONLY the work profile: corporate apps, email, policies. Personal apps, photos, and data remain completely private \u2014 IT cannot see or manage them. If the employee leaves, IT can wipe only the work profile. The personal side is untouched. This is the standard BYOD enrolment for Android.",
       "Android device administrator is a legacy enrolment method that Google is deprecating. It gives IT broad device-level control without the clean separation of work and personal data. It's not recommended for BYOD scenarios and doesn't provide the container-based isolation that work profile offers.",
-      "Dedicated device mode is for single-purpose, corporate-owned devices (kiosks, digital signage, shared devices). There's no user \u2014 the device runs specific apps for a specific purpose. Not applicable to BYOD employee devices."
+      "Dedicated device mode is for single-purpose, corporate-owned devices (kiosks, digital signage, shared devices). There's no user \u2014 the device runs specific apps for a specific purpose. Not applicable to BYOD employee devices.",
+      "Fully managed (device owner) gives IT complete control over the entire device \u2014 all apps, settings, and data. This is for corporate-owned devices where the company owns the device. It does NOT separate personal and work data because there IS no personal side \u2014 IT manages everything."
     ],
     "tip": "Android Enterprise enrolment modes: Work profile (personally-owned) = BYOD, separate container. Work profile (corporate-owned) = company device with personal use allowed. Fully managed = company device, IT controls everything. Dedicated = kiosk/single-purpose. If 'BYOD' + 'separate container' + 'personal untouched' \u2014 work profile (personally-owned)."
   },
@@ -359,8 +359,8 @@
     "choices": [
       "A retention policy applied to all Exchange mailboxes with 7-year retain-then-delete settings",
       "A retention label published to all mailboxes that users manually apply to emails",
-      "An eDiscovery hold on all mailboxes for 7 years",
-      "Exchange Online mailbox archive with a 7-year archive policy"
+      "Exchange Online mailbox archive with a 7-year archive policy",
+      "An eDiscovery hold on all mailboxes for 7 years"
     ],
     "answer": [
       0
@@ -368,8 +368,8 @@
     "explanations": [
       "This option is correct. A Microsoft Purview retention policy applied to the Exchange Online location with settings 'Retain items for 7 years, then delete automatically' enforces automatic retention across ALL mailboxes (existing and future). No user action is required \u2014 the policy is applied at the organisational level. Items are preserved in place for 7 years (even if users delete them \u2014 they go to Recoverable Items). After 7 years, items are permanently deleted. This is the standard approach for regulatory email retention.",
       "Retention labels require user action (manual application) unless auto-apply is configured. Even with auto-apply, labels are item-level (applied to individual emails matching conditions). The question says 'no user action' and 'all emails' \u2014 a retention POLICY is the location-wide, automatic approach. Labels are for specific items; policies are for entire locations.",
-      "eDiscovery holds are for legal investigations and preserve content indefinitely until released. They don't automatically delete after a period. Using eDiscovery holds for routine regulatory retention is a misuse of the feature and creates management overhead.",
-      "Online Archive (In-Place Archive) moves older emails to an archive mailbox to manage primary mailbox size. It doesn't enforce retention periods or automatic deletion. Archive = storage management. Retention policy = compliance lifecycle management."
+      "Online Archive (In-Place Archive) moves older emails to an archive mailbox to manage primary mailbox size. It doesn't enforce retention periods or automatic deletion. Archive = storage management. Retention policy = compliance lifecycle management.",
+      "eDiscovery holds are for legal investigations and preserve content indefinitely until released. They don't automatically delete after a period. Using eDiscovery holds for routine regulatory retention is a misuse of the feature and creates management overhead."
     ],
     "tip": "Retention policies vs retention labels: Policies = automatic, location-wide (all Exchange, all SharePoint), no user action. Labels = item-level, can be manual or auto-applied, more granular. For 'apply to everything automatically' \u2014 retention POLICY. For 'classify specific items differently' \u2014 retention LABELS. Both can retain-then-delete."
   },
@@ -379,18 +379,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage devices\n- The security team wants to deploy BitLocker encryption to all Windows 11 devices\n- BitLocker recovery keys must be stored in Azure AD for IT support access\n- The encryption should be enforced silently without user interaction\n\nQuestion:\nHow should you deploy BitLocker through Intune?",
     "choices": [
-      "Create an Intune device configuration profile with a BitLocker template",
-      "Create an Intune endpoint security disk encryption policy for BitLocker",
       "Use a PowerShell script deployed through Intune to run manage-bde commands",
+      "Create an Intune endpoint security disk encryption policy for BitLocker",
+      "Create an Intune device configuration profile with a BitLocker template",
       "Deploy BitLocker through Group Policy and wait for Hybrid Azure AD sync"
     ],
     "answer": [
       1
     ],
     "explanations": [
-      "A device configuration profile with the Endpoint protection template CAN configure BitLocker, but Intune has since introduced dedicated endpoint security policies specifically for disk encryption. The endpoint security approach provides a more focused, cleaner configuration experience with all BitLocker settings in one place. Microsoft recommends using endpoint security policies for security configurations.",
-      "This option is correct. Intune endpoint security policies include a dedicated Disk encryption profile type for BitLocker. Configure: silent encryption (no user interaction required \u2014 works on modern TPM 2.0 devices with Azure AD join), recovery key escrow to Azure AD (stored automatically \u2014 IT can retrieve via Azure AD or Intune portal), encryption method (XTS-AES 256), and which drives to encrypt. This is the Microsoft-recommended approach for managing BitLocker through Intune. Recovery keys are automatically backed up to Azure AD.",
       "PowerShell scripts for BitLocker are unnecessarily complex and don't provide the managed policy experience. Recovery key escrow to Azure AD wouldn't be handled natively. Scripts run once; policies continuously evaluate and enforce.",
+      "This option is correct. Intune endpoint security policies include a dedicated Disk encryption profile type for BitLocker. Configure: silent encryption (no user interaction required \u2014 works on modern TPM 2.0 devices with Azure AD join), recovery key escrow to Azure AD (stored automatically \u2014 IT can retrieve via Azure AD or Intune portal), encryption method (XTS-AES 256), and which drives to encrypt. This is the Microsoft-recommended approach for managing BitLocker through Intune. Recovery keys are automatically backed up to Azure AD.",
+      "A device configuration profile with the Endpoint protection template CAN configure BitLocker, but Intune has since introduced dedicated endpoint security policies specifically for disk encryption. The endpoint security approach provides a more focused, cleaner configuration experience with all BitLocker settings in one place. Microsoft recommends using endpoint security policies for security configurations.",
       "Group Policy is for on-premises AD environments and doesn't back up recovery keys to Azure AD natively. For Intune-managed devices, use Intune policies. Hybrid scenarios add unnecessary complexity when Intune endpoint security policies handle it directly."
     ],
     "tip": "BitLocker through Intune: use Endpoint security \u2192 Disk encryption policy. Key settings: silent encryption (no user prompt), recovery key escrow to Azure AD, XTS-AES 256-bit. Silent encryption requires: TPM 2.0, UEFI, Azure AD joined (or Hybrid), no pre-provisioned OS volume. Recovery keys viewable in Azure AD and Intune device properties."
@@ -403,8 +403,8 @@
     "choices": [
       "Azure AD Conditional Access",
       "Azure AD Identity Protection",
-      "Microsoft Defender for Cloud Apps",
-      "Microsoft Sentinel"
+      "Microsoft Sentinel",
+      "Microsoft Defender for Cloud Apps"
     ],
     "answer": [
       1
@@ -412,8 +412,8 @@
     "explanations": [
       "Conditional Access enforces access policies based on conditions (location, device, risk level), but it doesn't DETECT impossible travel or calculate risk scores. Conditional Access consumes risk information from Identity Protection \u2014 it doesn't generate it. It's the enforcement engine, not the detection engine.",
       "This option is correct. Azure AD Identity Protection uses machine learning to detect risky sign-in behaviours including: impossible travel (signing in from geographically distant locations in impossible time), anonymous IP address use, malware-linked IP addresses, unfamiliar sign-in properties, and legacy authentication from unusual locations. It calculates sign-in risk (low, medium, high) and user risk. You can configure automated responses: require MFA for medium risk, block sign-in for high risk, require password change for compromised users.",
-      "Defender for Cloud Apps (formerly Cloud App Security) is a CASB that monitors cloud app usage, detects shadow IT, and provides threat detection across SaaS applications. While it has anomaly detection, Identity Protection is the purpose-built service for Azure AD sign-in risk and impossible travel detection.",
-      "Microsoft Sentinel is a SIEM/SOAR platform that aggregates security data from multiple sources for threat detection and incident response. It can ingest Identity Protection alerts but doesn't perform the primary detection of impossible travel \u2014 that's Identity Protection's role."
+      "Microsoft Sentinel is a SIEM/SOAR platform that aggregates security data from multiple sources for threat detection and incident response. It can ingest Identity Protection alerts but doesn't perform the primary detection of impossible travel \u2014 that's Identity Protection's role.",
+      "Defender for Cloud Apps (formerly Cloud App Security) is a CASB that monitors cloud app usage, detects shadow IT, and provides threat detection across SaaS applications. While it has anomaly detection, Identity Protection is the purpose-built service for Azure AD sign-in risk and impossible travel detection."
     ],
     "tip": "Identity Protection = detect risky sign-ins and compromised users. Risk types: impossible travel, anonymous IP, unfamiliar properties, leaked credentials. Risk levels: low, medium, high. Automated responses: require MFA, block, force password change. Conditional Access CONSUMES risk signals from Identity Protection. If 'detect risky sign-in' \u2014 Identity Protection."
   },
@@ -425,17 +425,17 @@
     "choices": [
       "Microsoft Store app (new)",
       "Web link",
-      "Windows app (Win32)",
-      "Microsoft 365 Apps for Windows"
+      "Microsoft 365 Apps for Windows",
+      "Windows app (Win32)"
     ],
     "answer": [
-      2
+      3
     ],
     "explanations": [
       "Microsoft Store app (new) deploys apps from the Microsoft Store or private store. A custom LOB MSI installer is not in the Microsoft Store. This app type is for Store-published applications only.",
       "A web link creates a shortcut to a URL \u2014 it doesn't install a native Windows application. It's for web-based apps and bookmarks, not MSI installer packages.",
-      "This option is correct. The Win32 app type in Intune handles MSI, EXE, and MSIX packages for Windows applications. You wrap the MSI with the Microsoft Win32 Content Prep Tool (IntuneWinAppUtil.exe) to create a .intunewin package, upload it to Intune, configure silent install commands (msiexec /i app.msi /qn), detection rules (MSI product code, file existence, or registry key), and dependencies. Intune tracks installation status (installed, failed, pending) in the device install status report.",
-      "Microsoft 365 Apps for Windows is a dedicated app type specifically for deploying the Office suite. It's not for custom LOB applications."
+      "Microsoft 365 Apps for Windows is a dedicated app type specifically for deploying the Office suite. It's not for custom LOB applications.",
+      "This option is correct. The Win32 app type in Intune handles MSI, EXE, and MSIX packages for Windows applications. You wrap the MSI with the Microsoft Win32 Content Prep Tool (IntuneWinAppUtil.exe) to create a .intunewin package, upload it to Intune, configure silent install commands (msiexec /i app.msi /qn), detection rules (MSI product code, file existence, or registry key), and dependencies. Intune tracks installation status (installed, failed, pending) in the device install status report."
     ],
     "tip": "Intune app types for Windows: Win32 = MSI/EXE/MSIX (most flexible, detection rules, dependencies, requirements). LOB = simple MSI/APPX without Win32 wrapping. Store app = Microsoft Store apps. M365 Apps = Office suite only. For custom LOB applications \u2014 Win32 app type is the recommended approach."
   },
@@ -445,18 +445,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage devices\n- The IT team wants to deploy apps with the following assignment types:\n  - Required apps: automatically installed on all devices in the assigned group\n  - Available apps: users can choose to install from the Company Portal\n  - Uninstall: removes the app from all devices in the assigned group\n- They assign a LOB app as 'Required' to the Sales group and 'Available' to the Marketing group\n\nQuestion:\nWhat happens for a user who is in BOTH the Sales and Marketing groups?",
     "choices": [
-      "The app appears as Available in the Company Portal \u2014 the user can choose to install it",
       "The app is automatically installed (Required) \u2014 Required takes precedence over Available",
       "A conflict occurs and the app is not deployed to the user",
+      "The app appears as Available in the Company Portal \u2014 the user can choose to install it",
       "The user is prompted to choose between Required and Available installation"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Available means optional \u2014 the user can install from Company Portal if they want. But since the user is also in the Sales group where the app is Required, Intune enforces the Required assignment. Required is a stronger intent than Available.",
       "This option is correct. When a user is targeted by both Required and Available assignments for the same app, Intune applies the most restrictive (strongest) intent. The precedence order is: Uninstall > Required > Available. Since Required is stronger than Available, the app is automatically installed. The user doesn't get a choice \u2014 the Required assignment wins. This conflict resolution is handled automatically by Intune.",
       "Intune does not create conflicts for overlapping assignment types \u2014 it resolves them using intent precedence. No deployment failure occurs.",
+      "Available means optional \u2014 the user can install from Company Portal if they want. But since the user is also in the Sales group where the app is Required, Intune enforces the Required assignment. Required is a stronger intent than Available.",
       "Intune doesn't prompt users to resolve assignment conflicts. The precedence rules are applied automatically."
     ],
     "tip": "Intune app assignment precedence: Uninstall > Required > Available. If a user is in multiple groups with different assignment types, the strongest intent wins. Required + Available = Required (auto-install). Required + Uninstall = Uninstall (removed). No user choice in conflicts \u2014 Intune resolves automatically."
@@ -489,19 +489,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft 365 and Azure AD\n- The Global Administrator account has been compromised\n- The attacker has:\n  - Changed the admin password\n  - Added their own MFA method\n  - Created new admin accounts\n  - Modified Conditional Access policies\n\nQuestion:\nWhich emergency access mechanism should have been in place to recover from this scenario?",
     "choices": [
-      "Azure AD Connect with on-premises AD admin fallback",
       "Break-glass emergency access accounts excluded from Conditional Access",
-      "Microsoft support ticket to reset the Global Admin password",
-      "Azure subscription owner account with Azure AD management rights"
+      "Azure subscription owner account with Azure AD management rights",
+      "Azure AD Connect with on-premises AD admin fallback",
+      "Microsoft support ticket to reset the Global Admin password"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Azure AD Connect synchronises on-premises AD to Azure AD, but on-premises admin accounts don't automatically have Azure AD Global Admin privileges. If the attacker has modified Azure AD directly, on-premises AD admin access doesn't help recover Azure AD control. They're separate admin planes.",
       "This option is correct. Break-glass (emergency access) accounts are highly privileged Azure AD accounts specifically designed for emergency scenarios when normal admin accounts are compromised or locked out. Best practices: at least 2 break-glass accounts, excluded from ALL Conditional Access policies (including MFA requirements), cloud-only (no on-premises sync), not assigned to any individual, passwords stored securely offline (safe/vault), monitored with alerts for any sign-in activity. These accounts let you regain control of Azure AD even when all other admin accounts are compromised.",
-      "While Microsoft support can assist, it's a slow process with identity verification requirements. By the time support resolves it, the attacker has had extended access. Break-glass accounts provide immediate, self-service recovery.",
-      "Azure subscription owner and Azure AD Global Admin are separate roles. Subscription owner manages Azure resources (VMs, storage), not Azure AD (users, policies, Conditional Access). They can't reset Azure AD admin passwords or modify Conditional Access policies."
+      "Azure subscription owner and Azure AD Global Admin are separate roles. Subscription owner manages Azure resources (VMs, storage), not Azure AD (users, policies, Conditional Access). They can't reset Azure AD admin passwords or modify Conditional Access policies.",
+      "Azure AD Connect synchronises on-premises AD to Azure AD, but on-premises admin accounts don't automatically have Azure AD Global Admin privileges. If the attacker has modified Azure AD directly, on-premises AD admin access doesn't help recover Azure AD control. They're separate admin planes.",
+      "While Microsoft support can assist, it's a slow process with identity verification requirements. By the time support resolves it, the attacker has had extended access. Break-glass accounts provide immediate, self-service recovery."
     ],
     "tip": "Break-glass accounts: 2 cloud-only accounts, Global Admin role, excluded from ALL Conditional Access, strong passwords stored offline, monitored with Azure Monitor alerts. NEVER use for daily admin work. Test periodically. If the question mentions emergency access or admin lockout recovery \u2014 break-glass accounts."
   },
@@ -511,19 +511,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps to 1,500 devices\n- The IT team wants to:\n  - Deploy the Monthly Enterprise Channel for stability\n  - Exclude Access and Publisher from the installation\n  - Include the Microsoft Teams desktop app\n  - Use 64-bit architecture\n\nQuestion:\nWhere do you configure these installation settings when deploying through Intune?",
     "choices": [
+      "In the Microsoft 365 admin centre Apps settings page",
       "In the Office Customization Tool (OCT) and deploy via SCCM",
-      "In the Intune Microsoft 365 Apps for Windows app configuration (App suite information and settings)",
       "In a PowerShell script that runs the Office Deployment Tool with a configuration.xml",
-      "In the Microsoft 365 admin centre Apps settings page"
+      "In the Intune Microsoft 365 Apps for Windows app configuration (App suite information and settings)"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
+      "The Microsoft 365 admin centre manages organisation-wide settings (update channel defaults, feature access), but it doesn't handle per-device deployment configuration through Intune. The app deployment settings are configured within Intune itself.",
       "The OCT and SCCM are for on-premises deployment. Intune is a cloud management tool and doesn't use SCCM deployment infrastructure. While you can use ODT with configuration.xml for manual deployments, Intune has a built-in wizard for this.",
-      "This option is correct. When you add a 'Microsoft 365 Apps for Windows' app in Intune, the configuration wizard lets you specify all these settings through the UI: select apps to include/exclude (remove Access and Publisher), choose update channel (Monthly Enterprise Channel), select architecture (64-bit), include Teams, set language, and configure other options. These settings are configured in the 'App suite information' and 'App suite settings' tabs during app creation. No manual XML editing required.",
       "While PowerShell with ODT and configuration.xml works for manual deployments, Intune provides a native GUI-based configuration experience. Using PowerShell scripts bypasses Intune's deployment tracking, reporting, and assignment capabilities.",
-      "The Microsoft 365 admin centre manages organisation-wide settings (update channel defaults, feature access), but it doesn't handle per-device deployment configuration through Intune. The app deployment settings are configured within Intune itself."
+      "This option is correct. When you add a 'Microsoft 365 Apps for Windows' app in Intune, the configuration wizard lets you specify all these settings through the UI: select apps to include/exclude (remove Access and Publisher), choose update channel (Monthly Enterprise Channel), select architecture (64-bit), include Teams, set language, and configure other options. These settings are configured in the 'App suite information' and 'App suite settings' tabs during app creation. No manual XML editing required."
     ],
     "tip": "Microsoft 365 Apps deployment via Intune wizard: App suite information (name, description) \u2192 App suite settings (products to include/exclude, update channel, architecture, language, Teams). All configurable through the Intune UI. The wizard generates the ODT configuration behind the scenes. If 'deploy M365 Apps through Intune' \u2014 use the built-in app type wizard."
   },
@@ -533,19 +533,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Defender for Endpoint on all Windows devices\n- A suspicious file is detected on a device and Defender for Endpoint flags it as malicious\n- The security analyst wants to:\n  - Isolate the affected device from the network\n  - Collect an investigation package (forensic data)\n  - Run an antivirus scan on the device\n- All actions should be performed remotely without physical access to the device\n\nQuestion:\nWhere does the security analyst perform these response actions?",
     "choices": [
-      "Microsoft Intune device actions (remote wipe, retire)",
       "Microsoft Defender portal \u2014 device page response actions",
-      "Azure AD admin centre \u2014 device management",
-      "Exchange Online admin centre \u2014 mobile device management"
+      "Microsoft Intune device actions (remote wipe, retire)",
+      "Exchange Online admin centre \u2014 mobile device management",
+      "Azure AD admin centre \u2014 device management"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Intune device actions include remote wipe, retire, restart, and sync. These are device management actions, not security investigation and response actions. Intune doesn't provide network isolation, forensic investigation packages, or targeted antivirus scans for security incidents.",
       "This option is correct. The Microsoft Defender portal (security.microsoft.com) provides response actions on the device page: Isolate device (cut network access while maintaining Defender connectivity for remote management), Collect investigation package (gathers forensic data \u2014 running processes, network connections, registry, event logs), Run antivirus scan (trigger Microsoft Defender Antivirus remotely), Restrict app execution (block unsigned processes), Initiate automated investigation, and Initiate Live Response (remote shell). All done remotely through the portal.",
-      "Azure AD admin centre manages device identity (registered, joined, compliant status). It doesn't provide security response actions like network isolation, forensic collection, or antivirus scanning.",
-      "Exchange Online MDM manages mobile device access to Exchange. It has basic wipe capabilities but no advanced security investigation or response features."
+      "Intune device actions include remote wipe, retire, restart, and sync. These are device management actions, not security investigation and response actions. Intune doesn't provide network isolation, forensic investigation packages, or targeted antivirus scans for security incidents.",
+      "Exchange Online MDM manages mobile device access to Exchange. It has basic wipe capabilities but no advanced security investigation or response features.",
+      "Azure AD admin centre manages device identity (registered, joined, compliant status). It doesn't provide security response actions like network isolation, forensic collection, or antivirus scanning."
     ],
     "tip": "Defender for Endpoint response actions: Isolate device (network isolation), Collect investigation package (forensics), Run AV scan, Restrict app execution, Live Response (remote shell), Automated investigation. All in Microsoft Defender portal \u2192 Device page \u2192 Response actions. Different from Intune device actions (management, not security response)."
   },
@@ -556,18 +556,18 @@
     "stem": "Scenario:\n- Your company manages Windows 11 devices with Microsoft Intune\n- An Intune device configuration profile and a Group Policy Object (GPO) both configure the same setting\n- The GPO sets the screen lock timeout to 15 minutes\n- The Intune profile sets the screen lock timeout to 5 minutes\n- The device is Hybrid Azure AD joined\n\nQuestion:\nWhich setting takes effect on the device?",
     "choices": [
       "The GPO setting (15 minutes) \u2014 GPO always wins over Intune",
-      "The Intune setting (5 minutes) \u2014 Intune always wins over GPO",
       "The conflict depends on the specific CSP \u2014 by default, MDM (Intune) wins over GPO on Windows 10/11 Azure AD-joined devices",
-      "Both settings are applied and the device alternates between them"
+      "Both settings are applied and the device alternates between them",
+      "The Intune setting (5 minutes) \u2014 Intune always wins over GPO"
     ],
     "answer": [
-      2
+      1
     ],
     "explanations": [
       "GPO does NOT always win over Intune. On Windows 10/11, Microsoft introduced a policy resolution mechanism that gives MDM (Intune) precedence over GPO for co-managed or Azure AD-joined devices. The traditional 'GPO wins' behaviour only applies in purely on-premises AD environments.",
-      "While MDM wins by default on Azure AD-joined devices, saying 'Intune always wins' is an oversimplification. The behaviour can be configured using the ControlPolicyConflict/MDMWinsOverGP CSP. The correct answer acknowledges the MDM precedence mechanism.",
       "This option is correct. On Windows 10/11 devices that are Azure AD joined or Hybrid Azure AD joined with MDM enrolment, the ControlPolicyConflict CSP determines which policy source wins when both GPO and MDM configure the same setting. By default, MDM (Intune) takes precedence over GPO. This means the 5-minute timeout from Intune is applied. This behaviour can be changed by configuring the MDMWinsOverGP policy. This is critical to understand during GPO-to-Intune migration.",
-      "Devices don't alternate between conflicting settings. Windows applies one setting based on the policy precedence rules. Conflicting policies are resolved, not merged."
+      "Devices don't alternate between conflicting settings. Windows applies one setting based on the policy precedence rules. Conflicting policies are resolved, not merged.",
+      "While MDM wins by default on Azure AD-joined devices, saying 'Intune always wins' is an oversimplification. The behaviour can be configured using the ControlPolicyConflict/MDMWinsOverGP CSP. The correct answer acknowledges the MDM precedence mechanism."
     ],
     "tip": "GPO vs Intune conflict resolution: MDMWinsOverGP CSP controls precedence. Default on Azure AD/Hybrid joined: MDM (Intune) wins. This is by design for cloud-first management. During migration, use Intune Settings Catalog to find matching settings and retire GPOs gradually. Exam favourite: 'What happens when GPO and Intune conflict?' \u2014 MDM wins by default."
   },
@@ -577,19 +577,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company wants to classify and protect email messages based on their content\n- The legal team sends emails containing attorney-client privileged information\n- These emails should be automatically:\n  - Labelled as 'Attorney-Client Privilege'\n  - Encrypted so only the sender and recipients can read them\n  - Prevented from being forwarded to anyone\n\nQuestion:\nWhich Microsoft Purview feature should you configure?",
     "choices": [
-      "Data Loss Prevention (DLP) policy for Exchange",
+      "Communication compliance policy",
       "Sensitivity label with encryption and rights management (Do Not Forward)",
-      "Retention label with 'Mark as regulatory record'",
-      "Communication compliance policy"
+      "Data Loss Prevention (DLP) policy for Exchange",
+      "Retention label with 'Mark as regulatory record'"
     ],
     "answer": [
       1
     ],
     "explanations": [
-      "DLP detects and can block sensitive content, but it doesn't classify emails with labels or apply persistent encryption with rights management. DLP prevents data from leaving \u2014 it doesn't protect data with encryption and forward restrictions.",
+      "Communication compliance monitors communications for policy violations (harassment, insider trading, regulatory compliance). It doesn't classify, encrypt, or apply forwarding restrictions to emails.",
       "This option is correct. A sensitivity label named 'Attorney-Client Privilege' with encryption settings: user-defined permissions or 'Do Not Forward' rights management. Do Not Forward prevents recipients from forwarding, printing, or copying the email. The label can be applied manually by the legal team or auto-applied using keyword/sensitive info type detection. The encryption persists with the email \u2014 even if forwarded (if allowed), only authorised recipients can read it.",
-      "Retention labels manage content lifecycle (retain/delete). They don't encrypt content or prevent forwarding. Regulatory records prevent content from being edited or deleted, but that's about lifecycle immutability, not confidentiality protection.",
-      "Communication compliance monitors communications for policy violations (harassment, insider trading, regulatory compliance). It doesn't classify, encrypt, or apply forwarding restrictions to emails."
+      "DLP detects and can block sensitive content, but it doesn't classify emails with labels or apply persistent encryption with rights management. DLP prevents data from leaving \u2014 it doesn't protect data with encryption and forward restrictions.",
+      "Retention labels manage content lifecycle (retain/delete). They don't encrypt content or prevent forwarding. Regulatory records prevent content from being edited or deleted, but that's about lifecycle immutability, not confidentiality protection."
     ],
     "tip": "Sensitivity labels with encryption rights: Do Not Forward = recipients can read but NOT forward, print, or copy. Encrypt-Only = recipients can read and forward but not modify permissions. Custom permissions = granular rights (view, edit, print, forward). If 'prevent forwarding' + 'encrypt' \u2014 sensitivity label with Do Not Forward."
   },
@@ -599,18 +599,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Intune and has the following device groups:\n  - Group A: All Windows devices (dynamic membership rule: deviceOS = Windows)\n  - Group B: Finance department devices (manually assigned)\n  - Group C: All company devices (All devices built-in group)\n- A compliance policy requiring a 6-character PIN is assigned to Group A\n- A compliance policy requiring an 8-character PIN is assigned to Group B\n- A Finance department Windows device is in both Group A and Group B\n\nQuestion:\nWhat PIN length is required for the Finance department Windows device?",
     "choices": [
-      "6 characters (Group A policy wins because it was assigned first)",
-      "8 characters (the most restrictive setting wins)",
       "6 characters (the less restrictive setting wins to avoid user impact)",
+      "8 characters (the most restrictive setting wins)",
+      "6 characters (Group A policy wins because it was assigned first)",
       "The device is marked as non-compliant due to the conflict"
     ],
     "answer": [
       1
     ],
     "explanations": [
-      "Assignment order doesn't determine which policy wins in Intune. Intune doesn't process policies in a queue \u2014 it evaluates all assigned policies and applies conflict resolution rules based on the setting values.",
-      "This option is correct. When multiple compliance policies target the same device with conflicting settings, Intune applies the most restrictive (most secure) value. A device in both Group A (6-char PIN) and Group B (8-char PIN) must meet the 8-character PIN requirement because it's more restrictive. This ensures security is never weakened by overlapping policy assignments. The device must satisfy ALL assigned policies.",
       "Intune does NOT apply the least restrictive setting for compliance policies. Security-related settings always resolve to the most restrictive value to maintain security posture. Applying the less restrictive value would create a security gap.",
+      "This option is correct. When multiple compliance policies target the same device with conflicting settings, Intune applies the most restrictive (most secure) value. A device in both Group A (6-char PIN) and Group B (8-char PIN) must meet the 8-character PIN requirement because it's more restrictive. This ensures security is never weakened by overlapping policy assignments. The device must satisfy ALL assigned policies.",
+      "Assignment order doesn't determine which policy wins in Intune. Intune doesn't process policies in a queue \u2014 it evaluates all assigned policies and applies conflict resolution rules based on the setting values.",
       "Conflicting compliance policies don't automatically mark devices as non-compliant. Intune resolves numeric conflicts by applying the most restrictive value. The device is evaluated against the resolved settings."
     ],
     "tip": "Intune compliance policy conflicts: most restrictive value wins for numeric settings (longer PIN, newer OS version). For boolean settings (require encryption: yes vs no): 'yes' wins. This ensures maximum security. Different from configuration profile conflicts where the last-applied may win or create errors. Compliance = most restrictive always."
@@ -622,18 +622,18 @@
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage iOS devices\n- The IT team wants to prevent users from installing apps from the Apple App Store that are not approved by IT\n- Only apps deployed through Intune or the Company Portal should be available\n- Users should not be able to browse or download apps from the public App Store\n\nQuestion:\nHow should you restrict App Store access on managed iOS devices?",
     "choices": [
       "Create an App protection policy that blocks the App Store",
+      "Create a Conditional Access policy that blocks access to the App Store",
       "Create a device configuration profile with device restrictions that block the App Store app",
-      "Uninstall the App Store app from all devices using a PowerShell script",
-      "Create a Conditional Access policy that blocks access to the App Store"
+      "Uninstall the App Store app from all devices using a PowerShell script"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
       "App protection policies (MAM) protect data within managed apps. They don't control which apps can be installed or block access to the App Store. MAM operates at the app data level, not the device configuration level.",
+      "Conditional Access controls access to cloud services based on conditions (user, device, location, risk). The Apple App Store is not an Azure AD-integrated cloud service \u2014 Conditional Access cannot block it. App Store access is controlled at the device configuration level.",
       "This option is correct. An Intune device configuration profile with iOS/iPadOS device restrictions can block the App Store. Under 'Built-in Apps' restrictions, disable 'Allow App Store'. This hides the App Store from the device, preventing users from browsing or downloading unapproved apps. IT can still push apps through Intune (VPP/ABM apps or Store apps managed through Intune). This requires supervised iOS devices for full restriction enforcement.",
-      "You cannot uninstall the App Store from iOS \u2014 it's a system app. Even on supervised devices, you can only hide it through device restrictions, not uninstall it. PowerShell doesn't run natively on iOS devices.",
-      "Conditional Access controls access to cloud services based on conditions (user, device, location, risk). The Apple App Store is not an Azure AD-integrated cloud service \u2014 Conditional Access cannot block it. App Store access is controlled at the device configuration level."
+      "You cannot uninstall the App Store from iOS \u2014 it's a system app. Even on supervised devices, you can only hide it through device restrictions, not uninstall it. PowerShell doesn't run natively on iOS devices."
     ],
     "tip": "iOS device restrictions in Intune: block App Store, block camera, block screenshots, restrict AirDrop, disable iCloud backup, require managed pasteboard, and more. IMPORTANT: Many iOS restrictions require SUPERVISED mode (Apple Business Manager + automated device enrolment). If 'block App Store on iOS' \u2014 device restriction profile (supervised mode)."
   },
@@ -643,19 +643,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft 365 E5\n- The security team wants to investigate and respond to advanced threats across:\n  - Email (phishing, malicious attachments)\n  - Endpoints (malware, exploits)\n  - Identity (compromised accounts, lateral movement)\n  - Cloud apps (shadow IT, suspicious activity)\n- They want a single portal that correlates alerts from all these sources into unified incidents\n\nQuestion:\nWhich Microsoft security solution provides this unified cross-domain threat detection and response?",
     "choices": [
-      "Microsoft Defender for Office 365 only",
       "Microsoft 365 Defender (now Microsoft Defender XDR)",
-      "Microsoft Sentinel only",
-      "Azure Security Centre only"
+      "Microsoft Defender for Office 365 only",
+      "Azure Security Centre only",
+      "Microsoft Sentinel only"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "Defender for Office 365 covers only email and collaboration threats (phishing, malicious attachments, Safe Links). It doesn't provide endpoint protection, identity threat detection, or cloud app security. It's one component of the broader Defender suite.",
       "This option is correct. Microsoft 365 Defender (rebranded as Microsoft Defender XDR \u2014 Extended Detection and Response) correlates alerts from: Defender for Office 365 (email), Defender for Endpoint (devices), Defender for Identity (on-premises AD), and Defender for Cloud Apps (SaaS apps). It automatically correlates related alerts into unified incidents, enabling security teams to see the full attack chain across domains. The unified portal (security.microsoft.com) provides incident investigation, automated investigation and response (AIR), and advanced hunting with KQL.",
-      "Microsoft Sentinel is a cloud-native SIEM/SOAR that can ingest data from Microsoft 365 Defender AND third-party sources. While Sentinel provides broader security analytics, the question asks about cross-domain Microsoft 365 threat detection and correlation \u2014 that's XDR's purpose. Sentinel is complementary (SIEM), not the XDR layer itself.",
-      "Azure Security Centre (now Microsoft Defender for Cloud) focuses on cloud infrastructure security (Azure VMs, containers, SQL, storage). It doesn't cover email, endpoint, or identity threats in the Microsoft 365 ecosystem."
+      "Defender for Office 365 covers only email and collaboration threats (phishing, malicious attachments, Safe Links). It doesn't provide endpoint protection, identity threat detection, or cloud app security. It's one component of the broader Defender suite.",
+      "Azure Security Centre (now Microsoft Defender for Cloud) focuses on cloud infrastructure security (Azure VMs, containers, SQL, storage). It doesn't cover email, endpoint, or identity threats in the Microsoft 365 ecosystem.",
+      "Microsoft Sentinel is a cloud-native SIEM/SOAR that can ingest data from Microsoft 365 Defender AND third-party sources. While Sentinel provides broader security analytics, the question asks about cross-domain Microsoft 365 threat detection and correlation \u2014 that's XDR's purpose. Sentinel is complementary (SIEM), not the XDR layer itself."
     ],
     "tip": "Microsoft Defender XDR = unified cross-domain threat detection and response. Correlates: Defender for Office 365 (email) + Defender for Endpoint (devices) + Defender for Identity (identity) + Defender for Cloud Apps (SaaS). Single portal: security.microsoft.com. Sentinel = SIEM/SOAR (broader, includes third-party data). XDR + Sentinel = complete security operations."
   },
@@ -666,18 +666,18 @@
     "stem": "Scenario:\n- Your company uses Microsoft Endpoint Manager (Intune) and Configuration Manager (MECM)\n- Currently, devices are managed by MECM with on-premises infrastructure\n- The IT team wants to gradually shift management workloads to Intune while keeping MECM for specific tasks\n- During the transition, some workloads should be managed by Intune and others by MECM\n\nQuestion:\nWhich feature enables this gradual transition between MECM and Intune?",
     "choices": [
       "Hybrid Azure AD join",
-      "Co-management",
       "Tenant attach",
-      "Azure AD Connect"
+      "Azure AD Connect",
+      "Co-management"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
       "Hybrid Azure AD join enables devices to be in both on-premises AD and Azure AD simultaneously. It's a prerequisite for co-management but doesn't itself control which management tool handles which workloads. Hybrid join is about device identity, not workload management.",
-      "This option is correct. Co-management allows devices to be simultaneously managed by BOTH Configuration Manager AND Intune. You can slide individual workloads between them: compliance policies, device configuration, Windows Update, resource access, endpoint protection, Office apps, and client apps. Each workload has a slider: MECM \u2190 \u2192 Intune. This enables a gradual, workload-by-workload migration from MECM to Intune without disrupting device management.",
       "Tenant attach uploads MECM device data to the Intune portal for visibility and limited remote actions, but it doesn't split management workloads between the two tools. Tenant attach is 'view MECM devices in the cloud'; co-management is 'manage devices with both tools simultaneously.'",
-      "Azure AD Connect synchronises on-premises AD identities to Azure AD. It's an identity sync tool, not a device management workload migration tool. It's a prerequisite for cloud identity but doesn't control which management platform handles device policies."
+      "Azure AD Connect synchronises on-premises AD identities to Azure AD. It's an identity sync tool, not a device management workload migration tool. It's a prerequisite for cloud identity but doesn't control which management platform handles device policies.",
+      "This option is correct. Co-management allows devices to be simultaneously managed by BOTH Configuration Manager AND Intune. You can slide individual workloads between them: compliance policies, device configuration, Windows Update, resource access, endpoint protection, Office apps, and client apps. Each workload has a slider: MECM \u2190 \u2192 Intune. This enables a gradual, workload-by-workload migration from MECM to Intune without disrupting device management."
     ],
     "tip": "Co-management = dual management (MECM + Intune) with workload sliders. Workloads you can shift: compliance, device config, Windows Update, resource access, endpoint protection, Office apps, client apps. Tenant attach = see MECM devices in Intune portal (visibility). Co-management = actually manage them from either tool (control). Different concepts!"
   },
@@ -688,17 +688,17 @@
     "stem": "Scenario:\n- Your company has Microsoft 365 E5\n- The compliance team needs to search for specific emails across all employee mailboxes\n- They received a regulatory request to find all emails containing the phrase 'Project Phoenix'\n- The search results must be exportable for legal review\n- Only compliance officers should be able to perform these searches\n\nQuestion:\nWhich Microsoft Purview feature should the compliance team use?",
     "choices": [
       "Audit log search in the Microsoft Purview portal",
-      "Content search in Microsoft Purview",
       "Microsoft Purview eDiscovery (Standard or Premium)",
+      "Content search in Microsoft Purview",
       "Data classification in Microsoft Purview"
     ],
     "answer": [
-      2
+      1
     ],
     "explanations": [
       "Audit log search shows WHO did WHAT in Microsoft 365 (user activities, admin actions). It doesn't search email content or mailbox data. Audit logs record events like 'User A signed in' or 'Admin B deleted a mailbox rule' \u2014 not email body text.",
-      "Content search can search across mailboxes, SharePoint, and OneDrive for specific content. However, it lacks the case management, hold capabilities, and review set features needed for legal/regulatory processes. For regulatory requests, eDiscovery provides the proper workflow.",
       "This option is correct. Microsoft Purview eDiscovery (Standard) provides: content search across all mailboxes, cases for organising investigations, holds to preserve relevant data, search results review and export for legal counsel, and role-based access (eDiscovery Manager role). eDiscovery Premium adds: custodian management, advanced processing, review sets with analytics (threading, near-duplicate detection), and predictive coding. For regulatory/legal content searches \u2014 eDiscovery is the appropriate tool with proper audit trails and access controls.",
+      "Content search can search across mailboxes, SharePoint, and OneDrive for specific content. However, it lacks the case management, hold capabilities, and review set features needed for legal/regulatory processes. For regulatory requests, eDiscovery provides the proper workflow.",
       "Data classification scans and identifies sensitive information types across Microsoft 365 content. It classifies content (credit cards, SSNs, medical records) but doesn't provide searchable content discovery, case management, or export for legal review."
     ],
     "tip": "eDiscovery = legal/regulatory content search, hold, and export. Content search = basic cross-service search (subset of eDiscovery). eDiscovery Standard = cases, holds, search, export. eDiscovery Premium = custodians, review sets, analytics, predictive coding. Required role: eDiscovery Manager or eDiscovery Administrator. If 'legal', 'regulatory', or 'export for review' \u2014 eDiscovery."
@@ -709,19 +709,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company purchases iOS apps in bulk through Apple Business Manager (ABM)\n- 200 licences of a paid app have been purchased\n- The IT team wants to:\n  - Distribute the app to managed iOS devices through Intune\n  - Revoke and reassign licences when employees leave the company\n  - Deploy the app without requiring users to have personal Apple IDs\n\nQuestion:\nWhich Intune feature supports this app distribution model?",
     "choices": [
-      "Apple App Store link in Intune",
-      "Volume Purchase Program (VPP) / Apple Business Manager app sync with Intune",
       "iOS app configuration policy",
-      "Managed Google Play (Android Enterprise)"
+      "Managed Google Play (Android Enterprise)",
+      "Volume Purchase Program (VPP) / Apple Business Manager app sync with Intune",
+      "Apple App Store link in Intune"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
-      "Adding an App Store link in Intune creates a pointer to the public App Store. Users need their own Apple ID and must purchase/download the app themselves. IT cannot manage licences, revoke assignments, or track licence usage. This doesn't support volume-purchased apps.",
-      "This option is correct. Apple Business Manager (ABM) \u2014 formerly Volume Purchase Program (VPP) \u2014 allows organisations to purchase iOS/macOS apps in bulk. When you sync ABM with Intune, purchased app licences appear in Intune. You can then assign apps to devices (device licensing \u2014 no Apple ID needed) or users (user licensing \u2014 Apple ID required). When an employee leaves, Intune automatically revokes the licence, making it available for reassignment. This is the proper enterprise iOS app distribution model.",
       "iOS app configuration policies push configuration settings (key-value pairs, XML) to apps AFTER they're installed. They don't handle app distribution, licensing, or deployment. App config = configure app settings, not install apps.",
-      "Managed Google Play is the Android Enterprise app distribution mechanism. It has nothing to do with iOS app distribution \u2014 that's handled through Apple Business Manager."
+      "Managed Google Play is the Android Enterprise app distribution mechanism. It has nothing to do with iOS app distribution \u2014 that's handled through Apple Business Manager.",
+      "This option is correct. Apple Business Manager (ABM) \u2014 formerly Volume Purchase Program (VPP) \u2014 allows organisations to purchase iOS/macOS apps in bulk. When you sync ABM with Intune, purchased app licences appear in Intune. You can then assign apps to devices (device licensing \u2014 no Apple ID needed) or users (user licensing \u2014 Apple ID required). When an employee leaves, Intune automatically revokes the licence, making it available for reassignment. This is the proper enterprise iOS app distribution model.",
+      "Adding an App Store link in Intune creates a pointer to the public App Store. Users need their own Apple ID and must purchase/download the app themselves. IT cannot manage licences, revoke assignments, or track licence usage. This doesn't support volume-purchased apps."
     ],
     "tip": "Apple Business Manager (ABM) + Intune: purchase apps in bulk, sync licences to Intune, assign to devices (no Apple ID needed) or users. Licence revocation = automatic when unassigned. Device-based licensing = the app installs without any Apple ID. If 'volume iOS apps' + 'revoke/reassign licences' \u2014 ABM/VPP sync with Intune."
   },
@@ -732,18 +732,18 @@
     "stem": "Scenario:\n- Your company uses Windows Autopilot with user-driven deployment mode\n- A new employee joins and receives a laptop\n- During the Autopilot OOBE (Out of Box Experience), the device:\n  1. Connects to the internet\n  2. Identifies itself via hardware hash\n  3. Downloads the Autopilot profile\n  4. Presents the company-branded sign-in page\n  5. The user signs in with their Azure AD credentials\n\nQuestion:\nWhat happens AFTER the user signs in during Autopilot user-driven deployment?",
     "choices": [
       "The device is manually imaged by IT with a corporate Windows image",
+      "The device reboots into Windows Setup for a fresh OS installation",
       "The device joins Azure AD (or Hybrid Azure AD), enrols in Intune, and receives assigned policies, apps, and configurations",
-      "The user must manually enrol the device in Intune through the Company Portal",
-      "The device reboots into Windows Setup for a fresh OS installation"
+      "The user must manually enrol the device in Intune through the Company Portal"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
       "Autopilot does NOT require imaging. The device ships with Windows pre-installed from the manufacturer. Autopilot configures the existing Windows installation \u2014 it's cloud-driven provisioning, not traditional imaging. No IT intervention needed.",
+      "Autopilot doesn't reinstall Windows. It transforms the factory OEM Windows installation into a corporate-configured device through cloud-driven policy application. No OS reinstallation, no rebooting into setup.",
       "This option is correct. After the user signs in: the device automatically joins Azure AD (or Hybrid Azure AD based on the Autopilot profile), automatically enrols in Microsoft Intune (MDM), Intune pushes all assigned device configuration profiles, compliance policies, apps (M365 Apps, LOB apps), security baselines, and endpoint security policies. The user sees an Enrolment Status Page (ESP) showing installation progress. Once complete, the desktop appears fully configured. The entire process is automated \u2014 zero IT intervention.",
-      "Autopilot user-driven mode automatically enrols the device in Intune after Azure AD join \u2014 there's no manual Company Portal enrolment step. The device is enrolled during the OOBE flow, not afterward.",
-      "Autopilot doesn't reinstall Windows. It transforms the factory OEM Windows installation into a corporate-configured device through cloud-driven policy application. No OS reinstallation, no rebooting into setup."
+      "Autopilot user-driven mode automatically enrols the device in Intune after Azure AD join \u2014 there's no manual Company Portal enrolment step. The device is enrolled during the OOBE flow, not afterward."
     ],
     "tip": "Autopilot user-driven flow: Power on \u2192 Internet \u2192 Hardware hash identified \u2192 Autopilot profile applied \u2192 Company branding \u2192 User signs in \u2192 Azure AD join \u2192 Intune enrolment \u2192 ESP (policies, apps install) \u2192 Desktop ready. Key concept: NO imaging, NO IT touch, cloud-driven. ESP (Enrolment Status Page) blocks the desktop until critical apps/policies are installed."
   },
@@ -753,19 +753,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Azure AD Privileged Identity Management (PIM)\n- The security team wants to:\n  - Make Global Administrator assignments time-limited (eligible, not permanent)\n  - Require approval before a user can activate the Global Admin role\n  - Require MFA when activating the role\n  - Send notifications when the role is activated\n\nQuestion:\nWhich PIM configuration achieves all of these requirements?",
     "choices": [
-      "Assign the Global Admin role as a permanent active assignment",
-      "Configure PIM role settings for Global Admin: eligible assignment, require approval, require MFA on activation, enable notifications",
       "Create a Conditional Access policy that requires MFA for Global Admins",
-      "Use Azure AD access reviews to review Global Admin assignments monthly"
+      "Use Azure AD access reviews to review Global Admin assignments monthly",
+      "Configure PIM role settings for Global Admin: eligible assignment, require approval, require MFA on activation, enable notifications",
+      "Assign the Global Admin role as a permanent active assignment"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
-      "Permanent active assignments are the OPPOSITE of what PIM is designed to prevent. PIM's purpose is to eliminate standing (permanent) privileged access. Making Global Admin permanent means the user always has the role \u2014 no time limit, no activation, no approval.",
-      "This option is correct. PIM role settings for Global Administrator: (1) Assignment type = Eligible (not Active) \u2014 user must activate when needed. (2) Activation maximum duration = time-limited (e.g., 8 hours). (3) Require approval = yes, with designated approvers. (4) Require MFA on activation = yes (user must MFA before the role activates). (5) Notification settings = send email when the role is activated. This implements just-in-time (JIT) privileged access with full governance controls.",
       "Conditional Access can require MFA when a Global Admin signs in, but it doesn't provide: eligible assignments, time-limited access, approval workflows, or activation-specific notifications. Conditional Access is always-on enforcement; PIM is just-in-time governance. They complement each other but serve different purposes.",
-      "Access reviews periodically review role assignments and ask 'Should this user still have this role?' They're important for governance hygiene but don't provide real-time activation controls (approval, MFA, time-limits, notifications). Access reviews = periodic cleanup. PIM settings = per-activation governance."
+      "Access reviews periodically review role assignments and ask 'Should this user still have this role?' They're important for governance hygiene but don't provide real-time activation controls (approval, MFA, time-limits, notifications). Access reviews = periodic cleanup. PIM settings = per-activation governance.",
+      "This option is correct. PIM role settings for Global Administrator: (1) Assignment type = Eligible (not Active) \u2014 user must activate when needed. (2) Activation maximum duration = time-limited (e.g., 8 hours). (3) Require approval = yes, with designated approvers. (4) Require MFA on activation = yes (user must MFA before the role activates). (5) Notification settings = send email when the role is activated. This implements just-in-time (JIT) privileged access with full governance controls.",
+      "Permanent active assignments are the OPPOSITE of what PIM is designed to prevent. PIM's purpose is to eliminate standing (permanent) privileged access. Making Global Admin permanent means the user always has the role \u2014 no time limit, no activation, no approval."
     ],
     "tip": "PIM role settings per role: eligible vs active assignment, max activation duration, require MFA on activation, require approval (with approvers), require justification, enable notifications. PIM = just-in-time privileged access. Conditional Access = always-on enforcement. Access reviews = periodic role assignment review. All three should work together."
   },
@@ -775,18 +775,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company manages 800 Windows 11 devices with Microsoft Intune\n- The IT team wants to deploy a standardised desktop wallpaper and lock screen image\n- They also want to configure Start menu layout with pinned company apps\n- These settings should be enforced and users should not be able to change them\n\nQuestion:\nWhich Intune feature should you use?",
     "choices": [
+      "App protection policy",
       "Device compliance policy",
       "Device configuration profile using the Settings Catalog or Device restrictions template",
-      "App protection policy",
       "Windows Autopilot deployment profile"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
+      "App protection policies protect data within managed apps. They don't configure device-level personalisation settings like wallpapers, lock screens, or Start menu layouts.",
       "Compliance policies evaluate whether a device meets requirements (encryption, PIN, OS version). They don't configure device settings like wallpapers, lock screens, or Start menu layouts. Compliance = assessment, not configuration.",
       "This option is correct. Device configuration profiles deploy settings to managed devices. Use the Settings Catalog (recommended) or Device restrictions template to configure: desktop wallpaper image (Personalization/DesktopImageUrl CSP), lock screen image (Personalization/LockScreenImageUrl CSP), and Start menu layout (Start/StartLayout CSP with XML or JSON layout). Assign to device groups \u2014 settings are enforced and users cannot change them. The Settings Catalog provides the widest range of Windows CSP settings.",
-      "App protection policies protect data within managed apps. They don't configure device-level personalisation settings like wallpapers, lock screens, or Start menu layouts.",
       "Autopilot deployment profiles configure the OOBE experience (skip screens, naming template, Azure AD join). They don't configure ongoing device settings like wallpapers or Start menus. Autopilot = initial provisioning. Configuration profiles = ongoing device management."
     ],
     "tip": "Device configuration profiles: Settings Catalog (widest coverage, individual settings), Templates (predefined setting groups \u2014 device restrictions, Wi-Fi, VPN, email), Custom (OMA-URI for specific CSPs). For wallpaper, lock screen, Start menu \u2014 use Settings Catalog or device restrictions. Compliance = assess. Configuration = configure. Different tools!"
@@ -798,18 +798,18 @@
     "stem": "Scenario:\n- Your company wants to implement insider risk management\n- They need to detect and respond to:\n  - Employees downloading large amounts of data before their resignation date\n  - Users copying sensitive files to USB drives\n  - Unusual file activity patterns that could indicate data theft\n- HR can provide a list of employees who have submitted resignations\n\nQuestion:\nWhich Microsoft Purview solution addresses these insider threat scenarios?",
     "choices": [
       "Microsoft Purview Data Loss Prevention",
-      "Microsoft Purview Insider Risk Management",
+      "Microsoft Defender for Cloud Apps",
       "Microsoft Purview Communication Compliance",
-      "Microsoft Defender for Cloud Apps"
+      "Microsoft Purview Insider Risk Management"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
       "DLP detects and blocks sensitive data from being shared or transferred based on content (credit cards, SSNs, custom patterns). While DLP can detect data leaving the organisation, it doesn't correlate activities with HR signals (resignation dates), build risk profiles of users, or provide insider threat investigation workflows.",
-      "This option is correct. Microsoft Purview Insider Risk Management is purpose-built for detecting, investigating, and responding to insider threats. It uses HR connector signals (resignation date, performance improvement plans), DLP policy matches, and activity signals (mass file downloads, USB copies, unusual access patterns) to build risk scores and generate alerts. Policies include: departing employee data theft, data leaks, security policy violations. It provides a triage and investigation workflow with case management.",
+      "Defender for Cloud Apps (CASB) monitors cloud app usage and can detect anomalous behaviour in cloud apps. While it has some overlap (unusual download activity from cloud apps), it doesn't integrate HR signals, monitor USB activity, or provide the dedicated insider risk management workflow.",
       "Communication Compliance monitors email, Teams, and other communications for policy violations (harassment, threats, regulatory language). It doesn't monitor file downloads, USB activity, or correlate with HR signals for insider risk detection.",
-      "Defender for Cloud Apps (CASB) monitors cloud app usage and can detect anomalous behaviour in cloud apps. While it has some overlap (unusual download activity from cloud apps), it doesn't integrate HR signals, monitor USB activity, or provide the dedicated insider risk management workflow."
+      "This option is correct. Microsoft Purview Insider Risk Management is purpose-built for detecting, investigating, and responding to insider threats. It uses HR connector signals (resignation date, performance improvement plans), DLP policy matches, and activity signals (mass file downloads, USB copies, unusual access patterns) to build risk scores and generate alerts. Policies include: departing employee data theft, data leaks, security policy violations. It provides a triage and investigation workflow with case management."
     ],
     "tip": "Insider Risk Management = detect data theft by insiders using HR signals + activity signals. Key policies: departing employee data theft, data leaks, security policy violations. HR connector = resignation dates, termination dates. Activity signals: mass downloads, USB copies, printing, email attachments. If 'insider threat' + 'HR signals' + 'data theft' \u2014 Insider Risk Management."
   },
@@ -841,19 +841,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage macOS devices\n- The IT team wants to deploy a configuration profile that:\n  - Configures Wi-Fi settings for the corporate network\n  - Installs a root CA certificate for network authentication\n  - Restricts AirDrop to managed devices only\n\nQuestion:\nWhich Intune profile types do you need to create for macOS? (Choose the best answer.)",
     "choices": [
-      "A single compliance policy covering Wi-Fi, certificates, and AirDrop",
-      "Device configuration profiles: Wi-Fi profile, Trusted certificate profile, and Device restrictions profile",
       "App protection policies for macOS",
-      "A single PowerShell script that configures all three settings"
+      "Device configuration profiles: Wi-Fi profile, Trusted certificate profile, and Device restrictions profile",
+      "A single PowerShell script that configures all three settings",
+      "A single compliance policy covering Wi-Fi, certificates, and AirDrop"
     ],
     "answer": [
       1
     ],
     "explanations": [
-      "Compliance policies EVALUATE device state \u2014 they don't deploy configurations like Wi-Fi profiles, certificates, or AirDrop restrictions. Compliance = 'Is the device meeting requirements?' Configuration profiles = 'Push these settings to the device.'",
-      "This option is correct. You need three device configuration profiles: (1) Wi-Fi profile \u2014 configures SSID, security type (WPA2-Enterprise), EAP method, and authentication certificate. (2) Trusted certificate profile \u2014 deploys the root CA certificate needed for 802.1x network authentication (referenced by the Wi-Fi profile). (3) Device restrictions profile \u2014 configures macOS restrictions including AirDrop settings. Each profile type serves a specific purpose and they work together.",
       "App protection policies (MAM) exist for iOS and Android to protect data in managed apps. macOS app protection is limited and doesn't cover Wi-Fi, certificates, or AirDrop device-level settings.",
-      "PowerShell is a Windows scripting language, not natively available on macOS. macOS uses shell scripts (bash/zsh). While Intune can deploy shell scripts to macOS, using native configuration profiles is the recommended approach \u2014 they provide ongoing enforcement, not just one-time execution."
+      "This option is correct. You need three device configuration profiles: (1) Wi-Fi profile \u2014 configures SSID, security type (WPA2-Enterprise), EAP method, and authentication certificate. (2) Trusted certificate profile \u2014 deploys the root CA certificate needed for 802.1x network authentication (referenced by the Wi-Fi profile). (3) Device restrictions profile \u2014 configures macOS restrictions including AirDrop settings. Each profile type serves a specific purpose and they work together.",
+      "PowerShell is a Windows scripting language, not natively available on macOS. macOS uses shell scripts (bash/zsh). While Intune can deploy shell scripts to macOS, using native configuration profiles is the recommended approach \u2014 they provide ongoing enforcement, not just one-time execution.",
+      "Compliance policies EVALUATE device state \u2014 they don't deploy configurations like Wi-Fi profiles, certificates, or AirDrop restrictions. Compliance = 'Is the device meeting requirements?' Configuration profiles = 'Push these settings to the device.'"
     ],
     "tip": "Intune macOS configuration: Wi-Fi profiles, VPN profiles, certificates (SCEP/PKCS/trusted certificate), device restrictions, custom profiles (.mobileconfig), and shell scripts. Intune manages macOS similarly to iOS \u2014 through MDM profiles. Certificate + Wi-Fi are often deployed together (cert authenticates to WPA2-Enterprise). If deploying corporate Wi-Fi with certificates \u2014 you need both profiles."
   },
@@ -864,18 +864,18 @@
     "stem": "Scenario:\n- Your company has Microsoft 365 E5 licences\n- The security team wants to:\n  - Identify all cloud applications being used by employees (including unsanctioned 'shadow IT')\n  - Assess the risk of each discovered app\n  - Block access to high-risk cloud applications\n  - Monitor user activity in sanctioned cloud applications\n\nQuestion:\nWhich Microsoft security service provides Cloud Access Security Broker (CASB) capabilities?",
     "choices": [
       "Microsoft Defender for Endpoint",
-      "Microsoft Defender for Cloud Apps",
       "Azure AD Conditional Access",
-      "Microsoft Purview Information Protection"
+      "Microsoft Purview Information Protection",
+      "Microsoft Defender for Cloud Apps"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
       "Defender for Endpoint protects device endpoints against threats (malware, exploits, network attacks). While it can feed network discovery data to Defender for Cloud Apps (shadow IT discovery from endpoint traffic), it doesn't provide CASB functionality itself \u2014 app risk assessment, governance, and cloud app monitoring.",
-      "This option is correct. Microsoft Defender for Cloud Apps (formerly Microsoft Cloud App Security) is Microsoft's CASB solution. It provides: Cloud Discovery (identify all cloud apps used via firewall/proxy logs or Defender for Endpoint signals), App Risk Assessment (risk score based on security, compliance, and legal factors from a catalogue of 31,000+ apps), App Governance (sanction/unsanction apps, block high-risk apps), Session and Activity Monitoring (real-time session controls, activity alerts, anomaly detection), and Information Protection (DLP policies for cloud apps). It's the complete CASB for Microsoft 365 and third-party SaaS.",
       "Conditional Access controls access to Azure AD-integrated apps based on conditions. It can consume signals FROM Defender for Cloud Apps (session risk) but doesn't discover shadow IT, assess app risk, or monitor cloud app usage patterns. Conditional Access = access enforcement. Defender for Cloud Apps = CASB (visibility and governance).",
-      "Purview Information Protection classifies and protects data with sensitivity labels and encryption. It doesn't discover cloud apps, assess app risk, or provide CASB capabilities."
+      "Purview Information Protection classifies and protects data with sensitivity labels and encryption. It doesn't discover cloud apps, assess app risk, or provide CASB capabilities.",
+      "This option is correct. Microsoft Defender for Cloud Apps (formerly Microsoft Cloud App Security) is Microsoft's CASB solution. It provides: Cloud Discovery (identify all cloud apps used via firewall/proxy logs or Defender for Endpoint signals), App Risk Assessment (risk score based on security, compliance, and legal factors from a catalogue of 31,000+ apps), App Governance (sanction/unsanction apps, block high-risk apps), Session and Activity Monitoring (real-time session controls, activity alerts, anomaly detection), and Information Protection (DLP policies for cloud apps). It's the complete CASB for Microsoft 365 and third-party SaaS."
     ],
     "tip": "Defender for Cloud Apps = CASB. Four pillars: (1) Cloud Discovery (shadow IT), (2) Information Protection (DLP in cloud apps), (3) Threat Protection (anomaly detection), (4) Compliance (app risk assessment). If 'shadow IT', 'cloud app discovery', 'CASB', or 'cloud app governance' \u2014 Defender for Cloud Apps."
   },
@@ -885,18 +885,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company uses Microsoft Intune to manage 800 iOS devices\n- The security team requires that users can only copy data from Microsoft Outlook to Microsoft Teams and OneDrive\n- Users must NOT be able to paste corporate email content into personal apps like WhatsApp or Notes\n- The devices are personally owned (BYOD) and not enrolled in Intune MDM\n\nQuestion:\nWhich Intune feature should you configure to enforce these data transfer restrictions?",
     "choices": [
-      "App configuration policy",
       "App protection policy (MAM)",
       "Device compliance policy",
+      "App configuration policy",
       "Device configuration profile"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "App configuration policies push settings to managed apps (like server URLs, default behaviors) but do NOT enforce data protection boundaries such as cut/copy/paste restrictions between apps.",
       "This option is correct. App protection policies (MAM without enrolment) enforce data loss prevention at the app level. You can restrict 'Send org data to other apps' to 'Policy managed apps' so copy/paste and data sharing only works between apps protected by Intune MAM policies (e.g., Outlook \u2192 Teams, Outlook \u2192 OneDrive). This works on BYOD devices without requiring MDM enrolment.",
       "Device compliance policies evaluate device health (OS version, encryption, jailbreak status) and report compliance state. They do not control inter-app data transfer.",
+      "App configuration policies push settings to managed apps (like server URLs, default behaviors) but do NOT enforce data protection boundaries such as cut/copy/paste restrictions between apps.",
       "Device configuration profiles push device-level settings (Wi-Fi, VPN, restrictions). They require MDM enrolment and operate at the device level, not the app level. Since these are unenrolled BYOD devices, device-level profiles cannot be applied."
     ],
     "tip": "BYOD + data protection = App protection policy (MAM without enrolment). Key MAM settings: 'Send org data to other apps' \u2192 Policy managed apps. 'Receive data from other apps' \u2192 Policy managed apps. 'Restrict cut, copy, paste' \u2192 Policy managed apps with paste in."
@@ -907,19 +907,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company is deploying 200 new Windows 11 laptops using Windows Autopilot\n- The devices must be deployed directly to end users without IT physically touching them\n- During the out-of-box experience (OOBE), users should sign in with their Azure AD credentials\n- An Enrolment Status Page (ESP) must display until all required apps and policies are installed\n\nQuestion:\nWhat is the PRIMARY purpose of the Enrolment Status Page (ESP) during Autopilot deployment?",
     "choices": [
+      "To prompt users to join the device to on-premises Active Directory",
       "To allow users to select which applications to install",
-      "To prevent users from using the device until required apps and policies are applied",
       "To display the device serial number and warranty information",
-      "To prompt users to join the device to on-premises Active Directory"
+      "To prevent users from using the device until required apps and policies are applied"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
+      "Autopilot with Azure AD join does not involve on-premises AD. The ESP is specifically about tracking Intune policy and app deployment progress, not domain joining.",
       "The ESP does not give users a choice of applications. App assignments are determined by Intune policies assigned to the user or device group. The ESP simply tracks installation progress.",
-      "This option is correct. The Enrolment Status Page blocks the user from accessing the desktop until all required applications, device configuration profiles, and compliance policies are installed and applied. This ensures the device is fully configured and secured before the user starts working. Without ESP, users could access an incompletely configured device.",
       "The ESP does not display hardware inventory information. Serial numbers and warranty details are available through Intune device properties or the hardware manufacturer's portal.",
-      "Autopilot with Azure AD join does not involve on-premises AD. The ESP is specifically about tracking Intune policy and app deployment progress, not domain joining."
+      "This option is correct. The Enrolment Status Page blocks the user from accessing the desktop until all required applications, device configuration profiles, and compliance policies are installed and applied. This ensures the device is fully configured and secured before the user starts working. Without ESP, users could access an incompletely configured device."
     ],
     "tip": "ESP = gate that blocks user access until device is ready. Key ESP settings: 'Block device use until all apps and profiles are installed', 'Show error when installation exceeds time limit', 'Allow users to reset device if installation error occurs'. ESP can be scoped to specific groups."
   },
@@ -929,19 +929,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your organization has Microsoft 365 E5 licensing\n- The CISO wants to automatically remediate compromised user accounts\n- When Azure AD Identity Protection detects a high-risk sign-in, the user must be forced to change their password\n- Multi-factor authentication must be required for medium-risk sign-ins\n\nQuestion:\nWhich TWO policies should you configure in Azure AD Identity Protection to meet these requirements? (Choose the single best answer)",
     "choices": [
-      "Sign-in risk policy set to High \u2192 Block access, and User risk policy set to Medium \u2192 Require MFA",
       "User risk policy set to High \u2192 Require password change, and Sign-in risk policy set to Medium \u2192 Require MFA",
-      "Conditional Access policy with device compliance, and DLP policy with endpoint restrictions",
-      "User risk policy set to High \u2192 Block access, and Sign-in risk policy set to Low \u2192 Require password change"
+      "Sign-in risk policy set to High \u2192 Block access, and User risk policy set to Medium \u2192 Require MFA",
+      "User risk policy set to High \u2192 Block access, and Sign-in risk policy set to Low \u2192 Require password change",
+      "Conditional Access policy with device compliance, and DLP policy with endpoint restrictions"
     ],
     "answer": [
-      1
+      0
     ],
     "explanations": [
-      "This reverses the policies. Blocking access for high-risk sign-ins prevents access entirely but doesn't remediate the compromised account (no password change). Setting user risk to Medium with MFA doesn't address the requirement to force password changes for compromised accounts.",
       "This option is correct. User risk policy at High \u2192 Require password change forces users with detected compromised credentials to reset their password, remediating the compromise. Sign-in risk policy at Medium \u2192 Require MFA adds an extra verification step when suspicious sign-in behaviour is detected. This is the standard Identity Protection configuration pattern.",
-      "Conditional Access device compliance and DLP are unrelated to identity risk remediation. Device compliance evaluates device health, and DLP prevents data loss \u2014 neither addresses compromised user accounts.",
-      "Blocking at High user risk prevents access but doesn't remediate. Requiring password change at Low sign-in risk is overly aggressive and applies password changes to normal sign-ins, which is not what was requested."
+      "This reverses the policies. Blocking access for high-risk sign-ins prevents access entirely but doesn't remediate the compromised account (no password change). Setting user risk to Medium with MFA doesn't address the requirement to force password changes for compromised accounts.",
+      "Blocking at High user risk prevents access but doesn't remediate. Requiring password change at Low sign-in risk is overly aggressive and applies password changes to normal sign-ins, which is not what was requested.",
+      "Conditional Access device compliance and DLP are unrelated to identity risk remediation. Device compliance evaluates device health, and DLP prevents data loss \u2014 neither addresses compromised user accounts."
     ],
     "tip": "Identity Protection has TWO risk policies: User risk (compromised credentials) \u2192 Require password change. Sign-in risk (suspicious sign-in) \u2192 Require MFA. Remember: User risk = who you ARE is compromised. Sign-in risk = what you're DOING looks suspicious."
   },
@@ -951,18 +951,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your organization manages 300 Android Enterprise devices through Intune\n- The IT department needs to deploy a custom line-of-business (LOB) Android app that is not available in the Google Play Store\n- The app is packaged as an APK file\n- The app should be automatically installed on all managed Android devices without user intervention\n\nQuestion:\nHow should you deploy this LOB app through Intune?",
     "choices": [
-      "Upload the APK as a line-of-business app in Intune and assign it as Required",
       "Publish the app to the public Google Play Store and add it as a Managed Google Play app",
       "Email the APK file to users and ask them to sideload it",
+      "Upload the APK as a line-of-business app in Intune and assign it as Required",
       "Create an app configuration policy that references the APK download URL"
     ],
     "answer": [
-      0
+      2
     ],
     "explanations": [
-      "This option is correct. For Android LOB apps not in Google Play, you upload the APK file directly to Intune as a line-of-business app type. Setting the assignment to 'Required' triggers automatic silent installation on targeted devices without user intervention. Intune handles the distribution and installation.",
       "Publishing to the public Google Play Store makes the app publicly available to everyone, which is not appropriate for an internal LOB app. Additionally, Google Play publishing requires a developer account and app review process.",
       "Email distribution bypasses Intune management entirely. Users would need to enable 'Install from unknown sources', which is a security risk, and IT would have no visibility into installation status or app version management.",
+      "This option is correct. For Android LOB apps not in Google Play, you upload the APK file directly to Intune as a line-of-business app type. Setting the assignment to 'Required' triggers automatic silent installation on targeted devices without user intervention. Intune handles the distribution and installation.",
       "App configuration policies send configuration data to already-installed apps (key-value pairs for app settings). They cannot install apps or distribute APK files."
     ],
     "tip": "Android app deployment in Intune: LOB app (APK upload) \u2192 for private/internal apps. Managed Google Play \u2192 for public store apps in enterprise context. Web link \u2192 for web apps. For automatic install, use 'Required' assignment. For user-choice install, use 'Available' assignment."
@@ -973,19 +973,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company has Microsoft 365 E5 licensing\n- The compliance team receives a legal hold request for a departing employee\n- All email, Teams messages, and OneDrive files for this user must be preserved exactly as they are\n- No content should be modified or deleted, even after the user account is disabled\n\nQuestion:\nWhich Microsoft Purview feature should you apply to preserve this user's content?",
     "choices": [
-      "Retention label with 'Delete after 7 years' action",
-      "eDiscovery hold (litigation hold or case hold)",
       "Data Loss Prevention (DLP) policy",
-      "Sensitivity label with encryption"
+      "Sensitivity label with encryption",
+      "eDiscovery hold (litigation hold or case hold)",
+      "Retention label with 'Delete after 7 years' action"
     ],
     "answer": [
-      1
+      2
     ],
     "explanations": [
-      "A retention label with a delete action would eventually delete the content after the retention period. Even a retention label that retains content doesn't provide the legal hold functionality \u2014 it applies lifecycle management, not litigation preservation. Legal holds specifically preserve content in-place and prevent deletion.",
-      "This option is correct. An eDiscovery hold (either litigation hold on the mailbox or a case hold in eDiscovery) preserves all content in-place. Exchange mailbox items, Teams chat messages, and OneDrive files are all held immutably \u2014 users and admins cannot delete or modify preserved content. The hold persists even after the user account is disabled or deleted (mailbox becomes inactive). This is the standard response to legal hold requests.",
       "DLP policies prevent sensitive data from being shared outside the organization. They scan for sensitive information types and apply restrictions. DLP does not preserve or hold content for legal purposes.",
-      "Sensitivity labels with encryption protect content from unauthorized access. They apply persistent protection (encryption, access controls) but do not prevent content deletion or provide legal preservation."
+      "Sensitivity labels with encryption protect content from unauthorized access. They apply persistent protection (encryption, access controls) but do not prevent content deletion or provide legal preservation.",
+      "This option is correct. An eDiscovery hold (either litigation hold on the mailbox or a case hold in eDiscovery) preserves all content in-place. Exchange mailbox items, Teams chat messages, and OneDrive files are all held immutably \u2014 users and admins cannot delete or modify preserved content. The hold persists even after the user account is disabled or deleted (mailbox becomes inactive). This is the standard response to legal hold requests.",
+      "A retention label with a delete action would eventually delete the content after the retention period. Even a retention label that retains content doesn't provide the legal hold functionality \u2014 it applies lifecycle management, not litigation preservation. Legal holds specifically preserve content in-place and prevent deletion."
     ],
     "tip": "Legal hold/litigation preservation \u2192 eDiscovery hold. Content lifecycle (keep/delete) \u2192 Retention policies/labels. Prevent data sharing \u2192 DLP. Protect/encrypt content \u2192 Sensitivity labels. For departing employees: apply hold BEFORE disabling/deleting the account."
   },
@@ -996,18 +996,18 @@
     "stem": "Scenario:\n- Your company manages Windows devices with Microsoft Intune\n- A new security vulnerability is discovered in Windows, and Microsoft releases an out-of-band security patch\n- The security team requires this patch to be deployed to all managed devices within 24 hours\n- Normal Windows Update for Business rings have a 7-day deferral for quality updates\n\nQuestion:\nWhich Intune feature allows you to expedite this critical security update?",
     "choices": [
       "Feature update deployment profile",
-      "Windows Update for Business expedite policy",
       "Device configuration profile with custom OMA-URI",
-      "PowerShell script deployment through Intune"
+      "PowerShell script deployment through Intune",
+      "Windows Update for Business expedite policy"
     ],
     "answer": [
-      1
+      3
     ],
     "explanations": [
       "Feature update profiles control Windows version upgrades (e.g., moving from Windows 10 to Windows 11 or from 21H2 to 22H2). They do not handle quality/security patches and are not designed for emergency patch deployment.",
-      "This option is correct. Windows Update for Business expedite policies allow you to bypass configured deferral periods and immediately deploy a specific quality update. The expedited update overrides the normal 7-day deferral ring and pushes the update as quickly as possible. Devices will download and install the update at the next check-in cycle, typically within 24 hours.",
       "Custom OMA-URI settings can configure many Windows settings, but managing individual Windows updates through custom OMA-URI is not the intended approach and does not provide the expedite functionality that bypasses deferral rings.",
-      "While PowerShell scripts could theoretically trigger Windows Update, this approach lacks the reporting, compliance tracking, and orchestration that the built-in expedite feature provides. It's also not the Microsoft-recommended approach for urgent patch deployment."
+      "While PowerShell scripts could theoretically trigger Windows Update, this approach lacks the reporting, compliance tracking, and orchestration that the built-in expedite feature provides. It's also not the Microsoft-recommended approach for urgent patch deployment.",
+      "This option is correct. Windows Update for Business expedite policies allow you to bypass configured deferral periods and immediately deploy a specific quality update. The expedited update overrides the normal 7-day deferral ring and pushes the update as quickly as possible. Devices will download and install the update at the next check-in cycle, typically within 24 hours."
     ],
     "tip": "Windows updates in Intune: Update rings \u2192 set deferral periods for quality/feature updates. Feature update profiles \u2192 pin a specific Windows version. Expedite policies \u2192 bypass deferrals for urgent quality updates. Driver update profiles \u2192 manage driver updates separately."
   },
@@ -1018,18 +1018,18 @@
     "stem": "Scenario:\n- Your organization uses Microsoft 365 with Exchange Online\n- Users report receiving emails from external senders that appear to come from your company's domain\n- The IT team suspects domain spoofing attacks\n- You need to configure email authentication to prevent external parties from spoofing your domain\n\nQuestion:\nWhich THREE email authentication standards should you implement together for comprehensive anti-spoofing protection? (Choose the best single answer)",
     "choices": [
       "SPF, DKIM, and DMARC",
+      "Safe Attachments, Safe Links, and anti-phishing policies",
       "TLS, S/MIME, and BitLocker",
-      "DLP, sensitivity labels, and retention policies",
-      "Safe Attachments, Safe Links, and anti-phishing policies"
+      "DLP, sensitivity labels, and retention policies"
     ],
     "answer": [
       0
     ],
     "explanations": [
       "This option is correct. SPF (Sender Policy Framework) specifies which mail servers can send email on behalf of your domain. DKIM (DomainKeys Identified Mail) adds a digital signature to outgoing emails to verify they haven't been tampered with. DMARC (Domain-based Message Authentication, Reporting, and Conformance) builds on SPF and DKIM, telling receiving servers what to do when authentication fails (quarantine, reject). Together, these three standards prevent domain spoofing.",
+      "Safe Attachments, Safe Links, and anti-phishing policies are Microsoft Defender for Office 365 features that protect against threats in inbound email. While anti-phishing includes some spoof detection, these don't prevent external parties from spoofing your domain to OTHER recipients \u2014 only SPF/DKIM/DMARC do that.",
       "TLS encrypts email in transit, S/MIME encrypts and signs individual messages, and BitLocker encrypts device disks. None of these prevent domain spoofing \u2014 they are all encryption technologies, not authentication standards.",
-      "DLP prevents sensitive data sharing, sensitivity labels classify and protect content, and retention policies manage content lifecycle. These are information protection features, not email authentication standards.",
-      "Safe Attachments, Safe Links, and anti-phishing policies are Microsoft Defender for Office 365 features that protect against threats in inbound email. While anti-phishing includes some spoof detection, these don't prevent external parties from spoofing your domain to OTHER recipients \u2014 only SPF/DKIM/DMARC do that."
+      "DLP prevents sensitive data sharing, sensitivity labels classify and protect content, and retention policies manage content lifecycle. These are information protection features, not email authentication standards."
     ],
     "tip": "Anti-spoofing trio: SPF \u2192 who can send. DKIM \u2192 message integrity signature. DMARC \u2192 policy enforcement (what to do on failure). Implementation order: SPF first, then DKIM, then DMARC. DMARC requires both SPF and DKIM to be effective."
   },
@@ -1039,18 +1039,18 @@
     "type": "single",
     "stem": "Scenario:\n- Your company deploys Microsoft 365 Apps using Intune\n- The Office deployment is configured to use the Monthly Enterprise Channel\n- After the latest update, multiple users report that an Excel add-in critical to finance operations is crashing\n- You need to quickly roll back to the previous version while the add-in vendor investigates\n\nQuestion:\nWhich approach should you use to roll back the Microsoft 365 Apps update?",
     "choices": [
-      "Uninstall and reinstall Microsoft 365 Apps from scratch using a different channel",
-      "Use the Office Deployment Tool (ODT) or Intune configuration to set TargetVersion to the previous build",
       "Ask users to use System Restore to revert their entire Windows installation",
+      "Use the Office Deployment Tool (ODT) or Intune configuration to set TargetVersion to the previous build",
+      "Uninstall and reinstall Microsoft 365 Apps from scratch using a different channel",
       "Disable automatic updates and wait for the next Monthly Enterprise Channel release"
     ],
     "answer": [
       1
     ],
     "explanations": [
-      "Completely uninstalling and reinstalling Office is disruptive and unnecessary. It would lose user customizations, cached credentials, and Outlook profiles. A targeted version rollback is far more efficient.",
-      "This option is correct. Setting the TargetVersion attribute to the previous build number forces Microsoft 365 Apps to roll back to that specific version. You can do this through the Office Deployment Tool configuration XML or through Intune's Microsoft 365 Apps configuration profile. Once set, clients will revert to the specified version at the next update cycle. This is the Microsoft-recommended rollback approach.",
       "System Restore reverts the entire Windows system state, which could undo other important changes and updates. It's a blunt instrument that affects far more than just Office and is not an enterprise management approach.",
+      "This option is correct. Setting the TargetVersion attribute to the previous build number forces Microsoft 365 Apps to roll back to that specific version. You can do this through the Office Deployment Tool configuration XML or through Intune's Microsoft 365 Apps configuration profile. Once set, clients will revert to the specified version at the next update cycle. This is the Microsoft-recommended rollback approach.",
+      "Completely uninstalling and reinstalling Office is disruptive and unnecessary. It would lose user customizations, cached credentials, and Outlook profiles. A targeted version rollback is far more efficient.",
       "Disabling updates and waiting means users are stuck with the broken version for an entire month until the next release. This doesn't solve the immediate problem and leaves users unable to use the critical Excel add-in."
     ],
     "tip": "Microsoft 365 Apps version control: TargetVersion \u2192 pin or rollback to a specific build. Update channel \u2192 controls update frequency (Monthly Enterprise, Semi-Annual, Current). Deadline \u2192 force updates by a specific date. For rollback: set TargetVersion to the previous known-good build number."
@@ -1061,19 +1061,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your company has a Microsoft 365 E3 subscription\n- The IT team manages both Windows and macOS devices through Intune\n- A new compliance requirement states that all devices must have disk encryption enabled\n- Non-compliant devices must be blocked from accessing corporate resources\n\nQuestion:\nHow should you enforce disk encryption and block non-compliant devices?",
     "choices": [
-      "Create a device compliance policy requiring encryption and integrate it with Conditional Access to block non-compliant devices",
-      "Create a device configuration profile that enables BitLocker and FileVault, with no additional policies",
       "Send an email to all users asking them to enable encryption manually",
-      "Create an Azure AD security group that only includes encrypted devices"
+      "Create a device compliance policy requiring encryption and integrate it with Conditional Access to block non-compliant devices",
+      "Create an Azure AD security group that only includes encrypted devices",
+      "Create a device configuration profile that enables BitLocker and FileVault, with no additional policies"
     ],
     "answer": [
-      0
+      1
     ],
     "explanations": [
-      "This option is correct. A device compliance policy checks whether disk encryption is enabled (BitLocker for Windows, FileVault for macOS) and marks devices as compliant or non-compliant. When integrated with a Conditional Access policy that requires device compliance, non-compliant devices are blocked from accessing corporate resources like Exchange Online, SharePoint, and Teams. This is the standard compliance enforcement pattern in Intune.",
-      "A device configuration profile CAN enable BitLocker and FileVault, but it only pushes the encryption settings \u2014 it doesn't evaluate compliance or block access for devices where encryption fails. Without a compliance policy and Conditional Access, unencrypted devices can still access corporate resources.",
       "Email communication is not a technical control. Users may ignore the email, not know how to enable encryption, or not have the required permissions. This provides no enforcement or verification mechanism.",
-      "You cannot create an Azure AD group that dynamically filters by encryption status. Device attributes in Azure AD don't include real-time encryption state. Even if you could, a group alone doesn't block access \u2014 you need Conditional Access for enforcement."
+      "This option is correct. A device compliance policy checks whether disk encryption is enabled (BitLocker for Windows, FileVault for macOS) and marks devices as compliant or non-compliant. When integrated with a Conditional Access policy that requires device compliance, non-compliant devices are blocked from accessing corporate resources like Exchange Online, SharePoint, and Teams. This is the standard compliance enforcement pattern in Intune.",
+      "You cannot create an Azure AD group that dynamically filters by encryption status. Device attributes in Azure AD don't include real-time encryption state. Even if you could, a group alone doesn't block access \u2014 you need Conditional Access for enforcement.",
+      "A device configuration profile CAN enable BitLocker and FileVault, but it only pushes the encryption settings \u2014 it doesn't evaluate compliance or block access for devices where encryption fails. Without a compliance policy and Conditional Access, unencrypted devices can still access corporate resources."
     ],
     "tip": "The compliance enforcement pattern: Step 1: Compliance policy (check device state). Step 2: Conditional Access (enforce access control based on compliance). Configuration profiles PUSH settings; compliance policies CHECK settings. You need both, plus Conditional Access for enforcement."
   },
@@ -1083,19 +1083,19 @@
     "type": "single",
     "stem": "Scenario:\n- Your organization has Microsoft 365 E5 licensing\n- The security team wants to create automated responses to common security incidents\n- When a user is confirmed as compromised by Identity Protection, the system should automatically:\n  1. Disable the user's sign-in\n  2. Revoke all active sessions\n  3. Create a ServiceNow ticket\n  4. Notify the security team via Teams\n\nQuestion:\nWhich Microsoft security feature enables this multi-step automated incident response?",
     "choices": [
-      "Microsoft Defender for Endpoint automated investigation",
-      "Azure Logic Apps triggered by Azure AD Identity Protection",
       "Microsoft Sentinel playbooks (SOAR)",
-      "Exchange Online mail flow rules"
+      "Exchange Online mail flow rules",
+      "Microsoft Defender for Endpoint automated investigation",
+      "Azure Logic Apps triggered by Azure AD Identity Protection"
     ],
     "answer": [
-      2
+      0
     ],
     "explanations": [
-      "Defender for Endpoint automated investigation handles endpoint-level threats (malware remediation, file quarantine, device isolation). It doesn't handle identity-based incidents or integrate with ServiceNow and Teams notifications as described.",
-      "Azure Logic Apps could theoretically be triggered by Identity Protection events, but this is not the standard enterprise approach for security incident orchestration. Logic Apps is a general workflow automation tool, not a security-focused SOAR solution. It lacks the security incident context and case management that Sentinel provides.",
       "This option is correct. Microsoft Sentinel playbooks are built on Azure Logic Apps but operate within the security context of Sentinel (SOAR \u2014 Security Orchestration, Automation, and Response). Sentinel ingests Identity Protection alerts, and playbooks can automatically execute multi-step responses: disable users via Graph API, revoke sessions, create ServiceNow tickets via connector, and send Teams notifications. This is the Microsoft-recommended approach for automated security incident response.",
-      "Mail flow rules (transport rules) process email in transit. They can add disclaimers, redirect messages, or apply encryption based on conditions. They have no capability to disable user accounts, revoke sessions, or create tickets."
+      "Mail flow rules (transport rules) process email in transit. They can add disclaimers, redirect messages, or apply encryption based on conditions. They have no capability to disable user accounts, revoke sessions, or create tickets.",
+      "Defender for Endpoint automated investigation handles endpoint-level threats (malware remediation, file quarantine, device isolation). It doesn't handle identity-based incidents or integrate with ServiceNow and Teams notifications as described.",
+      "Azure Logic Apps could theoretically be triggered by Identity Protection events, but this is not the standard enterprise approach for security incident orchestration. Logic Apps is a general workflow automation tool, not a security-focused SOAR solution. It lacks the security incident context and case management that Sentinel provides."
     ],
     "tip": "Automated security response: Sentinel playbooks (SOAR) \u2192 multi-step automated incident response with external integrations. Defender for Endpoint AIR \u2192 automated endpoint threat remediation. Identity Protection \u2192 risk detection and basic remediation (password change, MFA). For complex multi-step workflows with external systems \u2192 Sentinel playbooks."
   }
