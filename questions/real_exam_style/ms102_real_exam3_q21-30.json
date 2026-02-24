@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R3-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company deploys Windows Autopilot with the Enrollment Status Page (ESP) configured. A subset of 50 devices assigned to the Engineering department needs to have Visual Studio 2022 (8 GB) installed during ESP. All other departments should NOT have Visual Studio in their ESP.\n\nQuestion:\nHow should you configure this so Visual Studio is tracked in ESP only for Engineering devices?",
+    "choices": [
+      "Assign Visual Studio as Required to the Engineering group — the ESP automatically tracks all Required apps assigned to the device or user",
+      "Create a separate ESP profile for Engineering with Visual Studio listed in the 'Block device use until these required apps are installed' list, and assign it to the Engineering group",
+      "Add Visual Studio to the default ESP profile's blocking app list and use an assignment filter for Engineering devices",
+      "Deploy Visual Studio as Available to Engineering and instruct users to install it from Company Portal after ESP completes"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While Required apps are tracked during ESP, all Required apps for that user/device are tracked—not selectively. If Visual Studio is Required for Engineering, it will appear in ESP. But if you want ONLY Engineering to see it tracked in ESP while other groups have a different ESP experience, you need separate ESP profiles.",
+      "Correct. Create a separate Enrollment Status Page profile assigned to the Engineering group. In this profile, add Visual Studio to the 'Block device use until these required apps are installed if they are assigned to the user/device' list. Other departments use the default ESP profile without Visual Studio. This ensures only Engineering devices wait for Visual Studio during enrollment.",
+      "Incorrect. Assignment filters can target policy assignments to devices meeting specific criteria, but the ESP profile's blocking app list doesn't support assignment filters within it. You need separate ESP profiles for different app requirements.",
+      "Incorrect. Deploying as Available means the app is not installed during ESP—users must manually install it after enrollment. The requirement is to install it during the enrollment phase."
+    ],
+    "tip": "ESP customization: Multiple ESP profiles can target different groups. Each profile can specify different blocking apps. Higher-priority ESP profile wins for a device. Use this to customize the enrollment experience per department."
+  },
+  {
+    "id": "MS102-R3-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. The CISO requires that all sign-ins to the Azure portal and Microsoft 365 admin center require phishing-resistant MFA (FIDO2 security keys or Windows Hello for Business). Standard MFA (phone call, SMS, push notification) should not be accepted for admin portal access.\n\nQuestion:\nHow should you implement this?",
+    "choices": [
+      "Create a conditional access policy targeting Microsoft Azure Management and Microsoft 365 admin portals with Grant: Require MFA",
+      "Create a conditional access policy targeting admin portals with Grant: Require authentication strength set to 'Phishing-resistant MFA'",
+      "Enable security defaults which automatically requires MFA for admin portals",
+      "Configure an Azure AD Authentication Methods policy that disables all methods except FIDO2 and Windows Hello"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. 'Require MFA' accepts any MFA method including phone, SMS, and push notification. It does not enforce phishing-resistant methods only.",
+      "Correct. Conditional access authentication strength policies allow you to specify which authentication methods are acceptable. The built-in 'Phishing-resistant MFA' strength requires FIDO2 security keys, Windows Hello for Business, or certificate-based authentication. Create a conditional access policy targeting the admin portals with Grant control set to 'Require authentication strength: Phishing-resistant MFA'.",
+      "Incorrect. Security defaults require MFA but accept any MFA method. They also cannot be combined with conditional access policies and don't provide the granularity to target specific portals.",
+      "Incorrect. Disabling authentication methods globally would affect all users for all applications, not just admin portal access. This would break MFA for regular users who use phone/push notification for non-admin scenarios."
+    ],
+    "tip": "Authentication strength in conditional access: 'MFA' = any MFA method. 'Passwordless MFA' = FIDO2, WHfB, certificate. 'Phishing-resistant MFA' = FIDO2, WHfB, certificate (excludes phone/push). Use for high-security scenarios."
+  },
+  {
+    "id": "MS102-R3-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company has 300 iOS devices enrolled in Intune. You need to deploy a custom enterprise iOS app (.ipa file) that was developed in-house. The app is signed with the company's Apple Enterprise Developer certificate.\n\nQuestion:\nHow should you deploy this app through Intune?",
+    "choices": [
+      "Upload the .ipa file as a Line-of-business (LOB) app in Intune under Apps > iOS/iPadOS > Add > Line-of-business app",
+      "Upload the .ipa to Apple Business Manager and deploy via VPP",
+      "Publish the .ipa to the public App Store and deploy via Intune store app",
+      "Host the .ipa on a web server and create a Web link app assignment in Intune"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Enterprise-signed .ipa files are deployed through Intune as Line-of-business (LOB) apps. Upload the .ipa file directly to Intune, assign it to the target device group, and Intune handles the distribution. The devices must trust the enterprise developer certificate.",
+      "Incorrect. Apple Business Manager/VPP is for apps distributed through the App Store (public or custom B2B). Enterprise-signed .ipa files are not distributed through ABM/VPP.",
+      "Incorrect. Enterprise developer certificate-signed apps are for internal distribution only. They cannot be published to the public App Store (that requires standard Apple Developer Program submission and review).",
+      "Incorrect. Web link apps create home screen shortcuts to URLs, not install native iOS applications. A .ipa file requires proper MDM installation, not web link distribution."
+    ],
+    "tip": "iOS app distribution: App Store apps → VPP/ABM. Enterprise-signed .ipa → Intune LOB upload. Custom B2B apps → ABM custom apps. Web links → shortcut only, not native install."
+  },
+  {
+    "id": "MS102-R3-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 2,500 Windows devices for Litware Inc. using Intune. The security team implements Microsoft Defender for Endpoint and wants to onboard all managed Windows devices. Currently, no devices are onboarded to Defender for Endpoint.\n\nQuestion:\nWhat is the most efficient method to onboard all 2,500 Intune-managed Windows devices to Defender for Endpoint?",
+    "choices": [
+      "Download the onboarding script from the Defender portal and run it on each device manually",
+      "Create an endpoint detection and response (EDR) policy in Intune under Endpoint security > Endpoint detection and response and assign it to All Devices",
+      "Create a device configuration profile with the Microsoft Defender for Endpoint connector and assign it",
+      "Use a Group Policy Object to deploy the onboarding script via SYSVOL"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but not efficient. Running scripts manually on 2,500 devices is not scalable.",
+      "Correct. The most efficient method for Intune-managed devices is to create an EDR policy in Endpoint security > Endpoint detection and response. This policy configures the Microsoft Defender for Endpoint onboarding settings and pushes them to all assigned devices. First, ensure the Microsoft Defender for Endpoint connector is enabled in Intune (Tenant admin > Connectors and tokens > Microsoft Defender for Endpoint).",
+      "Incorrect. While a device configuration profile for Defender for Endpoint exists, the endpoint security EDR policy is the recommended and streamlined path specifically designed for Defender for Endpoint onboarding.",
+      "Incorrect. GPO-based deployment requires on-premises Active Directory infrastructure and domain-joined devices. For Azure AD-joined, Intune-managed devices, the Intune EDR policy is the appropriate method."
+    ],
+    "tip": "Defender for Endpoint onboarding via Intune: (1) Enable the connector in Tenant admin. (2) Create EDR policy in Endpoint security. (3) Assign to All Devices. This is the supported, scalable method for Intune-managed devices."
+  },
+  {
+    "id": "MS102-R3-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for A.Datum Corporation. The legal team needs to review and delete all personal data related to a specific employee who has exercised their GDPR 'Right to be forgotten'. The data exists across Exchange mailboxes, SharePoint sites, OneDrive accounts, and Teams conversations.\n\nQuestion:\nWhich approach should you use to find and delete the data?",
+    "choices": [
+      "Use Microsoft Purview > Data subject requests to search for and export the data, then manually delete it from each location",
+      "Use Microsoft Purview > eDiscovery > Content search to find all content related to the employee, review the results, then use the search-and-purge action to delete matching content",
+      "Use Microsoft Purview > Data lifecycle management > Retention policies to create a deletion policy targeting content about the employee",
+      "Use Microsoft Purview > Information protection > Auto-labeling to label all content about the employee, then create a DLP policy to delete labeled content"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but incomplete. Data subject requests help identify and export data, but the tool does not provide a built-in deletion capability across all workloads. You would need eDiscovery for the actual deletion.",
+      "Correct. eDiscovery Content search allows you to search across all Microsoft 365 workloads for content matching specific criteria (employee name, email address, etc.). After identifying all matching content, you can use the New-ComplianceSearchAction -Purge command to delete the content from Exchange mailboxes. For SharePoint/OneDrive, you use Content search to identify files and then remove them. This is the comprehensive approach for GDPR right-to-erasure requests.",
+      "Incorrect. Retention policies are designed for ongoing automated retention/deletion based on time periods, not for one-time targeted deletion of content related to a specific person.",
+      "Incorrect. Auto-labeling classifies content based on sensitive information types, not specific individuals. DLP policies don't have deletion capabilities—they prevent sharing/leakage."
+    ],
+    "tip": "GDPR Right to erasure: (1) Content search to find all related data. (2) Review results for accuracy. (3) New-ComplianceSearchAction -Purge for Exchange. (4) Manual deletion from SharePoint/OneDrive based on search results."
+  },
+  {
+    "id": "MS102-R3-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company has 500 Windows devices and uses assignment filters to target policies. You create an assignment filter with the following rule:\n\n(device.operatingSystemVersion -startsWith \"10.0.22631\")\n\nQuestion:\nWhich devices does this filter match?",
+    "choices": [
+      "Windows 10 devices only",
+      "Windows 11 23H2 devices",
+      "Windows 11 22H2 devices",
+      "All Windows 11 devices regardless of version"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Windows 10 build numbers start with 10.0.19xxx (e.g., 10.0.19045 for 22H2). Build 10.0.22631 is not Windows 10.",
+      "Correct. Build number 10.0.22631 corresponds to Windows 11 23H2. The assignment filter matches devices running Windows 11 version 23H2 specifically.",
+      "Incorrect. Windows 11 22H2 uses build number 10.0.22621. Build 22631 is 23H2.",
+      "Incorrect. The filter uses -startsWith \"10.0.22631\", which matches only the specific build number for 23H2. Other Windows 11 versions (21H2 = 22000, 22H2 = 22621, 24H2 = 26100) would not match."
+    ],
+    "tip": "Windows build numbers: Win10 22H2 = 10.0.19045. Win11 21H2 = 10.0.22000. Win11 22H2 = 10.0.22621. Win11 23H2 = 10.0.22631. Win11 24H2 = 10.0.26100. Know these for assignment filters."
+  },
+  {
+    "id": "MS102-R3-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The company uses sensitivity labels. The marketing department creates a document labeled 'General' (no encryption) and shares it externally. Later, the document is upgraded to 'Highly Confidential' (encrypted, internal only) by a manager.\n\nThe external partner who received the 'General' version still has the document.\n\nQuestion:\nWhat happens to the external partner's copy of the document?",
+    "choices": [
+      "The external partner's copy is automatically upgraded to 'Highly Confidential' and they lose access",
+      "The external partner's copy remains at 'General' with no encryption — label changes do not propagate to copies that have already been shared",
+      "The external partner's copy is automatically deleted from their system",
+      "The external partner receives a notification that the document has been reclassified and must delete it"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Sensitivity labels do not propagate to copies of documents that have already been shared and downloaded. The external partner has an independent copy.",
+      "Correct. Once a document is shared externally and downloaded, the recipient has an independent copy. Label changes made to the original document do not affect copies that are already in someone else's possession. The external partner's copy remains at 'General' with no encryption. This is a key limitation of post-sharing label changes.",
+      "Incorrect. Microsoft does not have the ability to delete files from external recipients' systems. Once a document leaves your control, label changes cannot reach it.",
+      "Incorrect. There is no automatic notification system for external recipients when a label is changed on the source document. The change only affects the original document."
+    ],
+    "tip": "Sensitivity label limitation: Labels protect at time of access/sharing. Once a document is downloaded/copied, the copy is independent. Label changes to the original don't propagate to existing copies. This is why encryption at initial labeling is crucial for confidential content."
+  },
+  {
+    "id": "MS102-R3-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The company wants to replace an older version of a custom Win32 app (InventoryTracker v2.0) with a new version (InventoryTracker v3.0) across 1,000 Windows devices. The old version must be uninstalled before the new version is installed.\n\nBoth versions are uploaded as Win32 apps in Intune.\n\nQuestion:\nWhich Intune feature should you use?",
+    "choices": [
+      "Configure supersedence: add v3.0 as the superseding app and v2.0 as the superseded app with 'Uninstall previous version' selected",
+      "Create a dependency: add v2.0 as a dependency of v3.0 with uninstall action",
+      "Manually uninstall v2.0 by changing its assignment to Uninstall, wait for completion, then assign v3.0 as Required",
+      "Include the v2.0 uninstall command in v3.0's pre-installation script"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Win32 app supersedence in Intune allows you to define that v3.0 supersedes v2.0. When configured with 'Uninstall' as the supersedence behavior, Intune automatically uninstalls v2.0 before installing v3.0 on each device. This is the purpose-built feature for app version upgrades.",
+      "Incorrect. Dependencies define apps that must be INSTALLED before the current app. Dependencies don't have an uninstall action—they only install prerequisite apps.",
+      "Incorrect. This manual two-step approach works but is inefficient, requires monitoring the uninstall progress, and creates a gap where the app is not available. Supersedence automates the entire process.",
+      "Incorrect. Including uninstall logic in the installation script works but bypasses Intune's tracking. Intune wouldn't know the old version was uninstalled, potentially causing reporting issues."
+    ],
+    "tip": "Win32 app lifecycle: Supersedence = replace old version with new (uninstall old → install new). Dependencies = install prerequisite first (install dep → install app). Use supersedence for version upgrades."
+  },
+  {
+    "id": "MS102-R3-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailwind Traders. The company has 200 iOS devices enrolled via Apple Business Manager (ABM) with Automated Device Enrollment (ADE). The IT team decides to switch MDM providers from Intune to a different MDM solution.\n\nQuestion:\nWhat must happen to the iOS devices during the MDM migration?",
+    "choices": [
+      "The devices can be re-assigned to the new MDM server in Apple Business Manager without affecting the devices until they are wiped and re-enrolled",
+      "The devices must be factory reset and go through Setup Assistant again to enroll in the new MDM",
+      "The devices can be unenrolled from Intune and enrolled in the new MDM without a factory reset by installing the new MDM profile",
+      "The Apple Business Manager token must be revoked and recreated with the new MDM provider"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In Apple Business Manager, you reassign devices to the new MDM server. The reassignment takes effect the NEXT time the device goes through Setup Assistant (which requires a factory reset/wipe). Until then, devices continue to be managed by Intune. Migration plan: reassign in ABM → when ready, wipe devices → they re-enroll to the new MDM via ADE.",
+      "Incorrect. While the devices do eventually need to go through Setup Assistant, the first step is reassigning them in ABM. Simply wiping without reassigning would re-enroll them back in Intune.",
+      "Incorrect. ADE-enrolled (supervised) devices cannot be unenrolled and re-enrolled in a different MDM without a factory reset. The ADE enrollment is tied to the Setup Assistant flow.",
+      "Incorrect. The ABM token doesn't need to be revoked. You add the new MDM server in ABM and reassign devices to it. Multiple MDM servers can coexist in ABM."
+    ],
+    "tip": "ABM/ADE MDM migration: (1) Add new MDM server in ABM. (2) Reassign devices to new server. (3) Wipe devices when ready. (4) Devices re-enroll to new MDM via Setup Assistant. Old MDM server can be removed after full migration."
+  },
+  {
+    "id": "MS102-R3-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. An external security audit requires evidence that:\n- All administrator sign-ins used MFA in the past 90 days\n- No administrator accounts signed in from prohibited countries\n- All conditional access policy changes were logged and tracked\n\nQuestion:\nWhich combination of reports provides this evidence?",
+    "choices": [
+      "Microsoft Entra sign-in logs filtered by admin roles (MFA status + location) + Microsoft Entra audit logs filtered by conditional access policy changes",
+      "Microsoft Secure Score report + Microsoft Defender portal security recommendations",
+      "Compliance Manager assessment report + Microsoft Purview audit log search",
+      "Azure AD Identity Protection risk detections report + Conditional access insights workbook"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. (1) Entra sign-in logs can be filtered by directory role (Global Admin, etc.) and show MFA status (requirement, method used) and sign-in location for each authentication event—covering the first two audit requirements. (2) Entra audit logs record all configuration changes including conditional access policy modifications (who changed what, when)—covering the third requirement.",
+      "Incorrect. Secure Score measures security posture but doesn't provide historical sign-in evidence or CA policy change logs.",
+      "Incorrect. Compliance Manager tracks regulatory compliance assessments. Purview audit logs could help with some requirements but are less focused than Entra-specific logs for identity-related evidence.",
+      "Incorrect. Identity Protection risk detections focus on risky sign-ins, not a comprehensive view of all admin sign-ins. The CA insights workbook shows CA policy effectiveness but doesn't provide the specific audit evidence requested."
+    ],
+    "tip": "Security audit evidence: Sign-in logs = who signed in, when, from where, MFA status. Audit logs = who changed what configuration, when. These two Entra log types cover most identity audit requirements."
+  }
+]
