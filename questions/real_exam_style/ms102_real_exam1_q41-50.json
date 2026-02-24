@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R1-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Windows devices for Contoso using Microsoft Intune. A remote worker's laptop is lost. The device is Azure AD joined and enrolled in Intune. The device has BitLocker enabled with the recovery key escrowed to Azure AD. The laptop contains confidential client data.\n\nThe security team requires that the data be made inaccessible immediately.\n\nQuestion:\nWhich remote action should you perform from the Intune admin center?",
+    "choices": [
+      "Retire — removes corporate data and management profile",
+      "Wipe — factory resets the device and removes all data",
+      "Delete — removes the device record from Intune",
+      "Remote lock — locks the device with a PIN"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Retire removes only corporate data (managed apps, profiles, email accounts) but leaves personal files and the OS intact. Confidential client data stored locally would remain accessible if the thief can bypass Windows sign-in.",
+      "Correct. Wipe performs a factory reset, removing all data including the OS and files. Combined with BitLocker encryption (the attacker doesn't have the recovery key since it's escrowed to Azure AD), this makes the data inaccessible. Wipe is the strongest action for a lost device with confidential data.",
+      "Incorrect. Delete only removes the device record from Intune's management console. It does not perform any action on the physical device. The data remains completely intact.",
+      "Incorrect. Remote lock locks the device screen, but a sophisticated attacker could still access the hard drive by removing it from the laptop. Since the data is confidential, a wipe is the appropriate action."
+    ],
+    "tip": "Lost device with confidential data → Wipe (factory reset). Employee leaving → Retire (remove corporate data only). Remove stale record → Delete. Temporarily secure → Remote lock."
+  },
+  {
+    "id": "MS102-R1-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring insider risk management in Microsoft Purview for Datum Corporation. The HR department will provide a CSV file containing the names and dates of employees who have submitted resignations. When an employee resigns, the insider risk policy should begin monitoring for data exfiltration activities such as downloading large volumes of files, printing sensitive documents, and copying to USB.\n\nQuestion:\nWhich insider risk management policy template should you use?",
+    "choices": [
+      "General data leaks",
+      "Data theft by departing users",
+      "Data leaks by priority users",
+      "Security policy violations"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. General data leaks monitors for data leakage indicators across all users based on DLP policy matches. It is not specifically triggered by HR-provided resignation data and does not use the departing user trigger.",
+      "Correct. 'Data theft by departing users' is specifically designed for this scenario. It uses the HR connector to import resignation/termination dates and automatically begins monitoring departing employees for exfiltration indicators. The policy activates a risk window around the departure date.",
+      "Incorrect. 'Data leaks by priority users' monitors designated high-impact users (executives, people with access to sensitive projects) regardless of employment status. It is not triggered by resignation events.",
+      "Incorrect. Security policy violations monitors for activities like disabling security software, installing unauthorized apps, or circumventing security controls. It does not focus on data exfiltration by departing employees."
+    ],
+    "tip": "Insider risk templates: Departing users = HR connector resignation trigger. General data leaks = DLP policy match trigger. Priority users = manually designated user group. Security violations = security control bypass."
+  },
+  {
+    "id": "MS102-R1-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for 3,000 users at Wingtip Toys using Microsoft Intune. The company uses three update channels:\n- IT department (50 users): Current Channel (Preview) for early testing\n- Early adopters (200 users): Current Channel for pre-production validation\n- All other users (2,750 users): Monthly Enterprise Channel for stability\n\nAn issue is discovered in the latest Monthly Enterprise Channel update that corrupts Excel macros. You need to roll back to the previous version for the 2,750 production users as quickly as possible.\n\nQuestion:\nWhat is the fastest method to roll back the Monthly Enterprise Channel update?",
+    "choices": [
+      "Use the Microsoft 365 Apps admin center > Servicing > Monthly Enterprise Channel > Roll back",
+      "Create an Intune device configuration profile using the Settings Catalog to set the target version to the previous build number",
+      "Use the Office Deployment Tool (ODT) with a configuration.xml specifying TargetVersion to deploy the previous version",
+      "In Intune, uninstall the Microsoft 365 Apps assignment and redeploy specifying the previous version"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Microsoft 365 Apps admin center servicing profiles can control update rollout, but the fastest rollback for Intune-managed devices is through Intune itself using the Settings Catalog or Cloud Policy.",
+      "Correct. Using the Settings Catalog in Intune, set 'Target Version' (under Microsoft Office 2016 > Updates) to the previous build number for the group containing the 2,750 users. Office will automatically roll back to the specified version on the next update check. This is the fastest method because it leverages existing Intune infrastructure and doesn't require any on-device action.",
+      "Incorrect. The ODT requires running a command on each device (setup.exe /configure), which is not practical for 2,750 devices and would be slower than using Intune policy.",
+      "Incorrect. Uninstalling and redeploying Microsoft 365 Apps is extremely disruptive—users lose access to Office during reinstallation. This is the slowest and most impactful approach."
+    ],
+    "tip": "Office rollback via Intune: Settings Catalog → Target Version = previous build. Office automatically downgrades. No user disruption, no on-device tools needed."
+  },
+  {
+    "id": "MS102-R1-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are implementing conditional access for Fabrikam. The security policy requires:\n- All users must use MFA when accessing Microsoft 365 from outside the corporate network\n- Users on the corporate network (IP range 203.0.113.0/24) should not be prompted for MFA\n- Guest users must always use MFA regardless of location\n\nQuestion:\nHow should you configure the conditional access policies?",
+    "choices": [
+      "Create one policy: All users > All cloud apps > Exclude location 203.0.113.0/24 > Grant: Require MFA. Create a second policy: Guest users > All cloud apps > Any location > Grant: Require MFA",
+      "Create one policy: All users > All cloud apps > Any location > Grant: Require MFA. Define 203.0.113.0/24 as a trusted location and exclude it from the policy conditions",
+      "Create one policy: All users including guests > All cloud apps > Condition: Not on trusted network > Grant: Require MFA. Create a second policy: Guest users > All cloud apps > Any location > Grant: Require MFA",
+      "Create one policy: All users > All cloud apps > Grant: Require compliant device OR MFA. Trust the corporate network IP as a compliant network"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. The first policy excluding the corporate IP works for regular users, but the second policy for guests creates a conflict. With two separate policies, processing order matters and the exclude in policy 1 might still exempt guest users on the corporate network.",
+      "Incorrect. Excluding the trusted location from a single policy exempts ALL users on that network from MFA, including guest users. This violates the requirement that guests must always use MFA.",
+      "Correct. Policy 1: Targets All users (includes guests), condition 'Not on trusted network', requires MFA. This handles MFA for everyone off the corporate network. Policy 2: Targets Guest users specifically, no location condition (any location), requires MFA. This ensures guests on the corporate network are still prompted for MFA. The guest-specific policy takes effect even when they're on the trusted network.",
+      "Incorrect. 'Require compliant device OR MFA' introduces device compliance as an alternative, which is not in the requirements. Also, there's no concept of a 'compliant network' in conditional access—only named/trusted locations."
+    ],
+    "tip": "Conditional access with guest exceptions: Use a general policy for all users with location exclusion + a guest-specific policy without location exclusion. More specific policies (guest users) override general policies."
+  },
+  {
+    "id": "MS102-R1-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Microsoft Purview Data Loss Prevention for Trey Research. The company needs to prevent users from uploading files containing source code to personal cloud storage services (Dropbox, Google Drive, iCloud) from their managed Windows endpoints.\n\nQuestion:\nWhich DLP policy location should you configure?",
+    "choices": [
+      "Exchange email — to block source code attachments sent to external recipients",
+      "SharePoint sites — to prevent source code from being shared externally from SharePoint",
+      "Devices (Endpoint DLP) — to monitor and block file uploads from Windows endpoints to cloud storage services",
+      "Microsoft Defender for Cloud Apps — to block uploads via the Cloud App Security proxy"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Exchange DLP monitors email content. It does not control file uploads from the Windows desktop to cloud storage applications.",
+      "Incorrect. SharePoint DLP monitors content stored in SharePoint and OneDrive. It does not monitor or block local file uploads from the Windows endpoint to third-party cloud storage.",
+      "Correct. Endpoint DLP monitors activities on managed Windows (and macOS) devices, including file uploads to cloud services, copy to USB, print, and copy to clipboard. You can create a policy targeting the 'Devices' location that detects source code content and blocks the 'Upload to cloud service' activity for restricted cloud services like Dropbox, Google Drive, and iCloud.",
+      "Incorrect. Defender for Cloud Apps can block uploads via session control, but this requires users to access cloud storage through a browser with conditional access app control. Direct desktop app uploads (Dropbox sync client, Google Drive client) would bypass this."
+    ],
+    "tip": "DLP locations: Exchange = email. SharePoint/OneDrive = cloud-stored files. Teams = messages. Devices (Endpoint DLP) = local file activities (USB, print, upload to cloud, clipboard). Use Endpoint DLP for local device control."
+  },
+  {
+    "id": "MS102-R1-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nLitware Inc. has 500 Windows 11 devices enrolled in Intune. The IT team uses Intune device configuration profiles to manage settings. After deploying a new Wi-Fi profile, 50 devices report a conflict status for the profile.\n\nYou need to identify what is causing the conflict.\n\nQuestion:\nWhere should you look in the Intune admin center?",
+    "choices": [
+      "Devices > Monitor > Device configuration > select the Wi-Fi profile > Device status, then select a conflicting device to view the conflicting settings",
+      "Devices > All devices > select a conflicting device > Device configuration > view all profiles and check which other profile conflicts",
+      "Tenant administration > Audit logs > filter by configuration profile changes",
+      "Reports > Endpoint analytics > Configuration scores"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Navigate to the Wi-Fi profile under Device configuration, view Device status to see which devices have conflicts, then select a specific device to see exactly which setting conflicts with another profile. Intune shows the conflicting setting name and the other profile that sets the same value differently.",
+      "Incorrect. While viewing profiles on a specific device shows assigned profiles, it does not directly show which specific settings conflict between profiles. The profile-level Device status view provides more detailed conflict information.",
+      "Incorrect. Audit logs record administrative actions (who changed what policy, when), not runtime configuration conflicts between profiles on devices.",
+      "Incorrect. Endpoint analytics configuration scores provide an overview of configuration health, not specific per-device conflicts between profiles."
+    ],
+    "tip": "Profile conflicts in Intune: Profile > Device status > select conflicting device = shows exactly which setting conflicts with which other profile. This is the fastest way to identify and resolve conflicts."
+  },
+  {
+    "id": "MS102-R1-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYour organization uses Microsoft Defender for Office 365 Plan 2. The security team wants to proactively test whether users in the Finance department are susceptible to phishing attacks. They want to send a simulated phishing email that mimics a common credential harvesting technique and track which users click the link and enter credentials.\n\nQuestion:\nWhich feature in the Microsoft Defender portal should you use?",
+    "choices": [
+      "Email & collaboration > Policies > Anti-phishing > Test mode",
+      "Email & collaboration > Attack simulation training > Simulations > Create a simulation",
+      "Email & collaboration > Explorer > Simulate phishing campaign",
+      "Email & collaboration > Policies > Safe Links > Create a test policy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Anti-phishing policies do not have a 'Test mode' feature for sending simulated phishing to users.",
+      "Correct. Attack simulation training in Microsoft Defender for Office 365 Plan 2 allows you to create realistic phishing simulations. You select a technique (credential harvest, malware attachment, etc.), choose a payload template, target the Finance department, and launch the simulation. The tool tracks who opened the email, clicked the link, and submitted credentials, providing a detailed report.",
+      "Incorrect. Threat Explorer analyzes real email threats, not simulated ones. There is no 'Simulate phishing campaign' option in Explorer.",
+      "Incorrect. Safe Links is a protection feature that scans URLs in real time. It does not have testing or simulation capabilities."
+    ],
+    "tip": "Attack simulation training: Credential harvest, Link in attachment, Malware attachment, Drive-by URL, OAuth consent grant. Available in Defender for Office 365 Plan 2. Tracks opens → clicks → credential submissions."
+  },
+  {
+    "id": "MS102-R1-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage app protection policies for Relecloud. The company allows employees to use personal Android devices to access corporate email via Outlook. The security team requires that:\n- Corporate email data must be encrypted at rest on the device\n- Users must authenticate with a 6-digit PIN before opening Outlook\n- If the device is jailbroken/rooted, Outlook must wipe corporate data\n- These policies must work WITHOUT requiring device enrollment in Intune\n\nQuestion:\nWhich type of policy meets these requirements?",
+    "choices": [
+      "Device compliance policy targeting Android devices",
+      "App protection policy (MAM without enrollment) targeting Microsoft Outlook",
+      "Device configuration profile with password and encryption requirements",
+      "Conditional access policy requiring a compliant device for Exchange Online"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Device compliance policies require devices to be enrolled in Intune. The requirement explicitly states the policies must work without device enrollment.",
+      "Correct. App protection policies (MAM without enrollment) apply to the app level, not the device level. They work on unmanaged personal devices without Intune enrollment. You can configure: data encryption (encrypt org data), PIN requirement (6-digit, required before access), and jailbreak/root detection (wipe corporate data if detected). All within the app—no device management needed.",
+      "Incorrect. Device configuration profiles require Intune enrollment to deploy and enforce. They cannot be applied to unmanaged personal devices.",
+      "Incorrect. Conditional access requiring a compliant device would block access entirely from unenrolled personal devices. The requirement is to allow access on personal devices with app-level protections."
+    ],
+    "tip": "MAM without enrollment (APP) = manage the app, not the device. Perfect for BYOD: encryption, PIN, wipe, data transfer controls—all at the app level without touching the personal device."
+  },
+  {
+    "id": "MS102-R1-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nContoso has 2,000 Windows 11 devices enrolled in Intune. The company wants to implement Windows LAPS (Local Administrator Password Solution) to manage the local administrator password on all devices. Passwords must be:\n- Rotated every 30 days\n- Stored in Azure AD\n- At least 14 characters with complexity requirements\n\nQuestion:\nHow should you configure Windows LAPS in Intune?",
+    "choices": [
+      "Create a device configuration profile using the Settings Catalog with LAPS settings for Azure AD backup, 30-day rotation, and 14-character complex passwords",
+      "Create an endpoint security Account protection policy with LAPS settings",
+      "Deploy a PowerShell script via Intune that runs Set-LapsADPassword every 30 days",
+      "Configure LAPS through Group Policy in a hybrid-joined environment only, as LAPS is not natively supported in Intune"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While the Settings Catalog does contain LAPS settings and could work, the recommended and purpose-built location for LAPS configuration in Intune is under Endpoint security > Account protection. This provides a streamlined experience specifically for LAPS.",
+      "Correct. In the Intune admin center, navigate to Endpoint security > Account protection > Create policy > Windows LAPS. Configure: Backup directory = Azure AD, Password age (days) = 30, Password complexity = Large letters + small letters + numbers + special characters, Password length = 14. This is the Microsoft-recommended way to deploy LAPS settings via Intune.",
+      "Incorrect. Set-LapsADPassword is for on-premises AD LAPS, not Azure AD LAPS. Also, managing LAPS via custom scripts bypasses Intune's built-in LAPS management and reporting capabilities.",
+      "Incorrect. Windows LAPS is natively supported in Intune for both Azure AD-joined and hybrid-joined devices. The Endpoint security > Account protection blade provides built-in LAPS configuration."
+    ],
+    "tip": "Windows LAPS in Intune: Endpoint security > Account protection > LAPS policy. Supports Azure AD backup (cloud-only) and on-premises AD backup (hybrid). Settings Catalog also works but Account protection is the recommended path."
+  },
+  {
+    "id": "MS102-R1-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are the Microsoft 365 administrator for Adventure Works Cycles. The company's Microsoft 365 E5 license is up for renewal. Management wants to understand the current security posture before renewal. They request a report showing:\n- The organization's overall security score\n- Which recommended security improvements would have the most impact\n- Comparison against similar organizations in the same industry\n\nQuestion:\nWhere should you direct management to view this information?",
+    "choices": [
+      "Microsoft Defender portal > Secure Score",
+      "Microsoft Purview compliance portal > Compliance Manager > Compliance score",
+      "Microsoft Entra admin center > Security > Identity Secure Score",
+      "Microsoft 365 admin center > Health > Service health dashboard"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Microsoft Secure Score in the Defender portal provides: (1) An overall security score based on configured security features, (2) Ranked improvement actions showing which changes would increase the score most, and (3) Industry comparison showing how your organization compares to similar-sized organizations in your sector.",
+      "Incorrect. Compliance Manager and Compliance score focus on regulatory compliance posture (GDPR, HIPAA, etc.), not security configuration. It measures compliance controls, not security improvements.",
+      "Incorrect. Identity Secure Score focuses only on Azure AD/Entra ID identity security (MFA adoption, privileged access, etc.). It does not cover the full Microsoft 365 security posture including endpoint, email, and data security.",
+      "Incorrect. Service health dashboard shows the operational status of Microsoft 365 services (outages, incidents). It has nothing to do with security posture or recommendations."
+    ],
+    "tip": "Microsoft Secure Score = overall security posture + improvement recommendations + industry comparison. Identity Secure Score = identity-only subset. Compliance Score = regulatory compliance posture. Different tools for different purposes."
+  }
+]
