@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R1-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 500 macOS devices enrolled in Microsoft Intune at Fourth Coffee. The security team requires that FileVault disk encryption is enabled on all macOS devices. If a user's device is not encrypted, the user must be given 7 days to enable encryption before losing access to corporate email.\n\nYou create an endpoint security disk encryption profile in the Intune admin center.\n\nQuestion:\nWhich additional configuration is required to enforce the 7-day grace period?",
+    "choices": [
+      "Create a device compliance policy that requires FileVault and set the grace period to 7 days under Actions for noncompliance",
+      "Configure a conditional access policy with a session control of 7-day sign-in frequency",
+      "Set the FileVault recovery key escrow timeout to 7 days in the disk encryption profile",
+      "Create a device configuration profile with a custom payload that sets a 7-day FileVault enforcement delay"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. A device compliance policy requiring FileVault encryption, combined with Actions for noncompliance set to 'Mark device noncompliant' after 7 days, gives users a grace period. Paired with a conditional access policy requiring compliant devices, users lose email access only after the grace period expires.",
+      "Incorrect. Sign-in frequency controls how often users re-authenticate, not how long before noncompliant devices are blocked. This has no relationship to encryption enforcement.",
+      "Incorrect. The recovery key escrow timeout determines how long to wait for the recovery key to be stored in Intune, not a grace period for enabling encryption.",
+      "Incorrect. There is no supported custom payload for FileVault enforcement delay. The grace period is managed through the compliance policy's noncompliance actions, not the encryption profile itself."
+    ],
+    "tip": "Enforcement flow: Disk encryption profile (deploys FileVault) + Compliance policy (checks FileVault + grace period via noncompliance actions) + Conditional access (blocks noncompliant devices)."
+  },
+  {
+    "id": "MS102-R1-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nVanArsdel Ltd. uses Microsoft 365 E5 and has offices in Germany and the United States. The German office processes EU citizen personal data. The Data Protection Officer (DPO) needs to perform a Data Subject Access Request (DSAR) to find all personal data related to a specific EU citizen across Exchange, SharePoint, OneDrive, and Teams.\n\nQuestion:\nWhat should the DPO use in the Microsoft Purview compliance portal?",
+    "choices": [
+      "eDiscovery > Premium > Create a case with a custodian hold",
+      "Data subject requests > Create a new DSR case using the built-in template",
+      "Content search > New search with the citizen's name as keyword",
+      "Data lifecycle management > Create a disposition review"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. eDiscovery Premium is designed for legal investigations and litigation holds, not GDPR data subject requests. While it can search content, it lacks the DSAR-specific workflow and reporting.",
+      "Correct. The Data subject requests feature in Microsoft Purview uses a built-in template that searches across Exchange, SharePoint, OneDrive, and Teams for content matching the data subject's personal information. It provides a DSAR-specific workflow aligned with GDPR Article 15 requirements.",
+      "Incorrect. Content search can find content by keyword, but it does not provide the structured DSAR workflow, reporting, or data export format required for GDPR compliance.",
+      "Incorrect. Disposition review is part of records management for reviewing content at the end of its retention period. It has nothing to do with data subject access requests."
+    ],
+    "tip": "GDPR DSAR in Microsoft 365 → use the dedicated 'Data subject requests' feature in Purview. It's purpose-built for this exact scenario and uses Content search under the hood."
+  },
+  {
+    "id": "MS102-R1-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYour company has 300 iOS devices managed by Microsoft Intune. You need to silently deploy the Microsoft Authenticator app to all managed iOS devices without user interaction. The app must be automatically updated when new versions are available in the Apple App Store.\n\nQuestion:\nWhich app type should you select when adding the app in the Intune admin center under Apps > iOS/iPadOS > Add?",
+    "choices": [
+      "iOS store app",
+      "iOS/iPadOS app (VPP) using Apple Business Manager",
+      "Web link",
+      "Line-of-business app (.ipa file)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but not best. iOS store apps can be assigned as required, but they cannot be silently installed on supervised devices and require the user to manually accept the installation prompt.",
+      "Correct. VPP (Volume Purchase Program) apps through Apple Business Manager can be deployed silently to supervised devices with device-based licensing. They also support automatic updates. This is the only method that meets both requirements: silent deployment and automatic updates.",
+      "Incorrect. Web links create a shortcut on the home screen to a URL. They do not install native apps.",
+      "Incorrect. Line-of-business apps are for custom enterprise .ipa files, not for apps available in the App Store. Also, LOB apps do not automatically update from the App Store."
+    ],
+    "tip": "Silent iOS app deployment = VPP/Apple Business Manager + supervised device + device-based license. Store apps always prompt the user."
+  },
+  {
+    "id": "MS102-R1-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nWingTip Toys uses Microsoft Intune to manage 2,000 Windows 11 devices. The IT team needs to ensure that Windows quality updates released in March are not installed until April 15th, giving the team two weeks to test. However, critical out-of-band security updates should be installed immediately without delay.\n\nYou navigate to Devices > Windows > Update rings for Windows 10 and later in the Intune admin center.\n\nQuestion:\nWhich setting combination achieves this requirement?",
+    "choices": [
+      "Set Quality update deferral period to 14 days",
+      "Set Quality update deferral period to 14 days and enable 'Expedite quality updates' for out-of-band updates",
+      "Create two update rings: one with a 14-day deferral for regular updates and one with 0-day deferral for security updates",
+      "Set Quality update deferral period to 14 days; when an out-of-band update is needed, use Windows Update for Business deployment service to expedite it"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. A 14-day deferral delays all quality updates, including critical out-of-band security patches. There is no built-in exception for security-only updates within an update ring.",
+      "Incorrect. There is no 'Expedite quality updates' toggle in the update ring configuration. Expediting is done through the Windows Update for Business deployment service, which is a separate feature.",
+      "Incorrect. A device can only be targeted by one update ring. You cannot assign two different update rings to the same devices for different update types.",
+      "Correct. Set the 14-day deferral in the update ring for standard quality updates. When a critical out-of-band update needs immediate deployment, use Devices > Windows > Quality updates for Windows 10 and later to create an expedited update policy that bypasses the deferral period."
+    ],
+    "tip": "Update rings = standard deferral policy. Windows Update for Business deployment service (Quality updates blade) = expedite specific updates to bypass deferrals. Two separate features."
+  },
+  {
+    "id": "MS102-R1-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5. The legal department initiates a litigation hold on all content in the mailbox and OneDrive of a user named Megan Bowen. After the hold is applied, Megan's employment is terminated and her Microsoft 365 license is removed. Her Azure AD account is then deleted.\n\nQuestion:\nWhat happens to Megan's mailbox and OneDrive content?",
+    "choices": [
+      "Both the mailbox and OneDrive content are permanently deleted after 30 days regardless of the hold",
+      "The mailbox becomes an inactive mailbox preserving all content; the OneDrive is retained for the hold duration per OneDrive retention settings",
+      "The mailbox becomes an inactive mailbox; the OneDrive content is permanently deleted since the account was deleted",
+      "Both the mailbox and OneDrive are converted to shared resources accessible by the legal team"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A litigation hold prevents permanent deletion. The mailbox is retained as an inactive mailbox, and OneDrive content is preserved according to the hold and retention settings.",
+      "Correct. When a hold is in place and the account is deleted: the Exchange mailbox becomes an inactive mailbox that preserves all content for the duration of the hold. OneDrive content is retained based on the hold—by default, a deleted user's OneDrive is retained for 30 days, but an eDiscovery hold or retention policy extends this.",
+      "Incorrect. OneDrive content under a litigation hold or eDiscovery hold is not permanently deleted when the account is removed. The hold preserves the content beyond the standard 30-day cleanup period.",
+      "Incorrect. Neither the mailbox nor OneDrive is converted to shared resources. The mailbox becomes inactive (searchable via eDiscovery but not accessible as a regular mailbox), and OneDrive is preserved in a hold state."
+    ],
+    "tip": "Account deletion + hold in place → Exchange = inactive mailbox (preserved), OneDrive = preserved by hold. Without hold: Exchange deleted after 30 days, OneDrive deleted after admin-set period (default 30 days)."
+  },
+  {
+    "id": "MS102-R1-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring device enrollment restrictions in Microsoft Intune for Datum Corporation. The company policy states:\n- Only corporate-owned devices should be enrolled\n- All personal (BYOD) devices must be blocked\n- The exception: the CEO's personal iPhone must be allowed to enroll\n\nQuestion:\nHow should you configure the enrollment restrictions to meet all three requirements?",
+    "choices": [
+      "Set the default device type restriction to block personally owned devices, then create a device platform restriction allowing iOS for the CEO's user group",
+      "Set the default device type restriction to block personally owned devices, then create a higher-priority device type restriction allowing personally owned devices scoped to a group containing only the CEO",
+      "Block all iOS enrollments in device platform restrictions, then add the CEO's device IMEI to the corporate device identifiers list",
+      "Set the default enrollment restriction to block all devices, then create an Autopilot profile assigned only to the CEO"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A device platform restriction controls which platforms (iOS, Android, Windows, macOS) can enroll, not whether personal vs. corporate devices are allowed. This would not block personal devices on other platforms.",
+      "Correct. Device type restrictions control personal vs. corporate enrollment. Set the default to block personal devices. Then create a second device type restriction with higher priority, scoped to a group containing only the CEO, that allows personally owned devices. Higher-priority restrictions override lower-priority ones for their targeted groups.",
+      "Incorrect. Adding the CEO's IMEI to corporate device identifiers would classify the phone as corporate, but this approach unnecessarily blocks all other corporate iOS devices. Also, Apple does not report IMEI during enrollment for personal devices unless supervised.",
+      "Incorrect. Autopilot is a Windows-specific enrollment technology and does not apply to iOS devices. Also, blocking all devices would prevent corporate device enrollment for everyone."
+    ],
+    "tip": "Enrollment restrictions are evaluated by priority (lower number = higher priority). Create a higher-priority exception for specific groups to override the default restriction."
+  },
+  {
+    "id": "MS102-R1-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nPratum Inc. uses Microsoft Defender for Office 365 Plan 2. The security team notices that users in the Finance department frequently receive phishing emails impersonating the CFO. The emails come from external domains but display the CFO's name in the From field.\n\nYou need to configure a policy that specifically protects against impersonation of the CFO.\n\nQuestion:\nWhich policy should you configure in the Microsoft Defender portal under Email & collaboration > Policies & rules > Threat policies?",
+    "choices": [
+      "Anti-spam policy with a high confidence phishing threshold",
+      "Anti-phishing policy with user impersonation protection enabled, adding the CFO as a protected user",
+      "Safe Links policy with URL detonation enabled for emails from external senders",
+      "Anti-phishing policy with mailbox intelligence enabled in the default policy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Anti-spam policies filter bulk and spam email based on content heuristics and sender reputation. They do not detect display name impersonation of specific individuals.",
+      "Correct. Anti-phishing policies in Defender for Office 365 include user impersonation protection. By adding the CFO as a protected user, the policy detects emails from external senders that display the CFO's name or a close variant. You can configure actions like quarantine or move to junk.",
+      "Incorrect. Safe Links protects against malicious URLs in emails by scanning links at click time. It does not detect display name impersonation.",
+      "Incorrect. Mailbox intelligence uses machine learning based on user communication patterns to detect impersonation, but it is a supplementary feature. The specific requirement to protect the CFO requires explicitly adding them as a protected user in the impersonation settings."
+    ],
+    "tip": "Anti-phishing impersonation protection: User impersonation = protects specific high-value users (add them by name + email). Domain impersonation = protects against spoofed domains. Mailbox intelligence = ML-based pattern detection."
+  },
+  {
+    "id": "MS102-R1-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps deployment at Relecloud. The deployment team uses the Office Deployment Tool and the following configuration.xml:\n\n<Configuration>\n  <Add OfficeClientEdition=\"64\" Channel=\"MonthlyEnterprise\">\n    <Product ID=\"O365ProPlusRetail\">\n      <Language ID=\"en-us\" />\n      <ExcludeApp ID=\"Groove\" />\n      <ExcludeApp ID=\"Lync\" />\n    </Product>\n  </Add>\n  <Updates Enabled=\"TRUE\" Channel=\"MonthlyEnterprise\" />\n  <Display Level=\"None\" AcceptEULA=\"TRUE\" />\n</Configuration>\n\nA user reports that Microsoft Teams is not installed after running setup.exe /configure configuration.xml.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "Teams is excluded by default when using O365ProPlusRetail and must be explicitly included using <Product ID=\"Teams\">",
+      "The ExcludeApp ID for Lync also removes Teams since Teams replaced Skype for Business",
+      "Teams is not part of the Microsoft 365 Apps suite and must be installed separately using the Teams MSI or MSIX package",
+      "The Display Level is set to None, which suppresses the Teams installation prompt that requires user consent"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Teams is not excluded by default in O365ProPlusRetail. However, as of recent changes, Teams is no longer bundled with Microsoft 365 Apps installations.",
+      "Incorrect. ExcludeApp ID=\"Lync\" excludes Skype for Business only. It does not affect Teams, which is a completely separate application.",
+      "Correct. As of 2024, Microsoft unbundled Teams from Microsoft 365 Apps. New installations of Microsoft 365 Apps no longer include Teams automatically. Teams must be installed separately using the Teams MSIX package, or via the 'Get Teams' link in Microsoft 365 Apps. This is the new Teams distribution model.",
+      "Incorrect. Display Level=\"None\" suppresses the installation UI but does not prevent any specific application from being installed. It is a silent installation switch."
+    ],
+    "tip": "Since mid-2024, Teams is unbundled from Microsoft 365 Apps. New Office installs do NOT include Teams. Teams must be deployed separately (MSIX, Intune, or EXE bootstrap)."
+  },
+  {
+    "id": "MS102-R1-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nA.Datum Corporation has 1,000 Windows 11 devices managed by Microsoft Intune. You need to create a PowerShell script that runs once on each device at enrollment to configure specific registry keys for a legacy application. The script must run in the SYSTEM context, not the user context.\n\nYou navigate to Devices > Scripts and remediations > Platform scripts in the Intune admin center.\n\nQuestion:\nWhich settings should you configure when adding the PowerShell script?",
+    "choices": [
+      "Run this script using the logged-on credentials: No; Run script in 64-bit PowerShell host: Yes",
+      "Run this script using the logged-on credentials: Yes; Run script in 64-bit PowerShell host: Yes",
+      "Run this script using the logged-on credentials: No; Run script in 64-bit PowerShell host: No",
+      "Run this script using the logged-on credentials: Yes; Enforce script signature check: Yes"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Setting 'Run this script using the logged-on credentials' to No runs the script as SYSTEM. Setting 'Run script in 64-bit PowerShell host' to Yes ensures the script accesses the correct 64-bit registry hive on Windows 11 (64-bit OS), which is important for registry key modifications.",
+      "Incorrect. Setting 'Run this script using the logged-on credentials' to Yes runs the script in the user context, not SYSTEM. The requirement specifically states the script must run as SYSTEM.",
+      "Incorrect. While 'Run this script using the logged-on credentials: No' correctly runs as SYSTEM, running in the 32-bit PowerShell host on a 64-bit OS may access the WoW64 registry redirected keys, causing the legacy app registry configuration to be written to the wrong location.",
+      "Incorrect. Running with logged-on credentials runs in user context, not SYSTEM. Additionally, enforcing script signature check is unrelated to the SYSTEM context requirement."
+    ],
+    "tip": "Intune PowerShell scripts: 'Logged-on credentials: No' = SYSTEM context. 'Logged-on credentials: Yes' = user context. Always use 64-bit host on 64-bit Windows to avoid WoW64 registry redirection."
+  },
+  {
+    "id": "MS102-R1-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring data loss prevention (DLP) for Trey Research. The compliance team requires that:\n- Emails containing more than 5 credit card numbers must be blocked from being sent externally\n- Emails containing 1-5 credit card numbers sent externally should trigger a policy tip warning but allow the user to override with a business justification\n- Internal emails should not be affected\n\nQuestion:\nHow should you configure the DLP policy rules?",
+    "choices": [
+      "Create one rule with instance count 1-5 set to notify with override, and set the default action to block for counts above 5",
+      "Create two rules: a low-volume rule (1-5 instances) with action Notify with override, and a high-volume rule (6-any) with action Block; both scoped to messages sent outside the organization",
+      "Create one rule with instance count 1-any set to block, then create an exception for counts 1-5 that allows override",
+      "Create two rules: one blocking external emails with any credit card numbers, and one allowing internal emails regardless of content"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. DLP policies do not have a 'default action for counts above' setting. Each threshold requires an explicit rule with its own conditions and actions.",
+      "Correct. Two separate DLP rules are needed within the same policy. Rule 1: Condition = content contains credit card numbers (instance count 1-5) + sent outside org → Action = Notify user with policy tip, allow override with justification. Rule 2: Condition = content contains credit card numbers (instance count 6+) + sent outside org → Action = Block the email. The high-volume rule should have higher priority.",
+      "Incorrect. DLP rules don't support exceptions based on instance count within a single rule. You need separate rules for different thresholds with different actions.",
+      "Incorrect. This configuration blocks all external emails with any credit card numbers, violating the requirement that 1-5 instances should only trigger a warning. Also, you don't need an explicit allow rule for internal emails—just scope the rules to external recipients."
+    ],
+    "tip": "DLP best practice: use multiple rules within one policy for different severity levels. Low count → warn with override. High count → block. Scope both to 'outside the organization' to leave internal email unaffected."
+  }
+]
