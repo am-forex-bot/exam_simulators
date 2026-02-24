@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R1-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Windows devices for Contoso Ltd using Microsoft Intune. A group of 50 kiosk devices in retail stores needs to run a single full-screen application (a custom POS app). The devices should automatically sign in without requiring user credentials and should restart automatically if the app crashes.\n\nQuestion:\nWhich Intune configuration profile template should you use?",
+    "choices": [
+      "Device restrictions > General > Kiosk mode settings",
+      "Kiosk profile under Devices > Configuration profiles > Create profile > Templates > Kiosk",
+      "Endpoint protection > Microsoft Defender Application Guard",
+      "Shared multi-user device profile under Devices > Configuration profiles"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While device restrictions contain some kiosk-related settings, the dedicated Kiosk template provides the full configuration including single-app kiosk mode, auto-logon, and app restart behavior.",
+      "Correct. The Kiosk template in Intune allows you to configure single-app kiosk mode, specify the application, enable auto-logon (no user credentials needed), and configure automatic restart if the app closes. This is the purpose-built profile for this exact scenario.",
+      "Incorrect. Microsoft Defender Application Guard is a security feature that isolates untrusted websites in a container. It has nothing to do with kiosk configuration.",
+      "Incorrect. Shared multi-user device profiles optimize devices for shared use by multiple users (cleanup between sessions, guest accounts). Kiosk devices running a single app need the dedicated Kiosk profile."
+    ],
+    "tip": "Single-app kiosk = Kiosk template (auto-logon + single app + restart on crash). Multi-app kiosk = Kiosk template with multi-app mode. Shared device = Shared multi-user device profile."
+  },
+  {
+    "id": "MS102-R1-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYour organization uses Microsoft Purview Information Protection. You have created a sensitivity label named 'Highly Confidential' that applies encryption with the following settings:\n- Assign permissions now\n- Users: All employees (group)\n- Permissions: Co-Author\n\nA user applies the 'Highly Confidential' label to a Word document and shares it with an external partner via email.\n\nQuestion:\nWhat happens when the external partner tries to open the document?",
+    "choices": [
+      "The partner can open and edit the document because Co-Author permissions allow full editing",
+      "The partner is prompted to authenticate but access is denied because they are not in the All employees group",
+      "The partner can open the document in read-only mode because external users are automatically downgraded to Viewer",
+      "The document is automatically encrypted with a different key for external sharing"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Co-Author permissions allow editing, but only for users specified in the permissions list. The external partner is not a member of the 'All employees' group.",
+      "Correct. The sensitivity label grants permissions only to the 'All employees' group. The external partner is not a member of this group. When they try to open the encrypted document, they are prompted to authenticate with Azure RMS, but access is denied because they are not authorized.",
+      "Incorrect. There is no automatic downgrade for external users. If they're not in the authorized group, they get no access at all—not read-only.",
+      "Incorrect. The document encryption is tied to the sensitivity label configuration. There is no automatic re-encryption mechanism for external sharing."
+    ],
+    "tip": "Sensitivity label encryption permissions are strict: only the specified users/groups can access the document. External users not listed → access denied. To allow external sharing, use 'Let users assign permissions' or add external domains."
+  },
+  {
+    "id": "MS102-R1-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou deploy a Win32 app (a custom CRM application) through Microsoft Intune. The app's installation command is:\n  setup.exe /S /norestart\n\nThe detection rule uses a file detection method checking for the existence of C:\\Program Files\\CustomCRM\\crm.exe.\n\nUsers report that Intune shows the app as 'Installed' but the application is actually not functional because a required Windows service (CustomCRMService) was not started.\n\nQuestion:\nWhat should you change to accurately detect a successful installation?",
+    "choices": [
+      "Change the detection rule to use a registry key that the CRM installer creates after a successful service registration",
+      "Change the detection rule to use a custom PowerShell detection script that checks both the file existence AND the service status",
+      "Add a dependency app that starts the service after installation",
+      "Change the installation command to include a /startservice parameter"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While a registry-based detection rule may be more reliable than file detection, it still only confirms that the installer ran—not that the service is running. The requirement is to detect whether the installation is fully functional.",
+      "Correct. A custom PowerShell detection script allows you to check multiple conditions. You can verify both that crm.exe exists AND that the CustomCRMService is in a Running state using Get-Service. This gives an accurate detection of a successful, functional installation.",
+      "Incorrect. Dependencies in Intune define apps that must be installed before the current app. They don't execute post-installation actions like starting services.",
+      "Incorrect. Changing the installation command might fix the functional issue, but the question asks about accurate detection. Even if the service parameter works, the detection rule should still validate the functional state."
+    ],
+    "tip": "Win32 app detection methods: File (basic), Registry (better), PowerShell script (most flexible—can check services, processes, registry, files, versions, anything). Use scripts for complex success criteria."
+  },
+  {
+    "id": "MS102-R1-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 3,000 Windows 11 devices for Wingtip Toys using Microsoft Intune. The company has three departments:\n- Engineering: needs Visual Studio and Docker Desktop\n- Sales: needs Salesforce desktop app and Adobe Acrobat Pro\n- HR: needs SAP SuccessFactors client and Adobe Acrobat Standard\n\nAll departments need Microsoft 365 Apps, Microsoft Teams, and Google Chrome.\n\nYou need to minimize the number of app assignments in Intune.\n\nQuestion:\nWhat is the most efficient assignment strategy?",
+    "choices": [
+      "Create one group per department and assign all apps (common + department-specific) to each group individually",
+      "Assign common apps (M365 Apps, Teams, Chrome) as Required to All Devices, then assign department-specific apps as Required to department-specific groups",
+      "Create a dynamic device group per department and use app configuration policies to determine which apps install",
+      "Create an app catalog with all apps and let users install what they need from Company Portal"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. This creates redundant assignments for common apps across three groups. Each common app would be assigned three times instead of once.",
+      "Correct. Assign the three common apps to All Devices (or All Users) as Required—one assignment each. Then create three department groups and assign the department-specific apps to their respective groups. This results in 3 (common) + 6 (department-specific) = 9 assignments total, which is the minimum.",
+      "Incorrect. App configuration policies configure app behavior/settings, not which apps get installed. App installation is controlled through app assignments.",
+      "Incorrect. Making all apps available in Company Portal relies on users to install required apps. The scenario implies these apps are required for work, not optional self-service."
+    ],
+    "tip": "Efficient app assignment: Common apps → All Users/Devices (Required). Department-specific → department groups (Required). User-requested → Available in Company Portal."
+  },
+  {
+    "id": "MS102-R1-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Microsoft Defender for Cloud Apps for Fabrikam. The security team wants to be alerted when any user downloads more than 500 MB of data from SharePoint Online within a 30-minute window. This should apply to all users except members of the IT Admins group.\n\nQuestion:\nWhich policy type should you create in the Microsoft Defender for Cloud Apps portal?",
+    "choices": [
+      "Activity policy with a repeated activity filter for downloads exceeding 500 MB in 30 minutes",
+      "File policy monitoring SharePoint Online files over 500 MB",
+      "Session policy with a conditional access app control for download monitoring",
+      "Anomaly detection policy with the 'Mass download' template"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. An Activity policy with a repeated activity filter allows you to define thresholds (e.g., download volume > 500 MB within 30 minutes) for specific cloud apps like SharePoint Online. You can exclude the IT Admins group in the user filter and configure alert notifications.",
+      "Incorrect. File policies monitor file properties like sharing settings, labels, and classification. They do not aggregate download volume over time.",
+      "Incorrect. Session policies with conditional access app control provide real-time inline controls during a session (like blocking downloads). They do not aggregate volume over a time window for alerting purposes.",
+      "Incorrect. The anomaly detection policy for mass downloads uses machine learning to detect unusual patterns, but it does not allow you to configure a specific threshold of 500 MB in 30 minutes."
+    ],
+    "tip": "Defender for Cloud Apps policy types: Activity = aggregate/threshold alerts on cloud activities. Session = real-time inline control. File = file property monitoring. Anomaly = ML-based detection (no custom thresholds)."
+  },
+  {
+    "id": "MS102-R1-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nLitware Inc. uses Microsoft Intune. You create a device compliance policy for Windows devices requiring BitLocker encryption. You assign the policy to a group containing 500 devices. After 24 hours, you notice that 200 devices show a compliance status of 'Not evaluated'.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The devices have not synced with Intune since the policy was assigned",
+      "BitLocker is enabled but the recovery key has not been escrowed to Azure AD",
+      "The devices are running Windows 10 Home which does not support BitLocker",
+      "The compliance policy has a syntax error in the BitLocker requirement setting"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. 'Not evaluated' means the device has not checked in with Intune to evaluate the compliance policy. Devices must sync with Intune to receive and evaluate compliance policies. The default check-in interval is every 8 hours, but newly assigned policies may take up to 24 hours for all devices to evaluate. Devices that are offline or have connectivity issues will remain 'Not evaluated'.",
+      "Incorrect. If BitLocker is enabled but the key isn't escrowed, the device would still be evaluated and would show as 'Compliant' or 'Not compliant' depending on the specific policy settings—not 'Not evaluated'.",
+      "Incorrect. Windows 10/11 Home devices would be evaluated and marked 'Not compliant' because BitLocker is not available. They would not show 'Not evaluated'.",
+      "Incorrect. Compliance policies don't have syntax errors—they are configured through the Intune UI with predefined settings. A misconfigured setting would still evaluate the devices."
+    ],
+    "tip": "Compliance status meanings: Not evaluated = device hasn't checked in to assess the policy. Not compliant = device checked in but failed. In grace period = failing but within the noncompliance action delay."
+  },
+  {
+    "id": "MS102-R1-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 for a financial services company. Regulations require that all Teams chat messages and channel messages must be retained for 7 years and cannot be deleted by users or admins during that period. After 7 years, the content should be automatically deleted.\n\nQuestion:\nWhich retention policy configuration in the Microsoft Purview compliance portal meets this requirement?",
+    "choices": [
+      "Create a retention policy for Teams with 'Retain items for 7 years' and 'At end of retention period: Delete items automatically'. Apply to All users and All Teams.",
+      "Create a retention policy for Teams with 'Retain items for 7 years' and 'At end of retention period: Do nothing'. Then create a separate deletion policy for 7+ year old content.",
+      "Create a retention label that retains for 7 years with automatic deletion, then auto-apply it to Teams messages",
+      "Enable litigation hold on all user mailboxes for 7 years to preserve Teams chat data"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. A retention policy scoped to Teams (both chat messages and channel messages) with 'Retain items for a specific period: 7 years' and 'At the end of the retention period: Delete items automatically' meets all requirements. Content is immutable during the retention period (users/admins cannot permanently delete it) and is auto-deleted after 7 years.",
+      "Incorrect. Setting 'Do nothing' after retention means content is not automatically deleted after 7 years. You would need a second policy, and using two policies for this is unnecessarily complex and could lead to conflicts.",
+      "Incorrect. Retention labels cannot be applied to Teams messages (chats and channel messages). Retention labels are supported for documents and emails, not Teams messages. You must use a retention policy.",
+      "Incorrect. Litigation hold preserves mailbox content but does not cover Teams channel messages stored in the group mailbox. Also, litigation hold has no automatic deletion after the period—content is held indefinitely until the hold is removed."
+    ],
+    "tip": "Teams retention: Use retention policies (not labels) for Teams chat and channel messages. Labels don't work for Teams messages. Retention policies enforce immutability during the retention period."
+  },
+  {
+    "id": "MS102-R1-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou need to deploy a Win32 application through Microsoft Intune that has the following dependency: .NET Framework 6.0 runtime must be installed before the application. If .NET 6.0 is not present, it should be automatically installed first.\n\nYou have already uploaded both the .NET 6.0 runtime and the application as Win32 apps in Intune.\n\nQuestion:\nHow should you configure the relationship between these two apps?",
+    "choices": [
+      "Add .NET 6.0 as a dependency of the application with Auto install set to Yes",
+      "Add .NET 6.0 as a supersedence of the application",
+      "Create an app configuration policy that installs .NET 6.0 before the application",
+      "Add the application as a dependency of .NET 6.0 with Auto install set to Yes"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In the application's properties, under Dependencies, add the .NET 6.0 app and set Auto install to Yes. This ensures that when Intune installs the application, it first checks if .NET 6.0 is present (using its detection rules). If not, Intune automatically installs .NET 6.0 before proceeding with the main application.",
+      "Incorrect. Supersedence is used when a new version of an app replaces an older version. .NET 6.0 is a prerequisite, not a replacement for the application.",
+      "Incorrect. App configuration policies configure settings within an already-installed app (like managed app settings). They do not install prerequisite software.",
+      "Incorrect. This reverses the dependency. Adding the application as a dependency of .NET 6.0 means .NET 6.0 would try to install the application first, which is the opposite of what's needed."
+    ],
+    "tip": "Win32 app relationships: Dependency = 'install this first before my app' (Auto install: Yes = automatic). Supersedence = 'my app replaces this older app'. Dependencies go ON the app that needs the prerequisite."
+  },
+  {
+    "id": "MS102-R1-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are configuring Endpoint analytics in Microsoft Intune for Northwind Traders. Management wants to identify devices that take longer than 60 seconds to boot and understand which startup processes are causing delays.\n\nYou navigate to Reports > Endpoint analytics in the Intune admin center.\n\nQuestion:\nWhich Endpoint analytics report provides this information?",
+    "choices": [
+      "Device performance > Startup performance tab showing startup scores and boot time breakdown per device",
+      "Proactive remediations > Create a script to detect slow boot times",
+      "Work from anywhere > Device readiness report",
+      "Application reliability > App crash and hang frequency"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Startup performance report in Endpoint analytics shows boot time metrics broken down by phases (Core boot time, Group Policy processing, Sign-in processing). You can identify devices with boot times over 60 seconds and drill into the specific startup processes causing delays.",
+      "Incorrect. Proactive remediations run custom scripts to detect and fix issues, but they are not a reporting/analytics feature. You would need to write custom scripts, and this doesn't provide the built-in boot time analytics.",
+      "Incorrect. The Work from anywhere report evaluates device readiness for cloud management (Windows version, cloud identity, cloud management enrollment), not boot performance.",
+      "Incorrect. Application reliability tracks app crashes and hangs, not device boot times. It focuses on application health, not startup performance."
+    ],
+    "tip": "Endpoint analytics reports: Startup performance = boot times and startup processes. Application reliability = app crashes/hangs. Work from anywhere = device readiness for modern management."
+  },
+  {
+    "id": "MS102-R1-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nAdventureWorks uses Microsoft 365 E5. The security team wants to automatically investigate and remediate alerts generated by Microsoft Defender for Endpoint. Specifically, when a high-severity malware alert is triggered, they want Defender to automatically:\n1. Collect an investigation package from the device\n2. Isolate the device from the network\n3. Run an antivirus scan\n\nAll without requiring analyst intervention.\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Create a custom detection rule with automated response actions",
+      "Enable automated investigation and remediation (AIR) and set the automation level to 'Full - remediate threats automatically'",
+      "Create a Power Automate flow triggered by Defender alerts that calls the Defender API endpoints",
+      "Configure an alert notification rule that emails the SOC team with recommended actions"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but limited. Custom detection rules can trigger response actions, but they are based on custom KQL queries, not the built-in alert types from Defender. They also don't provide the full automated investigation workflow.",
+      "Correct. Automated Investigation and Remediation (AIR) in Defender for Endpoint automatically investigates alerts and takes remediation actions (collect investigation package, isolate device, run AV scan, etc.) when set to 'Full - remediate threats automatically'. This is the built-in feature designed for this exact scenario.",
+      "Incorrect. While Power Automate can call Defender APIs, this creates an unnecessary dependency on an external service. AIR provides this capability natively without custom automation development.",
+      "Incorrect. Alert notification rules only send email notifications. They do not perform any automated investigation or remediation actions."
+    ],
+    "tip": "Defender for Endpoint automation levels: Full = auto-remediate. Semi = auto-investigate but require approval for remediation. No automation = manual only. Device groups control which level applies."
+  }
+]
