@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R1-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou are the Intune administrator for Tailwind Traders. The company acquires 100 new Surface Pro 9 devices. The hardware vendor has pre-registered the devices with the Windows Autopilot service by uploading their hardware hashes. You need to ensure the devices are assigned to the correct Autopilot deployment profile before they are distributed to users.\n\nYou confirm the devices appear in Devices > Windows > Windows enrollment > Devices in the Intune admin center.\n\nQuestion:\nWhat must you do to ensure the correct deployment profile is applied?",
+    "choices": [
+      "Manually assign the deployment profile to each device individually from the device properties",
+      "Create a dynamic Azure AD device group using the ZTDID attribute, then assign the deployment profile to that group",
+      "Assign an Autopilot deployment profile to the group tag assigned to the devices during hardware hash registration",
+      "Wait for the devices to come online and the default deployment profile will be applied automatically"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. While you can assign profiles to individual devices, this is not scalable for 100 devices and is not the recommended approach.",
+      "Incorrect. ZTDID-based dynamic groups can work, but they are slow to populate and less reliable than group tag-based targeting. Group tags are the standard method for organizing Autopilot devices for profile assignment.",
+      "Correct. During hardware hash registration, devices can be assigned a group tag. You create a dynamic Azure AD device group that matches the group tag using the OrderID attribute, then assign the Autopilot deployment profile to that group. This ensures all 100 devices get the correct profile without manual per-device assignment.",
+      "Incorrect. There is no default deployment profile that auto-applies. If no profile is assigned, the device goes through standard OOBE without Autopilot customization."
+    ],
+    "tip": "Autopilot device targeting: Group tag (OrderID) → dynamic Azure AD group → assign profile to group. This is the scalable way to manage Autopilot profile assignments across large fleets."
+  },
+  {
+    "id": "MS102-R1-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 security for Proseware Inc. A user reports that they received an email from what appeared to be Microsoft support asking them to verify their account. The user clicked the link and entered their credentials before realizing it was phishing.\n\nYou need to investigate the incident and determine the scope of the attack.\n\nQuestion:\nWhat should you do FIRST in the Microsoft Defender portal?",
+    "choices": [
+      "Go to Email & collaboration > Explorer, search for the sender address, and identify all recipients who received the same phishing email",
+      "Go to Incidents & alerts > Incidents and check if an automated incident was created for this phishing campaign",
+      "Immediately reset the user's password and revoke all active sessions from the Azure AD admin center",
+      "Run an advanced hunting query using the EmailEvents table to find all emails from the phishing domain"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While Explorer is useful for email investigation, checking incidents first is more efficient because Defender may have already correlated the phishing email with other signals (sign-in anomalies, credential theft, lateral movement) into a single incident.",
+      "Correct. The first step is to check Incidents in the Defender portal. Microsoft Defender XDR automatically correlates related alerts across email, identity, and endpoint into incidents. An automated incident may already exist showing the full attack chain: the phishing email, the credential compromise, and any post-compromise activity. This gives you the broadest view fastest.",
+      "Incorrect. Password reset is an important remediation step, but the question asks what to do FIRST for investigation. You need to understand the scope before remediating, as premature password reset could alert the attacker to pivot faster.",
+      "Incorrect. Advanced hunting is powerful but requires manual query writing. Checking the automated incident first is faster and may already contain the information you need."
+    ],
+    "tip": "Incident response order: 1) Check Incidents (automated correlation), 2) Investigate scope (Explorer, Advanced Hunting), 3) Remediate (reset password, revoke sessions, purge emails). Don't jump to remediation before understanding scope."
+  },
+  {
+    "id": "MS102-R1-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou need to configure Microsoft Edge browser settings for 2,000 Windows devices managed by Intune at Lucerne Publishing. The requirements are:\n- The home page must be set to https://intranet.lucernepublishing.com\n- Pop-up blocker must be enabled\n- Third-party cookies must be blocked\n- Users should NOT be able to override these settings\n\nQuestion:\nWhich Intune profile type should you use?",
+    "choices": [
+      "Device configuration > Administrative Templates > Microsoft Edge",
+      "Device configuration > Settings Catalog > Microsoft Edge",
+      "Endpoint security > Attack surface reduction > Web protection",
+      "App configuration policy for managed devices > Microsoft Edge"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Administrative Templates for Edge are available and work, but Microsoft recommends the Settings Catalog for new configurations as it provides a more comprehensive and up-to-date set of Edge policies. Administrative Templates may not include all the latest Edge settings.",
+      "Correct. The Settings Catalog provides the most comprehensive and current set of Microsoft Edge policies in Intune. You can configure homepage URL, pop-up blocker, cookie settings, and set them as mandatory (not user-overridable). The Settings Catalog is Microsoft's recommended approach for Edge browser configuration.",
+      "Incorrect. Attack surface reduction web protection focuses on blocking malicious websites and network protection. It does not manage browser configuration settings like homepage, cookies, or pop-ups.",
+      "Incorrect. App configuration policies for managed devices configure app-level settings (like managed bookmarks or proxy settings passed to the app), but for comprehensive browser policy enforcement that users cannot override, device configuration profiles with Edge policies are required."
+    ],
+    "tip": "Edge management in Intune: Settings Catalog (recommended, most complete) > Administrative Templates (legacy, subset of policies) > App configuration (app-level settings only). Settings Catalog = enforced, App config = sometimes overridable."
+  },
+  {
+    "id": "MS102-R1-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nAdatum has 800 Windows 11 devices enrolled in Intune. The help desk receives frequent calls about a specific third-party application (InventoryTracker v3.2) crashing. The IT team needs to proactively detect devices where this app crashes more than 3 times per day and automatically run a repair script on those devices.\n\nQuestion:\nWhich Intune feature should you use?",
+    "choices": [
+      "Endpoint analytics > Application reliability",
+      "Proactive remediations (Remediations) with a detection script and remediation script",
+      "Device compliance policy with a custom compliance script",
+      "Microsoft Defender for Endpoint > Automated investigation and remediation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Application reliability in Endpoint analytics reports on app crashes and hangs, but it is a read-only reporting feature. It cannot automatically run remediation scripts on affected devices.",
+      "Correct. Proactive remediations (now called Remediations in Intune) allow you to deploy a detection script that checks for the condition (e.g., InventoryTracker crash count > 3 in event logs) and a remediation script that runs automatically when the detection script reports an issue (e.g., repair/reinstall the app). This runs on a schedule across all targeted devices.",
+      "Incorrect. Custom compliance scripts evaluate device compliance state and can mark devices as noncompliant, but they cannot execute remediation actions. They are for reporting compliance status, not fixing issues.",
+      "Incorrect. Defender for Endpoint AIR investigates security alerts, not application crashes. It handles malware, suspicious activity, and security incidents—not application reliability."
+    ],
+    "tip": "Proactive remediations = detect a condition + automatically fix it (scheduled, repeating). Endpoint analytics = report on issues (read-only). Compliance scripts = evaluate compliance (no remediation action)."
+  },
+  {
+    "id": "MS102-R1-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5. The compliance team needs to implement a communication compliance policy that monitors Microsoft Teams messages for potential insider trading language. The policy should:\n- Monitor all messages in Teams (chats and channels)\n- Use a built-in classifier for regulatory compliance\n- Assign the Legal team as reviewers\n- Capture messages containing stock trading terminology\n\nQuestion:\nWhich policy template should you select when creating the communication compliance policy in Microsoft Purview?",
+    "choices": [
+      "Detect inappropriate text",
+      "Detect sensitive information",
+      "Detect regulatory compliance",
+      "Custom policy with keyword dictionary for trading terms"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. The 'Detect inappropriate text' template uses classifiers for threats, harassment, discrimination, and profanity. It does not detect financial regulatory compliance language.",
+      "Incorrect. 'Detect sensitive information' monitors for sensitive information types (SSN, credit card numbers, etc.), not regulatory compliance language or insider trading terminology.",
+      "Correct. The 'Detect regulatory compliance' template uses a built-in trainable classifier designed to detect language related to regulatory compliance, including financial information sharing, insider trading, and unauthorized disclosure. This is purpose-built for detecting potential insider trading communication.",
+      "Incorrect. While a custom policy with a keyword dictionary could work, it requires manually defining all relevant terms and would miss contextual language that the built-in classifier can detect. The built-in template is more accurate and meets the requirement to use a built-in classifier."
+    ],
+    "tip": "Communication compliance templates: Inappropriate text = harassment/threats. Sensitive info = PII/financial data types. Regulatory compliance = insider trading/financial misconduct language. Custom = your own rules."
+  },
+  {
+    "id": "MS102-R1-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 1,200 iOS devices for Fabrikam's field sales team using Microsoft Intune. The devices are supervised via Apple Business Manager. Users report that after enrolling, it takes over an hour for all required apps and configurations to be applied. During this time, users can access an unconfigured device.\n\nYou need to ensure that users cannot access the device until all required apps and configurations are installed.\n\nQuestion:\nWhat should you configure?",
+    "choices": [
+      "Set the enrollment type to User Enrollment with Company Portal",
+      "Configure an Enrollment Status Page (ESP) in the enrollment profile",
+      "Add required apps and profiles to the Setup Assistant configuration in the iOS enrollment profile with 'Await final configuration' enabled",
+      "Create a compliance policy that marks devices as noncompliant until all apps are installed"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. User Enrollment is for BYOD scenarios with reduced management capabilities. It does not address the timing of app/configuration deployment during enrollment.",
+      "Incorrect. Enrollment Status Page (ESP) is a Windows-only feature used with Windows Autopilot. It does not exist for iOS devices.",
+      "Correct. For supervised iOS devices enrolled via Apple Business Manager, you can enable 'Await final configuration' (also called Setup Assistant with modern authentication). This keeps the device on the Setup Assistant screen until all required apps and configuration profiles are installed, preventing users from accessing an unconfigured device.",
+      "Incorrect. Compliance policies evaluate after enrollment and can block resource access, but they don't prevent the user from using the device itself. The user would still have access to the unconfigured device."
+    ],
+    "tip": "iOS 'Await final configuration' = the iOS equivalent of Windows Enrollment Status Page. Keeps device locked at Setup Assistant until all required apps + profiles are installed. Requires supervised mode."
+  },
+  {
+    "id": "MS102-R1-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 for Relecloud. The security team discovers that an attacker has gained access to a global administrator account and has been active for the past 48 hours. The attacker has created two new admin accounts and configured a mail forwarding rule on the CEO's mailbox.\n\nYou need to contain the breach and ensure persistence mechanisms are removed.\n\nQuestion:\nWhich actions should you take? (Select the action that addresses ALL persistence mechanisms)",
+    "choices": [
+      "Reset the compromised admin password and enable MFA",
+      "Reset the compromised admin password, delete the two rogue admin accounts, remove the mail forwarding rule, and revoke all refresh tokens for affected accounts",
+      "Enable security defaults in Azure AD to force MFA for all admins",
+      "Reset the compromised admin password and run the automated investigation in Microsoft Defender for Office 365"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Only resetting the password and enabling MFA addresses one persistence mechanism. The two rogue admin accounts and the mail forwarding rule remain active, allowing continued unauthorized access.",
+      "Correct. A complete breach response must address all persistence mechanisms: (1) Reset compromised password to revoke current access, (2) Delete rogue admin accounts to prevent re-entry, (3) Remove mail forwarding to stop data exfiltration, (4) Revoke refresh tokens to invalidate existing sessions across all affected accounts. Missing any one of these leaves a backdoor open.",
+      "Incorrect. Security defaults enable baseline MFA, but this does not remove the two rogue admin accounts or the mail forwarding rule. The attacker's accounts would simply be prompted for MFA, which they may have already set up.",
+      "Incorrect. Automated investigation in Defender for Office 365 focuses on email threats, not identity-level persistence mechanisms. It won't discover or remove rogue admin accounts or mail forwarding rules."
+    ],
+    "tip": "Post-compromise checklist: Reset passwords + revoke tokens + remove rogue accounts + remove mail rules + check OAuth app consents + review audit logs. Always look for ALL persistence mechanisms."
+  },
+  {
+    "id": "MS102-R1-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou need to deploy a custom line-of-business (LOB) Android app to 500 corporate-owned, fully managed Android Enterprise devices using Microsoft Intune. The app is not available in the Google Play Store. You have the APK file.\n\nQuestion:\nHow should you add this app in the Intune admin center?",
+    "choices": [
+      "Apps > Android > Add > Managed Google Play app > Upload the APK as a private app",
+      "Apps > Android > Add > Line-of-business app > Upload the APK file directly",
+      "Apps > Android > Add > Android store app > Enter a custom URL to the APK",
+      "Apps > Android > Add > Web link > Host the APK on a web server"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. For Android Enterprise fully managed devices, apps must be distributed through Managed Google Play. You upload your custom APK as a private app in Managed Google Play through the Intune console. This publishes it to your organization's private store, making it available for assignment to fully managed devices.",
+      "Incorrect. The 'Line-of-business app' option for Android uploads an APK for device administrator enrollment, not Android Enterprise. Fully managed devices use Android Enterprise and require apps to come through Managed Google Play.",
+      "Incorrect. 'Android store app' references public Google Play Store listings by URL. A custom LOB app not in the public store cannot be added this way.",
+      "Incorrect. Web links create home screen shortcuts to websites, not install native Android applications."
+    ],
+    "tip": "Android Enterprise app deployment: ALL apps (store, LOB, web) must go through Managed Google Play. For custom APKs: upload as a private app in Managed Google Play via Intune. Direct APK sideloading is for device administrator mode only."
+  },
+  {
+    "id": "MS102-R1-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nA.Datum Corporation has a hybrid environment with Microsoft Intune and Microsoft Configuration Manager (SCCM). They enable co-management for 2,000 Windows devices. Currently, Configuration Manager handles all workloads.\n\nThe IT team wants to move the compliance policies workload to Intune while keeping all other workloads managed by Configuration Manager.\n\nQuestion:\nWhere do you configure this workload transition?",
+    "choices": [
+      "In the Microsoft Intune admin center under Tenant administration > Connectors and tokens > Co-management",
+      "In the Configuration Manager console under Administration > Cloud Services > Co-management > Properties > Workloads tab, slide the Compliance policies slider to Intune",
+      "In Azure AD under Device settings > Co-management workload configuration",
+      "Run the Set-CoManagementWorkload PowerShell cmdlet from the Configuration Manager server"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While the Intune admin center shows co-management status and enrollment, workload transition is configured in the Configuration Manager console, not Intune.",
+      "Correct. Co-management workload transitions are configured in the Configuration Manager console. Navigate to Administration > Cloud Services > Co-management, open Properties, go to the Workloads tab, and slide the 'Compliance policies' workload slider from Configuration Manager to Intune (either Pilot Intune for a test group, or Intune for all co-managed devices).",
+      "Incorrect. Azure AD Device settings control device registration and MDM enrollment, not co-management workload distribution between Intune and Configuration Manager.",
+      "Incorrect. There is no Set-CoManagementWorkload cmdlet. Workload transitions are managed through the Configuration Manager console GUI."
+    ],
+    "tip": "Co-management workload control lives in ConfigMgr console, not Intune. Each workload has a slider: ConfigMgr ← → Pilot Intune ← → Intune. Pilot uses a specific collection for testing before full transition."
+  },
+  {
+    "id": "MS102-R1-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nWoodgrove Bank uses Microsoft 365 E5. The risk management team requires that all Microsoft 365 audit log data be retained for 10 years to meet banking regulations. The default retention period for audit logs is 180 days (E5 license provides up to 1 year by default).\n\nQuestion:\nHow should you configure 10-year audit log retention?",
+    "choices": [
+      "Use PowerShell: Set-UnifiedAuditLogRetentionPolicy to create a custom retention policy for 10 years",
+      "In Microsoft Purview > Audit > Audit retention policies, create a policy with a 10-year retention period",
+      "Export audit logs to an Azure Storage account and configure a 10-year retention policy on the storage account",
+      "Configure a Microsoft Purview retention policy scoped to audit data with a 10-year retention period"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While New-UnifiedAuditLogRetentionPolicy is a valid PowerShell cmdlet for creating audit retention policies, the question asks about the UI-based configuration. However, the key insight is that 10-year retention requires the Audit (Premium) add-on license, which the answer should address.",
+      "Correct. In Microsoft Purview compliance portal, navigate to Audit > Audit retention policies and create a custom policy with a 10-year retention period. With Microsoft 365 E5 and the Audit Premium capability, you can set retention policies for up to 10 years. You can target specific record types or all audit activities.",
+      "Incorrect. Exporting to Azure Storage is a workaround but is not the native Microsoft 365 solution. Microsoft Purview natively supports 10-year audit log retention with the appropriate license.",
+      "Incorrect. Standard Purview retention policies scope to workloads like Exchange, SharePoint, and Teams—not to audit log data. Audit log retention has its own dedicated policy configuration under the Audit section."
+    ],
+    "tip": "Audit log retention: E3 = 180 days (default). E5 = 1 year default, up to 10 years with custom audit retention policies. Configured in Purview > Audit > Audit retention policies (not general retention policies)."
+  }
+]
