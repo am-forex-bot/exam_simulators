@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R2-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage 2,000 Windows devices for Contoso using Intune. A new corporate policy requires that all devices must encrypt removable USB drives with BitLocker To Go before any data can be written to them. If a USB drive is not encrypted, write access should be blocked while read access remains allowed.\n\nQuestion:\nWhich Intune profile should you configure?",
+    "choices": [
+      "Endpoint security > Disk encryption > BitLocker profile with 'Require encryption for removable data drives' and 'Block write access to removable drives not protected by BitLocker'",
+      "Device configuration > Endpoint protection > BitLocker settings for removable drives",
+      "Endpoint security > Attack surface reduction > Device control for removable storage",
+      "Device compliance policy requiring BitLocker on removable drives"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The endpoint security Disk encryption profile includes BitLocker settings specifically for removable data drives. 'Block write access to removable data drives not protected by BitLocker' allows reading unencrypted drives but blocks writing. Combined with enforcing BitLocker encryption on removable drives, this meets both requirements.",
+      "Incorrect. While endpoint protection templates include BitLocker settings, the recommended path for encryption management in Intune is under Endpoint security > Disk encryption. Both can work, but Endpoint security provides the current, streamlined experience.",
+      "Incorrect. ASR device control manages access to removable storage (allow/block read/write), but it does not enforce BitLocker encryption on removable drives. It can block USB access entirely but cannot conditionally allow encrypted-only writes.",
+      "Incorrect. Compliance policies evaluate device state but do not enforce settings. A compliance policy cannot enforce BitLocker encryption on removable drives—it can only check if the OS drive is encrypted."
+    ],
+    "tip": "BitLocker To Go (removable drives): Endpoint security > Disk encryption. Key setting: 'Block write access to removable drives not protected by BitLocker' = read unencrypted, block write until encrypted."
+  },
+  {
+    "id": "MS102-R2-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft 365 E5 and has enabled Microsoft Purview Audit (Premium). The security team is investigating a potential data breach and needs to determine exactly which emails a suspected malicious insider accessed in a colleague's mailbox using delegate access over the past 90 days.\n\nQuestion:\nWhich audit log activity should they search for?",
+    "choices": [
+      "MailItemsAccessed — records when mail items are accessed via protocols like IMAP, MAPI, or OWA",
+      "Send — records when emails are sent from the mailbox",
+      "MessageBind — records when a message is opened in the mailbox",
+      "FolderBind — records when a mailbox folder is accessed"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. MailItemsAccessed is an Audit Premium event that records when mail items are accessed via mail protocols (sync or bind operations). This captures delegate access, OWA viewing, and client sync operations. It provides the detailed access records needed to determine exactly which emails were read by the delegated user over the 90-day period.",
+      "Incorrect. The Send operation records when emails are sent from the mailbox, not when they are read or accessed. This would not show which emails the insider viewed.",
+      "Incorrect. MessageBind was the predecessor to MailItemsAccessed in older audit logging. It has been largely superseded by MailItemsAccessed in Audit Premium, which provides more comprehensive access tracking.",
+      "Incorrect. FolderBind records when a folder is opened (Inbox, Sent Items, etc.) but does not record which specific messages within the folder were accessed."
+    ],
+    "tip": "Audit Premium key events: MailItemsAccessed = which emails were read/synced (critical for breach investigation). SearchQueryInitiatedExchange = what email searches were performed. SearchQueryInitiatedSharePoint = what SharePoint searches were done."
+  },
+  {
+    "id": "MS102-R2-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 Apps for 800 users at Trey Research using Intune. The company uses Sensitivity Labels from Microsoft Purview. The security team reports that users cannot see or apply sensitivity labels in Word, Excel, and PowerPoint desktop apps.\n\nThe Sensitivity labels are published in a label policy in the Purview compliance portal. Labels work correctly in Outlook and Office for the web.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The Office apps are using a version that does not support built-in sensitivity labeling (requires version 2111 or later for Current Channel)",
+      "The Azure Information Protection unified labeling client add-in needs to be installed",
+      "Sensitivity labels require Microsoft 365 E5 licenses, which the users may not have",
+      "The label policy needs to be assigned to specific user groups, not published to all users"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Built-in sensitivity labeling in Office desktop apps requires a minimum version: Microsoft 365 Apps version 2111 (Current Channel) or later. If the Office apps are on an older version, sensitivity labels will not appear in the desktop apps. Labels work in Outlook (which may have different version requirements) and Office for the web (always up to date), which explains why those work.",
+      "Incorrect. The Azure Information Protection (AIP) unified labeling client is an older add-in that is being deprecated. Built-in sensitivity labeling in Office does not require the AIP client. If AIP is installed alongside a supported Office version, it can actually conflict with built-in labeling.",
+      "Incorrect. Sensitivity labels are available with various Microsoft 365 licenses including E3 (with limitations on auto-labeling). Basic manual labeling does not require E5.",
+      "Incorrect. If the label policy were not published to the users, labels would not work in any application—including Outlook and Office for the web. The fact that labels work in those apps means the policy is correctly published."
+    ],
+    "tip": "Sensitivity labels in Office desktop: Check the Office version first. Built-in labeling requires M365 Apps version 2111+. If labels work in web but not desktop, it's almost always a version issue."
+  },
+  {
+    "id": "MS102-R2-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nAdatum has 1,200 Windows 11 devices managed by Intune. You create a PowerShell remediation script (Proactive remediation) that checks if the Windows Time service (w32time) is running and restarts it if stopped. You assign the remediation to all devices with a schedule of every 1 hour.\n\nAfter 24 hours, you check the Remediations monitoring and see that 200 devices show 'Detection: Issue found, Remediation: Failed'.\n\nQuestion:\nWhat is the most likely cause of the remediation failure?",
+    "choices": [
+      "The remediation script has a syntax error that causes it to fail on execution",
+      "The remediation script is running in the user context and does not have permission to restart the Windows Time service — it needs to run as SYSTEM",
+      "The Windows Time service is disabled via Group Policy on those devices, and the remediation script cannot override Group Policy",
+      "The 1-hour schedule is too frequent and Intune is throttling the script execution"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. If the script had a syntax error, ALL devices would show remediation failure, not just 200. The detection script works correctly (it found the issue), suggesting the scripts are syntactically valid.",
+      "Correct. By default, Proactive remediation scripts run in the user context. The Windows Time service (w32time) is a system service that requires SYSTEM or administrator privileges to restart. If the remediation script runs as the logged-in user (standard user), it will fail with 'Access Denied' when attempting Restart-Service w32time. The fix: set 'Run this script using the logged-on credentials' to No (runs as SYSTEM).",
+      "Incorrect. While Group Policy could override local changes, the error would show as 'Remediation: Success' (the script ran and restarted the service) followed by the service stopping again at the next GP refresh. The status would cycle between 'No issue' and 'Issue found', not 'Remediation: Failed'.",
+      "Incorrect. Intune does not throttle remediation scripts based on schedule frequency. A 1-hour schedule is within supported limits."
+    ],
+    "tip": "Proactive remediation execution context: 'Logged-on credentials: Yes' = user context (default). 'No' = SYSTEM context. Always use SYSTEM for scripts that modify services, registry (HKLM), or system files."
+  },
+  {
+    "id": "MS102-R2-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Wingtip Toys. The company operates in the European Union and must comply with GDPR. The DPO needs a dashboard showing:\n- The organization's compliance posture against GDPR requirements\n- Which GDPR controls are implemented vs. gaps\n- An overall compliance score\n- Recommended improvement actions\n\nQuestion:\nWhich Microsoft Purview feature provides this?",
+    "choices": [
+      "Compliance Manager with the GDPR assessment template",
+      "Data classification > Overview dashboard",
+      "Audit > Audit log search with GDPR-related activities filter",
+      "Microsoft Secure Score with the compliance category filter"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Compliance Manager in Microsoft Purview provides pre-built assessment templates for regulations including GDPR. It shows: a compliance score, control implementation status (implemented, not implemented, partially implemented), gaps analysis, and prioritized improvement actions. This is the purpose-built tool for regulatory compliance posture assessment.",
+      "Incorrect. Data classification overview shows statistics about sensitive information types, sensitivity labels, and retention labels in your environment. It does not map to GDPR regulatory requirements or provide compliance gap analysis.",
+      "Incorrect. Audit log search records user and admin activities. It does not provide compliance posture assessment, scoring, or gap analysis against regulatory frameworks.",
+      "Incorrect. Microsoft Secure Score measures security posture (MFA, conditional access, Defender features), not regulatory compliance. It has no GDPR-specific assessment capability."
+    ],
+    "tip": "Compliance posture → Compliance Manager (regulatory assessments + scores + gap analysis). Security posture → Secure Score (security configuration + improvement recommendations). Different tools for different purposes."
+  },
+  {
+    "id": "MS102-R2-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company wants to allow users to access corporate resources from both managed (enrolled) and unmanaged (personal) Windows devices. However, the security requirements differ:\n- Managed devices: full access to all Microsoft 365 apps\n- Unmanaged devices: browser-only access to SharePoint Online and Exchange Online, with no file download allowed\n\nQuestion:\nHow should you implement the restriction for unmanaged devices?",
+    "choices": [
+      "Create a conditional access policy for unmanaged devices that blocks access to all cloud apps except SharePoint and Exchange",
+      "Create a conditional access policy for unmanaged devices with session controls using Conditional Access App Control (Defender for Cloud Apps) to enforce browser-only access with download blocking",
+      "Configure SharePoint tenant-level settings to block unmanaged device access",
+      "Create an app protection policy for Windows that restricts data transfer on unmanaged devices"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. This allows full access to SharePoint and Exchange from unmanaged devices. It does not enforce browser-only access or block file downloads.",
+      "Correct. Conditional access with session controls using Conditional Access App Control (MCAS/Defender for Cloud Apps) provides granular session-level controls. For unmanaged devices (filter: device is not compliant or not Azure AD joined), enforce: browser-only access (block desktop app sign-in), and configure session policy to block downloads while allowing browser viewing.",
+      "Incorrect. SharePoint tenant-level unmanaged device settings can limit access but apply to all unmanaged access globally. They don't provide the granular control of allowing browser access while blocking downloads, combined with Exchange policies.",
+      "Incorrect. App protection policies for Windows are limited in scope and don't provide the download-blocking capability for browser sessions that conditional access app control provides."
+    ],
+    "tip": "Unmanaged device access control: Conditional access (which apps) + Session controls via MCAS/Defender for Cloud Apps (how they can interact with data). Session controls: block download, block upload, block print, block copy."
+  },
+  {
+    "id": "MS102-R2-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5. The security team configures a Safe Attachments policy for Exchange Online. The policy is set to 'Dynamic Delivery' mode.\n\nA user receives an email with a Word document attachment. The user opens the email in Outlook.\n\nQuestion:\nWhat happens to the attachment while Safe Attachments is scanning it?",
+    "choices": [
+      "The entire email is held in quarantine until scanning is complete; the user does not see the email",
+      "The email is delivered immediately but the attachment is replaced with a placeholder. The original attachment becomes available after scanning confirms it is safe.",
+      "The email and attachment are delivered normally, and a background scan occurs. If malicious, the attachment is removed retroactively.",
+      "The email is delivered but the attachment is permanently removed. The user must request the attachment from the sender again."
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. This describes the 'Block' mode behavior, where emails with detected malicious attachments are quarantined. Dynamic Delivery delivers the email body immediately.",
+      "Correct. Dynamic Delivery delivers the email body immediately to the user's inbox. The attachment is replaced with a placeholder document that informs the user the attachment is being scanned. Once scanning completes (typically within minutes), the placeholder is replaced with the original attachment. If the attachment is found to be malicious, it is removed and the user is notified.",
+      "Incorrect. This describes a 'monitor-only' or retroactive approach. Dynamic Delivery actively replaces the attachment during scanning—it doesn't deliver the original attachment and remove it later.",
+      "Incorrect. The attachment is not permanently removed. It is temporarily replaced with a placeholder and restored after scanning (if clean)."
+    ],
+    "tip": "Safe Attachments modes: Block = quarantine entire email. Replace = remove attachment (deliver email without it). Dynamic Delivery = deliver email with placeholder, swap in real attachment after scan. Monitor = log only."
+  },
+  {
+    "id": "MS102-R2-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum. The company deploys a Win32 application (.intunewin) to 1,000 Windows devices. The app uses the following detection rule:\n- Registry: HKLM\\SOFTWARE\\A.Datum\\CRMApp, Value: Version, Value data equals 3.5.1\n\nAfter deployment, Intune reports that 500 devices show the app as 'Not installed' even though the app was successfully installed. You verify manually on several 'Not installed' devices that the app is indeed installed and running.\n\nQuestion:\nWhat is the most likely cause of the incorrect detection?",
+    "choices": [
+      "The detection rule is checking the 64-bit registry but the app installs to the 32-bit registry (WoW6432Node) — the detection rule needs 'Associated with a 32-bit app on 64-bit clients' checked",
+      "The detection rule should use 'Version' data type instead of 'String' comparison",
+      "The Intune management extension service is not running on those devices",
+      "The Win32 app content was corrupted during upload and needs to be re-uploaded"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. On 64-bit Windows, 32-bit applications write registry keys to HKLM\\SOFTWARE\\WOW6432Node\\ instead of HKLM\\SOFTWARE\\. If the detection rule checks HKLM\\SOFTWARE\\A.Datum\\CRMApp but the app wrote to the WoW6432Node path, the detection fails. Enabling 'Associated with a 32-bit app on 64-bit clients' in the detection rule redirects the check to the correct WoW6432Node path.",
+      "Incorrect. While using the correct data type matters, string comparison would still find the version value '3.5.1' if the registry path were correct. The issue is the registry path, not the comparison type.",
+      "Incorrect. If the Intune management extension weren't running, the app wouldn't have been installed successfully in the first place. The app IS installed, but detection fails.",
+      "Incorrect. If the content were corrupted, installation would fail on all devices, not just show incorrect detection on some."
+    ],
+    "tip": "Win32 app detection on 64-bit Windows: 32-bit apps write to WoW6432Node. Check 'Associated with a 32-bit app on 64-bit clients' to redirect registry detection to the correct path. This is the #1 cause of 'installed but showing as Not installed'."
+  },
+  {
+    "id": "MS102-R2-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Intune to manage 800 Windows devices. The company recently implemented a Zero Trust security model. As part of this, they want to ensure that devices can only access corporate resources if they meet ALL of the following conditions:\n- Device is Azure AD joined\n- Device is enrolled in Intune\n- Device is compliant with all compliance policies\n- User has completed MFA\n- User risk level is not High\n\nQuestion:\nHow should you implement this?",
+    "choices": [
+      "Create a single conditional access policy with all conditions: Require compliant device AND Require MFA AND User risk: exclude High",
+      "Create separate conditional access policies for each condition to maintain granular control",
+      "Configure a single conditional access policy: Grant requires both 'Require device to be marked as compliant' and 'Require multi-factor authentication', with User risk condition set to High → Block",
+      "Use Intune compliance policies to check all conditions and block noncompliant devices"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. You cannot combine 'Require compliant device' and 'Require MFA' as AND conditions in the same grant control using the standard 'Require all the selected controls' without also properly configuring the user risk condition as a separate control.",
+      "Incorrect. Separate policies for each condition may not enforce all conditions simultaneously. A user could satisfy one policy without satisfying all. Conditional access policies are independently evaluated, and access is granted if ANY policy grants it.",
+      "Correct. A single conditional access policy targeting all cloud apps: Grant control requires 'Require device to be marked as compliant' (ensures Azure AD joined + Intune enrolled + compliant) AND 'Require multi-factor authentication' with 'Require all the selected controls'. Add a condition: User risk = High → Block. This enforces all five conditions. Device compliance inherently requires Azure AD join and Intune enrollment.",
+      "Incorrect. Compliance policies evaluate device state but cannot enforce MFA or user risk conditions. These are conditional access capabilities, not Intune compliance capabilities."
+    ],
+    "tip": "Zero Trust conditional access: 'Require compliant device' covers Azure AD join + Intune enrollment + compliance. Add 'Require MFA' for authentication strength. Add User risk condition for identity protection. One comprehensive policy."
+  },
+  {
+    "id": "MS102-R2-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nLitware uses Microsoft 365 E5. The organization wants to implement a governance process for Microsoft Teams. The requirements are:\n- Teams must have at least one owner at all times\n- Teams with no activity for 90 days should be automatically archived\n- Teams that have been inactive for 180 days should be automatically deleted\n- Team creation should be restricted to members of the IT department\n\nQuestion:\nWhich combination of features implements these requirements?",
+    "choices": [
+      "Teams admin center policies for all four requirements",
+      "Azure AD group expiration policy (180 days) + Azure AD group creation restriction to IT department + Teams inactivity policy for archiving",
+      "Microsoft Purview retention policy for Teams + Azure AD group creation restriction",
+      "Power Automate flows to check team activity and archive/delete inactive teams + Azure AD group naming policy"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Teams admin center does not provide automatic archiving based on inactivity, automatic deletion, or group creation restrictions. These require Azure AD-level configuration.",
+      "Correct. (1) Azure AD group expiration policy set to 180 days handles automatic deletion—owners are notified before expiration, and unrenewed groups (Teams) are deleted. (2) Azure AD group creation restriction (via PowerShell: only the IT department security group can create Microsoft 365 groups/Teams) handles team creation restriction. (3) Teams admin center or custom policies handle the 90-day archive requirement. (4) Owner requirement is enforced by default in Teams (teams must have an owner, and orphaned teams can be managed via policy).",
+      "Incorrect. Purview retention policies control data retention (keeping or deleting content), not team lifecycle management (archiving, deleting inactive teams). Retention policies don't archive or delete the team itself.",
+      "Incorrect. While Power Automate could be built to handle lifecycle, it's a custom solution requiring development and maintenance. Azure AD group expiration is the native, supported mechanism for team lifecycle management."
+    ],
+    "tip": "Teams lifecycle: Azure AD group expiration = automatic deletion of inactive teams. Azure AD group creation restriction = control who can create teams. Teams inactivity policies (preview) = archive inactive teams."
+  }
+]
