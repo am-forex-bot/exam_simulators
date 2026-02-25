@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R4-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company wants to provision Windows 365 Cloud PCs for 100 new remote workers. Each Cloud PC needs:\n- Azure AD join (no hybrid)\n- Connection to the corporate network via Azure VPN for access to on-premises file shares\n- A specific image with pre-installed LOB applications\n\nQuestion:\nWhat must you configure in the Windows 365 provisioning policy?",
+    "choices": [
+      "Select Azure AD join, choose a Microsoft-hosted network connection (no VPN needed), select a custom image uploaded to Intune",
+      "Select Azure AD join, configure an Azure network connection (ANC) to a VNet with site-to-site VPN, select a custom image",
+      "Select Hybrid Azure AD join (required for on-premises access), configure an ANC, use the default Windows image",
+      "Select Azure AD join, configure a Microsoft Tunnel VPN profile, select a gallery image"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Correct but insufficient. A Microsoft-hosted network doesn't provide connectivity to the corporate network. Without an Azure network connection to a VNet with VPN, Cloud PCs cannot access on-premises file shares.",
+      "Correct. (1) Azure AD join as specified. (2) Azure network connection (ANC) pointing to an Azure VNet that has site-to-site VPN (or ExpressRoute) connectivity to the on-premises network — this provides access to file shares. (3) Custom image with the pre-installed LOB applications uploaded to Windows 365.",
+      "Incorrect. Hybrid Azure AD join is NOT required for on-premises access. Azure AD joined Cloud PCs can access on-premises resources through a VNet with VPN connectivity. Hybrid join adds unnecessary complexity.",
+      "Incorrect. Microsoft Tunnel is for mobile device VPN access, not Windows 365 network connectivity. Cloud PCs use Azure network connections (ANC) for network routing."
+    ],
+    "tip": "Windows 365 provisioning: Azure AD join + ANC (Azure network connection) to VNet with VPN = cloud PC with on-premises access. No hybrid join needed. Microsoft-hosted network = internet only, no on-prem access."
+  },
+  {
+    "id": "MS102-R4-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft Intune with 1,000 Windows 11 devices. The security team wants to use device health attestation to verify that devices booted securely before granting access to corporate resources. Specifically, they want to verify:\n- Secure Boot is enabled\n- BitLocker is enabled\n- Code integrity is enabled\n\nQuestion:\nHow should you implement this?",
+    "choices": [
+      "Create a device compliance policy with Windows Health Attestation settings requiring Secure Boot, BitLocker, and code integrity",
+      "Create a conditional access policy that checks device attestation directly",
+      "Configure Microsoft Defender for Endpoint health attestation monitoring",
+      "Deploy a PowerShell script that checks boot configuration and reports back"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Intune device compliance policies include Windows Health Attestation settings. These check device health data reported by the Windows Health Attestation Service (HAS) during boot. You can require: Secure Boot enabled, BitLocker enabled, code integrity enabled, and more. Noncompliant devices can be blocked by conditional access.",
+      "Incorrect. Conditional access evaluates conditions (user risk, device compliance, location) but doesn't directly check device attestation. It relies on the Intune compliance policy to evaluate health attestation and report the device as compliant or not.",
+      "Incorrect. Defender for Endpoint monitors security posture but doesn't provide the boot-time health attestation checks. Health attestation is a Windows + Intune compliance feature.",
+      "Incorrect. PowerShell scripts can check local configuration, but they run in the OS after boot and can be tampered with. Health attestation uses hardware-backed (TPM) measurements taken during the boot process, which is more secure and tamper-resistant."
+    ],
+    "tip": "Health attestation: TPM measures boot state → Windows Health Attestation Service validates → Intune compliance policy evaluates → conditional access enforces. Hardware-rooted trust, not software checks."
+  },
+  {
+    "id": "MS102-R4-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company has 200 iOS devices managed through Apple Business Manager. The IT team needs to deploy a custom enterprise app that was built by a third-party vendor and distributed through Apple Business Manager as a custom app (not public App Store).\n\nQuestion:\nHow should you deploy this custom app?",
+    "choices": [
+      "Upload the .ipa file as a line-of-business app in Intune",
+      "Sync the custom app from Apple Business Manager to Intune using the VPP token, then assign it as a VPP app",
+      "Instruct users to download the app from the App Store using their Apple IDs",
+      "Deploy using a web clip that links to the app's download page"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Custom apps distributed through Apple Business Manager are not .ipa files you download and upload. They are managed through the VPP/ABM integration.",
+      "Correct. Custom apps distributed through Apple Business Manager are synced to Intune using the VPP (Volume Purchase Program) token. In Intune, the VPP token syncs available apps (both public and custom) from ABM. The custom app appears in the app list and can be assigned as a Required or Available VPP app with device-based licensing.",
+      "Incorrect. Custom apps from ABM are not available in the public App Store. They are distributed through the organization's VPP/ABM, not individual Apple IDs.",
+      "Incorrect. Web clips create home screen shortcuts. They cannot install native apps. Custom ABM apps must be deployed through the VPP integration."
+    ],
+    "tip": "Custom apps via ABM: Vendor publishes custom app to your ABM account → VPP token syncs to Intune → appears as VPP app → assign to devices. Same workflow as public App Store VPP apps."
+  },
+  {
+    "id": "MS102-R4-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailwind Traders. The company has 300 Android Open Source Project (AOSP) devices used in a manufacturing facility. These devices don't have Google Mobile Services (GMS) installed. The devices need to be managed by Intune for compliance and app deployment.\n\nQuestion:\nWhich enrollment method should you use?",
+    "choices": [
+      "Android Enterprise fully managed enrollment",
+      "Android device administrator enrollment",
+      "Android (AOSP) corporate-owned, userless enrollment via Intune",
+      "Android Enterprise dedicated device enrollment"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Android Enterprise fully managed enrollment requires Google Mobile Services (GMS) on the device. AOSP devices without GMS cannot use Android Enterprise enrollment.",
+      "Incorrect. Device administrator enrollment is being deprecated and also relies on Google Play Services for Company Portal distribution. It's not suitable for AOSP devices.",
+      "Correct. Intune supports Android (AOSP) management for devices without Google Mobile Services. AOSP corporate-owned enrollment allows you to manage these devices, deploy compliance policies, and push apps without requiring GMS. This is designed for specialized devices like manufacturing floor tablets, ruggedized devices, and other non-GMS Android devices.",
+      "Incorrect. Dedicated device enrollment is an Android Enterprise enrollment mode that requires GMS. AOSP devices need the specific AOSP enrollment path."
+    ],
+    "tip": "Android without Google: AOSP enrollment in Intune. Supports corporate-owned userless (kiosk/shared) and user-associated modes. No GMS/Play Store required. Apps deployed as AOSP LOB apps."
+  },
+  {
+    "id": "MS102-R4-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The security team configures multiple endpoint security policies in Intune:\n- Security baseline for Windows\n- Endpoint security antivirus policy\n- Device configuration profile with Defender settings\n\nA Windows device receives conflicting values for the same setting from different policies.\n\nQuestion:\nHow does Intune resolve the conflict?",
+    "choices": [
+      "The security baseline always takes highest priority over all other policy types",
+      "The device configuration profile takes priority because it was created first",
+      "The most restrictive setting wins across all policy types",
+      "A conflict is reported — the setting falls back to its default value and the admin must resolve the conflict"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Security baselines do not automatically take priority over other policy types. In Intune, there is no built-in hierarchy between security baselines, endpoint security policies, and device configuration profiles.",
+      "Incorrect. Creation order does not determine policy priority in Intune. Unlike Group Policy, there is no 'last applied wins' or 'first created wins' rule.",
+      "Incorrect. Intune does not apply a 'most restrictive wins' rule when policies conflict across different policy types. This is a common misconception.",
+      "Correct. When the same setting is configured in multiple policy types with different values, Intune reports a conflict on the device. The conflicting setting typically falls back to its default value (or the device's existing value) until the admin resolves the conflict by removing the duplicate configuration. The device shows 'Conflict' status for the affected profiles."
+    ],
+    "tip": "Intune policy conflicts: Same setting in multiple policies → Conflict status → setting uses default value. Resolution: Remove the duplicate setting from one of the policies. Best practice: Configure each setting in only ONE policy type."
+  },
+  {
+    "id": "MS102-R4-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company is migrating from one Microsoft 365 tenant to another (tenant-to-tenant migration). 500 Windows devices enrolled in the source tenant need to be enrolled in the destination tenant.\n\nQuestion:\nWhat is required for the Windows devices during tenant migration?",
+    "choices": [
+      "Devices can be seamlessly moved between tenants using the Intune migration tool",
+      "Devices must be unenrolled from the source tenant, factory reset, and re-enrolled in the destination tenant",
+      "Devices must be unenrolled from the source tenant (Azure AD leave), then joined to the destination tenant's Azure AD and re-enrolled in Intune — factory reset is not always required for hybrid joined devices",
+      "Update the device's MDM enrollment URL to point to the new tenant"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. There is no 'Intune migration tool' for seamlessly moving devices between tenants. Tenant migration requires re-enrollment.",
+      "Incorrect. Factory reset is not always required. For Azure AD joined devices, you can leave the source Azure AD, join the destination Azure AD, and re-enroll in Intune. User data can be preserved if the process is done correctly.",
+      "Correct. For tenant migration: (1) Unenroll the device from the source tenant's Intune (may involve Azure AD leave/unjoin). (2) Join the device to the destination tenant's Azure AD. (3) Enroll in the destination tenant's Intune. Factory reset is one approach but not always required — for hybrid joined devices and some Azure AD joined scenarios, the migration can preserve user data.",
+      "Incorrect. You cannot simply change the MDM enrollment URL. Device enrollment is tied to the Azure AD tenant identity. The device must leave one tenant and join the other."
+    ],
+    "tip": "Tenant-to-tenant device migration: No seamless migration tool exists. Options: (1) Azure AD leave + rejoin + re-enroll (preserves data). (2) Wipe + Autopilot re-enroll (clean start). Plan for policy redeployment in the new tenant."
+  },
+  {
+    "id": "MS102-R4-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Trey Research. The Intune admin team has grown to 15 members. The IT director wants to track all administrative actions performed in the Intune admin center — who changed what policy, when, and what the old/new values were.\n\nQuestion:\nWhere can you view this information?",
+    "choices": [
+      "Intune admin center > Tenant administration > Audit logs",
+      "Microsoft Entra admin center > Monitoring > Audit logs",
+      "Microsoft Purview > Audit > Audit log search",
+      "All three locations contain relevant audit data, but Intune audit logs provide the most detailed Intune-specific change tracking"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. Intune audit logs show detailed Intune admin actions including policy changes.",
+      "Partially correct. Entra audit logs show Azure AD-level changes that may include some Intune-related activities.",
+      "Partially correct. Purview audit logs capture a broad range of Microsoft 365 activities.",
+      "Correct. All three audit log sources contain relevant data. However, the Intune audit logs (Tenant administration > Audit logs) provide the most detailed, Intune-specific tracking including: who made changes, what was changed, old and new values for policy settings, timestamps, and the affected resources. Use this for Intune-specific admin action tracking."
+    ],
+    "tip": "Intune admin audit trail: Tenant admin > Audit logs. Shows: Activity (create/modify/delete), Target (which policy/profile), Actor (which admin), Date/time, Modified properties (old value → new value). Retained for 30 days by default."
+  },
+  {
+    "id": "MS102-R4-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company wants to use the Intune Company Portal to provide a self-service app catalog where users can browse and install optional applications. Some apps should be available to all users, while others should only be visible to specific departments.\n\nQuestion:\nHow do you make apps available in the Company Portal for specific user groups?",
+    "choices": [
+      "Assign apps as 'Available for enrolled devices' to the specific user or device groups — only members of those groups see the apps in Company Portal",
+      "Assign apps as 'Required' to all users — Required apps appear in Company Portal automatically",
+      "Create categories in Company Portal and assign apps to categories — users browse by category",
+      "Configure the Company Portal app layout in Intune to show specific apps to specific groups"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. When you assign an app with the intent 'Available for enrolled devices' (or 'Available with or without enrollment') to a specific user group, only members of that group see the app in the Company Portal. This is how you control app visibility per department.",
+      "Incorrect. Required apps are automatically installed without user interaction. While they appear in Company Portal for status tracking, they are not 'browse and install' self-service apps. Also, assigning to all users makes the app visible to everyone.",
+      "Incorrect. Categories help organize the Company Portal app catalog, but they don't control which users can see which apps. Visibility is controlled by app assignment groups.",
+      "Incorrect. Company Portal layout customization (featured apps, categories) affects how apps are presented, not which users can see them. Visibility is controlled at the app assignment level."
+    ],
+    "tip": "Company Portal app visibility: 'Available' assignment to a group = only that group sees it. 'Required' = auto-installs (all assigned users). Categories = organization within Company Portal. Layout = featured/promoted apps."
+  },
+  {
+    "id": "MS102-R4-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company uses endpoint analytics in Intune to measure device performance and user experience. The endpoint analytics startup performance score for the organization is 45/100, which is below the industry average.\n\nThe IT team needs to identify the top factors causing slow startup times.\n\nQuestion:\nWhich endpoint analytics report should they review?",
+    "choices": [
+      "Application reliability > App crash frequency",
+      "Startup performance > Model performance tab showing average boot time by device model",
+      "Work from anywhere > Device readiness scores",
+      "Resource performance > CPU and memory utilization"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Application reliability tracks app crashes and hangs, not startup performance. While crashing apps can affect user experience, they don't directly impact boot times.",
+      "Correct. The Startup performance report's Model performance tab shows average boot time broken down by device model. This helps identify which device models have the slowest startup times. Combined with the Startup processes tab (showing which processes take the longest during boot), the IT team can pinpoint the top factors: slow hardware models, Group Policy processing, startup scripts, or resource-heavy services.",
+      "Incorrect. Work from anywhere scores measure device readiness for modern management (cloud identity, cloud management, Windows version), not startup performance.",
+      "Incorrect. Resource performance shows CPU and memory utilization during normal operation, not during the boot process. It helps identify devices that are underperforming during use, not slow to start."
+    ],
+    "tip": "Endpoint analytics startup performance: Model performance = which devices are slow. Startup processes = which processes delay boot. OS boot time = core Windows boot duration. GP processing = Group Policy impact on sign-in."
+  },
+  {
+    "id": "MS102-R4-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The company deploys passwordless authentication using FIDO2 security keys. Users should be able to sign in to Azure AD, Windows devices, and Microsoft 365 apps using only their FIDO2 key — no password required.\n\nBefore deploying to all users, the IT team wants to enable FIDO2 for a pilot group of 50 users.\n\nQuestion:\nWhere do you enable FIDO2 security keys for the pilot group?",
+    "choices": [
+      "Microsoft Entra admin center > Protection > Authentication methods > FIDO2 security key > Enable for target group (pilot users)",
+      "Microsoft Entra admin center > Security > Conditional access > Create a policy requiring FIDO2",
+      "Microsoft Intune admin center > Endpoint security > Account protection > FIDO2 configuration",
+      "Azure AD > User settings > Enable FIDO2 authentication for all users"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. FIDO2 security keys are enabled in the Entra admin center under Protection > Authentication methods. Select FIDO2 security key, enable it, and target the pilot group of 50 users. You can also restrict which FIDO2 key models are allowed using the AAGUID list.",
+      "Incorrect. Conditional access can require specific authentication strengths (including FIDO2), but it doesn't enable the FIDO2 authentication method itself. You must first enable FIDO2 in Authentication methods before it can be required by conditional access.",
+      "Incorrect. Intune Account protection manages Windows Hello for Business and LAPS, not FIDO2 authentication method enablement. FIDO2 is an Azure AD/Entra authentication feature.",
+      "Incorrect. There is no FIDO2 toggle in Azure AD User settings. Authentication methods are managed under Protection > Authentication methods with granular group targeting."
+    ],
+    "tip": "Passwordless deployment: (1) Enable method in Entra Authentication methods (target pilot group). (2) Users register their FIDO2 key. (3) Create conditional access policy requiring phishing-resistant MFA. (4) Expand to all users."
+  }
+]
