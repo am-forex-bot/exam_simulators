@@ -1,0 +1,402 @@
+[
+  {
+    "id": "MS102-R5-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company purchases 300 new laptops from Lenovo. The vendor pre-registers the devices in Windows Autopilot using their hardware hashes. The IT team needs to verify the devices appear in the Autopilot device list.\n\nQuestion:\nWhere do you verify Autopilot device registration?",
+    "choices": [
+      "Microsoft Entra admin center > Devices > All devices",
+      "Intune admin center > Devices > Enrollment > Windows > Windows Autopilot > Devices",
+      "Microsoft 365 admin center > Devices",
+      "Azure portal > Virtual machines"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Entra Devices shows registered/joined devices, not Autopilot-registered devices that haven't yet enrolled.",
+      "Correct. Autopilot-registered devices appear in Intune admin center under Devices > Enrollment > Windows > Windows Autopilot > Devices. Here you can see hardware hashes, serial numbers, assigned profiles, and enrollment status. Devices appear here before they're even powered on for the first time.",
+      "Incorrect. The M365 admin center shows active devices, not the Autopilot registration list.",
+      "Incorrect. Azure VMs are cloud virtual machines, not physical Autopilot devices."
+    ],
+    "tip": "Autopilot device list: Shows registered devices before enrollment. Vendor uploads hardware hashes → devices appear in Autopilot list → assign profile → ship to user → user powers on → Autopilot runs."
+  },
+  {
+    "id": "MS102-R5-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Relecloud. The company uses sensitivity labels to classify and protect documents. The legal team needs a sensitivity label that:\n- Encrypts documents automatically\n- Allows only the Legal department to open encrypted files\n- Prevents forwarding of labeled emails\n- Applies a watermark to documents\n\nQuestion:\nWhich sensitivity label settings should you configure?",
+    "choices": [
+      "Apply content marking (watermark) + Encryption with specific permissions: Legal group has Full Control, 'Do Not Forward' for emails",
+      "Apply content marking only — encryption must be configured separately through Azure RMS templates",
+      "Apply content marking + DLP policy for encryption enforcement",
+      "Apply content marking + Azure Information Protection classic client for encryption"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Configure the sensitivity label with: (1) Encryption: 'Configure encryption settings' > assign permissions to the Legal department group (Co-Owner or custom permissions). (2) Content marking: enable watermark with custom text. (3) For email-specific behavior: the 'Do Not Forward' option prevents recipients from forwarding, printing, or copying encrypted emails. All settings are configured within the single sensitivity label.",
+      "Incorrect. Sensitivity labels have built-in encryption capabilities. Separate Azure RMS templates are not required — the label can define encryption settings directly.",
+      "Incorrect. DLP policies detect and protect data based on sensitive information types, but they don't apply encryption the same way sensitivity labels do. Labels provide persistent encryption that travels with the document.",
+      "Incorrect. The AIP classic client is deprecated. Sensitivity labels in Microsoft Purview with built-in labeling handle all these requirements natively."
+    ],
+    "tip": "Sensitivity label capabilities: Encryption (who can access, what permissions). Content marking (headers, footers, watermarks). Auto-labeling (apply based on content). All in one label — no separate tools needed."
+  },
+  {
+    "id": "MS102-R5-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company deploys a Win32 app via Intune. The app installation succeeds according to the return code, but Intune still shows the app as 'Not installed' on the device.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The Intune Management Extension service needs to be restarted",
+      "The detection rule is misconfigured — it doesn't correctly identify the installed application, so Intune can't verify the installation",
+      "The Win32 app cache is corrupted",
+      "The device hasn't synced with Intune since the installation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Restarting the IME service may trigger a re-evaluation, but if the detection rule is wrong, the app will still show as not installed.",
+      "Correct. After installing a Win32 app, Intune uses the detection rule to verify the app is actually installed. If the detection rule checks for the wrong file path, registry key, or MSI product code, Intune cannot confirm the installation and reports 'Not installed'. Fix: verify the detection rule matches the actual installation artifacts (correct file path, registry key, or MSI GUID).",
+      "Incorrect. Cache corruption would cause installation failures, not post-install detection issues.",
+      "Incorrect. The Intune Management Extension evaluates detection rules locally on the device. A sync delay might cause a brief reporting delay, but the detection rule running locally would still show the correct status."
+    ],
+    "tip": "Win32 app detection rules: File (path + version/size/date). Registry (key + value). MSI (product code). If app installs but shows 'Not installed', the detection rule doesn't match the actual installation. Test detection rules manually."
+  },
+  {
+    "id": "MS102-R5-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Northwind Traders. The company uses co-management with Configuration Manager and Intune. Some workloads are managed by ConfigMgr and others by Intune. The IT team wants to move the 'Compliance policies' workload from ConfigMgr to Intune.\n\nQuestion:\nWhat happens when the compliance policies workload is moved to Intune?",
+    "choices": [
+      "All existing ConfigMgr compliance baselines are automatically migrated to Intune compliance policies",
+      "Intune becomes the authority for device compliance evaluation — ConfigMgr compliance baselines no longer apply, and you must create equivalent Intune compliance policies",
+      "Both ConfigMgr and Intune evaluate compliance simultaneously and the strictest result wins",
+      "Only new devices use Intune compliance — existing devices continue using ConfigMgr compliance"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. There is no automatic migration of ConfigMgr compliance baselines to Intune policies. You must manually create equivalent policies in Intune.",
+      "Correct. When the compliance policies workload is switched to Intune, Intune becomes the sole authority for evaluating device compliance. ConfigMgr compliance baselines are no longer evaluated for the co-managed devices in the pilot or production collection. You must create equivalent Intune compliance policies before switching the workload to avoid a gap in compliance evaluation.",
+      "Incorrect. Only one authority manages each workload at a time. They don't evaluate simultaneously — it's either ConfigMgr or Intune for compliance.",
+      "Incorrect. The workload switch affects all devices in the targeted co-management collection (pilot or production), not just new devices."
+    ],
+    "tip": "Co-management workload switch: Create equivalent Intune policies BEFORE switching. Workloads: Compliance, Device config, Resource access, Windows Update, Endpoint Protection, Client apps. Switch per-workload, not all at once."
+  },
+  {
+    "id": "MS102-R5-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for A.Datum Corporation. The company uses conditional access with Terms of Use (ToU). The compliance team requires all users to accept updated terms of use annually. Users who don't accept should be blocked from accessing Microsoft 365.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Create Terms of Use in Microsoft Entra > Identity Governance > Terms of use, set 'Require users to re-accept every 12 months', then reference the ToU in a conditional access policy's Grant controls",
+      "Email the terms of use PDF to all users annually and track responses manually",
+      "Create a SharePoint page with terms of use and require users to visit it annually",
+      "Configure a compliance policy in Purview that requires ToU acceptance"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. (1) Create Terms of Use in Entra admin center > Identity Governance > Terms of use. Upload the PDF, set 'Expire consents' to recur annually. (2) Create a conditional access policy targeting all users and all cloud apps. In Grant controls, select 'Require terms of use acceptance'. Users who haven't accepted (or whose acceptance has expired) must accept before accessing resources.",
+      "Incorrect. Email tracking is manual, unenforceable, and doesn't block access for non-responders.",
+      "Incorrect. A SharePoint page doesn't integrate with access controls. Users can skip it without consequence.",
+      "Incorrect. Microsoft Purview Compliance Manager doesn't have Terms of Use enforcement. ToU is an Entra Identity Governance feature enforced through conditional access."
+    ],
+    "tip": "Terms of Use: Entra Identity Governance feature. Create ToU document → configure expiry (annual re-acceptance) → enforce via conditional access Grant control. Tracks acceptance per-user. Blocks non-acceptors."
+  },
+  {
+    "id": "MS102-R5-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company needs to configure Firmware-over-the-air (FOTA) updates for Samsung Android Enterprise devices. This allows the IT team to control which firmware version is installed on Samsung devices.\n\nQuestion:\nWhat is required to use FOTA with Intune?",
+    "choices": [
+      "Samsung Knox Mobile Enrollment configured with Intune, Samsung Enterprise FOTA (E-FOTA) license, and Intune Suite add-on",
+      "Any Android Enterprise enrolled Samsung device — FOTA is built into Android",
+      "Samsung Knox Manage console instead of Intune",
+      "Google Zero-Touch enrollment with firmware management enabled"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. FOTA for Samsung devices through Intune requires: (1) Samsung Knox Mobile Enrollment (KME) configured with Intune. (2) Samsung Enterprise FOTA (E-FOTA One) license for firmware management. (3) Intune Suite add-on which includes the FOTA capability. This combination allows IT to select specific firmware versions, schedule updates, and control the rollout.",
+      "Incorrect. FOTA firmware management is not built into standard Android Enterprise. It requires Samsung-specific E-FOTA licensing and Intune Suite.",
+      "Incorrect. Knox Manage is Samsung's own MDM. With Intune Suite, FOTA can be managed through Intune directly, without Knox Manage.",
+      "Incorrect. Google Zero-Touch is an enrollment method, not a firmware management tool. FOTA is Samsung-specific through E-FOTA."
+    ],
+    "tip": "Samsung FOTA via Intune: Knox enrollment + E-FOTA license + Intune Suite. Control exact firmware versions, schedule updates, emergency patches. Samsung-only feature — not available for other Android manufacturers."
+  },
+  {
+    "id": "MS102-R5-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Tailwind Traders. The security team wants to configure Microsoft Entra Privileged Identity Management (PIM) for the Global Administrator role. The requirements are:\n- Admins must request activation for the role (not permanently assigned)\n- Activation requires MFA and justification\n- Maximum activation duration is 4 hours\n- Another admin must approve the activation\n\nQuestion:\nWhich PIM settings should you configure?",
+    "choices": [
+      "Make Global Admin an eligible assignment (not active), set activation maximum duration to 4 hours, require MFA on activation, require justification, require approval with a designated approver",
+      "Create a conditional access policy requiring MFA for Global Admin actions",
+      "Assign Global Admin as permanent but require MFA for all admin portal access",
+      "Use Azure AD administrative units to restrict Global Admin scope"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. PIM configuration for Global Admin: (1) Assign users as 'Eligible' (not Active/permanent). (2) Role settings: set maximum activation duration to 4 hours. (3) Require MFA on activation. (4) Require justification (user must explain why they need the role). (5) Require approval and designate approver(s). When an eligible admin needs Global Admin access, they request activation, provide justification, complete MFA, and wait for approval.",
+      "Incorrect. Conditional access controls authentication requirements but doesn't provide just-in-time activation, approval workflows, or time-limited role assignments.",
+      "Incorrect. Permanent assignment violates the principle of least privilege. PIM's purpose is to eliminate standing admin access.",
+      "Incorrect. Administrative units restrict the scope of admin roles but don't provide just-in-time activation or approval workflows."
+    ],
+    "tip": "PIM for privileged roles: Eligible (not permanent) + MFA + justification + approval + time-limited activation. Reduces standing admin access. Audit trail of all activations. Alert on activation. Review access periodically."
+  },
+  {
+    "id": "MS102-R5-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company uses Microsoft 365 Apps deployment through Intune. The IT team wants to switch from the Current Channel to Monthly Enterprise Channel for all devices to get a more predictable update cadence.\n\nQuestion:\nHow should you change the update channel?",
+    "choices": [
+      "Uninstall and reinstall Microsoft 365 Apps with the new channel selection",
+      "Modify the existing Microsoft 365 Apps deployment configuration in Intune to change the update channel — devices will switch channels at the next update cycle",
+      "Create an Office cloud policy in the Microsoft 365 Apps admin center to change the update channel",
+      "Both B and C can change the channel, but the Intune M365 Apps configuration is the recommended approach for Intune-managed devices"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Reinstallation is unnecessary. Microsoft 365 Apps supports channel switching without reinstallation.",
+      "Partially correct. Modifying the Intune deployment configuration changes the channel.",
+      "Partially correct. Office cloud policy can also set the update channel.",
+      "Correct. Both methods work: (1) Modify the Microsoft 365 Apps deployment in Intune (Apps > Windows > Microsoft 365 Apps) to change the update channel setting. (2) Create an Office cloud policy that sets the update channel. For Intune-managed devices, the Intune deployment configuration is recommended as the primary method. Devices switch channels automatically without reinstallation."
+    ],
+    "tip": "M365 Apps channel change: No reinstall needed. Intune deployment config (recommended for Intune devices) or Office cloud policy. Channels: Current (monthly), Monthly Enterprise (monthly, 2-month delay), Semi-Annual Enterprise (Jan/Jul)."
+  },
+  {
+    "id": "MS102-R5-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Trey Research. The company has 50 Linux devices (Ubuntu 22.04) that need to be enrolled in Intune for compliance monitoring. The IT team wants to verify these devices meet security requirements before granting access to corporate resources.\n\nQuestion:\nDoes Intune support Linux device enrollment?",
+    "choices": [
+      "No. Intune only supports Windows, iOS/iPadOS, macOS, and Android",
+      "Yes. Intune supports Linux enrollment for Ubuntu and RedHat Enterprise Linux — users install the Intune app and the Edge browser to enroll and access conditional access-protected resources",
+      "Yes, but only through Microsoft Defender for Endpoint's device management",
+      "Linux devices can only be managed through Azure Arc, not Intune"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Intune added Linux support. Ubuntu and RHEL are supported platforms.",
+      "Correct. Intune supports Linux device enrollment for Ubuntu Desktop (20.04, 22.04, 24.04) and RedHat Enterprise Linux 8/9. Users install the Microsoft Intune app and Microsoft Edge. The device enrolls in Intune, compliance policies evaluate the device, and conditional access can require device compliance for resource access. Linux compliance checks include encryption, password policy, and OS version.",
+      "Incorrect. While Defender for Endpoint supports Linux for security monitoring, Intune enrollment is a separate capability that provides compliance evaluation and conditional access integration.",
+      "Incorrect. Azure Arc manages servers and Kubernetes. Intune manages Linux desktops/workstations for compliance and conditional access."
+    ],
+    "tip": "Intune Linux support: Ubuntu + RHEL desktops. Enrollment via Intune app + Edge. Compliance policies (encryption, password, OS version). Conditional access integration. Limited compared to Windows/macOS management scope."
+  },
+  {
+    "id": "MS102-R5-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Woodgrove Bank. The compliance team needs to configure communication compliance policies to monitor employee communications for regulatory compliance. They want to detect inappropriate content in Teams messages and emails.\n\nQuestion:\nWhere do you configure communication compliance?",
+    "choices": [
+      "Microsoft Teams admin center > Messaging policies",
+      "Microsoft Purview > Communication compliance > create a policy with built-in classifiers for inappropriate content targeting Exchange and Teams",
+      "Microsoft Defender portal > Email & collaboration > Policies",
+      "Exchange Online > Compliance management > Supervision"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Teams messaging policies control features like message editing and URL preview, not content monitoring for compliance.",
+      "Correct. Communication compliance in Microsoft Purview allows you to create policies that monitor employee communications for policy violations. Use built-in trainable classifiers (inappropriate text, harassment, profanity, threat) targeting Exchange email and Teams messages. Reviewers receive alerts and can investigate, escalate, or remediate flagged communications.",
+      "Incorrect. Defender portal policies focus on security threats (phishing, malware), not regulatory communication compliance.",
+      "Incorrect. Exchange Online Supervision policies were the predecessor to communication compliance and have been deprecated. Communication compliance in Purview is the current solution."
+    ],
+    "tip": "Communication compliance: Purview feature. Monitors: Teams chat/channels, Exchange email, Copilot interactions. Uses: trainable classifiers, keyword dictionaries, sensitive info types. For: regulatory compliance, HR policy enforcement."
+  },
+  {
+    "id": "MS102-R5-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The company needs to deploy certificates to Windows devices for Wi-Fi authentication using SCEP (Simple Certificate Enrollment Protocol). The certificate infrastructure uses an on-premises Active Directory Certificate Services (AD CS) CA.\n\nQuestion:\nWhat components are required for SCEP certificate deployment from an on-premises CA through Intune?",
+    "choices": [
+      "Only the SCEP certificate profile in Intune — Intune communicates directly with the on-premises CA",
+      "On-premises NDES server, Intune Certificate Connector installed on the NDES server, Trusted root certificate profile, and SCEP certificate profile in Intune",
+      "Azure AD Application Proxy for the CA, and a SCEP profile in Intune",
+      "Microsoft Cloud PKI only — on-premises CA is not supported with Intune SCEP"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Intune cannot communicate directly with an on-premises CA. NDES and the Certificate Connector are required as intermediaries.",
+      "Correct. On-premises SCEP with Intune requires: (1) NDES server configured in AD CS to handle SCEP requests. (2) Intune Certificate Connector installed on or near the NDES server to bridge Intune cloud requests to the on-premises NDES. (3) Trusted root certificate profile deployed to devices (so they trust the CA). (4) SCEP certificate profile in Intune that specifies the certificate template, key usage, and NDES URL.",
+      "Incorrect. Azure AD Application Proxy is for publishing web apps, not certificate enrollment services. The Certificate Connector handles the Intune-to-NDES communication.",
+      "Incorrect. On-premises CA with SCEP is fully supported through the NDES + Certificate Connector architecture. Cloud PKI is an alternative that eliminates the on-premises requirement."
+    ],
+    "tip": "SCEP with on-prem CA: NDES server + Certificate Connector + Trusted root profile + SCEP profile. Alternative: Microsoft Cloud PKI (Intune Suite) eliminates NDES and on-prem CA entirely."
+  },
+  {
+    "id": "MS102-R5-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The security team wants to configure automatic attack disruption in Microsoft Defender XDR. This feature should automatically contain compromised user accounts and devices during an active attack without waiting for manual SOC response.\n\nQuestion:\nWhat is automatic attack disruption?",
+    "choices": [
+      "A feature that automatically blocks all external email during an attack",
+      "A Defender XDR capability that uses AI-driven correlation to identify active attacks and automatically takes containment actions (disable compromised accounts, isolate compromised devices) to limit attack impact while SOC investigates",
+      "A firewall feature that blocks malicious IP addresses automatically",
+      "A DLP policy that prevents data exfiltration during a security incident"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Attack disruption doesn't block all external email. It takes targeted containment actions against specific compromised entities.",
+      "Correct. Automatic attack disruption in Microsoft Defender XDR uses high-confidence AI signals correlated across endpoints, identities, email, and SaaS apps to identify active attacks (like ransomware or BEC). It automatically: disables compromised user accounts, isolates compromised devices from the network, and contains lateral movement — all without waiting for SOC analyst action. SOC can review and reverse actions if needed.",
+      "Incorrect. Firewall rules and IP blocking are network-level controls, not the AI-driven cross-domain attack disruption in Defender XDR.",
+      "Incorrect. DLP prevents data loss during normal operations. Attack disruption is a real-time incident response capability."
+    ],
+    "tip": "Attack disruption: Automated incident response in Defender XDR. Correlates signals across identity + endpoint + email + SaaS. Auto-contains threats (disable accounts, isolate devices). Human-speed response to machine-speed attacks."
+  },
+  {
+    "id": "MS102-R5-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware Inc. The company wants to deploy a web app shortcut on iOS devices that opens the company's intranet site (https://intranet.litware.com) directly from the home screen.\n\nQuestion:\nHow should you deploy this in Intune?",
+    "choices": [
+      "Deploy Microsoft Edge with a managed bookmark configuration",
+      "Create a web clip (web link) app in Intune under Apps > iOS > Add > iOS web clip, configure the URL, icon, and assign to device groups",
+      "Create an app configuration policy for Safari with the bookmark URL",
+      "Deploy a custom .mobileconfig profile with the web clip payload"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Managed bookmarks appear within Edge but don't create a home screen shortcut for quick access.",
+      "Correct. Web clips in Intune create home screen shortcuts on iOS devices. Navigate to Apps > iOS/iPadOS > Add > iOS/iPadOS web clip. Configure the URL (https://intranet.litware.com), upload a custom icon, optionally configure it to open in a managed browser, and assign to groups. Users see an app icon on their home screen that opens the URL directly.",
+      "Incorrect. There's no app configuration policy for Safari bookmarks in Intune. Safari bookmark management is limited.",
+      "Incorrect. While .mobileconfig files can include web clip payloads, Intune's native web clip app type is simpler and provides better management (assignment, reporting, removal)."
+    ],
+    "tip": "Web clips: Home screen shortcuts to URLs. Available for iOS and Android in Intune. Configure: URL, icon, managed browser option, full-screen mode. Shows as an app icon — users tap to open the URL directly."
+  },
+  {
+    "id": "MS102-R5-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The IT team wants to use Intune to manage Chrome OS devices (Chromebooks) used by frontline workers.\n\nQuestion:\nDoes Intune support Chrome OS management?",
+    "choices": [
+      "Yes. Intune fully manages Chrome OS through the Chrome Enterprise connector",
+      "No. Chrome OS/ChromeOS devices are managed through Google Workspace Admin (Google Admin console), not Intune. Intune does not support ChromeOS device enrollment or management.",
+      "Yes, but only for Chrome OS devices with Android app support enabled",
+      "Yes, through Microsoft Defender for Endpoint agent installed on Chrome OS"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. There is no Chrome Enterprise connector for Intune.",
+      "Correct. Intune does NOT support Chrome OS (ChromeOS) device management. Chromebooks and other ChromeOS devices are managed exclusively through the Google Admin console (Google Workspace Admin). Organizations using Chromebooks must use Google's management tools. Intune supports Windows, macOS, iOS/iPadOS, Android, and Linux — not ChromeOS.",
+      "Incorrect. Even with Android app support, ChromeOS devices cannot be enrolled in Intune.",
+      "Incorrect. Microsoft Defender for Endpoint does not have a ChromeOS agent. ChromeOS security is managed through Google's ecosystem."
+    ],
+    "tip": "Intune supported platforms: Windows, macOS, iOS/iPadOS, Android (Enterprise, AOSP), Linux (Ubuntu, RHEL). NOT supported: ChromeOS, FreeBSD, other Unix variants. ChromeOS = Google Admin console only."
+  },
+  {
+    "id": "MS102-R5-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. The company wants to implement Microsoft Entra access reviews to periodically verify that users still need access to specific groups and applications. If a reviewer doesn't respond within the review period, access should be automatically removed.\n\nQuestion:\nWhere do you configure access reviews?",
+    "choices": [
+      "Microsoft Entra admin center > Identity Governance > Access reviews — create a review targeting groups or applications with auto-apply results and 'Remove access' for non-responded reviews",
+      "Microsoft Purview > Data lifecycle management > Access certification",
+      "Microsoft 365 admin center > Users > Access review",
+      "Azure portal > Subscriptions > Access control (IAM) > Access reviews"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Access reviews are configured in Entra admin center > Identity Governance > Access reviews. Create a review: select the target (group, application, or access package), assign reviewers (manager, self, or specific reviewers), set the review duration and recurrence (quarterly, annually), configure what happens if reviewers don't respond ('Remove access', 'No change', 'Approve'). Enable auto-apply to automatically execute the review decisions.",
+      "Incorrect. Purview handles data governance, not user access reviews. Access reviews are an Identity Governance feature.",
+      "Incorrect. The M365 admin center doesn't have access review functionality.",
+      "Incorrect. Azure IAM access reviews are for Azure resource role assignments (RBAC), not Microsoft 365 group/app access. Entra access reviews cover both Azure AD and Azure resource roles."
+    ],
+    "tip": "Access reviews: Identity Governance feature. Review: group memberships, app assignments, role assignments, access packages. Auto-apply results. Configure non-response action (remove/approve/no change). Schedule recurring reviews."
+  },
+  {
+    "id": "MS102-R5-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. A Windows device enrolled in Intune shows a compliance status of 'In grace period'. The compliance policy has a 3-day grace period configured.\n\nQuestion:\nWhat does 'In grace period' mean?",
+    "choices": [
+      "The device was compliant but a new compliance policy was assigned and the device has 3 days to become compliant before being marked noncompliant",
+      "The device has never been evaluated for compliance and has 3 days to check in",
+      "The device is noncompliant but conditional access will treat it as compliant for 3 more days",
+      "The device compliance policy has a scheduled start date 3 days in the future"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The grace period applies when a compliance policy is newly assigned or when policy settings change. The device has the specified number of days to become compliant with the new requirements before being marked as noncompliant. During the grace period, conditional access treats the device as compliant, giving users time to make necessary changes (install updates, enable encryption, etc.).",
+      "Incorrect. Devices that haven't been evaluated show 'Not evaluated' status, not 'In grace period'.",
+      "Incorrect. While the effect is similar (conditional access treats as compliant during grace), the trigger is a new/changed policy assignment, not the device becoming noncompliant from a previously compliant state.",
+      "Incorrect. Compliance policies don't have scheduled start dates. They apply immediately upon assignment, with the grace period providing a transition window."
+    ],
+    "tip": "Compliance grace period: New policy assigned → device gets X days to comply → treated as compliant during this period → after grace period expires → marked noncompliant → conditional access blocks. Set via 'Mark device noncompliant' action schedule."
+  },
+  {
+    "id": "MS102-R5-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Wingtip Toys. The company implements Microsoft Defender for Cloud Apps. The security team wants to create a policy that detects when users download an unusually high volume of files from SharePoint Online within a short timeframe — indicating potential data exfiltration.\n\nQuestion:\nWhich Defender for Cloud Apps policy type should you use?",
+    "choices": [
+      "File policy — monitors specific file types and sharing permissions",
+      "Anomaly detection policy — detects unusual user behavior patterns like mass downloads based on learned baselines",
+      "Session policy — controls real-time file downloads through reverse proxy",
+      "Activity policy — creates alerts based on specific activity types (e.g., any file download)"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. File policies monitor file attributes (type, sharing, labels) but don't detect behavioral anomalies like unusual download volumes.",
+      "Correct. Anomaly detection policies in Defender for Cloud Apps use machine learning to learn each user's normal behavior baseline and detect deviations. The built-in 'Unusual file download (by user)' anomaly detection automatically identifies when a user downloads significantly more files than their normal pattern, which may indicate data exfiltration.",
+      "Incorrect. Session policies provide real-time controls (block downloads, protect downloads) but require Conditional Access App Control proxy. They control actions in real-time, not detect anomalous behavior patterns.",
+      "Incorrect. Activity policies alert on specific activities but use static rules (any download, downloads above a fixed number). They don't learn user baselines to detect truly anomalous behavior."
+    ],
+    "tip": "Defender for Cloud Apps policies: Anomaly detection (ML-based, learns baselines, detects unusual behavior). Activity (static rules, specific actions). File (file attributes, sharing). Session (real-time proxy controls). OAuth app (app permissions)."
+  },
+  {
+    "id": "MS102-R5-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Northwind Traders. The company uses the Managed Home Screen app on Android Enterprise dedicated devices deployed as kiosks. The IT team wants to configure the Managed Home Screen to show only 3 specific apps and display the company logo as a wallpaper.\n\nQuestion:\nHow do you configure the Managed Home Screen?",
+    "choices": [
+      "Create a device restriction profile that limits visible apps",
+      "Create a device configuration profile > Device restrictions > Dedicated device > Multi-app kiosk mode — select the allowed apps and configure Managed Home Screen settings (wallpaper, branding)",
+      "Install and configure the Managed Home Screen app through a separate app configuration policy",
+      "Both B and C are needed — the kiosk profile selects apps and the app config policy customizes the Managed Home Screen appearance (wallpaper, layout)"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Device restriction profiles limit general device functionality but don't configure the Managed Home Screen kiosk experience.",
+      "Partially correct. The kiosk profile selects which apps appear, but Managed Home Screen customization (wallpaper, branding, layout) is done through an app configuration policy.",
+      "Partially correct. The app config policy customizes appearance but the kiosk profile defines which apps are allowed.",
+      "Correct. Full Managed Home Screen configuration requires both: (1) Device configuration profile with multi-app kiosk mode to select the 3 allowed apps. (2) App configuration policy for the Managed Home Screen app to customize appearance: company wallpaper, logo, screen layout, and other branding. Both work together for the complete kiosk experience."
+    ],
+    "tip": "Managed Home Screen: Kiosk profile (which apps) + App config policy (appearance/branding). MHS settings via app config: wallpaper, logo, font size, screen orientation, notification badge, virtual home button."
+  },
+  {
+    "id": "MS102-R5-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The IT team wants to configure Platform SSO for macOS devices. This feature allows users to sign in to their Mac once and get SSO across all apps and websites that use Microsoft Entra ID.\n\nQuestion:\nWhat is Platform SSO for macOS?",
+    "choices": [
+      "The same as Apple SSO Extension — just a different name",
+      "A macOS feature that uses the Microsoft Enterprise SSO plug-in to provide device-level SSO, replacing the need for separate authentication in each app. It extends SSO to the macOS login window with Entra ID credentials.",
+      "A VPN feature that provides SSO to on-premises resources",
+      "A Safari-only SSO feature for web applications"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Platform SSO builds on top of the Apple SSO Extension but extends it further by integrating with the macOS login window for device-level authentication.",
+      "Correct. Platform SSO for macOS integrates Microsoft Entra ID authentication with the macOS login experience. Users sign in to their Mac with their Entra ID credentials (password, smart card, or Touch ID backed by Secure Enclave keys). After login, they get SSO to all Entra ID-integrated apps and websites without re-authenticating. It uses the Microsoft Enterprise SSO plug-in and requires macOS 13 (Ventura) or later.",
+      "Incorrect. Platform SSO is for identity/authentication SSO, not VPN or network access.",
+      "Incorrect. Platform SSO provides SSO across all apps (native and web), not just Safari. It works with any app that uses the system authentication framework."
+    ],
+    "tip": "Platform SSO for macOS: macOS login = Entra ID auth. Three modes: Password (sync Entra password to Mac), Secure Enclave (device-bound keys), Smart card. Requires macOS 13+, Company Portal, Enterprise SSO plug-in."
+  },
+  {
+    "id": "MS102-R5-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The company has completed deployment of all security features and wants a comprehensive assessment of their security posture. They need a single dashboard that shows:\n- Overall security score and comparison to similar organizations\n- Recommended improvement actions with implementation guidance\n- Exposure level and vulnerability information\n- Incident and alert trends\n\nQuestion:\nWhich dashboard provides this comprehensive view?",
+    "choices": [
+      "Microsoft 365 admin center > Health > Service health",
+      "Microsoft Defender portal — provides Secure Score (security posture), Exposure Management (vulnerabilities), Incidents & alerts (threat trends), and improvement recommendations all in one unified portal",
+      "Microsoft Entra admin center > Security > Dashboard",
+      "Microsoft Purview > Compliance Manager"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Service health shows Microsoft 365 service status and outages, not security posture.",
+      "Correct. The Microsoft Defender portal (security.microsoft.com) is the unified security operations center that provides: Secure Score (posture assessment with improvement actions and industry comparison), Microsoft Security Exposure Management (vulnerability and exposure tracking), Incidents & alerts (correlated security events and trends), Advanced hunting (proactive threat hunting), and unified device, identity, email, and app security management.",
+      "Incorrect. Entra Security dashboard shows identity-related security metrics but doesn't cover endpoint vulnerabilities, email security, or incident management.",
+      "Incorrect. Compliance Manager assesses regulatory compliance posture (GDPR, HIPAA, etc.), not security posture. Different scope — compliance vs. security."
+    ],
+    "tip": "Microsoft Defender portal: Unified SecOps. Secure Score (posture). Exposure Management (vulnerabilities). Incidents (threats). Advanced hunting (investigation). All security domains: Identity, Endpoint, Email, Cloud Apps, Data. Single pane of glass for security."
+  }
+]

@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R5-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company uses Windows Local Administrator Password Solution (LAPS) managed by Microsoft Entra ID and Intune. The IT help desk needs to retrieve the local admin password for a device to perform troubleshooting.\n\nQuestion:\nWhere can the help desk retrieve the LAPS password?",
+    "choices": [
+      "Microsoft Entra admin center > Devices > select device > Local administrator password recovery",
+      "Intune admin center > Devices > select device > scroll to Local admin password section",
+      "Active Directory Users and Computers > device object > LAPS tab",
+      "Both A and B provide access to the cloud-managed LAPS password"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. Entra admin center shows the LAPS password for the device.",
+      "Partially correct. Intune admin center also shows the LAPS password on the device details page.",
+      "Incorrect. Active Directory Users and Computers shows LAPS passwords for on-premises AD-managed LAPS, not cloud-native Entra LAPS.",
+      "Correct. Cloud-managed LAPS passwords can be retrieved from both the Microsoft Entra admin center (Devices > device > Local administrator password) and the Intune admin center (Devices > device > Local admin password). Both show the current password and its expiration. RBAC controls who can view passwords."
+    ],
+    "tip": "Cloud LAPS: Password stored in Entra ID, viewable in Entra and Intune portals. Configure via Intune Account protection policy. Auto-rotates on schedule. Requires Windows 10 21H2+ with April 2023 update or later."
+  },
+  {
+    "id": "MS102-R5-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. The company wants to implement phishing-resistant MFA using conditional access authentication strengths. The security team needs to require phishing-resistant MFA for administrators accessing Azure portal.\n\nQuestion:\nWhich authentication methods qualify as 'phishing-resistant' in Microsoft Entra?",
+    "choices": [
+      "SMS OTP and voice call",
+      "Microsoft Authenticator push notifications with number matching",
+      "FIDO2 security keys, Windows Hello for Business, and certificate-based authentication (CBA)",
+      "Any MFA method including Authenticator TOTP codes"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. SMS and voice are the weakest MFA methods and are highly susceptible to phishing (SIM swap, social engineering).",
+      "Incorrect. While Authenticator push with number matching is more resistant than basic push, it is NOT classified as phishing-resistant by Microsoft. It's classified as 'multifactor authentication' strength, not 'phishing-resistant MFA' strength.",
+      "Correct. Microsoft defines phishing-resistant MFA as methods that are cryptographically bound to the sign-in session and cannot be phished: FIDO2 security keys (hardware-bound), Windows Hello for Business (device-bound biometric/PIN), and Certificate-based authentication (CBA with smart cards). These are the only methods in the 'Phishing-resistant MFA' authentication strength.",
+      "Incorrect. TOTP codes can be phished through real-time proxy attacks. Only hardware-bound cryptographic methods are phishing-resistant."
+    ],
+    "tip": "Authentication strengths: MFA (any MFA method) < Passwordless MFA (Authenticator passwordless, FIDO2, WHfB) < Phishing-resistant MFA (FIDO2, WHfB, CBA only). Use CA to require specific strength for high-risk scenarios."
+  },
+  {
+    "id": "MS102-R5-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Trey Research. The company needs to deploy a Win32 application that requires a device restart after installation. The IT team wants Intune to handle the restart gracefully — notifying the user and allowing them to defer for up to 2 hours.\n\nQuestion:\nHow should you configure the restart behavior for this Win32 app?",
+    "choices": [
+      "Add a post-installation PowerShell script that triggers shutdown /r /t 7200",
+      "Configure the return codes in the Win32 app deployment — map the app's restart return code (e.g., 3010) to 'Soft reboot' behavior, and configure restart grace period in the app assignment",
+      "Create a separate Intune script that reboots the device after app detection confirms installation",
+      "The user must manually restart — Intune cannot trigger device restarts after app installation"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. A PowerShell shutdown command forces a restart without Intune's graceful notification and deferral capabilities.",
+      "Correct. Win32 apps in Intune support return code mapping. The standard restart code 3010 can be mapped to 'Soft reboot' which shows a user notification allowing restart deferral. Configure the restart grace period and deadline in the app assignment settings. Users see a notification and can defer the restart within the allowed timeframe.",
+      "Incorrect. Separate scripts are unnecessary. Intune's built-in return code handling manages restarts natively.",
+      "Incorrect. Intune can handle restart requirements through return code configuration."
+    ],
+    "tip": "Win32 app return codes: 0 = success. 1707 = success. 3010 = soft reboot (user can defer). 1641 = hard reboot (forced). Custom codes can be mapped. Configure restart behavior through return codes, not separate scripts."
+  },
+  {
+    "id": "MS102-R5-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company uses Apple Automated Device Enrollment (ADE) for iOS devices. During enrollment, the IT team wants to skip certain setup assistant screens (like Apple Pay, Siri, Location Services) to speed up the setup process.\n\nQuestion:\nWhere do you configure which setup assistant screens to skip?",
+    "choices": [
+      "Apple Business Manager portal > Devices > MDM server settings",
+      "Intune admin center > Devices > Enrollment > Apple > Enrollment program tokens > select token > Profiles > create/edit enrollment profile > Setup Assistant customization",
+      "Create a device configuration profile with setup assistant restrictions",
+      "Deploy a mobileconfig file that configures setup assistant options"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Apple Business Manager assigns devices to MDM servers but doesn't control which setup screens to skip. That's configured in the MDM (Intune).",
+      "Correct. In the Intune enrollment profile for ADE, there's a 'Setup Assistant' section where you choose which screens to show or hide during device setup. You can skip: Passcode, Location Services, Restore, Apple ID, Terms and Conditions, Touch/Face ID, Apple Pay, Siri, Display Tone, Privacy, and more.",
+      "Incorrect. Device configuration profiles apply after enrollment. Setup Assistant screens appear during enrollment, before profiles are applied.",
+      "Incorrect. Mobileconfig files don't control the enrollment setup experience. The ADE enrollment profile in Intune handles this."
+    ],
+    "tip": "ADE enrollment profile: Controls the entire out-of-box experience. Skip screens = faster deployment. Supervised mode toggle. User affinity settings. Department and support info. All configured before the device is even touched."
+  },
+  {
+    "id": "MS102-R5-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Tailspin Toys. The compliance team needs to investigate a potential data breach. They must search all emails, Teams chats, SharePoint files, and OneDrive files for content containing specific keywords within a specific date range.\n\nQuestion:\nWhich tool should they use?",
+    "choices": [
+      "Microsoft Purview > Content search — search across all Microsoft 365 content locations",
+      "Microsoft Purview > Audit log search",
+      "Microsoft Defender portal > Advanced hunting",
+      "Exchange Online > Compliance search in EAC"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. Content search in Microsoft Purview allows you to search across Exchange mailboxes (emails), Teams conversations (chats and channel messages), SharePoint sites, and OneDrive accounts simultaneously. You can specify keyword queries, date ranges, specific senders/recipients, and other conditions. Results can be previewed and exported.",
+      "Incorrect. Audit log search shows user and admin activity (who accessed what, when) but doesn't search the content of emails, documents, or chats.",
+      "Incorrect. Advanced hunting in Defender searches security event data (alerts, device events, email metadata), not email/document content.",
+      "Incorrect. Exchange admin center compliance search is limited to Exchange mailboxes. For a cross-service search including Teams, SharePoint, and OneDrive, use Content search in Purview."
+    ],
+    "tip": "Investigation tools: Content search = find content (emails, files, chats). Audit log = find activities (who did what). eDiscovery = legal hold + review + export. Advanced hunting = security events. Choose based on what you're looking for."
+  },
+  {
+    "id": "MS102-R5-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The company wants to configure Windows Hello for Business for all Azure AD joined Windows devices. The IT team needs:\n- PIN with minimum 6 digits\n- Biometric authentication enabled\n- TPM required\n\nQuestion:\nWhere should you configure Windows Hello for Business in Intune?",
+    "choices": [
+      "Endpoint security > Account protection > create a Windows Hello for Business policy",
+      "Device configuration > Identity protection > Windows Hello for Business",
+      "Tenant administration > Windows Hello for Business (tenant-wide setting)",
+      "All three locations can configure WHfB, but Account protection (Endpoint security) is the recommended modern approach for granular group targeting"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. Account protection is the recommended path.",
+      "Partially correct. Identity protection templates also configure WHfB.",
+      "Partially correct. Tenant-wide setting applies to all users but lacks granular group targeting.",
+      "Correct. Windows Hello for Business can be configured in three locations: (1) Endpoint security > Account protection (recommended, group-targeted). (2) Device configuration > Identity protection template. (3) Tenant administration > Windows Hello for Business (tenant-wide). The Account protection approach is recommended for granular control. If the tenant-wide setting is enabled, it can conflict with targeted policies — disable tenant-wide and use Account protection instead."
+    ],
+    "tip": "WHfB configuration priority: Disable tenant-wide setting (Not configured). Use Endpoint security > Account protection for group-targeted policies. Configure PIN complexity, biometrics, TPM requirement, key type."
+  },
+  {
+    "id": "MS102-R5-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Litware Inc. The company uses Microsoft Defender for Office 365. A user reports receiving a phishing email that bypassed Safe Links and Safe Attachments protections.\n\nQuestion:\nWhat should the security team do to investigate and respond?",
+    "choices": [
+      "Check the email headers manually and block the sender domain",
+      "Use Threat Explorer in the Defender portal to investigate the email — trace delivery, check URL detonation results, check attachment scan results, and use 'Soft delete' or 'Hard delete' remediation to remove the email from all recipient mailboxes",
+      "Create a mail flow rule to block all emails from the sender",
+      "Disable Safe Links and Safe Attachments since they failed, and use a third-party solution"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Manual header inspection is insufficient. Blocking a single sender domain doesn't address the actual threat or remove the email from other mailboxes.",
+      "Correct. Threat Explorer provides comprehensive investigation: (1) Search by sender, subject, or message ID to find all instances. (2) Review why protection was bypassed (zero-day URL, encrypted attachment, allow list override). (3) Check URL detonation and attachment sandbox results. (4) Use remediation actions (soft delete, hard delete, move to junk) to remove the phishing email from all recipient mailboxes. (5) Submit to Microsoft for analysis.",
+      "Incorrect. Mail flow rules prevent future emails but don't remove the existing phishing email from mailboxes. Investigation with Threat Explorer is needed first.",
+      "Incorrect. Disabling protections reduces security. The correct response is to investigate why the specific email bypassed protections and improve the configuration."
+    ],
+    "tip": "Phishing response: Threat Explorer (investigate + remediate) → check why bypassed (overrides, ZAP, allow lists) → remove from all mailboxes → submit to Microsoft → improve policies. Don't just block the sender."
+  },
+  {
+    "id": "MS102-R5-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Adventure Works. The company wants to use Intune to manage Microsoft Edge browser settings across all Windows devices. They need to configure:\n- Homepage URL\n- Block certain websites\n- Disable InPrivate browsing\n- Configure proxy settings\n\nQuestion:\nWhat is the most comprehensive way to manage Edge settings in Intune?",
+    "choices": [
+      "Deploy an ADMX template for Microsoft Edge in Intune",
+      "Use the Settings Catalog — search for Microsoft Edge settings which provides access to hundreds of Edge policies",
+      "Create an OMA-URI custom profile with Edge CSP settings",
+      "Use an app configuration policy for Microsoft Edge"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While ADMX templates (Administrative templates) include Edge settings, the Settings Catalog provides a more complete and searchable interface with all Edge policies.",
+      "Correct. The Settings Catalog in Intune provides the most comprehensive access to Microsoft Edge policies. Search for 'Microsoft Edge' to find hundreds of configurable policies including: homepage URL, site blocking (URLBlocklist/URLAllowlist), InPrivate browsing control, proxy configuration, extension management, and more. The Settings Catalog is searchable and provides descriptions for each setting.",
+      "Incorrect. Custom OMA-URI can configure Edge settings but requires knowing the exact CSP paths and values. The Settings Catalog provides a user-friendly interface with the same capabilities.",
+      "Incorrect. App configuration policies for Edge are primarily used for managed browser settings on mobile platforms (iOS/Android), not comprehensive Windows Edge management."
+    ],
+    "tip": "Edge management in Intune: Settings Catalog (most comprehensive, all Edge policies). Administrative templates (subset of policies). App config policy (mobile Edge). Settings Catalog is the modern recommended approach."
+  },
+  {
+    "id": "MS102-R5-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. A Windows Autopilot deployment profile is configured for user-driven Azure AD join. During deployment, a user reports the enrollment fails with error 801c03ed — 'This device is not authorized to enroll. You can try to enroll this device again, or contact your system administrator with the error code 801c03ed.'\n\nQuestion:\nWhat is the most likely cause of this error?",
+    "choices": [
+      "The device is not registered in Autopilot",
+      "The Azure AD device enrollment limit has been reached for the user — the user has too many registered devices",
+      "The Intune MDM authority is not configured",
+      "The Autopilot profile is not assigned to the device"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. If the device wasn't registered in Autopilot, the user wouldn't see the Autopilot OOBE experience at all.",
+      "Correct. Error 801c03ed typically indicates the user has reached the Azure AD device registration limit. By default, users can register up to 50 devices (configurable). If the user has reached this limit, new device enrollments fail. Resolution: increase the device limit in Azure AD > Devices > Device Settings, or remove stale device records for the user.",
+      "Incorrect. MDM authority configuration issues would affect all users, not just one user's enrollment.",
+      "Incorrect. If the profile wasn't assigned, the device would go through standard OOBE, not show an Autopilot-related enrollment error."
+    ],
+    "tip": "Common Autopilot errors: 801c03ed = device limit reached. 80180014 = MDM enrollment failed. 80070774 = network timeout. 801c0003 = device not found in Autopilot. Check Azure AD device limits and stale records first."
+  },
+  {
+    "id": "MS102-R5-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. The company uses Microsoft Purview Insider Risk Management to detect and respond to insider threats. The security team wants to identify users who may be exfiltrating data before leaving the company.\n\nQuestion:\nWhich insider risk policy template should they use?",
+    "choices": [
+      "General data leaks template",
+      "Data theft by departing users template — detects data exfiltration activities correlated with HR departure signals",
+      "Security policy violations template",
+      "Patient data misuse template"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. General data leaks detect data movement outside the organization but don't correlate with departure signals. They cast a wider net without focusing on departing employees.",
+      "Correct. The 'Data theft by departing users' template in Insider Risk Management specifically correlates data exfiltration indicators (file downloads, USB copies, cloud uploads, email attachments) with HR departure signals (resignation date from the HR connector, Azure AD account disable date). This template focuses risk detection on the critical period before and after an employee's departure.",
+      "Incorrect. Security policy violations detect users who bypass security controls but aren't specifically focused on departing users' data theft patterns.",
+      "Incorrect. Patient data misuse is specific to healthcare organizations and doesn't focus on departing employees."
+    ],
+    "tip": "Insider risk templates: Data theft by departing users (HR signals + exfiltration). General data leaks (broad exfiltration). Security policy violations (DLP/ASR bypasses). Data leaks by risky users (risk score + exfiltration). Match template to scenario."
+  }
+]
