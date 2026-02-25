@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R5-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company needs to configure device grouping for efficient policy targeting. The IT team has 5,000 devices across departments and wants automatic group membership based on device attributes.\n\nQuestion:\nWhich grouping strategy is most efficient for targeting compliance policies to specific device types?",
+    "choices": [
+      "Create static device groups and manually add devices as they enroll",
+      "Create dynamic Azure AD device groups using device properties (OS, manufacturer, enrollment profile, ownership) for automatic membership",
+      "Use assignment filters on policy assignments to dynamically target devices without creating separate groups",
+      "Both B and C are valid; use dynamic groups for broad categorization and assignment filters for fine-grained targeting within assignments"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Incorrect. Static groups require manual maintenance, don't scale, and devices aren't added automatically on enrollment.",
+      "Partially correct. Dynamic groups automatically categorize devices but require separate groups for each targeting criteria.",
+      "Partially correct. Assignment filters provide dynamic targeting within a policy assignment but work best when combined with groups.",
+      "Correct. Best practice: Use dynamic Azure AD device groups for broad categorization (all Windows devices, all iOS devices, all corporate-owned). Then use assignment filters on individual policy assignments for fine-grained targeting within those groups (only Surface devices, only devices with specific OS versions). This combination is the most efficient and scalable."
+    ],
+    "tip": "Intune targeting strategy: Dynamic groups = broad categories (platform, ownership, department). Assignment filters = fine-grained within assignments (manufacturer, model, OS version). Filters evaluate at policy deployment, not membership."
+  },
+  {
+    "id": "MS102-R5-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Pratum Inc. The compliance team implements data lifecycle management. They need to automatically apply retention labels to emails based on a condition: emails containing the keyword 'confidential' in the subject should be labeled 'Retain 7 years'.\n\nQuestion:\nWhich auto-labeling method should you use?",
+    "choices": [
+      "Create a retention label with auto-apply policy using keyword query (Subject:confidential) targeted to Exchange",
+      "Create a DLP policy that applies the retention label when the keyword is detected",
+      "Create a mail flow rule that applies the retention label to matching emails",
+      "Manually instruct users to apply the label to confidential emails"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In Microsoft Purview, create a retention label 'Retain 7 years'. Then create an auto-apply label policy with the condition type 'Apply label to content that contains specific words or phrases' or 'Apply label based on a KQL query'. Use the KQL query 'Subject:confidential' targeted to Exchange locations. The policy automatically applies the retention label to matching emails.",
+      "Incorrect. DLP policies detect and protect sensitive content but cannot apply retention labels. DLP and retention labeling are separate features.",
+      "Incorrect. Mail flow rules (transport rules) can add headers, redirect, or classify messages, but they cannot apply Microsoft Purview retention labels.",
+      "Incorrect. Manual labeling doesn't scale and is unreliable. Auto-apply policies ensure consistent label application across all qualifying content."
+    ],
+    "tip": "Auto-apply retention labels: KQL query (keywords, properties), Sensitive info types (SSN, credit cards), or Trainable classifiers (ML-based). Targets: Exchange, SharePoint, OneDrive. Runs continuously on new and existing content."
+  },
+  {
+    "id": "MS102-R5-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware Inc. The company wants to configure managed browser for iOS and Android devices. All web links opened from managed apps (Outlook, Teams) should open in Microsoft Edge instead of the device's default browser. Edge should also have an app protection policy applied.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Set 'Restrict web content transfer with other apps' to 'Microsoft Edge' in the Outlook and Teams app protection policies",
+      "Create a device restriction profile that sets Edge as the default browser",
+      "Deploy Edge as a required app and hope users choose it as their default browser",
+      "Configure a conditional access policy that blocks browser access except Microsoft Edge"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In the app protection policy for Outlook and Teams, under Data transfer settings, set 'Restrict web content transfer with other apps' to 'Microsoft Edge'. This forces all web links opened from managed apps to open in Microsoft Edge (which also has an APP applied). This is the managed browser configuration for Intune.",
+      "Incorrect. Device restriction profiles cannot force a default browser on iOS/Android for managed app links. The managed browser setting is in the app protection policy.",
+      "Incorrect. Simply deploying Edge doesn't force managed apps to open links in Edge. The app protection policy setting is required.",
+      "Incorrect. Conditional access controls which browsers can access cloud apps, not which browser opens links from managed apps."
+    ],
+    "tip": "Managed browser in APP: 'Restrict web content transfer with other apps: Microsoft Edge'. Links from managed apps → Edge (with APP). Edge becomes the corporate browser for managed app links. Works on iOS and Android."
+  },
+  {
+    "id": "MS102-R5-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Adventure Works. The company's IT team needs to run a real-time device query to check whether a specific Windows device has a particular software installed. They need the answer immediately, not from a cached report.\n\nQuestion:\nWhich Intune feature provides real-time device querying?",
+    "choices": [
+      "Intune Data Warehouse — query device inventory data",
+      "Advanced Endpoint Analytics > Device query — run KQL queries against live device data in real-time",
+      "Microsoft Graph API — query device properties",
+      "Endpoint analytics > Application reliability — check installed app data"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Data Warehouse contains historical data that's updated periodically, not real-time device state. Queries may be hours old.",
+      "Correct. Device query (part of Advanced Endpoint Analytics in the Intune Suite) allows administrators to run real-time KQL queries against Windows devices. You can query installed software, running processes, services, registry keys, event logs, and more — directly from the live device. Results are returned in near real-time.",
+      "Incorrect. Microsoft Graph API provides Intune management data (assigned policies, compliance status) but doesn't query real-time device state like installed software or running processes.",
+      "Incorrect. Application reliability tracks app crashes/hangs over time. It doesn't provide real-time queries about installed software."
+    ],
+    "tip": "Device query: Real-time KQL queries against live devices. Query: installed apps, processes, services, registry, hardware, network config. Part of Intune Suite. Think of it as 'live device investigation from the cloud'."
+  },
+  {
+    "id": "MS102-R5-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The security team notices that the company's Secure Score has dropped by 15 points over the past month. They need to identify which specific actions caused the decrease.\n\nQuestion:\nWhere can they find this information?",
+    "choices": [
+      "Microsoft Defender portal > Secure Score > History tab showing score changes over time with specific improvement actions that changed",
+      "Microsoft 365 admin center > Health > Message center",
+      "Microsoft Entra admin center > Security > Audit logs",
+      "Microsoft Purview > Compliance Manager > Assessment history"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The Secure Score History tab shows score changes over time. Each data point identifies which improvement actions caused the score to increase or decrease, including: actions that regressed (e.g., MFA was disabled for some users), actions completed (improving score), and Microsoft-initiated changes (new recommendations added).",
+      "Incorrect. Message center shows service announcements and planned changes, not Secure Score history.",
+      "Incorrect. Audit logs track admin actions in Azure AD but don't provide Secure Score change analysis.",
+      "Incorrect. Compliance Manager tracks compliance posture, not security posture. Different tool, different purpose."
+    ],
+    "tip": "Secure Score analysis: Overview (current score + comparison). Improvement actions (what to fix). History (score changes over time + root cause). Metrics & trends (long-term tracking). Use History to investigate score drops."
+  },
+  {
+    "id": "MS102-R5-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailwind Traders. The company has 500 Windows devices. A new security requirement mandates that all devices must have firmware-level protection enabled, specifically:\n- Virtualization-based security (VBS) must be enabled\n- Hypervisor-protected code integrity (HVCI) must be running\n\nQuestion:\nHow should you verify and enforce these settings?",
+    "choices": [
+      "Deploy a PowerShell script that enables VBS and HVCI through registry modifications",
+      "Create a device compliance policy with Windows Health Attestation settings that verify VBS and HVCI status. Deploy a device configuration profile via Settings Catalog to enable these features.",
+      "Configure Microsoft Defender for Endpoint to enforce firmware protection",
+      "These settings can only be configured in the device BIOS — Intune cannot manage firmware settings"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. While registry modifications can enable VBS/HVCI, this approach lacks verification and compliance tracking. A compliance policy is needed to verify the settings are actually active.",
+      "Correct. Two parts: (1) Configuration: Use the Settings Catalog to configure VBS and HVCI settings (Device Guard > Enable Virtualization Based Security, Hypervisor Enforced Code Integrity). (2) Verification: Create a compliance policy using Health Attestation to verify that VBS and code integrity are actually running at boot time. This ensures both deployment and ongoing verification.",
+      "Incorrect. Defender for Endpoint can report on VBS/HVCI status, but it doesn't enforce or configure these settings. Configuration is done through Intune profiles.",
+      "Incorrect. While BIOS settings (virtualization technology) are prerequisites, VBS and HVCI are OS-level features that are enabled through Windows configuration, which Intune can manage."
+    ],
+    "tip": "VBS/HVCI deployment: (1) BIOS prerequisite: virtualization enabled (manual/FOTA). (2) Intune Settings Catalog: enable VBS + HVCI. (3) Compliance: Health attestation verifies VBS/HVCI running at boot. All three layers needed."
+  },
+  {
+    "id": "MS102-R5-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. The company wants to configure Microsoft Entra ID Protection risk-based conditional access. The security team needs to understand the difference between sign-in risk and user risk.\n\nQuestion:\nWhich statement correctly describes the difference?",
+    "choices": [
+      "Sign-in risk and user risk are the same thing measured at different times",
+      "Sign-in risk evaluates the real-time risk of a specific authentication attempt (anonymous IP, impossible travel, malware-linked IP). User risk evaluates the overall likelihood that a user's identity is compromised (leaked credentials, threat intelligence).",
+      "Sign-in risk is for cloud-only users. User risk is for hybrid users.",
+      "Sign-in risk requires Defender for Endpoint. User risk requires Defender for Identity."
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. They measure fundamentally different things and operate independently.",
+      "Correct. Sign-in risk is a real-time assessment of each authentication attempt: was this sign-in from an anonymous IP, impossible travel, unfamiliar location, or malware-infected device? User risk is a cumulative assessment of the user account: are the credentials leaked, has threat intelligence linked the account to an attack? Different risks require different remediation: sign-in risk → require MFA. User risk → require password change.",
+      "Incorrect. Both sign-in risk and user risk apply to all user types (cloud-only and hybrid).",
+      "Incorrect. Both are native Identity Protection features. They don't require Defender for Endpoint or Defender for Identity (though DfI can contribute signals to user risk)."
+    ],
+    "tip": "Sign-in risk = 'Is THIS sign-in suspicious?' → Remediation: require MFA. User risk = 'Is this USER compromised?' → Remediation: require password change. Configure separate conditional access policies for each."
+  },
+  {
+    "id": "MS102-R5-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company has 300 Windows devices with Microsoft 365 Apps installed. The security team wants to ensure that Office macros in files downloaded from the internet are blocked by default, following Microsoft's recommended security configuration.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Create a device configuration profile using the Settings Catalog to configure 'Block macros from running in Office files from the Internet' for each Office application",
+      "Deploy an Office cloud policy that blocks macros from internet sources",
+      "Configure an attack surface reduction (ASR) rule to block all Office macros",
+      "Both A and B are valid approaches; the Settings Catalog provides device-level enforcement while cloud policy provides user-level enforcement"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. Settings Catalog can configure the macro block per Office application.",
+      "Partially correct. Office cloud policy in the Microsoft 365 Apps admin center can also configure this setting.",
+      "Incorrect. ASR rules related to Office (like 'Block Office apps from creating child processes') don't specifically target internet-sourced macros. The macro blocking policy is a separate Office Trust Center setting.",
+      "Correct. Both methods work: (1) Settings Catalog > configure 'VBA Macro Notification Settings' for each Office app with 'Block macros from running in Office files from the Internet' enabled (device-level). (2) Office cloud policy (Microsoft 365 Apps admin center > Policy management) can set the same policy at the user level. Use Settings Catalog for device-level enforcement or cloud policy for user-level enforcement."
+    ],
+    "tip": "Office macro security: 'Block macros from internet' (Trust Center policy via Settings Catalog or cloud policy). ASR rule 'Block Office from creating child processes' is complementary but different. Use both for defense in depth."
+  },
+  {
+    "id": "MS102-R5-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company provisions Windows 365 Cloud PCs for seasonal workers who only need access for 3 months at a time. When the season ends, the Cloud PCs should be automatically deprovisioned to save costs.\n\nQuestion:\nHow should you manage the lifecycle of these seasonal Cloud PCs?",
+    "choices": [
+      "Manually delete each Cloud PC at the end of the season",
+      "Use Azure AD group-based licensing — when seasonal workers are removed from the license group, their Cloud PCs are automatically deprovisioned after the grace period",
+      "Set an expiration date on the Cloud PC provisioning policy",
+      "Use Power Automate to schedule Cloud PC deletion"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Manual deletion for seasonal workers is not scalable and error-prone.",
+      "Correct. Windows 365 Cloud PCs are tied to the user's Windows 365 license. Use Azure AD group-based licensing: add seasonal workers to a license group when their season starts (gets Cloud PC provisioned). Remove them from the group when the season ends (license removed → Cloud PC enters a grace period → then deprovisioned). This automates the lifecycle.",
+      "Incorrect. Provisioning policies don't have built-in expiration dates for Cloud PCs.",
+      "Incorrect. While Power Automate could be built for this, group-based licensing is the native, supported mechanism."
+    ],
+    "tip": "Windows 365 lifecycle: License assigned → Cloud PC provisioned. License removed → grace period (7 days default) → Cloud PC deprovisioned. Use group-based licensing for automated lifecycle management."
+  },
+  {
+    "id": "MS102-R5-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The company needs to ensure that all Microsoft Teams meetings with external participants are recorded and that recordings are automatically retained for 2 years.\n\nQuestion:\nHow should you configure this?",
+    "choices": [
+      "Configure a Teams meeting policy that enables automatic recording, then create a Purview retention policy for Teams meeting recordings with 2-year retention",
+      "Configure an eDiscovery hold on all Teams recordings",
+      "Enable the Teams admin center recording policy and set the retention to 2 years in Teams settings",
+      "Create a DLP policy for Teams meetings that captures recordings"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. (1) In Teams admin center, create a meeting policy with 'Auto-recording' enabled or configure compliance recording for meetings with external participants. (2) Teams meeting recordings are stored in OneDrive/SharePoint. Create a Purview retention policy targeting SharePoint/OneDrive that retains recordings for 2 years. The retention policy can target the specific SharePoint location where Teams recordings are stored.",
+      "Incorrect. eDiscovery holds preserve content for investigation, not for ongoing compliance retention. Holds are indefinite and don't auto-delete after a period.",
+      "Incorrect. Teams admin center has a recording expiration setting but it's limited (default 120 days, max configurable). For 2-year retention, you need a Purview retention policy which overrides the Teams expiration setting.",
+      "Incorrect. DLP policies detect and protect sensitive content in messages, not manage meeting recordings or retention."
+    ],
+    "tip": "Teams meeting recordings: Stored in OneDrive (1:1/group) or SharePoint (channel meetings). Retention: Purview retention policy (overrides Teams expiration). Teams admin setting only controls default expiration, Purview controls long-term retention."
+  }
+]
