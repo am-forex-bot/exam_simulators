@@ -1,0 +1,202 @@
+[
+  {
+    "id": "MS102-R4-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company uses assignment filters to target policies to specific devices. You need to create a filter that targets only corporate-owned Windows devices manufactured by Microsoft (Surface devices).\n\nQuestion:\nWhich filter rule syntax should you use?",
+    "choices": [
+      "(device.manufacturer -eq \"Microsoft Corporation\") and (device.deviceOwnership -eq \"Corporate\")",
+      "(device.deviceModel -startsWith \"Surface\") and (device.managementType -eq \"MDM\")",
+      "(device.operatingSystem -eq \"Windows\") and (device.manufacturer -contains \"Microsoft\")",
+      "(device.enrollmentProfileName -eq \"Corporate\") and (device.model -eq \"Surface\")"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. The filter uses device.manufacturer (which is 'Microsoft Corporation' for Surface devices) combined with device.deviceOwnership to filter corporate-owned devices only. This accurately targets Surface devices that are corporate-owned.",
+      "Incorrect. While device.deviceModel with startsWith 'Surface' could work for model filtering, device.managementType isn't the correct property for ownership filtering. Also, non-corporate MDM-enrolled devices would be included.",
+      "Incorrect. device.operatingSystem -eq 'Windows' is redundant if the filter is already for Windows platform. The -contains operator is not available for all filter properties, and 'Microsoft' could match other manufacturers.",
+      "Incorrect. enrollmentProfileName filters by the Autopilot profile name, not ownership type. device.model doesn't match exact Surface model names with just 'Surface'."
+    ],
+    "tip": "Assignment filter properties: device.manufacturer = hardware vendor. device.deviceOwnership = Corporate/Personal. device.deviceModel = specific model. device.operatingSystemVersion = OS build. Combine with -and/-or for complex rules."
+  },
+  {
+    "id": "MS102-R4-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft Intune with Windows devices. The security team wants to configure controlled folder access in Microsoft Defender to protect important folders (Documents, Pictures, Desktop) from ransomware and unauthorized modification by untrusted applications.\n\nQuestion:\nWhere should you configure controlled folder access in Intune?",
+    "choices": [
+      "Endpoint security > Attack surface reduction > Create a policy with Controlled folder access settings",
+      "Device configuration > Endpoint protection > Microsoft Defender Exploit Guard > Controlled folder access",
+      "Endpoint security > Antivirus > Microsoft Defender Antivirus settings",
+      "Both A and B are valid locations, but Endpoint security > Attack surface reduction is the recommended path"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. This is the recommended location.",
+      "Partially correct. This also works but is the older configuration path.",
+      "Incorrect. Antivirus policies configure real-time protection, scan schedules, and exclusions. Controlled folder access is part of attack surface reduction, not antivirus settings.",
+      "Correct. Controlled folder access can be configured through either Endpoint security > Attack surface reduction (recommended) or Device configuration > Endpoint protection > Exploit Guard. The Endpoint security path is the modern, recommended approach. Both configure the same CSP settings."
+    ],
+    "tip": "Controlled folder access: Protects Documents, Desktop, Pictures, and custom folders from unauthorized changes. Modes: Disabled, Audit, Block, Audit only. Allow specific apps through exclusions. Part of ASR in Intune."
+  },
+  {
+    "id": "MS102-R4-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company deploys a managed installer policy to designate the Intune management extension as a managed installer for Windows Defender Application Control (WDAC). This means apps deployed through Intune are automatically trusted by WDAC.\n\nA user installs an application from the internet (not deployed by Intune). WDAC blocks the application.\n\nQuestion:\nWhy is the user's application blocked?",
+    "choices": [
+      "The application is malicious and Defender detected it",
+      "The application was not deployed through Intune (the managed installer), so WDAC does not trust it. Only apps installed via the managed installer are automatically trusted.",
+      "The user's device is not compliant with the compliance policy",
+      "The application's publisher certificate is expired"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. WDAC blocking is based on trust policy, not malware detection. Even a legitimate application would be blocked if it wasn't deployed through a trusted source.",
+      "Correct. When the Intune management extension is configured as a managed installer, WDAC automatically trusts any application installed through Intune. Applications installed from other sources (user downloads, USB, etc.) are not trusted and will be blocked unless they match another WDAC allow rule (publisher, path, file hash).",
+      "Incorrect. Device compliance status does not affect WDAC enforcement. WDAC operates independently of the Intune compliance framework.",
+      "Incorrect. While certificate issues can cause WDAC blocks, the most likely cause in this scenario is that the app was installed outside the managed installer (Intune), so WDAC has no trust basis for it."
+    ],
+    "tip": "Managed installer + WDAC: Apps from Intune = automatically trusted. Apps from other sources = blocked unless explicitly allowed by WDAC rules. This provides app control without maintaining exhaustive allow lists."
+  },
+  {
+    "id": "MS102-R4-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company wants to deploy driver updates for Windows devices through Intune rather than allowing Windows Update to install drivers automatically. Some driver updates have caused blue screens on specific device models in the past.\n\nQuestion:\nHow should you manage driver updates in Intune?",
+    "choices": [
+      "Use update rings to defer all driver updates indefinitely",
+      "Use Devices > Windows > Driver updates for Windows 10 and later to review, approve, and deploy specific driver updates",
+      "Block driver updates in Windows Update for Business and deploy drivers manually as Win32 apps",
+      "Use Microsoft Configuration Manager for driver management — Intune does not support driver updates"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Update rings can pause updates temporarily but don't provide granular control over individual driver updates. You cannot defer specific drivers while allowing others.",
+      "Correct. Intune provides a dedicated Driver updates management feature under Devices > Windows > Driver updates. It shows available driver updates for your devices, allows you to review each driver, approve or decline specific drivers, and deploy approved drivers to targeted groups. This gives granular control over which drivers are installed.",
+      "Incorrect. While blocking all driver updates and manually deploying is possible, it's highly impractical. The native Intune driver update management provides a much better experience with approval workflows.",
+      "Incorrect. Intune supports driver update management natively. ConfigMgr is not required for this capability."
+    ],
+    "tip": "Intune driver management: Devices > Windows > Driver updates. Review available drivers → approve/decline → deploy to groups. Requires Windows Update for Business deployment service. Provides per-driver control."
+  },
+  {
+    "id": "MS102-R4-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The security team wants to configure Microsoft Defender SmartScreen to:\n- Block users from accessing known phishing sites in Microsoft Edge\n- Block users from downloading malicious files\n- Prevent users from overriding SmartScreen warnings\n\nQuestion:\nWhich Intune policy should you configure?",
+    "choices": [
+      "Endpoint security > Attack surface reduction policy with SmartScreen settings",
+      "Device configuration > Settings Catalog > Microsoft Edge > SmartScreen settings (SmartScreenEnabled, PreventSmartScreenPromptOverride)",
+      "App protection policy for Microsoft Edge with URL filtering",
+      "Both A and B can configure SmartScreen, and the Settings Catalog provides the most granular Edge-specific SmartScreen controls"
+    ],
+    "answer": [3],
+    "explanations": [
+      "Partially correct. ASR policies include SmartScreen enforcement settings for Windows devices.",
+      "Partially correct. The Settings Catalog provides Edge-specific SmartScreen settings including override prevention.",
+      "Incorrect. App protection policies control data protection within apps, not browser security features like SmartScreen.",
+      "Correct. SmartScreen can be configured through multiple Intune paths: (1) Endpoint security ASR policies configure Windows SmartScreen for apps and files. (2) Settings Catalog > Microsoft Edge configures Edge-specific SmartScreen including SmartScreenEnabled, PreventSmartScreenPromptOverride, SmartScreenForTrustedDownloadsEnabled. The Settings Catalog provides the most granular Edge-specific controls for preventing SmartScreen override."
+    ],
+    "tip": "SmartScreen configuration: Windows-level (ASR policy) = protects against malicious apps/files OS-wide. Edge-level (Settings Catalog) = browser-specific phishing/download protection. Configure both for defense in depth."
+  },
+  {
+    "id": "MS102-R4-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Datum Corporation. The company has 500 stale device records in Intune — devices that haven't checked in for over 90 days. The IT team wants to automatically clean up these stale records.\n\nQuestion:\nWhich Intune feature handles automatic device cleanup?",
+    "choices": [
+      "Create a dynamic device group that excludes devices not seen in 90 days, then manually delete them",
+      "Configure device clean-up rules under Devices > Device clean-up rules to automatically delete devices that haven't checked in for a specified number of days",
+      "Run a PowerShell script using Microsoft Graph API to delete stale device records on a schedule",
+      "Configure a compliance policy that retires devices not seen in 90 days"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Dynamic groups can filter devices, but you would still need to manually select and delete them. This is not automated cleanup.",
+      "Correct. Intune provides built-in device clean-up rules under Devices > Device clean-up rules. Configure the rule to delete devices that haven't checked in for a specified number of days (e.g., 90 days). Intune automatically removes matching device records on a regular schedule.",
+      "Incorrect. While Graph API scripts could automate cleanup, Intune provides this capability natively without custom scripting.",
+      "Incorrect. Compliance policies evaluate device state and can mark devices as noncompliant, but they don't have an action to retire or delete devices based on last check-in time."
+    ],
+    "tip": "Device clean-up rules: Devices > Device clean-up rules. Set days since last check-in (30-270 days). Runs automatically. Deletes the device record from Intune (does NOT wipe the physical device)."
+  },
+  {
+    "id": "MS102-R4-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. The company integrates Intune with Azure Monitor/Log Analytics to export Intune diagnostic data for long-term retention and advanced analysis.\n\nThe IT team wants to query Intune device compliance data using KQL in the Log Analytics workspace.\n\nQuestion:\nWhat must you configure first?",
+    "choices": [
+      "Export Intune data to a Log Analytics workspace using Diagnostic settings under Tenant administration > Diagnostics settings in Intune",
+      "Install the Intune Data Warehouse connector in Azure Monitor",
+      "Configure Microsoft Graph API to push Intune data to Log Analytics",
+      "Enable the Intune reporting API and configure Azure Data Factory to ingest data"
+    ],
+    "answer": [0],
+    "explanations": [
+      "Correct. In the Intune admin center, navigate to Tenant administration > Diagnostics settings. Create a diagnostic setting that sends Intune logs (operational logs, device compliance, device configuration, etc.) to an Azure Monitor Log Analytics workspace. Once configured, data flows automatically and can be queried using KQL.",
+      "Incorrect. There is no 'Intune Data Warehouse connector' for Azure Monitor. The integration uses Intune's built-in diagnostic settings feature.",
+      "Incorrect. While Microsoft Graph API provides programmatic access to Intune data, the native diagnostic settings feature is the supported method for Log Analytics integration.",
+      "Incorrect. The Intune reporting API and Data Warehouse are separate features for reporting. Log Analytics integration uses diagnostic settings, not the reporting API."
+    ],
+    "tip": "Intune → Log Analytics: Tenant admin > Diagnostics settings > send to Log Analytics workspace. Data categories: Operational, DeviceComplianceOrg, Devices, AuditLogs. Then query with KQL in Azure Monitor."
+  },
+  {
+    "id": "MS102-R4-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware Inc. The company wants to deploy Microsoft Teams on macOS devices. The IT team needs to ensure that the latest version of Teams is always installed and automatically updated.\n\nQuestion:\nWhat is the recommended way to deploy Teams on managed macOS devices?",
+    "choices": [
+      "Deploy the Teams .dmg file as a macOS LOB app",
+      "Deploy Teams as a macOS app from the Mac App Store via Intune",
+      "Deploy the new Microsoft Teams app as a Microsoft 365 app for macOS",
+      "Use a shell script to download and install Teams from Microsoft's CDN"
+    ],
+    "answer": [2],
+    "explanations": [
+      "Incorrect. Deploying as a .dmg LOB app works for initial installation, but LOB apps don't automatically update. You would need to manually update the app in Intune for each new version.",
+      "Incorrect. Teams is not distributed through the Mac App Store. It's available directly from Microsoft.",
+      "Correct. The new Microsoft Teams (Teams 2.0) for macOS can be deployed through Intune as a Microsoft 365 app for macOS. This deployment method ensures the app is automatically updated when Microsoft releases new versions, without requiring admin intervention.",
+      "Incorrect. Shell script deployment works but doesn't provide automatic updates, installation tracking, or centralized management through Intune."
+    ],
+    "tip": "macOS Teams deployment: Microsoft 365 app for macOS (auto-updates, managed) > LOB .dmg (no auto-update). For the new Teams, use the M365 app deployment to ensure ongoing updates."
+  },
+  {
+    "id": "MS102-R4-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The IT team wants to view comprehensive reports about device compliance trends, app installation status, and policy assignment failures. They need to export reports for management review.\n\nQuestion:\nWhere should they access these reports?",
+    "choices": [
+      "Devices > Monitor section — provides per-policy monitoring views",
+      "Reports blade in the Intune admin center — provides comprehensive organizational reports with export capabilities",
+      "Microsoft 365 admin center > Reports > Usage",
+      "Azure portal > Azure AD > Devices > Activity"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. The Monitor section under Devices provides per-policy status views (which devices succeeded, failed, conflicted for a specific policy). It's useful for troubleshooting individual policies but doesn't provide comprehensive organizational reports.",
+      "Correct. The Reports blade in the Intune admin center provides comprehensive reports: Device compliance reports, App install status, Policy assignment failures, Feature update reports, and more. Reports can be filtered, sorted, and exported to CSV for management review.",
+      "Incorrect. Microsoft 365 admin center Reports show usage data (active users, email activity, OneDrive usage), not Intune device management reports.",
+      "Incorrect. Azure AD Devices Activity shows device sign-in activity, not Intune management status like compliance, app installation, or policy assignment."
+    ],
+    "tip": "Intune reporting locations: Reports blade = comprehensive org-wide reports with export. Devices > Monitor = per-policy status. Devices > All devices > per device = individual device details. Use Reports for management-level reporting."
+  },
+  {
+    "id": "MS102-R4-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The company uses Windows devices and needs to configure network protection in Microsoft Defender for Endpoint. Network protection should block connections to known malicious domains and IP addresses, extending SmartScreen-like protection beyond the browser to all network traffic.\n\nQuestion:\nHow should you enable network protection?",
+    "choices": [
+      "Configure a Windows Firewall policy in Intune to block malicious IPs",
+      "Enable network protection in an endpoint security Attack surface reduction policy and set it to Block mode",
+      "Configure Safe Links in Defender for Office 365 to scan all URLs",
+      "Deploy a third-party DNS filtering solution"
+    ],
+    "answer": [1],
+    "explanations": [
+      "Incorrect. Windows Firewall blocks traffic based on IP, port, and protocol rules. It requires a manually maintained list of malicious IPs. Network protection uses Microsoft's threat intelligence automatically.",
+      "Correct. Network protection is configured through endpoint security Attack surface reduction policies in Intune. Enable network protection and set it to Block mode. It extends SmartScreen-like protection to all HTTP(S) traffic system-wide, not just Microsoft Edge. It uses Microsoft's threat intelligence to block connections to malicious domains and IPs.",
+      "Incorrect. Safe Links protects against malicious URLs in emails and Office documents. It does not provide system-wide network-level protection against malicious domains.",
+      "Incorrect. While DNS filtering can block malicious domains, network protection is a built-in Defender for Endpoint feature that doesn't require third-party solutions."
+    ],
+    "tip": "Network protection: System-wide SmartScreen. Blocks low-reputation/malicious network connections for ALL apps (not just Edge). Modes: Audit (log only), Block (prevent + log), Disabled. Part of ASR policy in Intune."
+  }
+]
