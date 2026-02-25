@@ -1,0 +1,1102 @@
+[
+  {
+    "id": "MS102-R4-001",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft Intune to manage 2,000 Windows 11 devices. The IT team wants to allow standard users to elevate specific approved applications to run with administrator privileges without giving them permanent local admin rights.\n\nQuestion:\nWhich Intune feature should you use?",
+    "choices": [
+      "Endpoint Privilege Management (EPM) — configure elevation rules for specific applications",
+      "Local user group membership policy to add users to the local Administrators group",
+      "Windows Hello for Business with admin privilege elevation",
+      "Run the apps as SYSTEM using Intune PowerShell scripts"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Endpoint Privilege Management (part of the Intune Suite) allows standard users to run approved applications with elevated (admin) privileges without granting permanent local admin rights. You create elevation rules that specify which apps can be elevated, approval requirements, and auditing.",
+      "Incorrect. Adding users to the local Administrators group gives them permanent admin rights for ALL applications, not just specific approved ones. This violates the principle of least privilege.",
+      "Incorrect. Windows Hello for Business provides passwordless authentication. It does not provide application-level privilege elevation.",
+      "Incorrect. Running apps as SYSTEM via scripts is a deployment-time action, not a user-initiated elevation. Users cannot trigger SYSTEM-level execution on demand."
+    ],
+    "tip": "Endpoint Privilege Management: Standard user + approved app = temporary elevation. Types: automatic (silent), user confirmed (user approves), support approved (IT approves). Part of Intune Suite add-on."
+  },
+  {
+    "id": "MS102-R4-002",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft 365 E5 with Microsoft Defender for Endpoint. The security team wants to use Microsoft Tunnel to provide VPN access to on-premises resources for iOS and Android devices. The devices are NOT enrolled in Intune — they use MAM-only (app protection without enrollment).\n\nQuestion:\nCan Microsoft Tunnel be used with MAM-only devices?",
+    "choices": [
+      "No. Microsoft Tunnel requires full device enrollment in Intune",
+      "Yes. Microsoft Tunnel for MAM allows unenrolled iOS and Android devices to access on-premises resources through the Tunnel Gateway using the Defender for Endpoint app",
+      "Yes, but only for iOS devices. Android devices must be enrolled",
+      "No. Microsoft Tunnel requires a VPN device configuration profile which needs enrollment"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Microsoft Tunnel for MAM was introduced to support unenrolled devices. It does not require full device enrollment.",
+      "Correct. Microsoft Tunnel for MAM enables unenrolled iOS and Android devices to use Microsoft Tunnel for per-app VPN access to on-premises resources. The Defender for Endpoint app acts as the tunnel client. This is configured through app configuration policies targeting managed apps (not managed devices).",
+      "Incorrect. Microsoft Tunnel for MAM supports both iOS and Android unenrolled devices.",
+      "Incorrect. While enrolled devices use VPN device configuration profiles, MAM-only devices use app configuration policies for managed apps. No device enrollment is needed."
+    ],
+    "tip": "Microsoft Tunnel: Enrolled devices → VPN device config profile. MAM-only (unenrolled) → app configuration policy + Defender for Endpoint as tunnel client. Both use the same Tunnel Gateway server."
+  },
+  {
+    "id": "MS102-R4-003",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Windows 365 Cloud PCs for Trey Research using Microsoft Intune. The company provisions 200 Cloud PCs using a Windows 365 Enterprise license. The IT team needs to resize Cloud PCs for the Engineering team from 4 vCPU/16 GB RAM to 8 vCPU/32 GB RAM due to increased workload requirements.\n\nQuestion:\nHow should you resize the Cloud PCs?",
+    "choices": [
+      "Delete the existing Cloud PCs and reprovision with the new size — resizing is not supported",
+      "In the Intune admin center, navigate to Devices > Windows 365 > All Cloud PCs > select devices > Resize, and choose the new size",
+      "Modify the provisioning policy to use the larger size — existing Cloud PCs will automatically resize",
+      "Contact Microsoft support to resize the Cloud PCs on the backend"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Resizing is supported for Windows 365 Enterprise Cloud PCs. Deleting and reprovisioning is unnecessary and would lose user data and configurations.",
+      "Correct. Windows 365 Enterprise Cloud PCs can be resized from the Intune admin center. Select the Cloud PCs you want to resize, choose the Resize action, and select the target size (e.g., 8 vCPU/32 GB). The Cloud PC is resized while preserving user data and installed applications.",
+      "Incorrect. Modifying the provisioning policy affects only newly provisioned Cloud PCs. Existing Cloud PCs are not automatically resized when the policy changes.",
+      "Incorrect. Cloud PC resizing is a self-service admin action in the Intune portal. No Microsoft support contact is needed."
+    ],
+    "tip": "Windows 365 resize: Admin action in Intune portal. Preserves data and apps. Can resize up or down. User experiences a brief disconnection during resize. Only available for Enterprise, not Business SKU."
+  },
+  {
+    "id": "MS102-R4-004",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nLitware Inc. uses Microsoft Intune with 1,000 Windows devices. The IT team has multiple administrators managing different regions. You need to ensure:\n- US admins can only manage devices in the US\n- EU admins can only manage devices in the EU\n- Global admins can manage all devices\n\nQuestion:\nWhich Intune feature provides this delegation?",
+    "choices": [
+      "Azure AD administrative units",
+      "Intune scope tags assigned to device groups and admin roles",
+      "Conditional access policies restricting admin portal access by location",
+      "Separate Intune tenants for each region"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Azure AD administrative units delegate user and group management in Azure AD, not Intune device/policy management. They don't control which devices or policies an Intune admin can see.",
+      "Correct. Scope tags in Intune provide role-based access control for devices, policies, and apps. Create scope tags (e.g., 'US', 'EU'), assign them to device groups and configuration profiles, then assign the appropriate scope tag to each admin's role assignment. US admins with the 'US' scope tag only see US devices and policies. Global admins get the 'Default' scope tag which sees everything.",
+      "Incorrect. Conditional access controls who can access the portal, not what they can see within it. All admins need portal access; the restriction is on which devices/policies they manage.",
+      "Incorrect. Separate tenants create completely isolated environments, which is overkill for regional delegation. It also prevents centralized reporting and policy management."
+    ],
+    "tip": "Intune RBAC: Role (what actions) + Scope group (which users/devices) + Scope tag (which objects visible). Scope tags are the key to regional delegation without tenant separation."
+  },
+  {
+    "id": "MS102-R4-005",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nAdventure Works uses Microsoft 365 Business Premium with 200 users and 200 Windows devices. The company does not have Microsoft 365 E5 or standalone Defender for Endpoint Plan 2.\n\nThe security team wants to configure endpoint security policies in Intune including antivirus, firewall, and attack surface reduction.\n\nQuestion:\nWhich Defender for Endpoint capabilities are available with Microsoft 365 Business Premium?",
+    "choices": [
+      "Full Defender for Endpoint Plan 2 including EDR, advanced hunting, and automated investigation",
+      "Defender for Endpoint Plan 1 only: next-generation protection, ASR rules, device control — no EDR or advanced hunting",
+      "Defender for Business: includes EDR capabilities, automated investigation, simplified management — purpose-built for SMB",
+      "No Defender for Endpoint capabilities — only basic Windows Defender Antivirus"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. Plan 2 is included in Microsoft 365 E5, not Business Premium.",
+      "Incorrect. Plan 1 is included in Microsoft 365 E3 (as an add-on). Business Premium includes Defender for Business, which is a different SKU.",
+      "Correct. Microsoft 365 Business Premium includes Microsoft Defender for Business, which provides: next-generation protection, attack surface reduction, EDR (endpoint detection and response), automated investigation and remediation, vulnerability management, and a simplified security management experience designed for small and medium businesses. It's more capable than Plan 1 but with a simplified interface.",
+      "Incorrect. Business Premium includes Defender for Business, which provides significant endpoint security capabilities beyond basic antivirus."
+    ],
+    "tip": "Defender licensing: Business Premium → Defender for Business (simplified EDR + prevention). E3 → Plan 1 add-on (prevention only). E5 → Plan 2 (full EDR + hunting + analytics). Defender for Business is surprisingly capable for SMB."
+  },
+  {
+    "id": "MS102-R4-006",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Northwind Traders. The company deploys Universal Print to replace on-premises print servers. 500 Windows devices need access to corporate printers registered in Universal Print.\n\nQuestion:\nHow do you deploy Universal Print printers to Windows devices via Intune?",
+    "choices": [
+      "Create a device configuration profile for printer provisioning under Devices > Configuration profiles > Create > Universal Print",
+      "Deploy a PowerShell script that runs Add-Printer for each Universal Print printer",
+      "Users must manually add printers via Windows Settings > Printers & scanners > Add a printer",
+      "Configure a printer deployment in Universal Print admin center, which pushes printers to devices automatically"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. In Intune, you can create a device configuration profile for Universal Print printer provisioning. Navigate to Devices > Configuration profiles > Create profile > Windows 10 and later > Templates > Universal Print. Select the Universal Print printers to deploy and assign the profile to device or user groups.",
+      "Incorrect. While PowerShell scripts could add printers, using the native Intune Universal Print profile is the supported and scalable approach.",
+      "Incorrect. Manual printer addition doesn't scale to 500 devices and doesn't ensure consistent configuration.",
+      "Incorrect. Universal Print admin center manages printers and connectors but doesn't push printer deployments to devices. Deployment is done through Intune."
+    ],
+    "tip": "Universal Print deployment: Register printers in Universal Print → share them → deploy to devices via Intune Universal Print profile. No print server needed. Printers appear automatically on targeted devices."
+  },
+  {
+    "id": "MS102-R4-007",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nContoso uses Microsoft 365 E5 and has partner organizations they collaborate with via Azure AD B2B. The security team needs to configure cross-tenant access settings so that:\n- Users from partner org Fabrikam can access Contoso's SharePoint and Teams\n- Fabrikam users must satisfy Contoso's MFA and device compliance requirements\n- Contoso trusts Fabrikam's MFA claims (so Fabrikam users don't need to re-register MFA in Contoso)\n\nQuestion:\nWhere do you configure trust settings for Fabrikam's MFA claims?",
+    "choices": [
+      "Microsoft Entra admin center > External Identities > Cross-tenant access settings > Fabrikam (partner) > Inbound access > Trust settings > Trust MFA from the partner tenant",
+      "Conditional access policy > Grant > Require MFA > Exclude Fabrikam users",
+      "Microsoft Entra admin center > External Identities > External collaboration settings > Allow MFA passthrough",
+      "Azure AD B2B > Trust policies > Add trusted MFA provider"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. In Cross-tenant access settings, add Fabrikam as a partner organization. In the Inbound access settings for Fabrikam, configure Trust settings to 'Trust multi-factor authentication from Azure AD tenant'. This allows Contoso to accept Fabrikam's MFA claims, so Fabrikam users authenticated with MFA in their home tenant won't be prompted for MFA again in Contoso.",
+      "Incorrect. Excluding Fabrikam users from MFA removes the MFA requirement entirely rather than trusting their home tenant's MFA. This reduces security.",
+      "Incorrect. There is no 'Allow MFA passthrough' setting in External collaboration settings. MFA trust is configured per-partner in Cross-tenant access settings.",
+      "Incorrect. There is no 'Azure AD B2B > Trust policies' configuration. MFA trust is managed through Cross-tenant access settings."
+    ],
+    "tip": "Cross-tenant MFA trust: Cross-tenant access settings > Partner > Inbound > Trust settings. Trust MFA = accept partner's MFA claims. Trust compliant devices = accept partner's device compliance. Trust hybrid Azure AD joined = accept partner's hybrid join status."
+  },
+  {
+    "id": "MS102-R4-008",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The company uses Intune Remote Help to allow help desk staff to remotely view and control users' Windows devices for troubleshooting. A help desk technician reports they cannot establish a Remote Help session with a user's device.\n\nThe user's device is enrolled in Intune and connected to the internet.\n\nQuestion:\nWhat is the most likely cause?",
+    "choices": [
+      "The Remote Help app is not installed on the user's device",
+      "The help desk technician does not have the correct Intune RBAC role (Remote Help operator or equivalent)",
+      "Remote Help requires the devices to be on the same network",
+      "Remote Help only works with Azure AD joined devices, not hybrid Azure AD joined"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Remote Help requires the Remote Help application to be installed on the target device. If it's not deployed via Intune or installed manually, sessions cannot be established. Deploy the Remote Help app through Intune as a Win32 app or download it from Microsoft.",
+      "Incorrect. While RBAC roles control Remote Help permissions, a missing role would show a permission error, not a connection failure. The most common cause of connection issues is the app not being installed.",
+      "Incorrect. Remote Help works over the internet and does not require devices to be on the same network. It uses cloud-based relay services.",
+      "Incorrect. Remote Help works with Azure AD joined, hybrid Azure AD joined, and Azure AD registered devices enrolled in Intune."
+    ],
+    "tip": "Remote Help prerequisites: (1) Remote Help app installed on target device. (2) Helper has RBAC role with Remote Help permissions. (3) Device enrolled in Intune. (4) Intune Suite or Remote Help add-on license. (5) Internet connectivity."
+  },
+  {
+    "id": "MS102-R4-009",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company wants to send custom notification messages to users' devices through the Company Portal. For example, notifying all users about a mandatory password change or an upcoming system maintenance window.\n\nQuestion:\nHow should you send these notifications?",
+    "choices": [
+      "Create an organizational message in Intune under Tenant administration > Organizational messages",
+      "Send a custom notification in Intune under Tenant administration > Custom notifications > send to device groups",
+      "Configure a push notification in the Company Portal app settings",
+      "Create a compliance policy notification action"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Organizational messages display branded messages on the Windows desktop (taskbar, notification area, Get Started app). They are not push notifications through the Company Portal app.",
+      "Correct. Custom notifications in Intune allow you to send push notification messages to users' devices through the Company Portal and Intune apps. Navigate to Tenant administration > Custom notifications, compose the message, and send it to selected device groups. Users receive the notification on their devices.",
+      "Incorrect. There are no push notification settings in the Company Portal app configuration. Custom notifications are managed centrally through the Intune admin center.",
+      "Incorrect. Compliance policy notification actions send emails when devices become noncompliant. They are automated responses to compliance state changes, not on-demand custom messages."
+    ],
+    "tip": "Intune notifications: Custom notifications = on-demand push messages via Company Portal. Organizational messages = branded desktop messages (Windows). Compliance notifications = automated emails on noncompliance."
+  },
+  {
+    "id": "MS102-R4-010",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Tailspin Toys. The company needs to create a custom compliance policy for Windows devices that checks whether a specific registry key exists. The built-in compliance settings don't include this check.\n\nQuestion:\nHow should you implement this custom compliance check?",
+    "choices": [
+      "Create a Proactive remediation script to detect the registry key and mark the device as noncompliant",
+      "Create a custom compliance policy using a PowerShell detection script that returns JSON output, paired with a custom compliance JSON schema",
+      "Modify the built-in compliance policy to include a custom registry check",
+      "Use Microsoft Defender for Endpoint to monitor the registry key and create a compliance integration"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Proactive remediations detect and fix issues but operate independently from the compliance framework. They cannot set a device's compliance state.",
+      "Correct. Intune supports custom compliance policies using PowerShell discovery scripts. You create a PowerShell script that checks for the registry key and returns results as JSON (e.g., {\"RegistryKeyExists\": true}). Then create a JSON compliance file that defines the rule (e.g., RegistryKeyExists must be true). Upload both to the compliance policy. The script runs on devices and the JSON schema evaluates the results.",
+      "Incorrect. Built-in compliance policies have fixed settings. You cannot add custom registry checks to them. Custom compliance policies are a separate feature.",
+      "Incorrect. While Defender for Endpoint monitors device health, it doesn't directly integrate with Intune custom compliance. Custom compliance uses PowerShell scripts native to Intune."
+    ],
+    "tip": "Custom compliance in Intune: PowerShell script (discovery) + JSON schema (evaluation rules). Script outputs JSON → schema evaluates → compliant/noncompliant. Use for any check not covered by built-in settings."
+  },
+  {
+    "id": "MS102-R4-011",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company uses assignment filters to target policies to specific devices. You need to create a filter that targets only corporate-owned Windows devices manufactured by Microsoft (Surface devices).\n\nQuestion:\nWhich filter rule syntax should you use?",
+    "choices": [
+      "(device.manufacturer -eq \"Microsoft Corporation\") and (device.deviceOwnership -eq \"Corporate\")",
+      "(device.deviceModel -startsWith \"Surface\") and (device.managementType -eq \"MDM\")",
+      "(device.operatingSystem -eq \"Windows\") and (device.manufacturer -contains \"Microsoft\")",
+      "(device.enrollmentProfileName -eq \"Corporate\") and (device.model -eq \"Surface\")"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. The filter uses device.manufacturer (which is 'Microsoft Corporation' for Surface devices) combined with device.deviceOwnership to filter corporate-owned devices only. This accurately targets Surface devices that are corporate-owned.",
+      "Incorrect. While device.deviceModel with startsWith 'Surface' could work for model filtering, device.managementType isn't the correct property for ownership filtering. Also, non-corporate MDM-enrolled devices would be included.",
+      "Incorrect. device.operatingSystem -eq 'Windows' is redundant if the filter is already for Windows platform. The -contains operator is not available for all filter properties, and 'Microsoft' could match other manufacturers.",
+      "Incorrect. enrollmentProfileName filters by the Autopilot profile name, not ownership type. device.model doesn't match exact Surface model names with just 'Surface'."
+    ],
+    "tip": "Assignment filter properties: device.manufacturer = hardware vendor. device.deviceOwnership = Corporate/Personal. device.deviceModel = specific model. device.operatingSystemVersion = OS build. Combine with -and/-or for complex rules."
+  },
+  {
+    "id": "MS102-R4-012",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft Intune with Windows devices. The security team wants to configure controlled folder access in Microsoft Defender to protect important folders (Documents, Pictures, Desktop) from ransomware and unauthorized modification by untrusted applications.\n\nQuestion:\nWhere should you configure controlled folder access in Intune?",
+    "choices": [
+      "Endpoint security > Attack surface reduction > Create a policy with Controlled folder access settings",
+      "Device configuration > Endpoint protection > Microsoft Defender Exploit Guard > Controlled folder access",
+      "Endpoint security > Antivirus > Microsoft Defender Antivirus settings",
+      "Both A and B are valid locations, but Endpoint security > Attack surface reduction is the recommended path"
+    ],
+    "answer": [
+      3
+    ],
+    "explanations": [
+      "Partially correct. This is the recommended location.",
+      "Partially correct. This also works but is the older configuration path.",
+      "Incorrect. Antivirus policies configure real-time protection, scan schedules, and exclusions. Controlled folder access is part of attack surface reduction, not antivirus settings.",
+      "Correct. Controlled folder access can be configured through either Endpoint security > Attack surface reduction (recommended) or Device configuration > Endpoint protection > Exploit Guard. The Endpoint security path is the modern, recommended approach. Both configure the same CSP settings."
+    ],
+    "tip": "Controlled folder access: Protects Documents, Desktop, Pictures, and custom folders from unauthorized changes. Modes: Disabled, Audit, Block, Audit only. Allow specific apps through exclusions. Part of ASR in Intune."
+  },
+  {
+    "id": "MS102-R4-013",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company deploys a managed installer policy to designate the Intune management extension as a managed installer for Windows Defender Application Control (WDAC). This means apps deployed through Intune are automatically trusted by WDAC.\n\nA user installs an application from the internet (not deployed by Intune). WDAC blocks the application.\n\nQuestion:\nWhy is the user's application blocked?",
+    "choices": [
+      "The application is malicious and Defender detected it",
+      "The application was not deployed through Intune (the managed installer), so WDAC does not trust it. Only apps installed via the managed installer are automatically trusted.",
+      "The user's device is not compliant with the compliance policy",
+      "The application's publisher certificate is expired"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. WDAC blocking is based on trust policy, not malware detection. Even a legitimate application would be blocked if it wasn't deployed through a trusted source.",
+      "Correct. When the Intune management extension is configured as a managed installer, WDAC automatically trusts any application installed through Intune. Applications installed from other sources (user downloads, USB, etc.) are not trusted and will be blocked unless they match another WDAC allow rule (publisher, path, file hash).",
+      "Incorrect. Device compliance status does not affect WDAC enforcement. WDAC operates independently of the Intune compliance framework.",
+      "Incorrect. While certificate issues can cause WDAC blocks, the most likely cause in this scenario is that the app was installed outside the managed installer (Intune), so WDAC has no trust basis for it."
+    ],
+    "tip": "Managed installer + WDAC: Apps from Intune = automatically trusted. Apps from other sources = blocked unless explicitly allowed by WDAC rules. This provides app control without maintaining exhaustive allow lists."
+  },
+  {
+    "id": "MS102-R4-014",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company wants to deploy driver updates for Windows devices through Intune rather than allowing Windows Update to install drivers automatically. Some driver updates have caused blue screens on specific device models in the past.\n\nQuestion:\nHow should you manage driver updates in Intune?",
+    "choices": [
+      "Use update rings to defer all driver updates indefinitely",
+      "Use Devices > Windows > Driver updates for Windows 10 and later to review, approve, and deploy specific driver updates",
+      "Block driver updates in Windows Update for Business and deploy drivers manually as Win32 apps",
+      "Use Microsoft Configuration Manager for driver management — Intune does not support driver updates"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Update rings can pause updates temporarily but don't provide granular control over individual driver updates. You cannot defer specific drivers while allowing others.",
+      "Correct. Intune provides a dedicated Driver updates management feature under Devices > Windows > Driver updates. It shows available driver updates for your devices, allows you to review each driver, approve or decline specific drivers, and deploy approved drivers to targeted groups. This gives granular control over which drivers are installed.",
+      "Incorrect. While blocking all driver updates and manually deploying is possible, it's highly impractical. The native Intune driver update management provides a much better experience with approval workflows.",
+      "Incorrect. Intune supports driver update management natively. ConfigMgr is not required for this capability."
+    ],
+    "tip": "Intune driver management: Devices > Windows > Driver updates. Review available drivers → approve/decline → deploy to groups. Requires Windows Update for Business deployment service. Provides per-driver control."
+  },
+  {
+    "id": "MS102-R4-015",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The security team wants to configure Microsoft Defender SmartScreen to:\n- Block users from accessing known phishing sites in Microsoft Edge\n- Block users from downloading malicious files\n- Prevent users from overriding SmartScreen warnings\n\nQuestion:\nWhich Intune policy should you configure?",
+    "choices": [
+      "Endpoint security > Attack surface reduction policy with SmartScreen settings",
+      "Device configuration > Settings Catalog > Microsoft Edge > SmartScreen settings (SmartScreenEnabled, PreventSmartScreenPromptOverride)",
+      "App protection policy for Microsoft Edge with URL filtering",
+      "Both A and B can configure SmartScreen, and the Settings Catalog provides the most granular Edge-specific SmartScreen controls"
+    ],
+    "answer": [
+      3
+    ],
+    "explanations": [
+      "Partially correct. ASR policies include SmartScreen enforcement settings for Windows devices.",
+      "Partially correct. The Settings Catalog provides Edge-specific SmartScreen settings including override prevention.",
+      "Incorrect. App protection policies control data protection within apps, not browser security features like SmartScreen.",
+      "Correct. SmartScreen can be configured through multiple Intune paths: (1) Endpoint security ASR policies configure Windows SmartScreen for apps and files. (2) Settings Catalog > Microsoft Edge configures Edge-specific SmartScreen including SmartScreenEnabled, PreventSmartScreenPromptOverride, SmartScreenForTrustedDownloadsEnabled. The Settings Catalog provides the most granular Edge-specific controls for preventing SmartScreen override."
+    ],
+    "tip": "SmartScreen configuration: Windows-level (ASR policy) = protects against malicious apps/files OS-wide. Edge-level (Settings Catalog) = browser-specific phishing/download protection. Configure both for defense in depth."
+  },
+  {
+    "id": "MS102-R4-016",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Datum Corporation. The company has 500 stale device records in Intune — devices that haven't checked in for over 90 days. The IT team wants to automatically clean up these stale records.\n\nQuestion:\nWhich Intune feature handles automatic device cleanup?",
+    "choices": [
+      "Create a dynamic device group that excludes devices not seen in 90 days, then manually delete them",
+      "Configure device clean-up rules under Devices > Device clean-up rules to automatically delete devices that haven't checked in for a specified number of days",
+      "Run a PowerShell script using Microsoft Graph API to delete stale device records on a schedule",
+      "Configure a compliance policy that retires devices not seen in 90 days"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Dynamic groups can filter devices, but you would still need to manually select and delete them. This is not automated cleanup.",
+      "Correct. Intune provides built-in device clean-up rules under Devices > Device clean-up rules. Configure the rule to delete devices that haven't checked in for a specified number of days (e.g., 90 days). Intune automatically removes matching device records on a regular schedule.",
+      "Incorrect. While Graph API scripts could automate cleanup, Intune provides this capability natively without custom scripting.",
+      "Incorrect. Compliance policies evaluate device state and can mark devices as noncompliant, but they don't have an action to retire or delete devices based on last check-in time."
+    ],
+    "tip": "Device clean-up rules: Devices > Device clean-up rules. Set days since last check-in (30-270 days). Runs automatically. Deletes the device record from Intune (does NOT wipe the physical device)."
+  },
+  {
+    "id": "MS102-R4-017",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. The company integrates Intune with Azure Monitor/Log Analytics to export Intune diagnostic data for long-term retention and advanced analysis.\n\nThe IT team wants to query Intune device compliance data using KQL in the Log Analytics workspace.\n\nQuestion:\nWhat must you configure first?",
+    "choices": [
+      "Export Intune data to a Log Analytics workspace using Diagnostic settings under Tenant administration > Diagnostics settings in Intune",
+      "Install the Intune Data Warehouse connector in Azure Monitor",
+      "Configure Microsoft Graph API to push Intune data to Log Analytics",
+      "Enable the Intune reporting API and configure Azure Data Factory to ingest data"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. In the Intune admin center, navigate to Tenant administration > Diagnostics settings. Create a diagnostic setting that sends Intune logs (operational logs, device compliance, device configuration, etc.) to an Azure Monitor Log Analytics workspace. Once configured, data flows automatically and can be queried using KQL.",
+      "Incorrect. There is no 'Intune Data Warehouse connector' for Azure Monitor. The integration uses Intune's built-in diagnostic settings feature.",
+      "Incorrect. While Microsoft Graph API provides programmatic access to Intune data, the native diagnostic settings feature is the supported method for Log Analytics integration.",
+      "Incorrect. The Intune reporting API and Data Warehouse are separate features for reporting. Log Analytics integration uses diagnostic settings, not the reporting API."
+    ],
+    "tip": "Intune → Log Analytics: Tenant admin > Diagnostics settings > send to Log Analytics workspace. Data categories: Operational, DeviceComplianceOrg, Devices, AuditLogs. Then query with KQL in Azure Monitor."
+  },
+  {
+    "id": "MS102-R4-018",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware Inc. The company wants to deploy Microsoft Teams on macOS devices. The IT team needs to ensure that the latest version of Teams is always installed and automatically updated.\n\nQuestion:\nWhat is the recommended way to deploy Teams on managed macOS devices?",
+    "choices": [
+      "Deploy the Teams .dmg file as a macOS LOB app",
+      "Deploy Teams as a macOS app from the Mac App Store via Intune",
+      "Deploy the new Microsoft Teams app as a Microsoft 365 app for macOS",
+      "Use a shell script to download and install Teams from Microsoft's CDN"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. Deploying as a .dmg LOB app works for initial installation, but LOB apps don't automatically update. You would need to manually update the app in Intune for each new version.",
+      "Incorrect. Teams is not distributed through the Mac App Store. It's available directly from Microsoft.",
+      "Correct. The new Microsoft Teams (Teams 2.0) for macOS can be deployed through Intune as a Microsoft 365 app for macOS. This deployment method ensures the app is automatically updated when Microsoft releases new versions, without requiring admin intervention.",
+      "Incorrect. Shell script deployment works but doesn't provide automatic updates, installation tracking, or centralized management through Intune."
+    ],
+    "tip": "macOS Teams deployment: Microsoft 365 app for macOS (auto-updates, managed) > LOB .dmg (no auto-update). For the new Teams, use the M365 app deployment to ensure ongoing updates."
+  },
+  {
+    "id": "MS102-R4-019",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The IT team wants to view comprehensive reports about device compliance trends, app installation status, and policy assignment failures. They need to export reports for management review.\n\nQuestion:\nWhere should they access these reports?",
+    "choices": [
+      "Devices > Monitor section — provides per-policy monitoring views",
+      "Reports blade in the Intune admin center — provides comprehensive organizational reports with export capabilities",
+      "Microsoft 365 admin center > Reports > Usage",
+      "Azure portal > Azure AD > Devices > Activity"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. The Monitor section under Devices provides per-policy status views (which devices succeeded, failed, conflicted for a specific policy). It's useful for troubleshooting individual policies but doesn't provide comprehensive organizational reports.",
+      "Correct. The Reports blade in the Intune admin center provides comprehensive reports: Device compliance reports, App install status, Policy assignment failures, Feature update reports, and more. Reports can be filtered, sorted, and exported to CSV for management review.",
+      "Incorrect. Microsoft 365 admin center Reports show usage data (active users, email activity, OneDrive usage), not Intune device management reports.",
+      "Incorrect. Azure AD Devices Activity shows device sign-in activity, not Intune management status like compliance, app installation, or policy assignment."
+    ],
+    "tip": "Intune reporting locations: Reports blade = comprehensive org-wide reports with export. Devices > Monitor = per-policy status. Devices > All devices > per device = individual device details. Use Reports for management-level reporting."
+  },
+  {
+    "id": "MS102-R4-020",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The company uses Windows devices and needs to configure network protection in Microsoft Defender for Endpoint. Network protection should block connections to known malicious domains and IP addresses, extending SmartScreen-like protection beyond the browser to all network traffic.\n\nQuestion:\nHow should you enable network protection?",
+    "choices": [
+      "Configure a Windows Firewall policy in Intune to block malicious IPs",
+      "Enable network protection in an endpoint security Attack surface reduction policy and set it to Block mode",
+      "Configure Safe Links in Defender for Office 365 to scan all URLs",
+      "Deploy a third-party DNS filtering solution"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Windows Firewall blocks traffic based on IP, port, and protocol rules. It requires a manually maintained list of malicious IPs. Network protection uses Microsoft's threat intelligence automatically.",
+      "Correct. Network protection is configured through endpoint security Attack surface reduction policies in Intune. Enable network protection and set it to Block mode. It extends SmartScreen-like protection to all HTTP(S) traffic system-wide, not just Microsoft Edge. It uses Microsoft's threat intelligence to block connections to malicious domains and IPs.",
+      "Incorrect. Safe Links protects against malicious URLs in emails and Office documents. It does not provide system-wide network-level protection against malicious domains.",
+      "Incorrect. While DNS filtering can block malicious domains, network protection is a built-in Defender for Endpoint feature that doesn't require third-party solutions."
+    ],
+    "tip": "Network protection: System-wide SmartScreen. Blocks low-reputation/malicious network connections for ALL apps (not just Edge). Modes: Audit (log only), Block (prevent + log), Disabled. Part of ASR policy in Intune."
+  },
+  {
+    "id": "MS102-R4-021",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company wants to provision Windows 365 Cloud PCs for 100 new remote workers. Each Cloud PC needs:\n- Azure AD join (no hybrid)\n- Connection to the corporate network via Azure VPN for access to on-premises file shares\n- A specific image with pre-installed LOB applications\n\nQuestion:\nWhat must you configure in the Windows 365 provisioning policy?",
+    "choices": [
+      "Select Azure AD join, choose a Microsoft-hosted network connection (no VPN needed), select a custom image uploaded to Intune",
+      "Select Azure AD join, configure an Azure network connection (ANC) to a VNet with site-to-site VPN, select a custom image",
+      "Select Hybrid Azure AD join (required for on-premises access), configure an ANC, use the default Windows image",
+      "Select Azure AD join, configure a Microsoft Tunnel VPN profile, select a gallery image"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Correct but insufficient. A Microsoft-hosted network doesn't provide connectivity to the corporate network. Without an Azure network connection to a VNet with VPN, Cloud PCs cannot access on-premises file shares.",
+      "Correct. (1) Azure AD join as specified. (2) Azure network connection (ANC) pointing to an Azure VNet that has site-to-site VPN (or ExpressRoute) connectivity to the on-premises network — this provides access to file shares. (3) Custom image with the pre-installed LOB applications uploaded to Windows 365.",
+      "Incorrect. Hybrid Azure AD join is NOT required for on-premises access. Azure AD joined Cloud PCs can access on-premises resources through a VNet with VPN connectivity. Hybrid join adds unnecessary complexity.",
+      "Incorrect. Microsoft Tunnel is for mobile device VPN access, not Windows 365 network connectivity. Cloud PCs use Azure network connections (ANC) for network routing."
+    ],
+    "tip": "Windows 365 provisioning: Azure AD join + ANC (Azure network connection) to VNet with VPN = cloud PC with on-premises access. No hybrid join needed. Microsoft-hosted network = internet only, no on-prem access."
+  },
+  {
+    "id": "MS102-R4-022",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nFabrikam uses Microsoft Intune with 1,000 Windows 11 devices. The security team wants to use device health attestation to verify that devices booted securely before granting access to corporate resources. Specifically, they want to verify:\n- Secure Boot is enabled\n- BitLocker is enabled\n- Code integrity is enabled\n\nQuestion:\nHow should you implement this?",
+    "choices": [
+      "Create a device compliance policy with Windows Health Attestation settings requiring Secure Boot, BitLocker, and code integrity",
+      "Create a conditional access policy that checks device attestation directly",
+      "Configure Microsoft Defender for Endpoint health attestation monitoring",
+      "Deploy a PowerShell script that checks boot configuration and reports back"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Intune device compliance policies include Windows Health Attestation settings. These check device health data reported by the Windows Health Attestation Service (HAS) during boot. You can require: Secure Boot enabled, BitLocker enabled, code integrity enabled, and more. Noncompliant devices can be blocked by conditional access.",
+      "Incorrect. Conditional access evaluates conditions (user risk, device compliance, location) but doesn't directly check device attestation. It relies on the Intune compliance policy to evaluate health attestation and report the device as compliant or not.",
+      "Incorrect. Defender for Endpoint monitors security posture but doesn't provide the boot-time health attestation checks. Health attestation is a Windows + Intune compliance feature.",
+      "Incorrect. PowerShell scripts can check local configuration, but they run in the OS after boot and can be tampered with. Health attestation uses hardware-backed (TPM) measurements taken during the boot process, which is more secure and tamper-resistant."
+    ],
+    "tip": "Health attestation: TPM measures boot state → Windows Health Attestation Service validates → Intune compliance policy evaluates → conditional access enforces. Hardware-rooted trust, not software checks."
+  },
+  {
+    "id": "MS102-R4-023",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Woodgrove Bank. The company has 200 iOS devices managed through Apple Business Manager. The IT team needs to deploy a custom enterprise app that was built by a third-party vendor and distributed through Apple Business Manager as a custom app (not public App Store).\n\nQuestion:\nHow should you deploy this custom app?",
+    "choices": [
+      "Upload the .ipa file as a line-of-business app in Intune",
+      "Sync the custom app from Apple Business Manager to Intune using the VPP token, then assign it as a VPP app",
+      "Instruct users to download the app from the App Store using their Apple IDs",
+      "Deploy using a web clip that links to the app's download page"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Custom apps distributed through Apple Business Manager are not .ipa files you download and upload. They are managed through the VPP/ABM integration.",
+      "Correct. Custom apps distributed through Apple Business Manager are synced to Intune using the VPP (Volume Purchase Program) token. In Intune, the VPP token syncs available apps (both public and custom) from ABM. The custom app appears in the app list and can be assigned as a Required or Available VPP app with device-based licensing.",
+      "Incorrect. Custom apps from ABM are not available in the public App Store. They are distributed through the organization's VPP/ABM, not individual Apple IDs.",
+      "Incorrect. Web clips create home screen shortcuts. They cannot install native apps. Custom ABM apps must be deployed through the VPP integration."
+    ],
+    "tip": "Custom apps via ABM: Vendor publishes custom app to your ABM account → VPP token syncs to Intune → appears as VPP app → assign to devices. Same workflow as public App Store VPP apps."
+  },
+  {
+    "id": "MS102-R4-024",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailwind Traders. The company has 300 Android Open Source Project (AOSP) devices used in a manufacturing facility. These devices don't have Google Mobile Services (GMS) installed. The devices need to be managed by Intune for compliance and app deployment.\n\nQuestion:\nWhich enrollment method should you use?",
+    "choices": [
+      "Android Enterprise fully managed enrollment",
+      "Android device administrator enrollment",
+      "Android (AOSP) corporate-owned, userless enrollment via Intune",
+      "Android Enterprise dedicated device enrollment"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. Android Enterprise fully managed enrollment requires Google Mobile Services (GMS) on the device. AOSP devices without GMS cannot use Android Enterprise enrollment.",
+      "Incorrect. Device administrator enrollment is being deprecated and also relies on Google Play Services for Company Portal distribution. It's not suitable for AOSP devices.",
+      "Correct. Intune supports Android (AOSP) management for devices without Google Mobile Services. AOSP corporate-owned enrollment allows you to manage these devices, deploy compliance policies, and push apps without requiring GMS. This is designed for specialized devices like manufacturing floor tablets, ruggedized devices, and other non-GMS Android devices.",
+      "Incorrect. Dedicated device enrollment is an Android Enterprise enrollment mode that requires GMS. AOSP devices need the specific AOSP enrollment path."
+    ],
+    "tip": "Android without Google: AOSP enrollment in Intune. Supports corporate-owned userless (kiosk/shared) and user-associated modes. No GMS/Play Store required. Apps deployed as AOSP LOB apps."
+  },
+  {
+    "id": "MS102-R4-025",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The security team configures multiple endpoint security policies in Intune:\n- Security baseline for Windows\n- Endpoint security antivirus policy\n- Device configuration profile with Defender settings\n\nA Windows device receives conflicting values for the same setting from different policies.\n\nQuestion:\nHow does Intune resolve the conflict?",
+    "choices": [
+      "The security baseline always takes highest priority over all other policy types",
+      "The device configuration profile takes priority because it was created first",
+      "The most restrictive setting wins across all policy types",
+      "A conflict is reported — the setting falls back to its default value and the admin must resolve the conflict"
+    ],
+    "answer": [
+      3
+    ],
+    "explanations": [
+      "Incorrect. Security baselines do not automatically take priority over other policy types. In Intune, there is no built-in hierarchy between security baselines, endpoint security policies, and device configuration profiles.",
+      "Incorrect. Creation order does not determine policy priority in Intune. Unlike Group Policy, there is no 'last applied wins' or 'first created wins' rule.",
+      "Incorrect. Intune does not apply a 'most restrictive wins' rule when policies conflict across different policy types. This is a common misconception.",
+      "Correct. When the same setting is configured in multiple policy types with different values, Intune reports a conflict on the device. The conflicting setting typically falls back to its default value (or the device's existing value) until the admin resolves the conflict by removing the duplicate configuration. The device shows 'Conflict' status for the affected profiles."
+    ],
+    "tip": "Intune policy conflicts: Same setting in multiple policies → Conflict status → setting uses default value. Resolution: Remove the duplicate setting from one of the policies. Best practice: Configure each setting in only ONE policy type."
+  },
+  {
+    "id": "MS102-R4-026",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. The company is migrating from one Microsoft 365 tenant to another (tenant-to-tenant migration). 500 Windows devices enrolled in the source tenant need to be enrolled in the destination tenant.\n\nQuestion:\nWhat is required for the Windows devices during tenant migration?",
+    "choices": [
+      "Devices can be seamlessly moved between tenants using the Intune migration tool",
+      "Devices must be unenrolled from the source tenant, factory reset, and re-enrolled in the destination tenant",
+      "Devices must be unenrolled from the source tenant (Azure AD leave), then joined to the destination tenant's Azure AD and re-enrolled in Intune — factory reset is not always required for hybrid joined devices",
+      "Update the device's MDM enrollment URL to point to the new tenant"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. There is no 'Intune migration tool' for seamlessly moving devices between tenants. Tenant migration requires re-enrollment.",
+      "Incorrect. Factory reset is not always required. For Azure AD joined devices, you can leave the source Azure AD, join the destination Azure AD, and re-enroll in Intune. User data can be preserved if the process is done correctly.",
+      "Correct. For tenant migration: (1) Unenroll the device from the source tenant's Intune (may involve Azure AD leave/unjoin). (2) Join the device to the destination tenant's Azure AD. (3) Enroll in the destination tenant's Intune. Factory reset is one approach but not always required — for hybrid joined devices and some Azure AD joined scenarios, the migration can preserve user data.",
+      "Incorrect. You cannot simply change the MDM enrollment URL. Device enrollment is tied to the Azure AD tenant identity. The device must leave one tenant and join the other."
+    ],
+    "tip": "Tenant-to-tenant device migration: No seamless migration tool exists. Options: (1) Azure AD leave + rejoin + re-enroll (preserves data). (2) Wipe + Autopilot re-enroll (clean start). Plan for policy redeployment in the new tenant."
+  },
+  {
+    "id": "MS102-R4-027",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Trey Research. The Intune admin team has grown to 15 members. The IT director wants to track all administrative actions performed in the Intune admin center — who changed what policy, when, and what the old/new values were.\n\nQuestion:\nWhere can you view this information?",
+    "choices": [
+      "Intune admin center > Tenant administration > Audit logs",
+      "Microsoft Entra admin center > Monitoring > Audit logs",
+      "Microsoft Purview > Audit > Audit log search",
+      "All three locations contain relevant audit data, but Intune audit logs provide the most detailed Intune-specific change tracking"
+    ],
+    "answer": [
+      3
+    ],
+    "explanations": [
+      "Partially correct. Intune audit logs show detailed Intune admin actions including policy changes.",
+      "Partially correct. Entra audit logs show Azure AD-level changes that may include some Intune-related activities.",
+      "Partially correct. Purview audit logs capture a broad range of Microsoft 365 activities.",
+      "Correct. All three audit log sources contain relevant data. However, the Intune audit logs (Tenant administration > Audit logs) provide the most detailed, Intune-specific tracking including: who made changes, what was changed, old and new values for policy settings, timestamps, and the affected resources. Use this for Intune-specific admin action tracking."
+    ],
+    "tip": "Intune admin audit trail: Tenant admin > Audit logs. Shows: Activity (create/modify/delete), Target (which policy/profile), Actor (which admin), Date/time, Modified properties (old value → new value). Retained for 30 days by default."
+  },
+  {
+    "id": "MS102-R4-028",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company wants to use the Intune Company Portal to provide a self-service app catalog where users can browse and install optional applications. Some apps should be available to all users, while others should only be visible to specific departments.\n\nQuestion:\nHow do you make apps available in the Company Portal for specific user groups?",
+    "choices": [
+      "Assign apps as 'Available for enrolled devices' to the specific user or device groups — only members of those groups see the apps in Company Portal",
+      "Assign apps as 'Required' to all users — Required apps appear in Company Portal automatically",
+      "Create categories in Company Portal and assign apps to categories — users browse by category",
+      "Configure the Company Portal app layout in Intune to show specific apps to specific groups"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. When you assign an app with the intent 'Available for enrolled devices' (or 'Available with or without enrollment') to a specific user group, only members of that group see the app in the Company Portal. This is how you control app visibility per department.",
+      "Incorrect. Required apps are automatically installed without user interaction. While they appear in Company Portal for status tracking, they are not 'browse and install' self-service apps. Also, assigning to all users makes the app visible to everyone.",
+      "Incorrect. Categories help organize the Company Portal app catalog, but they don't control which users can see which apps. Visibility is controlled by app assignment groups.",
+      "Incorrect. Company Portal layout customization (featured apps, categories) affects how apps are presented, not which users can see them. Visibility is controlled at the app assignment level."
+    ],
+    "tip": "Company Portal app visibility: 'Available' assignment to a group = only that group sees it. 'Required' = auto-installs (all assigned users). Categories = organization within Company Portal. Layout = featured/promoted apps."
+  },
+  {
+    "id": "MS102-R4-029",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company uses endpoint analytics in Intune to measure device performance and user experience. The endpoint analytics startup performance score for the organization is 45/100, which is below the industry average.\n\nThe IT team needs to identify the top factors causing slow startup times.\n\nQuestion:\nWhich endpoint analytics report should they review?",
+    "choices": [
+      "Application reliability > App crash frequency",
+      "Startup performance > Model performance tab showing average boot time by device model",
+      "Work from anywhere > Device readiness scores",
+      "Resource performance > CPU and memory utilization"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Application reliability tracks app crashes and hangs, not startup performance. While crashing apps can affect user experience, they don't directly impact boot times.",
+      "Correct. The Startup performance report's Model performance tab shows average boot time broken down by device model. This helps identify which device models have the slowest startup times. Combined with the Startup processes tab (showing which processes take the longest during boot), the IT team can pinpoint the top factors: slow hardware models, Group Policy processing, startup scripts, or resource-heavy services.",
+      "Incorrect. Work from anywhere scores measure device readiness for modern management (cloud identity, cloud management, Windows version), not startup performance.",
+      "Incorrect. Resource performance shows CPU and memory utilization during normal operation, not during the boot process. It helps identify devices that are underperforming during use, not slow to start."
+    ],
+    "tip": "Endpoint analytics startup performance: Model performance = which devices are slow. Startup processes = which processes delay boot. OS boot time = core Windows boot duration. GP processing = Group Policy impact on sign-in."
+  },
+  {
+    "id": "MS102-R4-030",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. The company deploys passwordless authentication using FIDO2 security keys. Users should be able to sign in to Azure AD, Windows devices, and Microsoft 365 apps using only their FIDO2 key — no password required.\n\nBefore deploying to all users, the IT team wants to enable FIDO2 for a pilot group of 50 users.\n\nQuestion:\nWhere do you enable FIDO2 security keys for the pilot group?",
+    "choices": [
+      "Microsoft Entra admin center > Protection > Authentication methods > FIDO2 security key > Enable for target group (pilot users)",
+      "Microsoft Entra admin center > Security > Conditional access > Create a policy requiring FIDO2",
+      "Microsoft Intune admin center > Endpoint security > Account protection > FIDO2 configuration",
+      "Azure AD > User settings > Enable FIDO2 authentication for all users"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. FIDO2 security keys are enabled in the Entra admin center under Protection > Authentication methods. Select FIDO2 security key, enable it, and target the pilot group of 50 users. You can also restrict which FIDO2 key models are allowed using the AAGUID list.",
+      "Incorrect. Conditional access can require specific authentication strengths (including FIDO2), but it doesn't enable the FIDO2 authentication method itself. You must first enable FIDO2 in Authentication methods before it can be required by conditional access.",
+      "Incorrect. Intune Account protection manages Windows Hello for Business and LAPS, not FIDO2 authentication method enablement. FIDO2 is an Azure AD/Entra authentication feature.",
+      "Incorrect. There is no FIDO2 toggle in Azure AD User settings. Authentication methods are managed under Protection > Authentication methods with granular group targeting."
+    ],
+    "tip": "Passwordless deployment: (1) Enable method in Entra Authentication methods (target pilot group). (2) Users register their FIDO2 key. (3) Create conditional access policy requiring phishing-resistant MFA. (4) Expand to all users."
+  },
+  {
+    "id": "MS102-R4-031",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The IT helpdesk needs to troubleshoot why a specific user's device is not receiving a configuration profile. The helpdesk technician needs to see all policies assigned to the device, their delivery status, and any errors.\n\nQuestion:\nWhich Intune feature provides the most comprehensive troubleshooting view for a specific user's device?",
+    "choices": [
+      "Devices > All devices > select device > Device configuration > list of profiles",
+      "Tenant administration > Troubleshooting + support > select user > view devices, policies, apps, and status",
+      "Reports > Device configuration > Assignment failures",
+      "Devices > Monitor > Assignment status"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. The device's configuration profile list shows assigned profiles and their status, but it's limited to configuration profiles. It doesn't show compliance policies, app assignments, or provide a holistic troubleshooting view.",
+      "Correct. The Troubleshooting + support blade provides the most comprehensive view. Select a user and see: all assigned devices, configuration profiles and their per-setting status, compliance policies, app assignments, enrollment status, and any errors. This is the purpose-built troubleshooting interface.",
+      "Incorrect. Assignment failures report shows organization-wide failures, not a user-specific troubleshooting view.",
+      "Incorrect. Assignment status under Monitor shows aggregate status for a specific policy, not a user-specific comprehensive view."
+    ],
+    "tip": "Intune troubleshooting: Troubleshooting + support blade = best for user/device-specific investigation. Profile Device status = best for policy-specific investigation. Reports = best for org-wide trends."
+  },
+  {
+    "id": "MS102-R4-032",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Litware Inc. The company wants to use Microsoft Entra Verified ID to issue digital employee credentials. These credentials would allow employees to prove their employment status to external partners and services without sharing unnecessary personal information.\n\nQuestion:\nWhat is Microsoft Entra Verified ID based on?",
+    "choices": [
+      "OAuth 2.0 tokens stored in Azure AD",
+      "Decentralized identity standards (W3C Verifiable Credentials and Decentralized Identifiers)",
+      "SAML assertions with attribute-based claims",
+      "X.509 certificates issued by a Microsoft Certificate Authority"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. While Entra Verified ID integrates with Azure AD, the credentials themselves are not OAuth tokens. They use decentralized identity standards.",
+      "Correct. Microsoft Entra Verified ID is based on W3C Verifiable Credentials (VC) and Decentralized Identifiers (DID) standards. It allows organizations to issue and verify digital credentials that users control. The credentials are stored in the user's Microsoft Authenticator app and can be presented to verifiers without the issuer being involved — supporting selective disclosure and user privacy.",
+      "Incorrect. SAML is a federated authentication protocol. Verified IDs use decentralized identity, which is fundamentally different from federated identity.",
+      "Incorrect. X.509 certificates are PKI-based. While both provide identity assurance, Verified ID uses W3C VC standards, not X.509 PKI."
+    ],
+    "tip": "Entra Verified ID: Decentralized identity (W3C standards). Issuer creates credential → user stores in Authenticator → user presents to verifier → verifier validates. User controls their credentials (self-sovereign identity)."
+  },
+  {
+    "id": "MS102-R4-033",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Trey Research. The company uses Managed Apple IDs (federated with Azure AD) for corporate iOS and iPad devices enrolled via Apple Business Manager. Users sign in to devices using their Managed Apple IDs.\n\nA user reports they cannot download apps from the App Store using their Managed Apple ID.\n\nQuestion:\nWhy can't the user download apps from the public App Store?",
+    "choices": [
+      "The user's Managed Apple ID is not linked to the App Store region",
+      "Managed Apple IDs cannot be used to purchase or download apps from the public App Store — apps must be distributed through Intune using VPP",
+      "The user needs to accept the Apple Terms of Service for their Managed Apple ID",
+      "The App Store is blocked by an Intune device restriction profile"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. The region is not the issue. Managed Apple IDs have fundamental limitations compared to personal Apple IDs.",
+      "Correct. Managed Apple IDs (created through Apple Business Manager) have limitations by design. They cannot be used to make purchases or download apps from the public App Store. All apps for devices using Managed Apple IDs must be distributed through the organization using VPP (Volume Purchase Program) / Apple Business Manager and deployed via Intune.",
+      "Incorrect. While Terms of Service acceptance may be required, the fundamental issue is that Managed Apple IDs cannot access the public App Store for downloads.",
+      "Incorrect. Even without a device restriction, Managed Apple IDs inherently cannot access the public App Store."
+    ],
+    "tip": "Managed Apple ID limitations: No public App Store access, no iCloud Keychain, no HomeKit, no Find My. Apps must come via VPP/ABM. Managed Apple IDs are for corporate use — keep scope narrow."
+  },
+  {
+    "id": "MS102-R4-034",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Adventure Works. The company wants to use Windows Sandbox on Windows 11 Enterprise devices so that employees can safely test suspicious files in an isolated environment. The IT team needs to enable Windows Sandbox via Intune.\n\nQuestion:\nHow should you enable Windows Sandbox?",
+    "choices": [
+      "Deploy a device configuration profile using the Settings Catalog to enable the Windows Sandbox optional feature",
+      "Deploy a PowerShell script via Intune: Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM",
+      "Windows Sandbox is enabled by default on Windows 11 Enterprise",
+      "Both A and B are valid approaches, with the Settings Catalog being the recommended Intune-native method"
+    ],
+    "answer": [
+      3
+    ],
+    "explanations": [
+      "Partially correct. The Settings Catalog can manage Windows optional features.",
+      "Partially correct. The PowerShell cmdlet works but requires a script deployment.",
+      "Incorrect. Windows Sandbox is not enabled by default. It's an optional feature that must be explicitly enabled.",
+      "Correct. Both approaches work: (1) Settings Catalog to manage the Windows Sandbox feature through Intune policy, (2) PowerShell script using Enable-WindowsOptionalFeature. The Settings Catalog is preferred as it's Intune-native, reportable, and doesn't require script deployment. Both require a device reboot after enabling."
+    ],
+    "tip": "Windows Sandbox: Optional feature, not enabled by default. Requires: Windows 10/11 Pro or Enterprise, AMD64, virtualization enabled in BIOS, 4GB RAM, 1GB storage. Enable via Settings Catalog, PowerShell, or DISM."
+  },
+  {
+    "id": "MS102-R4-035",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Pratum Inc. The security team wants to create an expedited quality update deployment to patch a critical zero-day vulnerability on all managed Windows devices within 24 hours, bypassing the normal 14-day deferral configured in the update ring.\n\nQuestion:\nHow should you deploy this expedited update?",
+    "choices": [
+      "Edit the update ring and change the quality update deferral to 0 days temporarily",
+      "In Intune, navigate to Devices > Windows > Quality updates for Windows 10 and later > Create profile, select the specific KB update, and set expedite with a compliance deadline",
+      "Use Windows Server Update Services (WSUS) to approve and force the update",
+      "Run a PowerShell script on all devices to trigger Windows Update manually"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Changing the update ring deferral affects ALL future quality updates, not just the critical one. When you revert the deferral later, the configuration change affects all pending updates.",
+      "Correct. The expedited quality updates feature in Intune (Devices > Windows > Quality updates) allows you to select a specific KB update and deploy it with a compliance deadline. This bypasses the update ring deferral period and forces the device to install the update within the specified timeframe (e.g., within 24 hours).",
+      "Incorrect. WSUS is an on-premises solution. For cloud-managed Intune devices, the Windows Update for Business deployment service (expedited updates in Intune) is the appropriate tool.",
+      "Incorrect. Running UsoClient.exe or trigger scripts is unreliable, doesn't bypass deferrals, and doesn't provide centralized tracking of update compliance."
+    ],
+    "tip": "Expedited quality updates: Bypasses deferral → forces specific KB installation within deadline. Uses Windows Update for Business deployment service. Set compliance deadline (e.g., 1 day) and grace period. Devices update ASAP."
+  },
+  {
+    "id": "MS102-R4-036",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Contoso. The company has branch offices with limited internet bandwidth. 200 Windows devices in each branch need to download large Intune app packages and Windows updates. The company wants to use a local cache server to reduce internet bandwidth usage.\n\nQuestion:\nWhich Microsoft solution provides local caching for Intune content and Windows updates?",
+    "choices": [
+      "Microsoft Connected Cache (MCC) — a cache server deployed on-premises that caches Intune content and Windows updates for local distribution",
+      "Windows BranchCache — built-in Windows peer caching for network content",
+      "Azure CDN with custom origin pointing to the Intune content store",
+      "WSUS configured as a content proxy for Windows Update"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Microsoft Connected Cache (MCC) is a software solution deployed on an on-premises server that caches content from Microsoft's CDN (including Intune Win32 app content, Windows updates, Microsoft Store apps, and more). Devices on the local network download from the cache server instead of the internet, significantly reducing WAN bandwidth usage.",
+      "Incorrect. BranchCache provides peer-to-peer caching between Windows devices, but it doesn't provide a dedicated cache server and has limited support for some Intune content types.",
+      "Incorrect. Azure CDN is Microsoft's content delivery network. You cannot configure custom CDN origins to cache Intune content. Microsoft Connected Cache is the supported solution.",
+      "Incorrect. WSUS handles Windows updates but doesn't cache Intune app content. Also, WSUS is being deprecated in favor of Windows Update for Business."
+    ],
+    "tip": "Microsoft Connected Cache: On-prem cache for Microsoft CDN content. Caches: Win32 apps, Windows updates, Store apps, Office updates. Reduces WAN traffic up to 90% for repeated downloads. Deploy on Windows Server or Linux."
+  },
+  {
+    "id": "MS102-R4-037",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Fabrikam. The security team wants to configure Secure Boot attestation in the device compliance policy. A device reports that Secure Boot is not enabled. The device is a Surface Laptop with TPM 2.0.\n\nQuestion:\nWhat should you check to resolve the Secure Boot attestation failure?",
+    "choices": [
+      "Verify Secure Boot is enabled in the device's UEFI/BIOS firmware settings",
+      "Install the latest TPM firmware update",
+      "Re-enroll the device in Intune to refresh the attestation data",
+      "Verify the device has a valid Health Attestation Service (HAS) certificate"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. The most common reason for Secure Boot attestation failure is that Secure Boot is disabled in the UEFI firmware. Check the device's UEFI settings (usually accessed during boot with F2 or Delete key) and ensure Secure Boot is enabled. Some devices may have had Secure Boot disabled for dual-boot Linux configurations or legacy OS installations.",
+      "Incorrect. While TPM firmware should be current, Secure Boot attestation failure typically means Secure Boot itself is disabled, not a TPM issue.",
+      "Incorrect. Re-enrollment doesn't change the device's Secure Boot state. The attestation accurately reports the boot configuration.",
+      "Incorrect. The HAS certificate is used by the device to submit attestation data, but if Secure Boot is actually disabled, the attestation will correctly report it as disabled."
+    ],
+    "tip": "Health attestation failures: Secure Boot disabled → enable in UEFI. BitLocker not enabled → check TPM and BitLocker policy. Code integrity disabled → check virtualization-based security. Always check the actual device state first."
+  },
+  {
+    "id": "MS102-R4-038",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Datum Corporation. The company uses the Intune Data Warehouse to export device and app data for business intelligence reporting in Power BI. The IT director wants automated daily reports showing:\n- Device compliance trends over time\n- App installation success rates\n- OS distribution across the device fleet\n\nQuestion:\nHow should you access the Intune Data Warehouse for Power BI reporting?",
+    "choices": [
+      "Use the Intune Data Warehouse OData feed URL in Power BI to connect directly, or use the Intune Data Warehouse API",
+      "Export CSV reports from the Intune admin center and import into Power BI manually",
+      "Use Microsoft Graph API beta endpoints to query Intune reporting data",
+      "Connect Power BI to the Azure Monitor Log Analytics workspace where Intune diagnostic data is stored"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. The Intune Data Warehouse provides an OData feed URL that Power BI can connect to directly. Navigate to Reports > Data warehouse in the Intune admin center to find the OData feed URL. In Power BI, use 'Get Data > OData feed' with this URL. The Data Warehouse retains 90 days of historical data, enabling trend analysis. You can also use the Intune Data Warehouse REST API for programmatic access.",
+      "Incorrect. Manual CSV export doesn't support automated daily reports and lacks historical trend data.",
+      "Incorrect. While Microsoft Graph API provides Intune data access, the Data Warehouse is specifically designed for reporting scenarios with historical trend data. Graph API is better for real-time operational data.",
+      "Incorrect. Log Analytics stores diagnostic logs, not the structured reporting data (compliance trends, app install rates, OS distribution) that the Data Warehouse provides."
+    ],
+    "tip": "Intune reporting options: Data Warehouse (OData + Power BI, 90-day history, trends). Reports blade (pre-built reports, export). Graph API (real-time data, automation). Log Analytics (diagnostic logs, KQL queries)."
+  },
+  {
+    "id": "MS102-R4-039",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Tailspin Toys. A device compliance policy is configured to retire (wipe corporate data from) devices that remain noncompliant for more than 30 days. A user's device has been noncompliant for 35 days because the user has been on extended leave.\n\nQuestion:\nWhat happens to the device?",
+    "choices": [
+      "The device is automatically retired (corporate data wiped) because it exceeded the 30-day noncompliance threshold",
+      "The device is only retired if you configured 'Retire the noncompliant device' as an action for noncompliance in the compliance policy",
+      "Intune compliance policies cannot trigger automatic device retirement",
+      "The device is blocked from accessing resources but not retired"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Automatic retirement is not a default behavior. It only happens if specifically configured as an action for noncompliance.",
+      "Correct. Compliance policies have configurable 'Actions for noncompliance' that execute on a schedule. You can add actions like: 'Mark device noncompliant' (after X days), 'Send email to end user', 'Retire the noncompliant device' (after X days). The retire action only triggers if it was explicitly added with a 30-day schedule. If it wasn't configured, the device remains noncompliant but is not retired.",
+      "Incorrect. Compliance policies CAN trigger automatic device retirement, but only when 'Retire the noncompliant device' is explicitly configured as an action for noncompliance.",
+      "Incorrect. Resource blocking happens through conditional access (requiring compliant devices), not the compliance policy itself. The compliance policy's actions for noncompliance determine what happens."
+    ],
+    "tip": "Actions for noncompliance: Mark noncompliant (default, immediate or delayed), Send email, Send push notification, Remotely lock, Retire device. Each action has its own schedule. Retire = corporate wipe. Must be explicitly configured."
+  },
+  {
+    "id": "MS102-R4-040",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Woodgrove Bank. The IT team wants to collect diagnostic logs from a user's Windows device to troubleshoot an Intune policy deployment issue. The user is working remotely.\n\nQuestion:\nHow should you collect the diagnostic logs?",
+    "choices": [
+      "Ask the user to manually run mdmdiagnosticstool.exe and email the log files",
+      "In the Intune admin center, select the device and use the 'Collect diagnostics' remote action to retrieve logs from the device",
+      "Connect to the device using Remote Desktop and collect logs manually",
+      "Wait for the device to sync and check the Intune troubleshooting blade for errors"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. While mdmdiagnosticstool.exe can collect diagnostic data locally, it requires user action and manual file transfer. For remote troubleshooting, there's a better option.",
+      "Correct. The 'Collect diagnostics' remote action in Intune allows admins to remotely trigger diagnostic log collection from a Windows device. The device collects MDM logs, event logs, registry keys, and Intune management extension logs, then uploads them to Intune where the admin can download and analyze them. No user interaction required.",
+      "Incorrect. Remote Desktop may not be available or allowed for remote workers. The Intune collect diagnostics action is simpler and doesn't require RDP access.",
+      "Incorrect. The troubleshooting blade shows policy assignment status but may not have detailed error information. Diagnostic logs provide much more detail about why a policy failed."
+    ],
+    "tip": "Collect diagnostics: Remote action in Intune. Gathers: MDM diagnostic report, event logs, registry data, IME logs. No user interaction. Available for Windows 10+ devices. Download logs from the device details page."
+  },
+  {
+    "id": "MS102-R4-041",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Relecloud. A Windows feature update policy targeting Windows 11 24H2 is assigned to 500 devices. After two weeks, only 200 devices have updated. The remaining 300 show 'Safeguard hold' status.\n\nQuestion:\nWhat does 'Safeguard hold' mean and what should you do?",
+    "choices": [
+      "Safeguard hold means the Intune policy is paused — resume the policy to continue deployment",
+      "Safeguard hold is a Microsoft-applied block preventing the update on devices with known compatibility issues — do NOT override it; wait for Microsoft to resolve the issue or investigate the specific hold ID",
+      "Safeguard hold means the device doesn't meet hardware requirements for Windows 11",
+      "Safeguard hold is an error state — re-assign the feature update policy to retry"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Safeguard holds are not related to Intune policy state. They are applied by Microsoft at the Windows Update level.",
+      "Correct. Safeguard holds are applied by Microsoft when they detect known compatibility issues with a Windows feature update on specific hardware or software configurations. They prevent the update to protect devices from known problems. Do NOT try to bypass them. Check the safeguard hold ID in the Windows release health dashboard for details about the specific issue and expected resolution timeline.",
+      "Incorrect. Hardware incompatibility shows as 'Not eligible' or 'Not compatible', not 'Safeguard hold'. Safeguard holds are about software/driver compatibility issues discovered after the update's release.",
+      "Incorrect. Safeguard holds are not error states. They are intentional protective measures. Re-assigning the policy won't override a safeguard hold."
+    ],
+    "tip": "Safeguard holds: Microsoft-applied protection. Check hold ID at aka.ms/WindowsReleaseHealth. Do NOT use DisableWUfBSafeguards policy in production. Wait for Microsoft to release the hold when the issue is resolved."
+  },
+  {
+    "id": "MS102-R4-042",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Northwind Traders. The company wants to implement B2B collaboration with a partner organization (Adatum). The requirements are:\n- Adatum users can access Northwind's SharePoint and Teams\n- Adatum users must use MFA (trust Adatum's MFA)\n- Adatum users must use compliant devices (trust Adatum's device compliance)\n- Only specific Adatum users (not all) should have access\n\nQuestion:\nWhich cross-tenant access settings should you configure?",
+    "choices": [
+      "Inbound access settings for Adatum: Allow specific Adatum users/groups, trust MFA and device compliance from Adatum's tenant",
+      "Outbound access settings for Adatum: Allow Northwind users to access Adatum's resources",
+      "Default cross-tenant settings: Trust MFA and compliance from all partner tenants",
+      "External collaboration settings: Allow invitations from Adatum's domain only"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Configure inbound access settings for Adatum in Northwind's cross-tenant access settings: (1) Add Adatum as a partner organization. (2) In Inbound access, specify which Adatum users/groups are allowed (not all). (3) In Trust settings, enable trust for MFA and device compliance from Adatum. This meets all four requirements.",
+      "Incorrect. Outbound settings control what Northwind users can access in partner tenants. The scenario requires configuring what Adatum users can access in Northwind.",
+      "Incorrect. Default settings apply to ALL partner tenants. The requirement is to configure specific trust for Adatum only. Trusting all partners' MFA and compliance may be too broad.",
+      "Incorrect. External collaboration settings control general B2B invitation policies. Cross-tenant access settings provide the granular per-partner control needed for MFA trust, device compliance trust, and user-specific access."
+    ],
+    "tip": "Cross-tenant access: Inbound = what partners can access in YOUR tenant. Outbound = what YOUR users can access in partner tenants. Trust settings = accept partner's MFA/device compliance. Configure per-partner for granular control."
+  },
+  {
+    "id": "MS102-R4-043",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for A.Datum Corporation. The company has Apple DEP (Device Enrollment Program, now ADE) configured for iOS devices. The VPP token used for app deployment is expiring in 7 days. If the token expires, app assignments will stop working.\n\nQuestion:\nHow do you renew the VPP token?",
+    "choices": [
+      "Delete the expired token in Intune and create a new one from scratch",
+      "In Apple Business Manager, download a new VPP token file using the same Apple ID, then upload it in Intune under Tenant administration > Connectors and tokens > Apple VPP tokens > select token > Renew",
+      "The token auto-renews if the Apple Business Manager account is active",
+      "Contact Apple Support to extend the token expiration date"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Deleting and recreating the token breaks all existing app assignments tied to that token. Always renew rather than delete.",
+      "Correct. VPP token renewal: (1) Sign in to Apple Business Manager (business.apple.com). (2) Download a new server token file (.vpptoken) using the same Apple ID that originally created the token. (3) In Intune, navigate to Tenant admin > Connectors and tokens > Apple VPP tokens > select the expiring token > Renew/Upload > upload the new token file. Existing assignments are preserved.",
+      "Incorrect. VPP tokens do not auto-renew. They expire annually and must be manually renewed by downloading a new token from Apple Business Manager.",
+      "Incorrect. Apple Support cannot extend token expiration. Renewal is done through the Apple Business Manager portal."
+    ],
+    "tip": "VPP token renewal cycle: Download new token from ABM annually → upload to Intune (renew, don't delete). Same Apple ID required. Set calendar reminder for expiration. Token expiry = all VPP app assignments stop."
+  },
+  {
+    "id": "MS102-R4-044",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Wingtip Toys. The company uses organizational messages in Intune to display branded messages on Windows 11 devices. The IT team wants to show a message in the Windows Get Started app welcoming new employees and providing links to corporate resources.\n\nQuestion:\nWhere do you configure this organizational message?",
+    "choices": [
+      "Intune admin center > Tenant administration > Organizational messages > Create a message with the 'Get Started' delivery channel",
+      "Windows Configuration Designer > create a provisioning package with custom OOBE messages",
+      "Intune admin center > Devices > Configuration profiles > Create a custom OMA-URI profile with message content",
+      "Microsoft 365 admin center > Organizational messages > Create a welcome message"
+    ],
+    "answer": [
+      0
+    ],
+    "explanations": [
+      "Correct. Organizational messages in Intune allow you to create branded messages delivered through Windows 11 surfaces including: Get Started app, Taskbar notification, and Notification area. Navigate to Tenant administration > Organizational messages, create a message, select the delivery channel (Get Started), configure the content with corporate branding and links, and assign to user groups.",
+      "Incorrect. Windows Configuration Designer creates provisioning packages for initial device setup, not ongoing organizational messaging.",
+      "Incorrect. Custom OMA-URI profiles configure CSP settings, not organizational messages. Organizational messages have their own dedicated feature in Intune.",
+      "Incorrect. Organizational messages for Windows devices are configured in the Intune admin center, not the Microsoft 365 admin center."
+    ],
+    "tip": "Organizational messages: Intune feature for Windows 11. Delivery channels: Get Started app (onboarding), Taskbar (persistent), Notification area (alerts). Supports corporate branding, custom links, and group targeting."
+  },
+  {
+    "id": "MS102-R4-045",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Contoso. A compliance audit reveals that some users have been forwarding corporate emails to personal Gmail accounts using Outlook rules. The compliance team wants to:\n1. Identify all existing forwarding rules to external addresses\n2. Block future external forwarding rules\n3. Alert the compliance team when someone attempts to create an external forwarding rule\n\nQuestion:\nWhich PowerShell cmdlet helps identify existing forwarding rules across all mailboxes?",
+    "choices": [
+      "Get-TransportRule -Filter {RedirectMessageTo -ne $null}",
+      "Get-InboxRule -Mailbox * | Where-Object {$_.ForwardTo -like '*@gmail.com*' -or $_.RedirectTo -like '*@gmail.com*'}",
+      "Get-Mailbox -ResultSize Unlimited | ForEach-Object { Get-InboxRule -Mailbox $_.Identity | Where-Object {$_.ForwardTo -or $_.ForwardAsAttachmentTo -or $_.RedirectTo} }",
+      "Search-UnifiedAuditLog -Operations New-InboxRule"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. Get-TransportRule retrieves organization-level mail flow rules (transport rules), not user-created inbox forwarding rules.",
+      "Incorrect. Get-InboxRule -Mailbox * is not valid syntax. You cannot use wildcard for the Mailbox parameter. You need to iterate through mailboxes.",
+      "Correct. This command iterates through all mailboxes and retrieves inbox rules that have forwarding or redirect actions configured. It catches ForwardTo, ForwardAsAttachmentTo, and RedirectTo rules. This identifies all existing forwarding rules across the organization.",
+      "Incorrect. Search-UnifiedAuditLog finds when rules were created (historical activity) but doesn't show the current state of existing rules. It also doesn't show rules created before auditing was enabled."
+    ],
+    "tip": "Finding forwarding rules: Get-Mailbox | Get-InboxRule (current rules). Search-UnifiedAuditLog (historical creation events). Blocking: Set-RemoteDomain -AutoForwardEnabled $false (transport-level block). Alerting: Alert policies in Purview."
+  },
+  {
+    "id": "MS102-R4-046",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Fabrikam. The company wants to deploy Apple Managed Apple IDs to all corporate iOS devices. These Managed Apple IDs should be federated with the company's Azure AD so that employees use their corporate credentials.\n\nQuestion:\nWhat must you configure for Managed Apple ID federation with Azure AD?",
+    "choices": [
+      "Configure SAML SSO between Azure AD and Apple Business Manager",
+      "Configure federated authentication in Apple Business Manager by connecting to Microsoft Entra ID as the identity provider, then enable Managed Apple ID creation",
+      "Install the Apple SSO extension on all iOS devices via Intune",
+      "Configure Apple School Manager instead of Apple Business Manager for managed IDs"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. While federation involves identity provider configuration, it's set up in Apple Business Manager's settings, not as a standalone SAML SSO configuration.",
+      "Correct. In Apple Business Manager > Settings > Federated Authentication, connect to Microsoft Entra ID (Azure AD) as the identity provider. Once federation is configured, Managed Apple IDs are automatically created based on Azure AD user accounts (using the format user@appleid.domain). Users sign in to their Apple devices using their corporate credentials.",
+      "Incorrect. The Apple SSO extension provides single sign-on for apps on Apple devices, not Managed Apple ID federation. Federation is configured at the ABM/Azure AD level.",
+      "Incorrect. Apple School Manager is for educational institutions. Apple Business Manager is the correct platform for enterprise Managed Apple ID federation."
+    ],
+    "tip": "Managed Apple ID federation: ABM > Federated Authentication > connect to Azure AD. Users get Managed Apple IDs mapped from Azure AD. Sign in with corporate creds. No separate Apple ID needed."
+  },
+  {
+    "id": "MS102-R4-047",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Datum Corporation. The security team configures Microsoft Defender for Endpoint and notices that the 'Endpoint analytics' score in the Microsoft Intune admin center shows a low score of 35/100. The primary contributing factor is 'Software recommended' with many devices running outdated software.\n\nQuestion:\nWhich Endpoint analytics component provides this software recommendation insight?",
+    "choices": [
+      "Startup performance — identifies slow startup processes",
+      "Application reliability — identifies crashing applications",
+      "Work from anywhere — assesses device readiness including software currency",
+      "Resource performance — identifies hardware bottlenecks"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. Startup performance measures boot time and startup process duration. It doesn't assess software currency.",
+      "Incorrect. Application reliability tracks app crashes and hangs. It reports on application health, not whether the software is up to date.",
+      "Correct. The 'Work from anywhere' report in Endpoint analytics includes a 'Software recommended' metric that assesses whether devices are running current, supported versions of Windows and Microsoft 365 Apps. Outdated software versions lower this score. The report recommends updating to current versions.",
+      "Incorrect. Resource performance tracks CPU, memory, and disk utilization. It identifies hardware performance issues, not software version currency."
+    ],
+    "tip": "Endpoint analytics scores: Startup performance (boot speed). Application reliability (app health). Work from anywhere (device readiness: OS version, cloud management, software currency). Each contributes to the overall score."
+  },
+  {
+    "id": "MS102-R4-048",
+    "domain": "Manage applications",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Litware Inc. The company needs to deploy a macOS application packaged as a .dmg file. The .dmg contains a standard macOS .app bundle that users would normally drag to the Applications folder.\n\nQuestion:\nHow should you deploy this in Intune?",
+    "choices": [
+      "Upload the .dmg as a macOS LOB app in Intune — Intune handles .dmg extraction and .app installation automatically",
+      "Convert the .dmg to a .pkg installer first, then upload as a macOS LOB app",
+      "Upload directly as a macOS DMG app type in Intune under Apps > macOS > Add > macOS app (DMG)",
+      "Deploy using a shell script that mounts the DMG and copies the app bundle"
+    ],
+    "answer": [
+      2
+    ],
+    "explanations": [
+      "Incorrect. The 'LOB app' type for macOS expects .pkg or .intunemac format, not .dmg. Uploading a .dmg as LOB would fail.",
+      "Incorrect. While converting to .pkg works, it's unnecessary. Intune natively supports .dmg uploads.",
+      "Correct. Intune supports direct .dmg file upload as the 'macOS app (DMG)' type. Navigate to Apps > macOS > Add > select 'macOS app (DMG)'. Upload the .dmg file, configure detection rules, and assign. Intune handles the .dmg mounting and .app installation to /Applications automatically.",
+      "Incorrect. Shell script deployment works but bypasses Intune's app management capabilities (tracking, detection, assignment, reporting). Use the native DMG app type instead."
+    ],
+    "tip": "macOS app deployment in Intune: .dmg → 'macOS app (DMG)' type. .pkg → 'macOS LOB' type. M365 Apps → 'Microsoft 365 for macOS'. Shell scripts → for one-off configurations, not app deployment."
+  },
+  {
+    "id": "MS102-R4-049",
+    "domain": "Deploy and manage endpoints",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Intune for Pratum Inc. The company uses Windows Autopilot pre-provisioning (formerly white glove) to set up devices in the IT department before shipping them to remote users. During pre-provisioning, the technician boots the device, presses the Windows key five times to enter pre-provisioning mode, and the device completes Azure AD join, Intune enrollment, and app installation.\n\nWhen the user receives the device and signs in, they should see a minimal setup experience.\n\nQuestion:\nWhat does the user experience when they first sign in to a pre-provisioned device?",
+    "choices": [
+      "Full Windows OOBE including region, keyboard, and privacy settings",
+      "A minimal Enrollment Status Page showing only the user-specific phase (account setup) since device setup was already completed during pre-provisioning",
+      "No setup at all — the user goes directly to the Windows desktop",
+      "The user must re-authenticate with Azure AD and go through a full Autopilot enrollment"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. Pre-provisioning handles most of the OOBE and device setup. The user does not go through the full OOBE.",
+      "Correct. After pre-provisioning, the device setup phase (Azure AD join, Intune enrollment, device apps/policies) is already complete. When the user signs in, they only see the account setup phase of the ESP, which installs user-targeted apps and policies. This is significantly faster than the full Autopilot experience.",
+      "Incorrect. The user still needs to sign in and complete the user-specific ESP phase. There is still some setup, just minimal.",
+      "Incorrect. The device is already Azure AD joined and enrolled. The user authenticates to establish user affinity and completes only the user-specific phase."
+    ],
+    "tip": "Autopilot pre-provisioning: Tech does device phase (AAD join, enroll, device apps). User does account phase (user apps, user policies). Total user wait time: minutes instead of 30-60 minutes. Great for remote worker onboarding."
+  },
+  {
+    "id": "MS102-R4-050",
+    "domain": "Implement security and compliance",
+    "type": "single",
+    "stem": "Scenario:\nYou manage Microsoft 365 E5 for Adventure Works. The IT team needs to understand which Intune license is needed for different features. A manager asks which features require the Intune Suite add-on license beyond the standard Intune Plan 1 license.\n\nQuestion:\nWhich features require the Intune Suite add-on?",
+    "choices": [
+      "Device compliance policies, app protection policies, and conditional access integration",
+      "Endpoint Privilege Management, Remote Help, Microsoft Tunnel for MAM, Advanced Endpoint Analytics, and Microsoft Cloud PKI",
+      "Windows Autopilot, Windows Update for Business, and security baselines",
+      "Microsoft Defender for Endpoint integration, endpoint security policies, and device configuration profiles"
+    ],
+    "answer": [
+      1
+    ],
+    "explanations": [
+      "Incorrect. These features are included in the standard Intune Plan 1 license (included in Microsoft 365 E3/E5).",
+      "Correct. The Intune Suite add-on includes premium features beyond Plan 1: Endpoint Privilege Management (EPM), Remote Help, Microsoft Tunnel for MAM, Advanced Endpoint Analytics, Microsoft Cloud PKI, and Firmware-over-the-air (FOTA) updates. These are advanced capabilities designed for organizations with sophisticated endpoint management needs.",
+      "Incorrect. Autopilot, WUfB, and security baselines are included in standard Intune Plan 1.",
+      "Incorrect. Defender for Endpoint integration, endpoint security policies, and device configuration profiles are part of Intune Plan 1."
+    ],
+    "tip": "Intune licensing: Plan 1 (in M365 E3/E5) = core MDM/MAM. Plan 2 (standalone add-on) = advanced management. Intune Suite = premium features (EPM, Remote Help, Tunnel MAM, Cloud PKI, Advanced Analytics). Know which features need which license."
+  }
+]
